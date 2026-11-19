@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Kitchen Designer</title>
+<style>
+:root {
+  --bg: #f4f5f7; --panel: #ffffff; --panel-2: #f8f9fb; --text: #15171c; --muted: #5d6470; --line: #e1e4ea;
+  --accent: #2c56d1; --accent-soft: #e8eefc; --accent-ink: #ffffff;
+  --ok: #1d7f47; --ok-soft: #e6f4ec; --warn: #9a5b00; --warn-soft: #fdf3e2; --err: #bf2626; --err-soft: #fbeaea;
+  --base: #4a78d6; --tall: #2b9a67; --wallu: #de8c22; --loft: #9466cf; --corner: #c2457a;
+  --wall-line: #262a31; --door: #d24646; --window: #2399cf; --floor: #eceff4; --counter: #6b7280;
+  --shadow: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1014; --panel: #161920; --panel-2: #1b1f27; --text: #e7e9ee; --muted: #9aa1ad; --line: #2a2f39;
+    --accent: #6f8ff2; --accent-soft: #1f2a46; --accent-ink: #0e1014;
+    --ok: #4cc283; --ok-soft: #14291f; --warn: #e3a64a; --warn-soft: #2d2313; --err: #f07272; --err-soft: #331919;
+    --wall-line: #d8dce3; --floor: #1d2129; --counter: #a3a9b4;
+    --shadow: none; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body { font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+button, input, select, textarea { font: inherit; color: inherit; }
+h1 { font-size: 17px; margin: 0; font-weight: 650; letter-spacing: -.01em; }
+h2 { font-size: 13px; margin: 0 0 10px; font-weight: 650; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+h3 { font-size: 14px; margin: 0 0 6px; font-weight: 650; }
+
+header { display: flex; align-items: center; gap: 12px; padding: 12px 20px; background: var(--panel); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+.logo { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); display: grid; place-items: center; color: var(--accent-ink); font-weight: 700; }
+.sub { color: var(--muted); font-size: 12.5px; }
+.chips { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 12px; color: var(--muted); background: var(--panel-2); white-space: nowrap; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.dot.ok { background: var(--ok); } .dot.err { background: var(--err); } .dot.warn { background: var(--warn); }
+
+main { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 16px; padding: 16px 20px 40px; max-width: 1480px; margin: 0 auto; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 12px 16px 32px; } header { padding: 10px 16px; } }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); }
+.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+.drop { border: 1.5px dashed var(--line); border-radius: 10px; padding: 22px 14px; text-align: center; cursor: pointer; background: var(--panel-2); transition: border-color .15s, background .15s; }
+.drop:hover, .drop:focus-visible, .drop.over { border-color: var(--accent); background: var(--accent-soft); outline: none; }
+.drop strong { display: block; font-size: 14.5px; margin-bottom: 2px; }
+.drop .sub { display: block; }
+.file-meta { margin-top: 12px; display: none; }
+.file-meta.show { display: block; }
+.file-name { font-weight: 600; word-break: break-all; }
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
+.fact { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+.fact b { display: block; font-size: 16px; font-variant-numeric: tabular-nums; }
+.fact span { font-size: 11.5px; color: var(--muted); }
+.linkbtn { background: none; border: 0; color: var(--accent); padding: 0; cursor: pointer; font-size: 13px; }
+.linkbtn:hover { text-decoration: underline; }
+
+.field { margin-bottom: 12px; }
+.field > label, .field > .label { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 5px; }
+select, textarea { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); }
+textarea { min-height: 64px; resize: vertical; }
+select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { text-align: center; padding: 7px 4px; cursor: pointer; font-size: 13px; border-left: 1px solid var(--line); background: var(--panel); user-select: none; }
+.seg label:first-of-type { border-left: 0; }
+.seg input:checked + label { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: -2px; }
+.row { display: flex; gap: 10px; }
+.row > * { flex: 1; }
+.toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); }
+.toggle:first-child { border-top: 0; }
+.toggle small { display: block; color: var(--muted); font-size: 12px; }
+.switch { position: relative; width: 38px; height: 22px; flex: none; }
+.switch input { opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; position: absolute; z-index: 1; }
+.switch span { position: absolute; inset: 0; background: var(--line); border-radius: 999px; transition: background .15s; }
+.switch span::after { content: ""; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; border-radius: 50%; background: #fff; transition: transform .15s; }
+.switch input:checked + span { background: var(--accent); }
+.switch input:checked + span::after { transform: translateX(16px); }
+.switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.walls-pick { display: flex; flex-wrap: wrap; gap: 6px; }
+.walls-pick label { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; font-size: 12.5px; cursor: pointer; }
+.walls-pick input { accent-color: var(--accent); margin: 0; }
+details summary { cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--muted); margin: 4px 0 10px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px; border-radius: 9px; border: 1px solid var(--line); background: var(--panel); cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text); }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); width: 100%; font-size: 15px; padding: 12px; }
+.btn.primary:hover { filter: brightness(1.06); }
+.btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hint { color: var(--muted); font-size: 12px; margin-top: 8px; text-align: center; }
+
+.viewer-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.tab { padding: 6px 12px; border-radius: 8px; border: 1px solid transparent; background: none; cursor: pointer; color: var(--muted); font-weight: 600; font-size: 13px; }
+.tab:hover { color: var(--text); }
+.tab.active { background: var(--accent-soft); color: var(--accent); }
+.tab:focus-visible { outline: 2px solid var(--accent); }
+.downloads { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+.canvas { position: relative; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); min-height: 420px; display: grid; place-items: center; overflow: hidden; }
+.canvas svg { width: 100%; height: auto; max-height: 68vh; display: block; }
+.empty { text-align: center; color: var(--muted); padding: 40px 20px; }
+.empty strong { display: block; color: var(--text); font-size: 15px; margin-bottom: 4px; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-size: 12px; color: var(--muted); }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -2px; }
+
+.progress { position: absolute; inset: 0; background: color-mix(in srgb, var(--panel) 92%, transparent); display: none; place-items: center; z-index: 2; }
+.progress.show { display: grid; }
+.progress-box { width: min(440px, 90%); }
+.progress-title { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 15px; margin-bottom: 4px; }
+.spinner { width: 18px; height: 18px; border: 2.5px solid var(--accent-soft); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; flex: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } }
+.steps { list-style: none; padding: 0; margin: 14px 0 0; }
+.steps li { display: flex; gap: 10px; padding: 5px 0; color: var(--muted); font-size: 13px; }
+.steps li.done { color: var(--text); }
+.steps li .mk { width: 16px; flex: none; text-align: center; }
+.steps li.current { color: var(--text); font-weight: 600; }
+.timer { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 12.5px; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 1100px) { .grid2 { grid-template-columns: 1fr; } }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.badge.ai { background: var(--accent-soft); color: var(--accent); }
+.badge.rules { background: var(--warn-soft); color: var(--warn); }
+.quote { background: var(--panel-2); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 8px 12px; margin: 8px 0; }
+.quote small { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
+ul.notes { margin: 6px 0 0; padding-left: 0; list-style: none; }
+ul.notes li { padding: 6px 10px; border-radius: 7px; margin-bottom: 5px; font-size: 13px; background: var(--panel-2); border: 1px solid var(--line); }
+ul.notes li.warn { background: var(--warn-soft); border-color: transparent; color: var(--warn); }
+ul.notes li.err { background: var(--err-soft); border-color: transparent; color: var(--err); }
+ul.notes li.ok { background: var(--ok-soft); border-color: transparent; color: var(--ok); }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+.stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
+.stat b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 11.5px; color: var(--muted); }
+table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11.5px; }
+.tier { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11px; font-weight: 600; color: #fff; }
+.alert { padding: 10px 12px; border-radius: 8px; background: var(--err-soft); color: var(--err); margin-top: 12px; display: none; font-size: 13px; }
+.alert.show { display: block; }
+.hidden { display: none !important; }
+.scroll-x { overflow-x: auto; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo" aria-hidden="true">M</div>
+  <div>
+    <h1>AI Kitchen Designer</h1>
+    <div class="sub">Upload a floor plan · Qwen designs · rules verify · download the scene</div>
+  </div>
+  <div class="chips">
+    <span class="chip" id="chip-ai"><span class="dot"></span><span>Checking Qwen…</span></span>
+    <span class="chip" id="chip-cat"><span class="dot"></span><span>Catalogue</span></span>
+  </div>
+</header>
+
+<main>
+  <!-- Left: inputs -->
+  <div class="stack">
+    <section class="card" aria-labelledby="h-upload">
+      <h2 id="h-upload">1 · Floor plan</h2>
+      <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="drop-sub">
+        <strong>Drop a floor-plan JSON here</strong>
+        <span class="sub" id="drop-sub">or click to browse · magickhomes-scene v1</span>
+      </div>
+      <input type="file" id="file" accept=".json,application/json" class="hidden">
+      <div style="margin-top:8px;text-align:center"><button class="linkbtn" id="sample">Use the sample floor plan</button></div>
+      <div class="file-meta" id="file-meta">
+        <div class="file-name" id="file-name"></div>
+        <div class="sub" id="file-note"></div>
+        <div class="facts">
+          <div class="fact"><b id="f-walls">0</b><span>walls</span></div>
+          <div class="fact"><b id="f-doors">0</b><span>doors</span></div>
+          <div class="fact"><b id="f-windows">0</b><span>windows</span></div>
+          <div class="fact"><b id="f-size">–</b><span>room (m)</span></div>
+        </div>
+      </div>
+      <div class="alert" id="file-err" role="alert"></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-prefs">
+      <h2 id="h-prefs">2 · Preferences</h2>
+      <div class="field">
+        <span class="label" id="lbl-designer">Designer</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-designer">
+          <input type="radio" name="ai" id="ai-ollama" value="ollama" checked><label for="ai-ollama">Qwen AI</label>
+          <input type="radio" name="ai" id="ai-auto" value="auto"><label for="ai-auto">Qwen + fallback</label>
+          <input type="radio" name="ai" id="ai-fallback" value="fallback"><label for="ai-fallback">Rules only</label>
+        </div>
+      </div>
+      <div class="field">
+        <span class="label" id="lbl-layout">Layout</span>
+        <div class="seg" role="radiogroup" aria-labelledby="lbl-layout">
+          <input type="radio" name="layout" id="lay-auto" value="auto" checked><label for="lay-auto">Auto</label>
+          <input type="radio" name="layout" id="lay-single" value="single"><label for="lay-single">Single</label>
+          <input type="radio" name="layout" id="lay-l" value="L"><label for="lay-l">L-shape</label>
+          <input type="radio" name="layout" id="lay-u" value="U"><label for="lay-u">U-shape</label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="style">Door style</label>
+        <select id="style"><option>Slab (Plain)</option></select>
+      </div>
+      <div class="field">
+        <div class="toggle"><div>Tall storage<small>Tall unit / built-in oven at a run end</small></div><label class="switch"><input type="checkbox" id="tall" checked aria-label="Tall storage"><span></span></label></div>
+        <div class="toggle"><div>Loft units<small>Only if wall height ≥ 2.66 m</small></div><label class="switch"><input type="checkbox" id="loft" aria-label="Loft units"><span></span></label></div>
+        <div class="toggle"><div>LPG cylinder unit<small>Beside the hob</small></div>
+          <select id="cyl" style="width:auto"><option value="">Auto</option><option value="true">Yes</option><option value="false">No</option></select>
+        </div>
+      </div>
+      <details id="walls-box">
+        <summary>Choose cabinet walls (optional)</summary>
+        <div class="walls-pick" id="walls-pick"><span class="sub">Upload a floor plan first.</span></div>
+      </details>
+      <div class="field">
+        <label for="notes">Design brief for Qwen <span class="sub">(optional)</span></label>
+        <textarea id="notes" maxlength="500" placeholder="e.g. lots of drawers near the hob, family of four, cooks daily"></textarea>
+      </div>
+      <button class="btn primary" id="go" disabled>Generate kitchen</button>
+      <div class="hint" id="go-hint">Upload a floor plan to start. Qwen takes about 2–3 minutes on a laptop CPU.</div>
+      <div class="alert" id="run-err" role="alert"></div>
+    </section>
+  </div>
+
+  <!-- Right: output -->
+  <div class="stack">
+    <section class="card" aria-labelledby="h-view">
+      <div class="viewer-head">
+        <h2 id="h-view" style="margin:0">Preview</h2>
+        <div class="tabs" id="tabs" role="tablist"></div>
+        <div class="downloads hidden" id="downloads">
+          <a class="btn" id="dl-scene" href="#" download>⬇ Kitchen JSON</a>
+          <a class="btn" id="dl-report" href="#" download>Report</a>
+        </div>
+      </div>
+      <div class="canvas" id="canvas">
+        <div class="empty" id="empty"><strong>No floor plan yet</strong>Upload a magickhomes-scene JSON to see the room.</div>
+        <div id="svg-host" class="hidden" style="width:100%"></div>
+        <div class="progress" id="progress" aria-live="polite">
+          <div class="progress-box">
+            <div class="progress-title"><span class="spinner" aria-hidden="true"></span><span id="p-stage">Starting…</span></div>
+            <div class="timer" id="p-timer">0:00</div>
+            <ol class="steps" id="p-steps"></ol>
+          </div>
+        </div>
+      </div>
+      <div class="legend" id="legend">
+        <span><i style="background:var(--base)"></i>Base</span>
+        <span><i style="background:var(--tall)"></i>Tall</span>
+        <span><i style="border:2px solid var(--wallu)"></i>Wall unit</span>
+        <span><i style="border:2px dotted var(--loft)"></i>Loft</span>
+        <span><i style="background:var(--corner)"></i>Corner unit</span>
+        <span><i style="background:var(--door)"></i>Door</span>
+        <span><i style="background:var(--window)"></i>Window</span>
+      </div>
+    </section>
+
+    <div class="grid2 hidden" id="results">
+      <section class="card" aria-labelledby="h-design">
+        <h2 id="h-design">Designer</h2>
+        <div id="ai-badge"></div>
+        <div id="ai-notes"></div>
+        <div class="stats" id="stats"></div>
+      </section>
+      <section class="card" aria-labelledby="h-rules">
+        <h2 id="h-rules">Rule engine</h2>
+        <ul class="notes" id="checks"></ul>
+      </section>
+      <section class="card" style="grid-column:1/-1" aria-labelledby="h-sched">
+        <h2 id="h-sched">Cabinet schedule</h2>
+        <div class="scroll-x"><table id="schedule"></table></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<input type="file" class="hidden">
+<script>
+(() => {
+  "use strict";
+  const $ = (s) => document.querySelector(s);
+  const state = { input: null, filename: null, jobId: null, output: null, report: null, tab: "plan", poll: null, tick: null, started: 0 };
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  async function api(path, opts = {}) {
+    const r = await fetch(path, opts);
+    const ct = r.headers.get("content-type") || "";
+    const body = ct.includes("json") ? await r.json() : await r.text();
+    if (!r.ok) {
+      const d = body && body.detail !== undefined ? body.detail : body;
+      throw new Error(typeof d === "string" ? d : JSON.stringify(d));
+    }
+    return body;
+  }
+
+  // ---------- status chips ----------
+  async function refreshHealth() {
+    try {
+      const h = await api("/health");
+      const ok = h.ollama === "ready";
+      setChip("#chip-ai", ok ? "ok" : "err", ok ? `Qwen ready · ${h.ollama_model}` : "Qwen unavailable");
+      $("#chip-ai").title = h.ollama;
+      const c = h.catalog || {};
+      if (c.loaded) setChip("#chip-cat", c.source === "api" ? "ok" : "warn", `Catalogue: ${c.source} · ${c.skus.toLocaleString()} SKUs`);
+      else setChip("#chip-cat", "", "Catalogue loading…");
+      if (!c.loaded) setTimeout(refreshHealth, 4000);
+    } catch (e) {
+      setChip("#chip-ai", "err", "Server offline");
+    }
+  }
+  function setChip(sel, kind, text) {
+    const el = $(sel);
+    el.querySelector(".dot").className = "dot " + kind;
+    el.querySelector("span:last-child").textContent = text;
+  }
+  async function loadStyles() {
+    try {
+      const styles = await api("/api/door-styles");
+      const sel = $("#style");
+      sel.innerHTML = styles.map((s) => `<option${s === "Slab (Plain)" ? " selected" : ""}>${esc(s)}</option>`).join("");
+    } catch (e) { /* keep default */ }
+  }
+
+  // ---------- geometry ----------
+  function geom(doc) {
+    const nodes = doc.scene.nodes;
+    const all = Object.values(nodes);
+    const walls = all.filter((n) => n.type === "wall");
+    const pts = walls.flatMap((w) => [w.start, w.end]);
+    const c = [pts.reduce((a, p) => a + p[0], 0) / pts.length, pts.reduce((a, p) => a + p[1], 0) / pts.length];
+    const ceiling = all.find((n) => n.type === "ceiling");
+    const frames = {};
+    for (const w of walls) {
+      const dx = w.end[0] - w.start[0], dz = w.end[1] - w.start[1];
+      const L = Math.hypot(dx, dz);
+      const d = [dx / L, dz / L];
+      let n = [-d[1], d[0]];
+      const m = [(w.start[0] + w.end[0]) / 2, (w.start[1] + w.end[1]) / 2];
+      if ((c[0] - m[0]) * n[0] + (c[1] - m[1]) * n[1] < 0) n = [d[1], -d[0]];
+      frames[w.id] = { w, L, d, n, o: w.start, t: w.thickness || 0.1, h: w.height || (ceiling && ceiling.height) || 2.5 };
+    }
+    return { nodes, all, walls, frames, ceiling };
+  }
+  const W = (f, x, z) => [f.o[0] + f.d[0] * x + f.n[0] * z, f.o[1] + f.d[1] * x + f.n[1] * z];
+  const pts = (arr) => arr.map((p) => `${p[0].toFixed(4)},${p[1].toFixed(4)}`).join(" ");
+  const isCorner = (cat) => /corner/i.test(cat || "");
+  const SHORT = [
+    [/^Base Sink Unit/i, "Sink"], [/^Base Hob Unit/i, "Hob"], [/^Base Spice/i, "Spice"], [/^Base Cylinder/i, "Cylinder"],
+    [/^Base Grain/i, "Grain trolley"], [/^Base Wicker/i, "Wicker"], [/^Blind corner unit.*L$/i, "Blind corner L"],
+    [/^Blind corner unit.*R$/i, "Blind corner R"], [/^Wall L Corner/i, "L corner"], [/^Loft.*L Corner/i, "Loft corner"],
+    [/^Tall Built-In Oven/i, "Oven"], [/^Tall Unit/i, "Tall"], [/^Wall Unit/i, "Wall"], [/^Loft/i, "Loft"], [/^Base Unit/i, "Base"],
+  ];
+  const short = (cat) => (SHORT.find(([r]) => r.test(cat || "")) || [null, cat || ""])[1];
+
+  function tierColor(level, cat) {
+    if (isCorner(cat)) return cssVar("--corner");
+    return cssVar({ base: "--base", tall: "--tall", wall: "--wallu", loft: "--loft" }[level] || "--base");
+  }
+
+  // ---------- plan (top view) ----------
+  function planSVG(doc) {
+    const g = geom(doc);
+    const xs = g.walls.flatMap((w) => [w.start[0], w.end[0]]), zs = g.walls.flatMap((w) => [w.start[1], w.end[1]]);
+    const pad = 0.55, minx = Math.min(...xs) - pad, minz = Math.min(...zs) - pad;
+    const vw = Math.max(...xs) - Math.min(...xs) + 2 * pad, vh = Math.max(...zs) - Math.min(...zs) + 2 * pad;
+    const out = [];
+    const poly = g.ceiling && Array.isArray(g.ceiling.polygon) ? g.ceiling.polygon : g.walls.map((w) => w.start);
+    out.push(`<polygon points="${pts(poly)}" fill="${cssVar("--floor")}"/>`);
+    const items = g.all.filter((n) => n.type === "item" && n.asset && n.asset.category === "kitchen" && g.frames[n.parentId]);
+    const order = { base: 0, tall: 1, wall: 2, loft: 3 };
+    items.sort((a, b) => (order[a.placement?.level] ?? 0) - (order[b.placement?.level] ?? 0));
+    for (const n of items) {
+      const f = g.frames[n.parentId], [w, , d] = n.asset.dimensions, [x, , z] = n.position;
+      const lvl = n.placement?.level || "base", cat = n.metadata?.category || "";
+      const p = [W(f, x - w / 2, z - d / 2), W(f, x + w / 2, z - d / 2), W(f, x + w / 2, z + d / 2), W(f, x - w / 2, z + d / 2)];
+      const col = tierColor(lvl, cat);
+      const tip = `<title>${esc(cat)} ${n.metadata?.width ?? ""} · ${esc(lvl)}\n${esc(n.name)}</title>`;
+      if (lvl === "base" || lvl === "tall") out.push(`<polygon points="${pts(p)}" fill="${col}" fill-opacity=".85" stroke="${cssVar("--panel")}" stroke-width="1.2" vector-effect="non-scaling-stroke">${tip}</polygon>`);
+      else out.push(`<polygon points="${pts(p)}" fill="none" stroke="${col}" stroke-width="1.8" ${lvl === "loft" ? 'stroke-dasharray="2 3"' : 'stroke-dasharray="6 3"'} vector-effect="non-scaling-stroke">${tip}</polygon>`);
+      // appliances drawn on their host cabinets
+      for (const cid of n.children || []) {
+        const a = g.nodes[cid];
+        if (!a) continue;
+        const [aw, , ad] = a.asset.dimensions;
+        const q = [W(f, x - aw / 2, z - ad / 2), W(f, x + aw / 2, z - ad / 2), W(f, x + aw / 2, z + ad / 2), W(f, x - aw / 2, z + ad / 2)];
+        if (/sink/i.test(a.name)) out.push(`<polygon points="${pts(q)}" fill="#cfe9f6" stroke="#2a7fa8" stroke-width="1" vector-effect="non-scaling-stroke"><title>Sink90 (APS02)</title></polygon>`);
+        else if (/hob/i.test(a.name)) {
+          out.push(`<polygon points="${pts(q)}" fill="#2b2f36" stroke="#111" stroke-width="1" vector-effect="non-scaling-stroke"><title>Hob90 (APH02)</title></polygon>`);
+          for (const [bx, bz] of [[-0.2, -0.12], [0.2, -0.12], [-0.2, 0.12], [0.2, 0.12], [0, 0]]) {
+            const c = W(f, x + bx, z + bz);
+            out.push(`<circle cx="${c[0]}" cy="${c[1]}" r="0.055" fill="none" stroke="#e8e8e8" stroke-width="1" vector-effect="non-scaling-stroke"/>`);
+          }
+        }
+      }
+    }
+    for (const ch of g.all.filter((n) => n.type === "item" && /chimney/i.test(n.name) && g.frames[n.parentId])) {
+      const f = g.frames[ch.parentId], [w, , d] = ch.asset.dimensions, [x, , z] = ch.position;
+      const p = [W(f, x - w / 2, z - d / 2), W(f, x + w / 2, z - d / 2), W(f, x + w / 2, z + d / 2), W(f, x - w / 2, z + d / 2)];
+      out.push(`<polygon points="${pts(p)}" fill="none" stroke="${cssVar("--door")}" stroke-width="1.4" stroke-dasharray="1 2" vector-effect="non-scaling-stroke"><title>Chimney90 (APC02)</title></polygon>`);
+    }
+    for (const wl of g.walls) {
+      out.push(`<line x1="${wl.start[0]}" y1="${wl.start[1]}" x2="${wl.end[0]}" y2="${wl.end[1]}" stroke="${cssVar("--wall-line")}" stroke-width="${g.frames[wl.id].t}" stroke-linecap="square"/>`);
+    }
+    for (const o of g.all.filter((n) => (n.type === "door" || n.type === "window") && g.frames[n.wallId])) {
+      const f = g.frames[o.wallId], x0 = o.position[0] - o.width / 2, x1 = o.position[0] + o.width / 2;
+      const a = W(f, x0, 0), b = W(f, x1, 0);
+      const col = cssVar(o.type === "door" ? "--door" : "--window");
+      out.push(`<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="${col}" stroke-width="${f.t * 0.9}"><title>${esc(o.name || o.type)}</title></line>`);
+      if (o.type === "door") {
+        const hingeLeft = (o.hingesSide || "left") === "left";
+        const hx = hingeLeft ? x0 : x1, fx = hingeLeft ? x1 : x0;
+        const h = W(f, hx, f.t / 2), leaf = W(f, hx, f.t / 2 + o.width), free = W(f, fx, f.t / 2);
+        out.push(`<line x1="${h[0]}" y1="${h[1]}" x2="${leaf[0]}" y2="${leaf[1]}" stroke="${col}" stroke-width="1.2" vector-effect="non-scaling-stroke"/>`);
+        out.push(`<path d="M ${leaf[0]} ${leaf[1]} A ${o.width} ${o.width} 0 0 ${sweep(f, hingeLeft)} ${free[0]} ${free[1]}" fill="none" stroke="${col}" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`);
+      }
+    }
+    for (const wl of g.walls) {
+      const f = g.frames[wl.id], m = W(f, f.L / 2, -0.32);
+      out.push(`<text x="${m[0]}" y="${m[1]}" font-size="0.17" text-anchor="middle" dominant-baseline="middle" fill="${cssVar("--muted")}" font-family="system-ui,sans-serif">${esc(wl.name || wl.id)}</text>`);
+    }
+    return `<svg viewBox="${minx} ${minz} ${vw} ${vh}" role="img" aria-label="Top view of the kitchen">${out.join("")}</svg>`;
+  }
+  function sweep(f, hingeLeft) {
+    // arc from the open leaf back to the closed position; orientation from the wall frame handedness
+    const cross = f.d[0] * f.n[1] - f.d[1] * f.n[0];
+    return (cross > 0) === hingeLeft ? 0 : 1;
+  }
+
+  // ---------- elevation ----------
+  function elevationSVG(doc, wallId) {
+    const g = geom(doc), f = g.frames[wallId];
+    const H = Math.max(f.h, 2.1), L = f.L, padX = 0.25, padY = 0.3;
+    const Y = (y) => H - y;
+    const out = [];
+    out.push(`<rect x="0" y="${Y(H)}" width="${L}" height="${H}" fill="${cssVar("--floor")}" stroke="${cssVar("--line")}" stroke-width="1" vector-effect="non-scaling-stroke"/>`);
+    const on = g.all.filter((n) => n.wallId === wallId || n.parentId === wallId);
+    for (const o of on.filter((n) => n.type === "door" || n.type === "window")) {
+      const x0 = o.position[0] - o.width / 2, y0 = o.position[1] - o.height / 2;
+      const col = cssVar(o.type === "door" ? "--door" : "--window");
+      out.push(`<rect x="${x0}" y="${Y(y0 + o.height)}" width="${o.width}" height="${o.height}" fill="${col}" fill-opacity=".08" stroke="${col}" stroke-width="2" vector-effect="non-scaling-stroke"><title>${esc(o.name || o.type)}</title></rect>`);
+    }
+    const fx = on.filter((n) => n.type === "item" && n.asset?.category === "fixture");
+    const fxOrder = { backsplash: 0, "toe-kick": 1, countertop: 3, slab: 4, filler: 4 };
+    fx.sort((a, b) => (fxOrder[a.metadata.fixtureKind] ?? 2) - (fxOrder[b.metadata.fixtureKind] ?? 2));
+    const fxStyle = {
+      backsplash: [cssVar("--window"), 0.12, "none"], "toe-kick": ["#1f2228", 0.9, "none"], countertop: [cssVar("--counter"), 1, "none"],
+      slab: [cssVar("--panel"), 1, cssVar("--muted")], filler: [cssVar("--panel"), 1, cssVar("--muted")],
+    };
+    const drawFx = (n) => {
+      const [w, t] = n.asset.dimensions, [x, y] = n.position;
+      const [fill, op, stroke] = fxStyle[n.metadata.fixtureKind] || [cssVar("--muted"), 0.5, "none"];
+      return `<rect x="${x - w / 2}" y="${Y(y + t / 2)}" width="${w}" height="${t}" fill="${fill}" fill-opacity="${op}" stroke="${stroke}" stroke-width=".8" vector-effect="non-scaling-stroke"><title>${esc(n.metadata.fixtureKind)} ${(w * 1000).toFixed(0)} mm</title></rect>`;
+    };
+    for (const n of fx.filter((n) => n.metadata.fixtureKind === "backsplash")) out.push(drawFx(n));
+    const cabs = on.filter((n) => n.type === "item" && n.asset?.category === "kitchen");
+    for (const n of cabs) {
+      const [w, h] = n.asset.dimensions, [x, y] = n.position, lvl = n.placement?.level || "base", cat = n.metadata?.category || "";
+      const col = tierColor(lvl, cat);
+      out.push(`<rect x="${x - w / 2}" y="${Y(y + h)}" width="${w}" height="${h}" fill="${col}" fill-opacity=".22" stroke="${col}" stroke-width="1.5" vector-effect="non-scaling-stroke"><title>${esc(cat)} ${n.metadata?.width ?? ""} · opens ${esc(n.metadata?.openingDirection || "-")}\n${esc(n.name)}</title></rect>`);
+      if (w >= 0.28) {
+        const fs = Math.min(0.085, w / 6.5);
+        out.push(`<text x="${x}" y="${Y(y + h) + fs * 1.6}" font-size="${fs}" text-anchor="middle" fill="${cssVar("--text")}" font-family="system-ui,sans-serif" font-weight="600">${esc(short(cat))}</text>`);
+        out.push(`<text x="${x}" y="${Y(y + h) + fs * 2.9}" font-size="${fs * 0.85}" text-anchor="middle" fill="${cssVar("--muted")}" font-family="system-ui,sans-serif">${n.metadata?.width ?? ""}${n.metadata?.openingDirection && /Left|Right/.test(n.metadata.openingDirection) ? " · " + n.metadata.openingDirection[0] : ""}</text>`);
+      }
+    }
+    for (const n of fx.filter((n) => n.metadata.fixtureKind !== "backsplash")) out.push(drawFx(n));
+    for (const ch of on.filter((n) => n.type === "item" && /chimney/i.test(n.name))) {
+      const [w, h] = ch.asset.dimensions, [x, y] = ch.position;
+      out.push(`<path d="M ${x - w / 2} ${Y(y)} L ${x + w / 2} ${Y(y)} L ${x + 0.14} ${Y(y + h)} L ${x - 0.14} ${Y(y + h)} Z" fill="${cssVar("--muted")}" fill-opacity=".35" stroke="${cssVar("--text")}" stroke-width="1" vector-effect="non-scaling-stroke"><title>Chimney90 (APC02)</title></path>`);
+    }
+    out.push(`<line x1="${-padX}" y1="${Y(0)}" x2="${L + padX}" y2="${Y(0)}" stroke="${cssVar("--wall-line")}" stroke-width="2" vector-effect="non-scaling-stroke"/>`);
+    out.push(`<text x="0" y="${Y(H) - 0.08}" font-size="0.11" fill="${cssVar("--muted")}" font-family="system-ui,sans-serif">${esc(f.w.name || wallId)} · ${(L * 1000).toFixed(0)} mm · start ←</text>`);
+    out.push(`<text x="${L}" y="${Y(H) - 0.08}" font-size="0.11" text-anchor="end" fill="${cssVar("--muted")}" font-family="system-ui,sans-serif">→ end</text>`);
+    return `<svg viewBox="${-padX} ${-padY} ${L + 2 * padX} ${H + padY + 0.15}" role="img" aria-label="Elevation of ${esc(f.w.name || wallId)}">${out.join("")}</svg>`;
+  }
+
+  // ---------- view ----------
+  function render() {
+    const doc = state.output || state.input;
+    const tabs = $("#tabs");
+    if (!doc) { tabs.innerHTML = ""; return; }
+    const g = geom(doc);
+    const walls = g.walls.filter((w) => state.output && g.all.some((n) => n.type === "item" && n.wallId === w.id && n.asset?.category === "kitchen"));
+    const list = [["plan", "Plan"], ...walls.map((w) => [w.id, w.name || w.id])];
+    if (!list.some(([k]) => k === state.tab)) state.tab = "plan";
+    tabs.innerHTML = list.map(([k, label]) => `<button class="tab${k === state.tab ? " active" : ""}" role="tab" aria-selected="${k === state.tab}" data-tab="${esc(k)}">${esc(label)}</button>`).join("");
+    $("#svg-host").innerHTML = state.tab === "plan" ? planSVG(doc) : elevationSVG(doc, state.tab);
+    $("#svg-host").classList.remove("hidden");
+    $("#empty").classList.add("hidden");
+  }
+  $("#tabs").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tab]");
+    if (b) { state.tab = b.dataset.tab; render(); }
+  });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+
+  // ---------- upload ----------
+  function showFileError(msg) { const el = $("#file-err"); el.textContent = msg; el.classList.toggle("show", !!msg); }
+  function acceptDoc(doc, name) {
+    showFileError("");
+    if (!doc || doc.format !== "magickhomes-scene") return showFileError(`Not a magickhomes-scene file (format = ${JSON.stringify(doc && doc.format)}).`);
+    if (doc.version !== 1) return showFileError(`Unsupported version ${JSON.stringify(doc.version)} (expected 1).`);
+    if (!doc.scene || typeof doc.scene.nodes !== "object") return showFileError("scene.nodes is missing.");
+    const g = geom(doc);
+    if (!g.walls.length) return showFileError("The floor plan has no walls.");
+    state.input = doc; state.filename = name; state.output = null; state.report = null; state.jobId = null; state.tab = "plan";
+    const items = g.all.filter((n) => n.type === "item").length;
+    $("#file-name").textContent = name;
+    $("#file-note").textContent = items ? `${items} existing items will be replaced by the generated kitchen.` : "Empty floor plan.";
+    $("#f-walls").textContent = g.walls.length;
+    $("#f-doors").textContent = g.all.filter((n) => n.type === "door").length;
+    $("#f-windows").textContent = g.all.filter((n) => n.type === "window").length;
+    const xs = g.walls.flatMap((w) => [w.start[0], w.end[0]]), zs = g.walls.flatMap((w) => [w.start[1], w.end[1]]);
+    $("#f-size").textContent = `${(Math.max(...xs) - Math.min(...xs)).toFixed(1)}×${(Math.max(...zs) - Math.min(...zs)).toFixed(1)}`;
+    $("#file-meta").classList.add("show");
+    $("#walls-pick").innerHTML = g.walls.map((w) => {
+      const tags = [g.all.some((n) => n.type === "window" && n.wallId === w.id) ? "window" : "", g.all.some((n) => n.type === "door" && n.wallId === w.id) ? "door" : ""].filter(Boolean).join(", ");
+      return `<label><input type="checkbox" value="${esc(w.id)}"> ${esc(w.name || w.id)}${tags ? ` <span class="sub">(${tags})</span>` : ""}</label>`;
+    }).join("");
+    $("#results").classList.add("hidden");
+    $("#downloads").classList.add("hidden");
+    $("#go").disabled = false;
+    $("#go-hint").textContent = "Qwen takes about 2–3 minutes on a laptop CPU; the rules-only designer takes seconds.";
+    render();
+  }
+  function readFile(file) {
+    if (!file) return;
+    if (file.size > 50 * 1024 * 1024) return showFileError("File is larger than 50 MB.");
+    const r = new FileReader();
+    r.onload = () => { try { acceptDoc(JSON.parse(r.result), file.name); } catch (e) { showFileError("Could not parse JSON: " + e.message); } };
+    r.onerror = () => showFileError("Could not read the file.");
+    r.readAsText(file);
+  }
+  const drop = $("#drop"), fileInput = $("#file");
+  drop.addEventListener("click", () => fileInput.click());
+  drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); } });
+  fileInput.addEventListener("change", () => { readFile(fileInput.files[0]); fileInput.value = ""; });
+  ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
+  ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
+  drop.addEventListener("drop", (e) => readFile(e.dataTransfer.files[0]));
+  $("#sample").addEventListener("click", loadSample);
+  async function loadSample() {
+    try { acceptDoc(await api("/api/sample-floorplan"), "sample_floorplan.json"); } catch (e) { showFileError(e.message); }
+  }
+
+  // ---------- generate ----------
+  function prefs() {
+    const walls = [...document.querySelectorAll("#walls-pick input:checked")].map((i) => i.value);
+    const cyl = $("#cyl").value;
+    return {
+      ai_mode: document.querySelector('input[name="ai"]:checked').value,
+      layout: document.querySelector('input[name="layout"]:checked').value,
+      door_style: $("#style").value,
+      include_tall: $("#tall").checked,
+      include_loft: $("#loft").checked,
+      include_cylinder: cyl === "" ? null : cyl === "true",
+      cabinet_walls: walls.length ? walls : null,
+      style_notes: $("#notes").value.trim(),
+    };
+  }
+  function showRunError(msg) { const el = $("#run-err"); el.textContent = msg; el.classList.toggle("show", !!msg); }
+  const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+  const dur = (s) => (s < 60 ? `${Number(s).toFixed(s < 10 ? 1 : 0)} s` : fmt(s));
+
+  async function generate() {
+    if (!state.input) return;
+    showRunError("");
+    $("#go").disabled = true;
+    $("#go").textContent = "Designing…";
+    $("#results").classList.add("hidden");
+    $("#downloads").classList.add("hidden");
+    $("#progress").classList.add("show");
+    $("#p-stage").textContent = "Submitting…";
+    $("#p-steps").innerHTML = "";
+    state.started = Date.now();
+    clearInterval(state.tick);
+    state.tick = setInterval(() => { $("#p-timer").textContent = fmt((Date.now() - state.started) / 1000); }, 500);
+    try {
+      const job = await api("/api/jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ scene: state.input, preferences: prefs(), filename: state.filename }) });
+      state.jobId = job.id;
+      poll();
+    } catch (e) { finish(); showRunError(e.message); }
+  }
+  async function poll() {
+    try {
+      const j = await api(`/api/jobs/${state.jobId}`);
+      $("#p-stage").textContent = j.status === "queued" ? `Queued (${j.queue_position} ahead)` : j.stage;
+      $("#p-steps").innerHTML = j.log.map((s, i) => {
+        const last = i === j.log.length - 1 && j.status === "running";
+        return `<li class="${last ? "current" : "done"}"><span class="mk">${last ? "…" : "✓"}</span><span>${esc(s.msg)}</span><span class="timer" style="margin-left:auto">${fmt(s.t)}</span></li>`;
+      }).join("");
+      if (j.status === "done") return done(j);
+      if (j.status === "error") { finish(); return showRunError(j.error || "Generation failed"); }
+      setTimeout(poll, 1500);
+    } catch (e) { finish(); showRunError(e.message); }
+  }
+  function finish() {
+    clearInterval(state.tick);
+    $("#progress").classList.remove("show");
+    $("#go").disabled = !state.input;
+    $("#go").textContent = "Generate kitchen";
+  }
+  async function done(job) {
+    try {
+      state.output = await api(`/api/jobs/${job.id}/scene`);
+      state.report = job.report;
+      $("#dl-scene").href = `/api/jobs/${job.id}/scene?download=1`;
+      $("#dl-report").href = `/api/jobs/${job.id}/report?download=1`;
+      $("#downloads").classList.remove("hidden");
+      showReport(job);
+      const wantTab = new URLSearchParams(location.search).get("tab");
+      if (wantTab) state.tab = wantTab;
+      history.replaceState(null, "", `?job=${encodeURIComponent(job.id)}`);
+      render();
+    } catch (e) { showRunError(e.message); }
+    finish();
+  }
+
+  function showReport(job) {
+    const r = job.report, ai = r.ai || {}, lay = r.layout || {};
+    const isAI = ai.mode === "ollama";
+    $("#ai-badge").innerHTML = isAI
+      ? `<span class="badge ai">Designed by Qwen · ${esc(ai.model)}</span> <span class="sub">${esc(ai.seconds)} s · ${esc(ai.eval_count ?? "?")} tokens</span>`
+      : `<span class="badge rules">Rule-based designer</span> <span class="sub">${esc(ai.fallback_reason ? "Qwen unavailable: " + ai.fallback_reason : "Rules only selected")}</span>`;
+    const raw = ai.raw || {};
+    let notes = "";
+    if (isAI && (raw.room_reading || raw.design_plan)) {
+      if (raw.room_reading) notes += `<div class="quote"><small>Qwen's reading of the room</small>${esc(raw.room_reading)}</div>`;
+      if (raw.design_plan) notes += `<div class="quote"><small>Qwen's plan</small>${esc(raw.design_plan)}</div>`;
+    } else if (r.proposal?.notes) {
+      notes += `<div class="quote"><small>Design intent</small>${esc(r.proposal.notes)}</div>`;
+    }
+    $("#ai-notes").innerHTML = notes;
+    const counts = r.nodes_added || {};
+    const fixtures = Object.entries(counts).filter(([k]) => k.startsWith("fixture")).reduce((a, [, v]) => a + v, 0);
+    $("#stats").innerHTML = [
+      [counts.kitchen || 0, "cabinets"], [counts.appliance || 0, "appliances"], [fixtures, "fixtures"], [dur(job.elapsed_s || r.seconds || 0), "total time"],
+    ].map(([v, l]) => `<div class="stat"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
+
+    const checks = [];
+    const issues = r.validation_issues || [];
+    checks.push(issues.length
+      ? `<li class="err">${issues.length} validation issue(s): ${issues.map(esc).join("; ")}</li>`
+      : `<li class="ok">All placement checks passed: no overlaps, door/window/chimney clearances kept, corners use corner cabinets only.</li>`);
+    for (const w of lay.warnings || []) checks.push(`<li class="warn">${esc(w)}</li>`);
+    for (const d of lay.decisions || []) checks.push(`<li>${esc(d)}</li>`);
+    for (const c of lay.corners || []) {
+      const units = [c.base_unit, c.wall_unit, c.loft_unit].filter(Boolean);
+      const open = c.open_tiers?.length ? ` · open tiers: ${c.open_tiers.join(", ")}` : "";
+      checks.push(`<li>Corner ${esc(wallName(c.walls[0]))}/${esc(wallName(c.walls[1]))}: ${units.length ? units.map((u) => `<code>${esc(u)}</code>`).join(", ") : "left open"}${esc(open)}</li>`);
+    }
+    $("#checks").innerHTML = checks.join("");
+
+    const rows = [];
+    const tierOrder = { base: 0, tall: 1, wall: 2, loft: 3 };
+    for (const [wid, items] of Object.entries(lay.placements || {})) {
+      const sorted = [...items].sort((a, b) => (tierOrder[a.tier] - tierOrder[b.tier]) || a.start_mm - b.start_mm);
+      for (const it of sorted) {
+        rows.push(`<tr><td>${esc(wallName(wid))}</td><td><span class="tier" style="background:${tierColor(it.tier, it.category)}">${esc(it.tier)}</span></td><td>${esc(it.category)}</td><td class="num">${it.width}</td><td class="num">${Math.round(it.start_mm)}–${Math.round(it.end_mm)}</td><td>${esc(it.opening || "–")}</td><td class="mono">${esc(it.aid)}</td></tr>`);
+      }
+    }
+    $("#schedule").innerHTML = `<thead><tr><th>Wall</th><th>Tier</th><th>Category</th><th class="num">Width</th><th class="num">Position (mm)</th><th>Opens</th><th>AID</th></tr></thead><tbody>${rows.join("")}</tbody>`;
+    $("#results").classList.remove("hidden");
+  }
+  function wallName(id) {
+    const doc = state.output || state.input;
+    return (doc && doc.scene.nodes[id] && doc.scene.nodes[id].name) || id;
+  }
+
+  $("#go").addEventListener("click", generate);
+
+  // ---------- boot ----------
+  refreshHealth();
+  loadStyles();
+  const qs = new URLSearchParams(location.search);
+  if (qs.get("ai")) { const el = document.querySelector(`input[name="ai"][value="${CSS.escape(qs.get("ai"))}"]`); if (el) el.checked = true; }
+  if (qs.get("layout")) { const el = document.querySelector(`input[name="layout"][value="${CSS.escape(qs.get("layout"))}"]`); if (el) el.checked = true; }
+  if (qs.get("job")) {
+    // Re-open an existing job (works while the server keeps it in memory).
+    state.jobId = qs.get("job");
+    state.started = Date.now();
+    $("#progress").classList.add("show");
+    $("#go").disabled = true;
+    state.tick = setInterval(() => { $("#p-timer").textContent = fmt((Date.now() - state.started) / 1000); }, 500);
+    poll();
+  } else if (qs.has("sample")) loadSample().then(() => { if (qs.has("run")) generate(); });
+})();
+</script>
+</body>
+</html>

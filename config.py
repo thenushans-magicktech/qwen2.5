@@ -1,0 +1,180 @@
+"""Central configuration for the MagickHome AI kitchen layout generator.
+
+All distances in this module are millimetres unless the name ends in ``_M``
+(metres). Scene JSON positions are always metres; the solver works in mm.
+Every value can be overridden with an environment variable of the same name
+where noted.
+"""
+from __future__ import annotations
+
+import os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+
+# ---------------------------------------------------------------------------
+# Local LLM (Ollama). qwen2.5-coder:3b runs comfortably on a 16 GB RAM CPU-only
+# laptop (~2 GB weights, ~3 GB resident with an 8k context).
+# ---------------------------------------------------------------------------
+OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://127.0.0.1:11434")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:3b")
+OLLAMA_AUTO_PULL = os.getenv("OLLAMA_AUTO_PULL", "1") not in ("0", "false", "False")
+OLLAMA_TIMEOUT_S = float(os.getenv("OLLAMA_TIMEOUT_S", "900"))  # CPU inference is slow
+OLLAMA_KEEP_ALIVE = os.getenv("OLLAMA_KEEP_ALIVE", "10m")
+OLLAMA_OPTIONS = {
+    "temperature": 0,
+    "seed": 42,
+    "num_ctx": 8192,
+    "num_predict": 1500,
+}
+AI_MAX_RETRIES = 1
+AI_SHORTLIST_MIN = 35
+AI_SHORTLIST_MAX = 45
+
+# ---------------------------------------------------------------------------
+# Catalogue sources
+# ---------------------------------------------------------------------------
+# MagickHome Assets API (rule-engine cabinet list): POST ?page=N&limit=M ->
+# {"success", "data": {"items": [...], "total", "page", "limit"}}.
+# Set MAGICKHOME_ASSETS_API_URL="" to force the offline cache / xlsx.
+ASSETS_API_URL = os.getenv(
+    "MAGICKHOME_ASSETS_API_URL",
+    "https://dev-ai-design.magicktech.com/assetcatalog/api/v1/ruleengine/cabinets",
+)
+ASSETS_API_METHOD = os.getenv("MAGICKHOME_ASSETS_API_METHOD", "POST").upper()
+ASSETS_API_PAGE_SIZE = int(os.getenv("MAGICKHOME_ASSETS_API_PAGE_SIZE", "1000"))
+ASSETS_API_MAX_PAGES = 50
+ASSETS_API_TOKEN = os.getenv("MAGICKHOME_ASSETS_API_TOKEN", "")
+ASSETS_API_TIMEOUT_S = float(os.getenv("MAGICKHOME_ASSETS_API_TIMEOUT_S", "20"))
+
+CATALOG_XLSX_PATH = Path(os.getenv("CATALOG_XLSX_PATH", BASE_DIR / "Finalised_Asset_Catalogue_Sheet.xlsx"))
+CATALOG_SHEETS = (
+    "Kitchen Combinations - Slab",
+    "Kitchen Combinations - Shaker 1",
+    "Kitchen Combinations - Common",
+)
+CATALOG_AID_COLUMN = "AID Combined  Asset ID"  # note: two spaces in the production sheet
+
+MATERIAL_PRESETS_PATH = BASE_DIR / "data" / "material_presets.json"
+CATALOG_CACHE_PATH = BASE_DIR / "data" / "catalog_api_cache.json"  # last good API fetch (offline fallback)
+
+S3_BASE = "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com"
+CABINET_MODEL_URL = S3_BASE + "/catalogue-models/{aid}.glb"
+CABINET_MODEL_KEY = "catalogue-models/{aid}.glb"
+CABINET_THUMBNAIL_URL = S3_BASE + "/catalogue-thumbnail/{aid}.png"
+CABINET_PLACEHOLDER_THUMBNAIL = S3_BASE + "/catalogue-thumbnail/cabinet_dummythumbnail.png"
+
+# ---------------------------------------------------------------------------
+# Appliances (child of host cabinet for sink/hob, wall-mounted for chimney)
+# ---------------------------------------------------------------------------
+APPLIANCES = {
+    "sink": {
+        "aid": "APS02",
+        "name": "Sink90",
+        "category": "Sink",
+        "src": S3_BASE + "/appliance-models/APS02.glb",
+        "thumbnail": S3_BASE + "/appliance-thumbnail/APS02.jpg",
+        "dims_mm": (780, 450, 450),  # width, height, depth
+        "local_position": (0.0, 0.55, 0.0),  # relative to host cabinet
+        "level": "base",
+        "cutout_inset_mm": 20,  # countertop hole = appliance footprint minus inset per side
+    },
+    "hob": {
+        "aid": "APH02",
+        "name": "Hob90",
+        "category": "Hob",
+        "src": S3_BASE + "/appliance-models/APH02.glb",
+        "thumbnail": S3_BASE + "/appliance-thumbnail/APH02.jpg",
+        "dims_mm": (750, 70, 520),
+        "local_position": (0.0, 0.74, 0.0),
+        "level": "base",
+        "cutout_inset_mm": 20,
+    },
+    "chimney": {
+        "aid": "APC02",
+        "name": "Chimney90",
+        "category": "Chimney",
+        "src": S3_BASE + "/appliance-models/APC02.glb",
+        "thumbnail": S3_BASE + "/appliance-thumbnail/APC02.jpg",
+        "dims_mm": (900, 460, 540),
+        "wall_position_yz": (1.44, 0.32),  # y, z on the wall; x = hob centre
+        "level": "wall",
+    },
+}
+
+# ---------------------------------------------------------------------------
+# Elevations / depths (metres, wall-local frame: x along wall, y up, z into room)
+# ---------------------------------------------------------------------------
+CABINET_ROTATION = [0, 3.141592653589793, 0]
+FIXTURE_ROTATION = [0, 0, 0]
+
+POS_Y_M = {"base": 0.1, "base_floor": 0.0, "tall": 0.1, "wall": 1.44, "loft": 2.058}
+POS_Z_M = {"base": 0.33, "tall": 0.33, "wall": 0.215, "wall_corner": 0.375, "loft": 0.215, "loft_deep": 0.33}
+
+# Accepted catalogue heights per tier (mm). Base 800 = floor-standing cylinder units.
+TIER_HEIGHTS_MM = {"base": (700, 800), "wall": (600,), "tall": (1940,), "loft": (600,)}
+TIER_DEPTHS_MM = {"base": (560,), "wall": (330, 650), "tall": (560,), "loft": (330, 560, 650)}
+FLOOR_STANDING_HEIGHT_MM = 800  # base units this tall sit at y=0 (no plinth)
+
+LOFT_TOP_M = POS_Y_M["loft"] + 0.6  # 2.658
+DEFAULT_WALL_THICKNESS_M = 0.1
+DEFAULT_WALL_HEIGHT_M = 2.5
+
+# ---------------------------------------------------------------------------
+# Clearances & ergonomic thresholds (mm)
+# ---------------------------------------------------------------------------
+DOOR_CLEARANCE_MM = 100          # margin kept clear either side of a door frame
+DOOR_SWING_CHECK = True          # also keep hinged-door swing arcs clear on adjacent walls
+WINDOW_CLEARANCE_MM = 0          # extra margin beside windows for wall/tall/loft tiers
+CORNER_DEPTH_MM = 560            # base-cabinet depth reserved on the perpendicular wall
+WALL_CORNER_DEPTH_MM = 650       # Wall L Corner depth reserved on the perpendicular wall
+WALL_UNIT_DEPTH_MM = 330
+CHIMNEY_WIDTH_MM = 900
+CHIMNEY_SIDE_CLEARANCE_MM = 50   # free wall either side of the chimney hood
+MIN_LANDING_MM = 300             # counter beside hob / sink
+MIN_SINK_HOB_GAP_MM = 600        # edge-to-edge when sink and hob share a wall
+MIN_UNIT_WIDTH_MM = 300          # narrowest storage cabinet used for filling
+MAX_FILLER_MM = 150              # widest acceptable filler strip before a hard failure
+MIN_CABINET_WALL_MM = 1200       # usable base length for a wall to carry cabinets
+MIN_AISLE_MM = 1200              # clear floor between facing runs (U / galley)
+GRID_MM = 50                     # catalogue width module
+
+# Opening-direction convention: catalogue "Left" = hinges on the viewer's left
+# (viewer standing in the room facing the wall; wall start is on their left).
+HINGE_SIDE_FOR_OPENING = {"Left": "start", "Right": "end"}
+
+# ---------------------------------------------------------------------------
+# Fixtures (procedural geometry, metres) - matched to production scenes
+# ---------------------------------------------------------------------------
+PANEL_T_M = 0.018
+TOEKICK = {"y": 0.05, "z": 0.581, "thickness": 0.1, "depth": 0.018, "side_depth": 0.522, "side_z": 0.311}
+COUNTERTOP = {"y": 0.82, "z": 0.345, "thickness": 0.04, "depth": 0.59, "edge": {"type": "rounded", "radiusMm": 10}}
+BACKSPLASH = {"y": 1.14, "upper_y": 1.74, "z": 0.055, "thickness": 0.6, "depth": 0.01}
+BASE_SLAB = {"y": 0.45, "z": 0.339, "thickness": 0.7, "depth": 0.578}
+WALL_SLAB = {"y": 1.74, "z": 0.224, "thickness": 0.6, "depth": 0.348}
+BASE_FILLER = {"y": 0.45, "z": 0.619, "thickness": 0.7}
+WALL_FILLER = {"y": 1.74, "z": 0.389, "thickness": 0.6, "bottom_y": 1.449, "bottom_z": 0.215, "bottom_depth": 0.33}
+TALL_FILLER = {"y": 1.07, "z": 0.619, "thickness": 1.94, "front_shift": 0.56}
+TALL_SIDE_SLAB_COUNTER = {"y": 1.14, "z": 0.344, "thickness": 0.6, "depth": 0.568}
+TALL_SIDE_SLAB_WALL = {"y": 1.74, "z": 0.513, "thickness": 0.6, "depth": 0.23}
+TALL_SIDE_SLAB_FULL = {"y": 1.07, "z": 0.339, "thickness": 1.94, "depth": 0.578}
+LOFT_BOTTOM = {"y": 2.049, "thickness": 0.018}
+LOFT_SIDE = {"y": 2.358, "thickness": 0.6}
+FIXTURE_COLORS = {
+    "toe-kick": "#2a2a2a",
+    "countertop": "#e8e8e8",
+    "backsplash": "#e8e8e8",
+    "slab": "#e8e8e8",
+    "filler": "#e8e8e8",
+    "floor": "#e8e8e8",
+}
+
+DESIGN_SOURCE = "ai-kitchen-v1"
+DESIGN_SOURCE_FIXTURE = DESIGN_SOURCE + "-fixture"
+DESIGN_SOURCE_APPLIANCE = DESIGN_SOURCE + "-appliance"
+
+# ---------------------------------------------------------------------------
+# Defaults for customer preferences
+# ---------------------------------------------------------------------------
+DEFAULT_DOOR_STYLE = "Slab (Plain)"
+DEFAULT_HANDLE_TYPE = "External Handle"

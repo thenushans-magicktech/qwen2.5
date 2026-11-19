@@ -1,0 +1,213 @@
+{
+  "ai": {
+    "shortlist_size": 41,
+    "mode": "fallback"
+  },
+  "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+      "wall_1oy5ecjq6k11pfoo",
+      "wall_56i56ymve0xf69fm"
+    ],
+    "sink": {
+      "wall_id": "wall_56i56ymve0xf69fm",
+      "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+      "center_mm": null
+    },
+    "hob": {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTBABHU900560700DTDASLPUEHNS",
+      "center_mm": null
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+      {
+        "wall_id": "wall_56i56ymve0xf69fm",
+        "aid": "MTTATU6005601940SSSSLLEH4S"
+      }
+    ],
+    "base_prefs": {
+      "wall_1oy5ecjq6k11pfoo": [
+        "MTBABU600560700DFDSLPUEHNS"
+      ],
+      "wall_56i56ymve0xf69fm": [
+        "MTBABGT600560700DGTEDSLPUEHNS"
+      ]
+    },
+    "wall_prefs": {},
+    "notes": "L-shaped kitchen: sink on Wall 2 under the window, hob on Wall 1, tall storage on Wall 2.",
+    "source": "fallback"
+  },
+  "layout": {
+    "cabinet_walls": [
+      "wall_1oy5ecjq6k11pfoo",
+      "wall_56i56ymve0xf69fm"
+    ],
+    "placements": {
+      "wall_1oy5ecjq6k11pfoo": [
+        {
+          "aid": "MTBABSP300560700DSPSLPUEHNS",
+          "category": "Base Spice Pull Out",
+          "tier": "base",
+          "role": "spice",
+          "width": 300,
+          "start_mm": 1200.0,
+          "end_mm": 1500.0,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTBABHU900560700DTDASLPUEHNS",
+          "category": "Base Hob Unit",
+          "tier": "base",
+          "role": "hob",
+          "width": 900,
+          "start_mm": 1500.0,
+          "end_mm": 2400.0,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTBABCU600560800SCSSSLREHNS",
+          "category": "Base Cylinder Unit",
+          "tier": "base",
+          "role": "cylinder",
+          "width": 600,
+          "start_mm": 2400.0,
+          "end_mm": 3000.0,
+          "opening": "Right"
+        },
+        {
+          "aid": "MTBCBCL1050560700SBCLSLLEH1S",
+          "category": "Blind corner unit – L",
+          "tier": "base",
+          "role": "corner",
+          "width": 1050,
+          "start_mm": 3000.0,
+          "end_mm": 4050.0,
+          "opening": "Left"
+        },
+        {
+          "aid": "MTWAWU950330600SDSSLBOEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 950,
+          "start_mm": 2450.0,
+          "end_mm": 3400.0,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTWCWLC650650600SLCSLBOEH1S",
+          "category": "Wall L Corner",
+          "tier": "wall",
+          "role": "wall_corner",
+          "width": 650,
+          "start_mm": 3400.0,
+          "end_mm": 4050.0,
+          "opening": "Both"
+        }
+      ],
+      "wall_56i56ymve0xf69fm": [
+        {
+          "aid": "MTBABU750560700SDSSLBOEH1S",
+          "category": "Base Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 750,
+          "start_mm": 641.2,
+          "end_mm": 1391.2,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+          "category": "Base Sink Unit",
+          "tier": "base",
+          "role": "sink",
+          "width": 1200,
+          "start_mm": 1391.2,
+          "end_mm": 2591.2,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTBABU850560700SDSSLBOEH1S",
+          "category": "Base Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 850,
+          "start_mm": 2591.2,
+          "end_mm": 3441.2,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTTATU6005601940SSSSLREH4S",
+          "category": "Tall Unit",
+          "tier": "tall",
+          "role": "tall",
+          "width": 600,
+          "start_mm": 3441.2,
+          "end_mm": 4041.2,
+          "opening": "Right"
+        },
+        {
+          "aid": "MTWAWU500330600SSSSLLEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 500,
+          "start_mm": 700.0,
+          "end_mm": 1200.0,
+          "opening": "Left"
+        },
+        {
+          "aid": "MTWAWU700330600SDSSLBOEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 700,
+          "start_mm": 2741.2,
+          "end_mm": 3441.2,
+          "opening": "Both"
+        }
+      ]
+    },
+    "chimney": {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "center_mm": 1950.0
+    },
+    "corners": [
+      {
+        "walls": [
+          "wall_1oy5ecjq6k11pfoo",
+          "wall_56i56ymve0xf69fm"
+        ],
+        "base_unit": "MTBCBCL1050560700SBCLSLLEH1S",
+        "wall_unit": "MTWCWLC650650600SLCSLBOEH1S",
+        "loft_unit": null,
+        "open_tiers": []
+      }
+    ],
+    "loft_walls": [],
+    "score": 27.51,
+    "decisions": [
+      "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005601940SSSSLREH4S"
+    ],
+    "warnings": []
+  },
+  "nodes_added": {
+    "kitchen": 12,
+    "appliance": 3,
+    "fixture:toe-kick": 3,
+    "fixture:slab": 6,
+    "fixture:countertop": 2,
+    "fixture:backsplash": 5,
+    "fixture:filler": 2,
+    "fixture:floor": 1
+  },
+  "validation_issues": [],
+  "catalog": {
+    "source": "api",
+    "filtered_skus": 484,
+    "door_style": "Slab (Plain)"
+  },
+  "seconds": 0.21
+}

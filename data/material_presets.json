@@ -1,0 +1,3988 @@
+{
+ "sourceScenes": [
+  "magickhomes-scene_2026-11-18_10-38-22.json",
+  "magickhomes-scene_2026-11-18_10-24-05.json"
+ ],
+ "shutterTextures": {
+  "base": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce7d",
+    "aid": "MHS224",
+    "code": "64",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Cadet Blue",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#3B5A6E",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS224.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-09-03T11:44:45.659Z",
+    "SKU_ID": "SPHP015"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z",
+    "SKU_ID": "SPHP015"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z",
+    "SKU_ID": "SPHP015"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z",
+    "SKU_ID": "SPHP015"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z",
+    "SKU_ID": "SPHP015"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z",
+    "SKU_ID": "SPHP015"
+   }
+  ],
+  "tall": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce7d",
+    "aid": "MHS224",
+    "code": "64",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Cadet Blue",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#3B5A6E",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS224.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-09-03T11:44:45.659Z",
+    "SKU_ID": "SPHP235"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z",
+    "SKU_ID": "SPHP235"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z",
+    "SKU_ID": "SPHP235"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z",
+    "SKU_ID": "SPHP235"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z",
+    "SKU_ID": "SPHP235"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z",
+    "SKU_ID": "SPHP235"
+   }
+  ],
+  "wall": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce71",
+    "aid": "MHS212",
+    "code": "R50157",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Stromma White",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#F2F2F2",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS212.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-10-27T13:15:56.385Z",
+    "SKU_ID": "SPHP111"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z",
+    "SKU_ID": "SPHP111"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z",
+    "SKU_ID": "SPHP111"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z",
+    "SKU_ID": "SPHP111"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z",
+    "SKU_ID": "SPHP111"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z",
+    "SKU_ID": "SPHP111"
+   }
+  ],
+  "loft": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce71",
+    "aid": "MHS212",
+    "code": "R50157",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Stromma White",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#F2F2F2",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS212.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-10-27T13:15:56.385Z",
+    "SKU_ID": "SPHP129"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z",
+    "SKU_ID": "SPHP129"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z",
+    "SKU_ID": "SPHP129"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z",
+    "SKU_ID": "SPHP129"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z",
+    "SKU_ID": "SPHP129"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z",
+    "SKU_ID": "SPHP129"
+   }
+  ]
+ },
+ "fixtureTextures": {
+  "countertop": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdac",
+    "aid": "MHC015",
+    "code": "17",
+    "type": "Countertop",
+    "brand": "Nil",
+    "profile": [
+     "Nil"
+    ],
+    "category": "Quartz",
+    "family": "Unknown",
+    "shutter": "Unknown",
+    "name": "Ceaserstone Empiria White",
+    "width": 3200,
+    "height": 1600,
+    "isGroup": false,
+    "groupNormalToken": "MHCC009FM017S011_groupnormal",
+    "groupAORMToken": "MHCC009FM017S011_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 1219,
+    "textureHeight": 1219,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "materialName": "CountertopM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHC015.jpg",
+    "thumbnailKey": "thumbnail-texture/MHC015.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHC015_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHC015_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHC015_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHC015_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHC015_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHC015_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.211Z",
+    "updatedAt": "2026-10-27T13:15:56.221Z",
+    "metalic": "0",
+    "roughness": "0.15"
+   }
+  ],
+  "backsplash": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdc3",
+    "aid": "MHB038",
+    "code": "40",
+    "type": "Backsplash",
+    "brand": "Nil",
+    "profile": [
+     "Nil"
+    ],
+    "category": "Tile",
+    "family": "Unknown",
+    "shutter": "Unknown",
+    "name": "Coimbatore_Backsplash_Parallel",
+    "width": 300,
+    "height": 600,
+    "isGroup": false,
+    "groupNormalToken": "MHBC010FM017S011_groupnormal",
+    "groupAORMToken": "MHBC010FM017S011_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 609,
+    "textureHeight": 609,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "Nil",
+    "useTexture": true,
+    "metalic": "Nil",
+    "roughness": "Nil",
+    "materialName": "BacksplashM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHB038.jpg",
+    "thumbnailKey": "thumbnail-texture/MHB038.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHB038_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB038_baseColor_1K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/1K/MHB038_normalOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB038_normalOverride_1K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/1K/MHB038_aormOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB038_aormOverride_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHB038_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB038_baseColor_2K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/2K/MHB038_normalOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB038_normalOverride_2K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/2K/MHB038_aormOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB038_aormOverride_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHB038_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB038_baseColor_512.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/512/MHB038_normalOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB038_normalOverride_512.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/512/MHB038_aormOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB038_aormOverride_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.239Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdb2",
+    "aid": "MHB021",
+    "code": "23",
+    "type": "Backsplash",
+    "brand": "Nil",
+    "profile": [
+     "Nil"
+    ],
+    "category": "Tile",
+    "family": "Ceramic",
+    "shutter": "Matte",
+    "name": "Colliseum_White",
+    "width": 300,
+    "height": 600,
+    "isGroup": false,
+    "groupNormalToken": "MHBC010FM001S006_groupnormal",
+    "groupAORMToken": "MHBC010FM001S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 609,
+    "textureHeight": 609,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "Nil",
+    "useTexture": true,
+    "metalic": "Nil",
+    "roughness": "Nil",
+    "materialName": "BacksplashM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHB021.jpg",
+    "thumbnailKey": "thumbnail-texture/MHB021.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHB021_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_baseColor_1K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/1K/MHB021_normalOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_normalOverride_1K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/1K/MHB021_aormOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_aormOverride_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHB021_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_baseColor_2K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/2K/MHB021_normalOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_normalOverride_2K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/2K/MHB021_aormOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_aormOverride_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHB021_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_baseColor_512.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/512/MHB021_normalOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_normalOverride_512.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/512/MHB021_aormOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_aormOverride_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.211Z",
+    "updatedAt": "2026-10-27T13:15:56.227Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdb2",
+    "aid": "MHB021",
+    "code": "23",
+    "type": "Backsplash",
+    "brand": "Nil",
+    "profile": [
+     "Nil"
+    ],
+    "category": "Tile",
+    "family": "Ceramic",
+    "shutter": "Matte",
+    "name": "Colliseum_White",
+    "width": 300,
+    "height": 600,
+    "isGroup": false,
+    "groupNormalToken": "MHBC010FM001S006_groupnormal",
+    "groupAORMToken": "MHBC010FM001S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 609,
+    "textureHeight": 609,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "Nil",
+    "useTexture": true,
+    "metalic": "Nil",
+    "roughness": "Nil",
+    "materialName": "BacksplashM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHB021.jpg",
+    "thumbnailKey": "thumbnail-texture/MHB021.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHB021_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_baseColor_1K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/1K/MHB021_normalOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_normalOverride_1K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/1K/MHB021_aormOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_aormOverride_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHB021_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_baseColor_2K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/2K/MHB021_normalOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_normalOverride_2K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/2K/MHB021_aormOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_aormOverride_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHB021_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_baseColor_512.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/512/MHB021_normalOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_normalOverride_512.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/512/MHB021_aormOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_aormOverride_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.211Z",
+    "updatedAt": "2026-10-27T13:15:56.227Z"
+   }
+  ],
+  "slab:base": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce7d",
+    "aid": "MHS224",
+    "code": "64",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Cadet Blue",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#3B5A6E",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS224.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-09-03T11:44:45.659Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z"
+   }
+  ],
+  "filler:wall": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce71",
+    "aid": "MHS212",
+    "code": "R50157",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Stromma White",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#F2F2F2",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS212.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-10-27T13:15:56.385Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z"
+   }
+  ],
+  "slab:wall": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce71",
+    "aid": "MHS212",
+    "code": "R50157",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Stromma White",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#F2F2F2",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS212.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-10-27T13:15:56.385Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z"
+   }
+  ],
+  "filler:base": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce7d",
+    "aid": "MHS224",
+    "code": "64",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Cadet Blue",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#3B5A6E",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS224.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-09-03T11:44:45.659Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z"
+   }
+  ],
+  "filler:tall": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce7d",
+    "aid": "MHS224",
+    "code": "64",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Cadet Blue",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#3B5A6E",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS224.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-09-03T11:44:45.659Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z"
+   }
+  ],
+  "slab:tall": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce7d",
+    "aid": "MHS224",
+    "code": "64",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Cadet Blue",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#3B5A6E",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS224.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-09-03T11:44:45.659Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z"
+   }
+  ],
+  "floor": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdcb",
+    "aid": "MHF046",
+    "code": "48",
+    "type": "Floor",
+    "brand": "Nil",
+    "profile": [
+     "Nil"
+    ],
+    "category": "Tile",
+    "family": "Unknown",
+    "shutter": "HD Polished",
+    "name": "Davao Gris",
+    "width": 1200,
+    "height": 1800,
+    "isGroup": false,
+    "groupNormalToken": "MHFC010FM017S004_groupnormal",
+    "groupAORMToken": "MHFC010FM017S004_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 1219,
+    "textureHeight": 1219,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "Nil",
+    "useTexture": true,
+    "metalic": "Nil",
+    "roughness": "Nil",
+    "materialName": "FloorM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHF046.jpg",
+    "thumbnailKey": "thumbnail-texture/MHF046.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHF046_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHF046_baseColor_1K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/1K/MHF046_normalOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHF046_normalOverride_1K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/1K/MHF046_aormOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHF046_aormOverride_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHF046_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHF046_baseColor_2K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/2K/MHF046_normalOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHF046_normalOverride_2K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/2K/MHF046_aormOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHF046_aormOverride_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHF046_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHF046_baseColor_512.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/512/MHF046_normalOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHF046_normalOverride_512.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/512/MHF046_aormOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHF046_aormOverride_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.246Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdc6",
+    "aid": "MHF041",
+    "code": "43",
+    "type": "Floor",
+    "brand": "Nil",
+    "profile": [
+     "Nil"
+    ],
+    "category": "Tile",
+    "family": "Glazed Vitrified",
+    "shutter": "Matte",
+    "name": "Perth Taupe",
+    "width": 1200,
+    "height": 2400,
+    "isGroup": false,
+    "groupNormalToken": "MHFC010FM006S006_groupnormal",
+    "groupAORMToken": "MHFC010FM006S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 1219,
+    "textureHeight": 1219,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "Nil",
+    "useTexture": true,
+    "metalic": "Nil",
+    "roughness": "Nil",
+    "materialName": "FloorM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHF041.jpg",
+    "thumbnailKey": "thumbnail-texture/MHF041.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHF041_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHF041_baseColor_1K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/1K/MHF041_normalOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHF041_normalOverride_1K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/1K/MHF041_aormOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHF041_aormOverride_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHF041_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHF041_baseColor_2K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/2K/MHF041_normalOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHF041_normalOverride_2K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/2K/MHF041_aormOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHF041_aormOverride_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHF041_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHF041_baseColor_512.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/512/MHF041_normalOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHF041_normalOverride_512.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/512/MHF041_aormOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHF041_aormOverride_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.242Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdc6",
+    "aid": "MHF041",
+    "code": "43",
+    "type": "Floor",
+    "brand": "Nil",
+    "profile": [
+     "Nil"
+    ],
+    "category": "Tile",
+    "family": "Glazed Vitrified",
+    "shutter": "Matte",
+    "name": "Perth Taupe",
+    "width": 1200,
+    "height": 2400,
+    "isGroup": false,
+    "groupNormalToken": "MHFC010FM006S006_groupnormal",
+    "groupAORMToken": "MHFC010FM006S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 1219,
+    "textureHeight": 1219,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "Nil",
+    "useTexture": true,
+    "metalic": "Nil",
+    "roughness": "Nil",
+    "materialName": "FloorM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHF041.jpg",
+    "thumbnailKey": "thumbnail-texture/MHF041.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHF041_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHF041_baseColor_1K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/1K/MHF041_normalOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHF041_normalOverride_1K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/1K/MHF041_aormOverride_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHF041_aormOverride_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHF041_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHF041_baseColor_2K.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/2K/MHF041_normalOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHF041_normalOverride_2K.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/2K/MHF041_aormOverride_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHF041_aormOverride_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHF041_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHF041_baseColor_512.ktx2"
+     },
+     "normalOverride": {
+      "key": "texture-material/512/MHF041_normalOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHF041_normalOverride_512.ktx2"
+     },
+     "aormOverride": {
+      "key": "texture-material/512/MHF041_aormOverride_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHF041_aormOverride_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.242Z"
+   }
+  ],
+  "slab:loft": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce71",
+    "aid": "MHS212",
+    "code": "R50157",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Stromma White",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#F2F2F2",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS212.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-10-27T13:15:56.385Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z"
+   }
+  ],
+  "filler:loft": [
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce71",
+    "aid": "MHS212",
+    "code": "R50157",
+    "type": "Shutter",
+    "brand": "Magickhome",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "PU",
+    "family": "Solids",
+    "shutter": "Matte",
+    "name": "Stromma White",
+    "isGroup": true,
+    "groupNormalToken": "MHSC008FM015S006_groupnormal",
+    "groupAORMToken": "MHSC008FM015S006_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#F2F2F2",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS212.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.220Z",
+    "updatedAt": "2026-10-27T13:15:56.385Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddc",
+    "aid": "MHS063",
+    "code": "21039",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Misty Grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#383838",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cddd",
+    "aid": "MHS064",
+    "code": "21003",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Prairie Green",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#6F855F",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.213Z",
+    "updatedAt": "2026-10-27T13:15:56.260Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9cdd1",
+    "aid": "MHS052",
+    "code": "22079",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Solids",
+    "shutter": "Suede",
+    "name": "Dove grey",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM015S009_groupnormal",
+    "groupAORMToken": "MHSC006FM015S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "#80837C",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": false,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.212Z",
+    "updatedAt": "2026-10-27T13:15:56.250Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce24",
+    "aid": "MHS135",
+    "code": "10514 V",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Pure Legno Oak",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.5",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.216Z",
+    "updatedAt": "2026-10-27T13:15:56.324Z"
+   },
+   {
+    "_id": "6a991fb3d9ab0af9a6d9ce32",
+    "aid": "MHS149",
+    "code": "14665 RH",
+    "type": "Shutter",
+    "brand": "Merino",
+    "profile": [
+     "Handle",
+     "Gola",
+     "Edge"
+    ],
+    "category": "Laminate",
+    "family": "Wooden",
+    "shutter": "Suede",
+    "name": "Natural Ashwood",
+    "isGroup": true,
+    "groupNormalToken": "MHSC006FM019S009_groupnormal",
+    "groupAORMToken": "MHSC006FM019S009_groupAORM",
+    "isAvailable": true,
+    "textureWidth": 2438,
+    "textureHeight": 2438,
+    "colorCode": "Nil",
+    "isFrosted": false,
+    "glassOpacity": "Nil",
+    "normalIntensity": "0",
+    "useTexture": true,
+    "metalic": "0",
+    "roughness": "0.3",
+    "materialName": "ShutterFrontM",
+    "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+    "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+    "texture1K": {
+     "baseColor": {
+      "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+     }
+    },
+    "texture2K": {
+     "baseColor": {
+      "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+     }
+    },
+    "texture512": {
+     "baseColor": {
+      "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+      "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+     }
+    },
+    "isActive": true,
+    "__v": 0,
+    "createdAt": "2026-09-03T07:20:19.217Z",
+    "updatedAt": "2026-10-27T13:15:56.335Z"
+   }
+  ]
+ },
+ "fixtureColors": {
+  "toe-kick": "#2a2a2a",
+  "countertop": "#e8e8e8",
+  "backsplash": "#e8e8e8",
+  "slab": "#e8e8e8",
+  "filler": "#e8e8e8",
+  "floor": "#e8e8e8"
+ },
+ "appliances": {
+  "sink": {
+   "metadata": {
+    "_id": "6a636ca492bd092f25db7fe3",
+    "aid": "APS02",
+    "category": "Sink",
+    "description": "Sink90",
+    "width": 780,
+    "depth": 450,
+    "height": 450,
+    "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APS02.glb",
+    "modelKey": "appliance-models/APS02.glb",
+    "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APS02.jpg",
+    "isActive": true,
+    "createdAt": "2026-07-24T13:46:12.643Z",
+    "updatedAt": "2026-09-08T11:35:16.324Z",
+    "__v": 0,
+    "applianceKind": "sink",
+    "level": "base",
+    "subCategory": "Sink",
+    "textures": []
+   },
+   "asset": {
+    "id": "6a636ca492bd092f25db7fe3",
+    "category": "appliance",
+    "name": "Sink90",
+    "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APS02.jpg",
+    "source": "library",
+    "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APS02.glb",
+    "dimensions": [
+     0.78,
+     0.45,
+     0.45
+    ],
+    "offset": [
+     0,
+     0.225,
+     0
+    ],
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.01,
+     0.01,
+     0.01
+    ]
+   }
+  },
+  "hob": {
+   "metadata": {
+    "_id": "6a636ca592bd092f25db7fe6",
+    "aid": "APH02",
+    "category": "Hob",
+    "description": "Hob90",
+    "width": 750,
+    "depth": 520,
+    "height": 70,
+    "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APH02.glb",
+    "modelKey": "appliance-models/APH02.glb",
+    "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APH02.jpg",
+    "isActive": true,
+    "createdAt": "2026-07-24T13:46:13.804Z",
+    "updatedAt": "2026-09-08T11:35:16.178Z",
+    "__v": 0,
+    "applianceKind": "hob",
+    "level": "base",
+    "subCategory": "Hob",
+    "textures": [
+     {
+      "_id": "6a991fb3d9ab0af9a6d9ceac",
+      "aid": "MHH271",
+      "code": "111",
+      "type": "Hob",
+      "brand": "Nil",
+      "profile": [
+       "Nil"
+      ],
+      "category": "Nil",
+      "family": "Nil",
+      "shutter": "Nil",
+      "name": "Hob90",
+      "isGroup": false,
+      "groupNormalToken": "MHHC011FM020S013_groupnormal",
+      "groupAORMToken": "MHHC011FM020S013_groupAORM",
+      "isAvailable": true,
+      "colorCode": "Nil",
+      "isFrosted": false,
+      "glassOpacity": "Nil",
+      "normalIntensity": "Nil",
+      "useTexture": true,
+      "metalic": "Nil",
+      "roughness": "Nil",
+      "materialName": "HobM",
+      "texture1K": {
+       "baseColor": {
+        "key": "texture-material/1K/MHH271_baseColor_1K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHH271_baseColor_1K.ktx2"
+       },
+       "aormOverride": {
+        "key": "texture-material/1K/MHH271_aormOverride_1K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHH271_aormOverride_1K.ktx2"
+       },
+       "normalOverride": {
+        "key": "texture-material/1K/MHH271_normalOverride_1K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHH271_normalOverride_1K.ktx2"
+       }
+      },
+      "texture2K": {
+       "baseColor": {
+        "key": "texture-material/2K/MHH271_baseColor_2K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHH271_baseColor_2K.ktx2"
+       },
+       "aormOverride": {
+        "key": "texture-material/2K/MHH271_aormOverride_2K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHH271_aormOverride_2K.ktx2"
+       },
+       "normalOverride": {
+        "key": "texture-material/2K/MHH271_normalOverride_2K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHH271_normalOverride_2K.ktx2"
+       }
+      },
+      "texture512": {
+       "baseColor": {
+        "key": "texture-material/512/MHH271_baseColor_512.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHH271_baseColor_512.ktx2"
+       },
+       "aormOverride": {
+        "key": "texture-material/512/MHH271_aormOverride_512.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHH271_aormOverride_512.ktx2"
+       },
+       "normalOverride": {
+        "key": "texture-material/512/MHH271_normalOverride_512.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHH271_normalOverride_512.ktx2"
+       }
+      },
+      "isActive": true,
+      "__v": 0,
+      "createdAt": "2026-09-03T07:20:19.222Z",
+      "updatedAt": "2026-09-28T13:44:13.291Z"
+     },
+     {
+      "_id": "6a991fb3d9ab0af9a6d9cea9",
+      "aid": "MHH268",
+      "code": "108",
+      "type": "Hob",
+      "brand": "Nil",
+      "profile": [
+       "Nil"
+      ],
+      "category": "Nil",
+      "family": "Nil",
+      "shutter": "Nil",
+      "name": "Hob60",
+      "isGroup": false,
+      "groupNormalToken": "MHHC011FM020S013_groupnormal",
+      "groupAORMToken": "MHHC011FM020S013_groupAORM",
+      "isAvailable": true,
+      "colorCode": "Nil",
+      "isFrosted": false,
+      "glassOpacity": "Nil",
+      "normalIntensity": "Nil",
+      "useTexture": true,
+      "metalic": "Nil",
+      "roughness": "Nil",
+      "materialName": "HobM",
+      "texture1K": {
+       "baseColor": {
+        "key": "texture-material/1K/MHH268_baseColor_1K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHH268_baseColor_1K.ktx2"
+       },
+       "aormOverride": {
+        "key": "texture-material/1K/MHH268_aormOverride_1K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHH268_aormOverride_1K.ktx2"
+       },
+       "normalOverride": {
+        "key": "texture-material/1K/MHH268_normalOverride_1K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHH268_normalOverride_1K.ktx2"
+       }
+      },
+      "texture2K": {
+       "baseColor": {
+        "key": "texture-material/2K/MHH268_baseColor_2K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHH268_baseColor_2K.ktx2"
+       },
+       "aormOverride": {
+        "key": "texture-material/2K/MHH268_aormOverride_2K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHH268_aormOverride_2K.ktx2"
+       },
+       "normalOverride": {
+        "key": "texture-material/2K/MHH268_normalOverride_2K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHH268_normalOverride_2K.ktx2"
+       }
+      },
+      "texture512": {
+       "baseColor": {
+        "key": "texture-material/512/MHH268_baseColor_512.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHH268_baseColor_512.ktx2"
+       },
+       "aormOverride": {
+        "key": "texture-material/512/MHH268_aormOverride_512.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHH268_aormOverride_512.ktx2"
+       },
+       "normalOverride": {
+        "key": "texture-material/512/MHH268_normalOverride_512.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHH268_normalOverride_512.ktx2"
+       }
+      },
+      "isActive": true,
+      "__v": 0,
+      "createdAt": "2026-09-03T07:20:19.222Z",
+      "updatedAt": "2026-09-28T13:44:13.284Z"
+     }
+    ]
+   },
+   "asset": {
+    "id": "6a636ca592bd092f25db7fe6",
+    "category": "appliance",
+    "name": "Hob90",
+    "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APH02.jpg",
+    "source": "library",
+    "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APH02.glb",
+    "dimensions": [
+     0.75,
+     0.07,
+     0.52
+    ],
+    "offset": [
+     0,
+     0.035,
+     0
+    ],
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.01,
+     0.01,
+     0.01
+    ]
+   }
+  },
+  "chimney": {
+   "metadata": {
+    "_id": "6a636ca492bd092f25db7fdd",
+    "aid": "APC02",
+    "category": "Chimney",
+    "description": "Chimney90",
+    "width": 900,
+    "depth": 540,
+    "height": 460,
+    "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APC02.glb",
+    "modelKey": "appliance-models/APC02.glb",
+    "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APC02.jpg",
+    "isActive": true,
+    "createdAt": "2026-07-24T13:46:12.409Z",
+    "updatedAt": "2026-09-08T11:35:16.114Z",
+    "__v": 0,
+    "applianceKind": "chimney",
+    "level": "wall",
+    "subCategory": "Chimney",
+    "textures": [
+     {
+      "_id": "6a991fb3d9ab0af9a6d9cead",
+      "aid": "MHC272",
+      "code": "112",
+      "type": "Chimney",
+      "brand": "Nil",
+      "profile": [
+       "Nil"
+      ],
+      "category": "Nil",
+      "family": "Nil",
+      "shutter": "Nil",
+      "name": "Chimney",
+      "isGroup": false,
+      "groupNormalToken": "MHCC011FM020S013_groupnormal",
+      "groupAORMToken": "MHCC011FM020S013_groupAORM",
+      "isAvailable": true,
+      "colorCode": "Nil",
+      "isFrosted": false,
+      "glassOpacity": "Nil",
+      "normalIntensity": "Nil",
+      "useTexture": true,
+      "metalic": "Nil",
+      "roughness": "Nil",
+      "materialName": "ChimneyM",
+      "texture1K": {
+       "baseColor": {
+        "key": "texture-material/1K/MHC272_baseColor_1K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHC272_baseColor_1K.ktx2"
+       },
+       "aormOverride": {
+        "key": "texture-material/1K/MHC272_aormOverride_1K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHC272_aormOverride_1K.ktx2"
+       },
+       "normalOverride": {
+        "key": "texture-material/1K/MHC272_normalOverride_1K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHC272_normalOverride_1K.ktx2"
+       }
+      },
+      "texture2K": {
+       "baseColor": {
+        "key": "texture-material/2K/MHC272_baseColor_2K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHC272_baseColor_2K.ktx2"
+       },
+       "aormOverride": {
+        "key": "texture-material/2K/MHC272_aormOverride_2K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHC272_aormOverride_2K.ktx2"
+       },
+       "normalOverride": {
+        "key": "texture-material/2K/MHC272_normalOverride_2K.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHC272_normalOverride_2K.ktx2"
+       }
+      },
+      "texture512": {
+       "baseColor": {
+        "key": "texture-material/512/MHC272_baseColor_512.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHC272_baseColor_512.ktx2"
+       },
+       "aormOverride": {
+        "key": "texture-material/512/MHC272_aormOverride_512.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHC272_aormOverride_512.ktx2"
+       },
+       "normalOverride": {
+        "key": "texture-material/512/MHC272_normalOverride_512.ktx2",
+        "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHC272_normalOverride_512.ktx2"
+       }
+      },
+      "isActive": true,
+      "__v": 0,
+      "createdAt": "2026-09-03T07:20:19.222Z",
+      "updatedAt": "2026-09-28T13:44:13.291Z"
+     }
+    ]
+   },
+   "asset": {
+    "id": "6a636ca492bd092f25db7fdd",
+    "category": "appliance",
+    "name": "Chimney90",
+    "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APC02.jpg",
+    "source": "library",
+    "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APC02.glb",
+    "dimensions": [
+     0.9,
+     0.46,
+     0.54
+    ],
+    "offset": [
+     0,
+     0.23,
+     0
+    ],
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     0.01,
+     0.01,
+     0.01
+    ]
+   }
+  }
+ }
+}

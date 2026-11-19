@@ -1,0 +1,781 @@
+"""End-to-end verification of the AI kitchen layout generator.
+
+Strips every ``item_*`` node from the production sample
+``magickhomes-scene_2026-11-18_10-38-22.json`` and regenerates the kitchen, then
+checks the output JSON *independently* of the solver's internal state:
+
+* magickhomes-scene v1 schema and node-graph integrity,
+* every cabinet AID exists in ``Finalised_Asset_Catalogue_Sheet.xlsx``,
+* Base Sink Unit centred under ``window_a6jgraczhlas4vwp`` with child ``Sink90`` (APS02.glb),
+* Base Hob Unit with child ``Hob90`` (APH02.glb) and ``Chimney90`` (APC02.glb) at y = 1.44,
+* zero overlap with ``door_6a3cugqojq1bwey8`` (+100 mm clearance) and zero 3D cabinet collisions.
+
+AI mode: deterministic fallback by default (CI-safe). Use the live local model with
+    python test_pipeline.py --ai-mode ollama        (or KITCHEN_TEST_AI_MODE=ollama pytest)
+``--ai-mode auto`` tries Ollama and falls back. The mocked-Ollama tests always run.
+"""
+from __future__ import annotations
+
+import argparse
+import copy
+import json
+import math
+import os
+import sys
+from functools import lru_cache
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
+
+import ai_designer  # noqa: E402
+from ai_designer import KitchenPreferences  # noqa: E402
+from main import generate_kitchen  # noqa: E402
+from scene_parser import strip_items  # noqa: E402
+
+PRIMARY = ROOT / "magickhomes-scene_2026-11-18_10-38-22.json"
+SECONDARY = ROOT / "magickhomes-scene_2026-11-18_10-24-05.json"
+XLSX = ROOT / "Finalised_Asset_Catalogue_Sheet.xlsx"
+OUT_DIR = ROOT / "test_output"
+WINDOW_ID = "window_a6jgraczhlas4vwp"
+DOOR_ID = "door_6a3cugqojq1bwey8"
+W1, W2, W3 = "wall_1oy5ecjq6k11pfoo", "wall_56i56ymve0xf69fm", "wall_49fdugi4g7vj12pf"
+PI = math.pi
+TOL = 1e-6
+
+AI_MODE = os.getenv("KITCHEN_TEST_AI_MODE", "fallback")
+
+
+# ---------------------------------------------------------------------------
+# Independent helpers (do not reuse solver internals)
+# ---------------------------------------------------------------------------
+
+@lru_cache(maxsize=1)
+def xlsx_aids() -> frozenset[str]:
+    import pandas as pd
+
+    xls = pd.ExcelFile(XLSX)
+    aids = set()
+    for sheet in ("Kitchen Combinations - Slab", "Kitchen Combinations - Shaker 1", "Kitchen Combinations - Common"):
+        df = pd.read_excel(xls, sheet)
+        col = next(c for c in df.columns if str(c).replace(" ", "") == "AIDCombinedAssetID")
+        aids |= {str(a).strip() for a in df[col].dropna()}
+    return frozenset(aids)
+
+
+def load(path: Path) -> dict:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def empty_plan(path: Path = PRIMARY) -> dict:
+    return strip_items(load(path), lambda n: n.get("type") == "item" and n["id"].startswith("item_"))
+
+
+class Frame:
+    """Wall-local -> world transform derived straight from the JSON."""
+
+    def __init__(self, wall: dict, centroid):
+        (x1, z1), (x2, z2) = wall["start"], wall["end"]
+        self.length = math.hypot(x2 - x1, z2 - z1)
+        self.o = (x1, z1)
+        self.d = ((x2 - x1) / self.length, (z2 - z1) / self.length)
+        n = (-self.d[1], self.d[0])
+        mid = ((x1 + x2) / 2, (z1 + z2) / 2)
+        if (centroid[0] - mid[0]) * n[0] + (centroid[1] - mid[1]) * n[1] < 0:
+            n = (self.d[1], -self.d[0])
+        self.n = n
+
+    def world(self, x, z):
+        return (self.o[0] + self.d[0] * x + self.n[0] * z, self.o[1] + self.d[1] * x + self.n[1] * z)
+
+
+def frames(nodes: dict) -> dict[str, Frame]:
+    walls = {k: n for k, n in nodes.items() if n["type"] == "wall"}
+    pts = [p for w in walls.values() for p in (w["start"], w["end"])]
+    c = (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
+    return {k: Frame(w, c) for k, w in walls.items()}
+
+
+def sat(a, b, tol=1e-4) -> bool:
+    for poly in (a, b):
+        for i in range(len(poly)):
+            p, q = poly[i], poly[(i + 1) % len(poly)]
+            ax, az = -(q[1] - p[1]), q[0] - p[0]
+            ln = math.hypot(ax, az) or 1.0
+            ax, az = ax / ln, az / ln
+            pa = [v[0] * ax + v[1] * az for v in a]
+            pb = [v[0] * ax + v[1] * az for v in b]
+            if max(pa) <= min(pb) + tol or max(pb) <= min(pa) + tol:
+                return False
+    return True
+
+
+def box(node: dict, fr: Frame):
+    """World footprint + y-span of a wall-parented item (position = bottom-centre + offset)."""
+    w, h, d = node["asset"]["dimensions"]
+    x, y, z = node["position"]
+    oy = node["asset"]["offset"][1]
+    y0 = y + oy - h / 2
+    poly = [fr.world(x - w / 2, z - d / 2), fr.world(x + w / 2, z - d / 2), fr.world(x + w / 2, z + d / 2), fr.world(x - w / 2, z + d / 2)]
+    return poly, (y0, y0 + h)
+
+
+def cabinets(nodes):
+    return [n for n in nodes.values() if n["type"] == "item" and n["asset"]["category"] == "kitchen"]
+
+
+def by_category(nodes, category):
+    return [n for n in cabinets(nodes) if n["metadata"]["category"] == category]
+
+
+def interval(n):
+    x, w = n["position"][0], n["asset"]["dimensions"][0]
+    return x - w / 2, x + w / 2
+
+
+# ---------------------------------------------------------------------------
+# The verification suite (returns a list of failures so it can run anywhere)
+# ---------------------------------------------------------------------------
+
+def verify_scene(doc: dict, expect_window: str | None = WINDOW_ID, expect_door: str | None = DOOR_ID) -> list[str]:
+    errs: list[str] = []
+    E = errs.append
+
+    # -- schema -----------------------------------------------------------------
+    if doc.get("format") != "magickhomes-scene":
+        E(f"format is {doc.get('format')!r}")
+    if doc.get("version") != 1:
+        E(f"version is {doc.get('version')!r}")
+    if not isinstance(doc.get("exportedAt"), str):
+        E("exportedAt missing")
+    scene = doc.get("scene") or {}
+    nodes = scene.get("nodes")
+    if not isinstance(nodes, dict):
+        return errs + ["scene.nodes missing"]
+    for r in scene.get("rootNodeIds", []):
+        if r not in nodes:
+            E(f"rootNodeId {r} missing")
+    for nid, n in nodes.items():
+        if n.get("id") != nid or n.get("object") != "node":
+            E(f"node {nid}: id/object mismatch")
+        for c in n.get("children", []):
+            if c not in nodes:
+                E(f"{nid}: child {c} missing")
+            elif nodes[c]["type"] == "item" and nodes[c]["parentId"] != nid:
+                E(f"{c}: parentId {nodes[c]['parentId']} but listed under {nid}")
+        if n["type"] == "item":
+            p = n.get("parentId")
+            if p not in nodes or nid not in nodes[p].get("children", []):
+                E(f"{nid}: not registered in parent {p}.children")
+            for k in ("position", "rotation", "scale", "asset", "metadata"):
+                if k not in n:
+                    E(f"{nid}: missing {k}")
+            a = n["asset"]
+            if len(a.get("dimensions", [])) != 3 or min(a["dimensions"]) <= 0:
+                E(f"{nid}: bad dimensions {a.get('dimensions')}")
+            if any(isinstance(v, float) and not math.isfinite(v) for v in n["position"]):
+                E(f"{nid}: non-finite position")
+
+    fr = frames(nodes)
+    walls = {k: n for k, n in nodes.items() if n["type"] == "wall"}
+    cabs = cabinets(nodes)
+    if not cabs:
+        return errs + ["no cabinets generated"]
+
+    # -- cabinet nodes ------------------------------------------------------------
+    aids = xlsx_aids()
+    y_by_level = {"tall": 0.1, "wall": 1.44, "loft": 2.058}
+    for n in cabs:
+        aid = n["metadata"]["aid"]
+        a = n["asset"]
+        if aid not in aids:
+            E(f"{n['id']}: AID {aid} not in Finalised_Asset_Catalogue_Sheet.xlsx")
+        if n["name"] != aid or a["name"] != aid:
+            E(f"{n['id']}: name/asset.name != aid")
+        api_url = n["metadata"].get("modelUrl")  # present when the catalogue came from the Assets API
+        want_src = api_url or f"https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/{aid}.glb"
+        if a["src"] != want_src:
+            E(f"{n['id']}: asset.src {a['src']} != API modelUrl {want_src}")
+        if not a["src"].endswith(".glb"):
+            E(f"{n['id']}: asset.src is not a .glb")
+        if n["parentId"] != n["wallId"] or n["wallId"] not in walls:
+            E(f"{n['id']}: parentId/wallId mismatch")
+        if n["rotation"] != [0, PI, 0] or n["scale"] != [1, 1, 1] or a["scale"] != [0.01, 0.01, 0.01]:
+            E(f"{n['id']}: rotation/scale mismatch")
+        w, h, d = a["dimensions"]
+        if abs(a["offset"][1] - h / 2) > TOL:
+            E(f"{n['id']}: offset {a['offset']} != h/2")
+        lvl = n["placement"]["level"]
+        if n["placement"].get("designSource") != "ai-kitchen-v1" or n["placement"].get("side") != 1:
+            E(f"{n['id']}: placement block {n['placement']}")
+        want_y = (0.0 if n["metadata"]["height"] >= 800 else 0.1) if lvl == "base" else y_by_level[lvl]
+        if abs(n["position"][1] - want_y) > TOL:
+            E(f"{n['id']}: {lvl} y={n['position'][1]} expected {want_y}")
+        face = walls[n["wallId"]].get("thickness", 0.1) / 2  # back of cabinet on the wall face
+        want_z = face + d / 2  # = 0.33 / 0.215 / 0.375 for the production 100 mm walls
+        if abs(n["position"][2] - want_z) > TOL:
+            E(f"{n['id']}: z={n['position'][2]} expected {want_z}")
+        L = fr[n["wallId"]].length
+        if abs(n["wallT"] - n["position"][0] / L) > 1e-9:
+            E(f"{n['id']}: wallT inconsistent")
+        lo, hi = interval(n)
+        if lo < -TOL or hi > L + TOL:
+            E(f"{n['id']}: outside wall [0, {L}]")
+
+    # -- sink under window ------------------------------------------------------------
+    sinks = by_category(nodes, "Base Sink Unit")
+    if len(sinks) != 1:
+        E(f"expected 1 Base Sink Unit, got {len(sinks)}")
+    else:
+        s = sinks[0]
+        if expect_window:
+            win = nodes[expect_window]
+            if s["wallId"] != win["wallId"]:
+                E(f"sink on {s['wallId']} but {expect_window} is on {win['wallId']}")
+            if abs(s["position"][0] - win["position"][0]) > 0.001:
+                E(f"sink centre {s['position'][0]:.4f} not under window {win['position'][0]:.4f}")
+        kids = [nodes[c] for c in s["children"]]
+        if len(kids) != 1 or kids[0]["name"] != "Sink90" or not kids[0]["asset"]["src"].endswith("/appliance-models/APS02.glb"):
+            E(f"sink children wrong: {[k['name'] for k in kids]}")
+        else:
+            k = kids[0]
+            if k["parentId"] != s["id"] or k["position"] != [0, 0.55, 0] or k["rotation"] != [0, 0, 0]:
+                E("Sink90 not a correctly placed child of the sink unit")
+            if k["wallId"] != s["wallId"] or abs(k["wallT"] - s["wallT"]) > 1e-12:
+                E("Sink90 wallId/wallT differ from host")
+
+    # -- hob, spice, chimney ------------------------------------------------------------
+    hobs = by_category(nodes, "Base Hob Unit")
+    chims = [n for n in nodes.values() if n["type"] == "item" and n["name"] == "Chimney90"]
+    if len(hobs) != 1:
+        E(f"expected 1 Base Hob Unit, got {len(hobs)}")
+    else:
+        hb = hobs[0]
+        kids = [nodes[c] for c in hb["children"]]
+        if len(kids) != 1 or kids[0]["name"] != "Hob90" or not kids[0]["asset"]["src"].endswith("/appliance-models/APH02.glb"):
+            E(f"hob children wrong: {[k['name'] for k in kids]}")
+        elif kids[0]["position"] != [0, 0.74, 0] or kids[0]["parentId"] != hb["id"]:
+            E("Hob90 not a correctly placed child of the hob unit")
+        if len(chims) != 1:
+            E(f"expected 1 Chimney90, got {len(chims)}")
+        else:
+            c = chims[0]
+            if not c["asset"]["src"].endswith("/appliance-models/APC02.glb"):
+                E("chimney src wrong")
+            if c["parentId"] != hb["wallId"] or c["wallId"] != hb["wallId"] or c["id"] not in walls[hb["wallId"]]["children"]:
+                E("chimney not a child of the hob's wall")
+            cz = 0.32 + walls[hb["wallId"]].get("thickness", 0.1) / 2 - 0.05
+            if abs(c["position"][0] - hb["position"][0]) > TOL or abs(c["position"][1] - 1.44) > TOL or abs(c["position"][2] - cz) > TOL:
+                E(f"chimney position {c['position']} not above hob x={hb['position'][0]}")
+            if c["rotation"] != [0, PI, 0] or abs(c["wallT"] - hb["wallT"]) > 1e-12:
+                E("chimney rotation/wallT wrong")
+            # chimney zone must be free of wall-tier cabinets
+            cx = c["position"][0]
+            for n in cabs:
+                if n["wallId"] == hb["wallId"] and n["placement"]["level"] in ("wall", "tall"):
+                    lo, hi = interval(n)
+                    if lo < cx + 0.45 - TOL and hi > cx - 0.45 + TOL:
+                        E(f"{n['metadata']['category']} {n['id']} obstructs the chimney")
+        spice = [n for n in by_category(nodes, "Base Spice Pull Out") if n["wallId"] == hb["wallId"]]
+        h_lo, h_hi = interval(hb)
+        if not any(abs(interval(s)[1] - h_lo) < 0.001 or abs(interval(s)[0] - h_hi) < 0.001 for s in spice):
+            E("no Base Spice Pull Out immediately adjacent to the hob")
+
+    # -- doors -----------------------------------------------------------------------
+    doors = [n for n in nodes.values() if n["type"] == "door"]
+    if expect_door and expect_door not in nodes:
+        E(f"{expect_door} missing")
+    for dnode in doors:
+        dlo = dnode["position"][0] - dnode["width"] / 2 - 0.1
+        dhi = dnode["position"][0] + dnode["width"] / 2 + 0.1
+        for n in cabs:
+            if n["wallId"] == dnode["wallId"]:
+                lo, hi = interval(n)
+                if lo < dhi - TOL and hi > dlo + TOL:
+                    E(f"{n['metadata']['category']} {n['id']} overlaps {dnode['id']} clearance [{dlo:.3f}, {dhi:.3f}]")
+
+    # -- windows: no wall/tall/loft cabinets in front --------------------------------------
+    for wn in (n for n in nodes.values() if n["type"] == "window"):
+        wlo, whi = wn["position"][0] - wn["width"] / 2, wn["position"][0] + wn["width"] / 2
+        for n in cabs:
+            if n["wallId"] == wn["wallId"] and n["placement"]["level"] in ("wall", "tall", "loft"):
+                lo, hi = interval(n)
+                if lo < whi - TOL and hi > wlo + TOL:
+                    E(f"{n['metadata']['category']} {n['id']} blocks {wn['id']}")
+
+    # -- zero 3D collisions ---------------------------------------------------------------
+    solids = [(n, *box(n, fr[n["wallId"]])) for n in cabs]
+    for c in chims:
+        solids.append((c, *box(c, fr[c["wallId"]])))
+    for i in range(len(solids)):
+        a, pa, ya = solids[i]
+        for j in range(i + 1, len(solids)):
+            b, pb, yb = solids[j]
+            if ya[0] >= yb[1] - 1e-4 or yb[0] >= ya[1] - 1e-4:
+                continue
+            if sat(pa, pb):
+                E(f"3D collision: {a['name']} ({a['id']}) x {b['name']} ({b['id']})")
+
+    base_walls = {n["wallId"] for n in cabs if n["placement"]["level"] in ("base",)}
+
+    # -- corner rule: where two runs meet, only corner cabinets (per tier) -------------------
+    def is_corner_unit(n):
+        c = n["metadata"]["category"].replace("–", "-")
+        return c.startswith("Blind corner unit") or "L Corner" in c
+
+    tier_levels = {"base": ("base", "tall"), "wall": ("wall", "tall"), "loft": ("loft",)}
+    tier_depth = {"base": 0.56, "wall": 0.33, "loft": 0.33}
+    for a in walls:
+        for b in walls:
+            if a >= b:
+                continue
+            for end_a in ("start", "end"):
+                for end_b in ("start", "end"):
+                    if math.dist(walls[a][end_a], walls[b][end_b]) > 0.02:
+                        continue
+                    for tier, levels in tier_levels.items():
+                        def near(wid, end):
+                            L = fr[wid].length
+                            out = []
+                            for n in cabs:
+                                if n["wallId"] != wid or n["placement"]["level"] not in levels:
+                                    continue
+                                lo, hi = interval(n)
+                                d = lo if end == "start" else L - hi
+                                if d < 1.2:
+                                    out.append((n, lo, hi))
+                            return out
+                        na, nb = near(a, end_a), near(b, end_b)
+                        if not na or not nb:
+                            continue  # not a corner between two runs on this tier
+                        for wid, end, other, items in ((a, end_a, b, na), (b, end_b, a, nb)):
+                            L = fr[wid].length
+                            strip = tier_depth[tier] + walls[other].get("thickness", 0.1) / 2 - 0.001
+                            for n, lo, hi in items:
+                                inside = lo < strip if end == "start" else hi > L - strip
+                                if inside and not is_corner_unit(n):
+                                    E(f"regular {n['metadata']['category']} {n['id']} in the "
+                                      f"{walls[a]['name']}/{walls[b]['name']} corner ({tier} tier)")
+
+    # -- fixtures --------------------------------------------------------------------------
+    fixtures = [n for n in nodes.values() if n["type"] == "item" and n["asset"]["category"] == "fixture"]
+    for wid in base_walls:
+        kinds = {f["metadata"]["fixtureKind"] for f in fixtures if f.get("wallId") == wid}
+        for k in ("toe-kick", "countertop", "backsplash"):
+            if k not in kinds:
+                E(f"{walls[wid]['name']}: no {k} fixture")
+    for f in fixtures:
+        if f.get("wallId") and f["id"] not in walls[f["wallId"]]["children"]:
+            E(f"fixture {f['id']} not in its wall's children")
+    return errs
+
+
+# ---------------------------------------------------------------------------
+# pytest scenarios
+# ---------------------------------------------------------------------------
+
+SCENARIOS = {
+    "auto": dict(),
+    "reference_L_walls": dict(cabinet_walls=[W1, W2]),
+    "shaker_U": dict(door_style="Shaker -1", layout="U"),
+    "single_wall": dict(layout="single"),
+}
+
+
+def run(prefs: KitchenPreferences, source: Path = PRIMARY, name: str = "out"):
+    out, report = generate_kitchen(empty_plan(source), prefs)
+    OUT_DIR.mkdir(exist_ok=True)
+    (OUT_DIR / f"generated_kitchen_{name}.json").write_text(json.dumps(out, indent=1, ensure_ascii=False), encoding="utf-8")
+    (OUT_DIR / f"report_{name}.json").write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+    return out, report
+
+
+@pytest.mark.parametrize("name", list(SCENARIOS))
+def test_scenario(name):
+    prefs = KitchenPreferences(ai_mode=AI_MODE, **SCENARIOS[name])
+    out, report = run(prefs, name=name)
+    errs = verify_scene(out)
+    assert not errs, "\n".join(errs)
+    assert not report["validation_issues"], report["validation_issues"]
+    if name == "reference_L_walls":
+        assert set(report["layout"]["cabinet_walls"]) == {W1, W2}
+        door_wall_cabs = [n for n in cabinets(out["scene"]["nodes"]) if n["wallId"] == W1]
+        assert door_wall_cabs, "door wall must carry cabinets so the door rule is exercised"
+        corner = report["layout"]["corners"][0]
+        assert corner["base_unit"] and corner["wall_unit"], "the L corner should get corner cabinets"
+
+
+def test_strip_removes_all_items():
+    plan = empty_plan()
+    nodes = plan["scene"]["nodes"]
+    assert not [n for n in nodes.values() if n["type"] == "item"]
+    for n in nodes.values():
+        assert all(c in nodes for c in n.get("children", []))
+
+
+def test_loft_on_tall_walls():
+    """Secondary sample has 2.7 m walls: lofts allowed, deep loft above the tall unit."""
+    prefs = KitchenPreferences(ai_mode=AI_MODE, include_loft=True, cabinet_walls=[W1, W2])
+    out, report = run(prefs, SECONDARY, "loft")
+    assert not verify_scene(out), verify_scene(out)
+    lofts = [n for n in cabinets(out["scene"]["nodes"]) if n["placement"]["level"] == "loft"]
+    assert lofts, "expected loft units"
+    for n in lofts:
+        top = n["position"][1] + n["asset"]["dimensions"][1]
+        assert top <= 2.7 + TOL
+    fx = {n["metadata"].get("fixtureId", "") for n in out["scene"]["nodes"].values() if n["type"] == "item"}
+    assert any("loft_top" in f for f in fx), "expected loft top fillers up to the 2.7 m wall height"
+
+
+def test_no_loft_when_wall_too_low():
+    prefs = KitchenPreferences(ai_mode="fallback", include_loft=True)
+    out, report = run(prefs, PRIMARY, "loft_low")
+    assert not [n for n in cabinets(out["scene"]["nodes"]) if n["placement"]["level"] == "loft"]
+    assert any("no loft" in d for d in report["layout"]["decisions"])
+
+
+def test_rotated_and_translated_room():
+    """Same room rotated 30 deg and moved: wall-local maths must be frame independent."""
+    a = math.radians(30)
+
+    def f(x, z):
+        return [x * math.cos(a) - z * math.sin(a) + 5.0, x * math.sin(a) + z * math.cos(a) - 2.0]
+
+    doc = empty_plan()
+    for n in doc["scene"]["nodes"].values():
+        if n["type"] == "wall":
+            n["start"], n["end"] = f(*n["start"]), f(*n["end"])
+        if n["type"] in ("ceiling", "slab") and isinstance(n.get("polygon"), list):
+            n["polygon"] = [f(*p) for p in n["polygon"]]
+    out, report = generate_kitchen(doc, KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2]))
+    assert not verify_scene(out), verify_scene(out)
+    assert not report["validation_issues"]
+
+
+def _move_opening(doc, oid, wall_id, center_m, width_m=None):
+    nodes = doc["scene"]["nodes"]
+    o = nodes[oid]
+    for n in nodes.values():
+        if oid in n.get("children", []):
+            n["children"].remove(oid)
+    o["wallId"] = o["parentId"] = wall_id
+    o["position"][0] = center_m
+    if width_m:
+        o["width"] = width_m
+    nodes[wall_id]["children"].append(oid)
+    return doc
+
+
+def _layout_corners(report):
+    return report["layout"]["corners"]
+
+
+def test_corner_wall_tier_uses_blind_corner_when_l_corner_blocked():
+    """Window 550 mm from the Wall 1/Wall 2 corner: no room for a 650 Wall L Corner on Wall 2,
+    so the wall tier must use a wall blind corner unit (never a regular wall unit)."""
+    doc = _move_opening(empty_plan(), WINDOW_ID, W2, 0.55 + 0.6, 1.2)  # window 550-1750 on Wall 2
+    out, report = generate_kitchen(doc, KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2]))
+    errs = verify_scene(out)
+    assert not errs, "\n".join(errs)
+    corner = _layout_corners(report)[0]
+    wall_aid = corner["wall_unit"]
+    assert wall_aid and ("WBCL" in wall_aid or "WBCR" in wall_aid), corner
+    assert corner["base_unit"], corner
+
+
+def test_corner_left_open_when_no_corner_unit_fits():
+    """Doors right at the Wall 1/Wall 2 corner on both walls: no blind corner unit can sit there,
+    so the corner must stay empty instead of getting regular cabinets."""
+    doc = empty_plan()
+    _move_opening(doc, DOOR_ID, W1, 4.05 - 0.55, 0.9)  # door 3050-3950 on Wall 1 (corner end)
+    nodes = doc["scene"]["nodes"]
+    d2 = copy.deepcopy(nodes[DOOR_ID])
+    d2["id"] = "door_secondcorner0001"
+    nodes[d2["id"]] = d2
+    _move_opening(doc, d2["id"], W2, 0.05 + 0.55, 0.9)  # door 150-1050 on Wall 2 (corner start)
+    _move_opening(doc, WINDOW_ID, W2, 2.6, 1.2)
+    out, report = generate_kitchen(doc, KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2]))
+    errs = verify_scene(out, expect_window=WINDOW_ID, expect_door=DOOR_ID)
+    assert not errs, "\n".join(errs)
+    corner = _layout_corners(report)[0]
+    assert corner["base_unit"] is None and "base" in corner["open_tiers"], corner
+    assert any("left open" in w for w in report["layout"]["warnings"])
+
+
+def test_verifier_catches_violations():
+    """The checks above must actually fail on broken scenes (guards against vacuous passes)."""
+    good, _ = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2]))
+    assert not verify_scene(good)
+
+    def mutated(fn):
+        doc = copy.deepcopy(good)
+        fn(doc["scene"]["nodes"])
+        return verify_scene(doc)
+
+    def shift_sink(nodes):
+        by_category(nodes, "Base Sink Unit")[0]["position"][0] += 0.05
+
+    def into_door(nodes):
+        cab = min((n for n in cabinets(nodes) if n["wallId"] == W1), key=lambda n: n["position"][0])
+        cab["position"][0] = nodes[DOOR_ID]["position"][0] + 0.3
+
+    def collide(nodes):
+        a, b = [n for n in cabinets(nodes) if n["wallId"] == W2 and n["placement"]["level"] == "base"][:2]
+        b["position"][0] = a["position"][0] + 0.1
+
+    def fake_aid(nodes):
+        cabinets(nodes)[0]["metadata"]["aid"] = "MTFAKE123"
+
+    def regular_in_corner(nodes):
+        bcu = next(n for n in cabinets(nodes) if n["metadata"]["category"].startswith("Blind corner unit"))
+        bcu["metadata"]["category"] = "Base Unit"
+
+    def drop_chimney(nodes):
+        cid = next(k for k, n in nodes.items() if n.get("name") == "Chimney90")
+        wall = nodes[nodes[cid]["parentId"]]
+        wall["children"].remove(cid)
+        del nodes[cid]
+
+    assert any("not under window" in e for e in mutated(shift_sink))
+    assert any(DOOR_ID in e for e in mutated(into_door))
+    assert any("3D collision" in e for e in mutated(collide))
+    assert any("not in Finalised_Asset_Catalogue_Sheet" in e for e in mutated(fake_aid))
+    assert any("Chimney90" in e for e in mutated(drop_chimney))
+    assert any("corner" in e and "regular Base Unit" in e for e in mutated(regular_in_corner))
+
+
+def test_assets_api_loader_paginates_normalises_and_caches(monkeypatch, tmp_path):
+    """POST ?page=N&limit=M pagination, 'None' strings, 'Shaker 1' == 'Shaker -1', offline cache fallback."""
+    import catalog_loader as CL
+    import config
+    import requests
+
+    def rec(i, style):
+        return {"_id": f"id{i}", "aid": f"MTTEST{i}", "description": "t", "width": 600, "depth": 560, "height": 700,
+                "unitFamily": "Base", "category": "Base Unit ", "doorType": "Shutter", "cabinetCombination": "Double Shutter",
+                "doorStyle": style, "openingDirection": "None" if i == 0 else "Both", "handleType": "External Handle",
+                "internals": "One Shelf", "isApplianceAccessory": False, "isActive": True}
+
+    records = [rec(i, "Shaker 1" if i % 2 else "Slab (Plain)") for i in range(5)]
+    calls = []
+
+    class Resp:
+        def __init__(self, payload):
+            self.payload = payload
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return self.payload
+
+    def fake_post(url, params=None, json=None, headers=None, timeout=None):
+        calls.append(params)
+        page, limit = params["page"], params["limit"]
+        items = records[(page - 1) * limit: page * limit]
+        return Resp({"success": True, "message": "Cabinets fetched", "data": {"items": items, "total": 5, "page": page, "limit": limit}})
+
+    monkeypatch.setattr(requests, "post", fake_post)
+    monkeypatch.setattr(config, "ASSETS_API_PAGE_SIZE", 2)
+    monkeypatch.setattr(config, "ASSETS_API_METHOD", "POST")
+    monkeypatch.setattr(config, "ASSETS_API_URL", "https://example.invalid/cabinets")
+    monkeypatch.setattr(config, "CATALOG_CACHE_PATH", tmp_path / "cache.json")
+    try:
+        CL._load_catalog.cache_clear()
+        cat = CL.load_catalog()
+        assert cat.source == "api" and len(cat) == 5
+        assert [c["page"] for c in calls] == [1, 2, 3]
+        assert cat.get("MTTEST0").opening_direction is None
+        assert cat.get("MTTEST0").category == "Base Unit"
+        assert len(cat.filter(door_style="Shaker -1")) == 2  # API spells it 'Shaker 1'
+        assert cat.get("MTTEST1").metadata()["_id"] == "id1"
+        assert (tmp_path / "cache.json").exists()
+
+        def down(*a, **k):
+            raise requests.ConnectionError("offline")
+
+        monkeypatch.setattr(requests, "post", down)
+        CL._load_catalog.cache_clear()
+        cached = CL.load_catalog()
+        assert cached.source == "api-cache" and len(cached) == 5
+    finally:
+        CL._load_catalog.cache_clear()  # later tests reload the real catalogue
+
+
+def test_web_ui_job_flow():
+    """Upload -> background job -> poll -> download, exactly as the web UI does it."""
+    import time as _time
+
+    from fastapi.testclient import TestClient
+
+    from main import app
+
+    with TestClient(app) as c:
+        page = c.get("/")
+        assert page.status_code == 200 and "AI Kitchen Designer" in page.text
+        plan = c.get("/api/sample-floorplan").json()
+        assert not [n for n in plan["scene"]["nodes"].values() if n["type"] == "item"]
+        r = c.post("/api/jobs", json={"scene": plan, "preferences": {"ai_mode": "fallback"}, "filename": "my plan.json"})
+        assert r.status_code == 202, r.text
+        jid = r.json()["id"]
+        for _ in range(300):
+            s = c.get(f"/api/jobs/{jid}").json()
+            if s["status"] in ("done", "error"):
+                break
+            _time.sleep(0.1)
+        assert s["status"] == "done", s
+        assert [e["msg"] for e in s["log"]][0] == "Reading the floor plan"
+        d = c.get(f"/api/jobs/{jid}/scene?download=1")
+        assert 'filename="my_plan_kitchen.json"' in d.headers["content-disposition"]
+        assert not verify_scene(d.json())
+        assert c.get(f"/api/jobs/{jid}/report?download=1").json()["validation_issues"] == []
+        assert c.post("/api/jobs", json={"scene": {"format": "nope", "version": 1, "scene": {"nodes": {}}}}).status_code == 400
+        assert c.get("/api/jobs/doesnotexist").status_code == 404
+
+
+def test_deterministic_output():
+    prefs = KitchenPreferences(ai_mode="fallback")
+    a, _ = generate_kitchen(empty_plan(), prefs)
+    b, _ = generate_kitchen(empty_plan(), prefs)
+    a.pop("exportedAt"), b.pop("exportedAt")
+    assert a == b
+
+
+# -- mocked Ollama (exercises the structured-output path without a server) ------------
+
+class _Msg:
+    def __init__(self, content):
+        self.content = content
+
+
+class _Resp:
+    def __init__(self, content):
+        self.message = _Msg(content)
+        self.eval_count = 123
+
+
+class _Model:
+    def __init__(self, name):
+        self.model = name
+
+
+class FakeOllama:
+    """Returns a deliberately poor design to prove the rule engine repairs it."""
+
+    def __init__(self, design: dict, installed=True):
+        self.design = design
+        self.installed = installed
+        self.calls = []
+        self.pulled = False
+
+    def list(self):
+        import config
+
+        return type("L", (), {"models": [_Model(config.OLLAMA_MODEL)] if self.installed else []})()
+
+    def pull(self, model, stream=False):
+        self.pulled = True
+        self.installed = True
+        return iter([type("P", (), {"status": "success", "total": 1, "completed": 1})()])
+
+    def chat(self, model, messages, format=None, options=None, keep_alive=None):
+        self.calls.append({"model": model, "format": format, "options": options, "messages": messages})
+        return _Resp(json.dumps(self.design))
+
+
+def _bad_design(groups):
+    g = groups
+    return {
+        "room_reading": "Wall 2 has the window, Wall 1 has the door.",
+        "design_plan": "Sink on the plain wall, hob under the window, tall unit in the middle.",
+        "layout_type": "L",
+        "cabinet_walls": [W2, W3],
+        "sink_wall_id": W3,  # wrong: no window on Wall 3
+        "sink_aid": g["sink"][0].aid,
+        "hob_wall_id": W2,  # wrong: window wall -> chimney impossible there
+        "hob_aid": g["hob"][0].aid,
+        "hob_center_mm": 1990,
+        "spice_aid": g["spice"][0].aid,
+        "cylinder_aid": None,
+        "tall_units": [{"wall_id": W2, "aid": g["tall"][0].aid}],
+        "base_runs": [{"wall_id": W3, "aids": [g["base"][0].aid, g["base"][5].aid]}],
+        "wall_runs": [{"wall_id": W3, "aids": [g["wall"][6].aid]}],
+    }
+
+
+def test_mocked_ollama_design_is_repaired(monkeypatch):
+    from catalog_loader import load_filtered_catalog
+
+    groups = ai_designer.build_shortlist(load_filtered_catalog())
+    fake = FakeOllama(_bad_design(groups), installed=False)
+    monkeypatch.setattr(ai_designer, "_client", lambda: fake)
+    out, report = run(KitchenPreferences(ai_mode="ollama"), name="mocked_ollama")
+    assert fake.pulled, "missing model should be auto-pulled"
+    call = fake.calls[0]
+    assert call["options"]["temperature"] == 0
+    # schema is enum-locked to the shortlist
+    sink_enum = call["format"]["properties"]["sink_aid"]["enum"]
+    assert set(sink_enum) == {i.aid for i in groups["sink"]}
+    assert report["ai"]["mode"] == "ollama"
+    errs = verify_scene(out)
+    assert not errs, "\n".join(errs)
+    hob = by_category(out["scene"]["nodes"], "Base Hob Unit")[0]
+    assert hob["wallId"] != W2, "hob must not stay under the window"
+
+
+def test_customer_layout_overrides_ai_wall_count(monkeypatch):
+    """Qwen proposes an L (2 walls) but the customer asked for a U."""
+    from catalog_loader import load_filtered_catalog
+
+    groups = ai_designer.build_shortlist(load_filtered_catalog())
+    fake = FakeOllama(_bad_design(groups))
+    monkeypatch.setattr(ai_designer, "_client", lambda: fake)
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="ollama", layout="U"))
+    assert len(report["layout"]["cabinet_walls"]) == 3
+    assert any("layout U" in d for d in report["layout"]["decisions"])
+    assert not verify_scene(out)
+
+
+def test_schema_rejects_hallucinated_aid():
+    from catalog_loader import load_filtered_catalog
+    from pydantic import ValidationError
+
+    from scene_parser import parse_scene
+
+    groups = ai_designer.build_shortlist(load_filtered_catalog())
+    g = parse_scene(empty_plan())
+    Model = ai_designer.build_design_model(groups, g.wall_order)
+    bad = _bad_design(groups)
+    bad["sink_aid"] = "MTBABSU9999560700FAKE"
+    with pytest.raises(ValidationError):
+        Model.model_validate(bad)
+    bad = _bad_design(groups)
+    bad["hob_wall_id"] = "wall_doesnotexist"
+    with pytest.raises(ValidationError):
+        Model.model_validate(bad)
+    n = len(ai_designer.shortlist_items(groups))
+    assert 35 <= n <= 45, n
+
+
+def test_auto_mode_falls_back_without_server(monkeypatch):
+    def boom():
+        raise ai_designer.AIUnavailable("no server")
+
+    monkeypatch.setattr(ai_designer, "ensure_model", lambda *a, **kw: boom())
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="auto"))
+    assert report["ai"]["mode"] == "fallback" and "no server" in report["ai"]["fallback_reason"]
+    assert not verify_scene(out)
+
+
+# ---------------------------------------------------------------------------
+# Script entry point
+# ---------------------------------------------------------------------------
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser(description="Run the kitchen generator verification suite")
+    ap.add_argument("--ai-mode", default=AI_MODE, choices=["fallback", "auto", "ollama"])
+    args, rest = ap.parse_known_args()
+    os.environ["KITCHEN_TEST_AI_MODE"] = args.ai_mode
+    sys.exit(pytest.main([__file__, "-v", "-p", "no:cacheprovider", *rest]))
