@@ -740,13 +740,16 @@ def test_assets_api_loader_paginates_normalises_and_caches(monkeypatch, tmp_path
         CL._load_catalog.cache_clear()  # later tests reload the real catalogue
 
 
-def test_web_ui_job_flow():
+def test_web_ui_job_flow(monkeypatch, tmp_path):
     """Upload -> background job -> poll -> download, exactly as the web UI does it."""
     import time as _time
 
+    import config
     from fastapi.testclient import TestClient
 
-    from main import app
+    from main import JOBS, app
+
+    monkeypatch.setattr(config, "JOBS_DIR", tmp_path)  # finished designs are saved here
 
     with TestClient(app) as c:
         page = c.get("/")
@@ -767,6 +770,12 @@ def test_web_ui_job_flow():
         assert 'filename="my_plan_kitchen.json"' in d.headers["content-disposition"]
         assert not verify_scene(d.json())
         assert c.get(f"/api/jobs/{jid}/report?download=1").json()["validation_issues"] == []
+        assert (tmp_path / f"{jid}.json").is_file(), "finished design must be saved to disk"
+        with JOBS.lock:
+            JOBS.jobs.pop(jid)  # as after a server restart
+        again = c.get(f"/api/jobs/{jid}").json()
+        assert again["status"] == "done" and again["report"]["explanation"], "design must reload from disk"
+        assert c.get("/").headers.get("cache-control") == "no-cache"
         assert c.post("/api/jobs", json={"scene": {"format": "nope", "version": 1, "scene": {"nodes": {}}}}).status_code == 400
         assert c.get("/api/jobs/doesnotexist").status_code == 404
 
@@ -916,17 +925,25 @@ def _v2_design(menu, **over):
     d = {
         "room_reading": "Wall 2 has the window, Wall 1 the door near the Wall 4 corner, Wall 3 and Wall 4 are solid.",
         "design_plan": "Sink under the window on Wall 2, hob on solid Wall 3, tall storage at the end of Wall 3.",
+        "layout_why": "L-shape: window wall plus the solid wall away from the door.",
         "cabinet_walls": ["Wall 2", "Wall 3"],
+        "sink_why": "Window on Wall 2, standard 900 sink.",
         "sink_wall": "Wall 2",
         "sink": first["sink"],
+        "hob_why": "Wall 3 is solid and far from the door.",
         "hob_wall": "Wall 3",
         "hob": first["hob"],
         "hob_center_mm": 2000,
         "spice": first["spice"],
+        "lpg_why": "Gas supply not stated and the hob wall is busy.",
         "lpg_cylinder": "NONE",
+        "tall_why": "Reheats daily, microwave tower at the run end.",
         "tall_units": [{"wall": "Wall 3", "unit": next(c for c in codes["tall"] if c.startswith("MICROWAVE"))}],
+        "purifier_why": "Not stated; most homes use a wall purifier.",
         "water_purifier": first["purifier"],
+        "display_why": "Long window wall can frame the window.",
         "display_unit": first["display"],
+        "features_why": "Drawers by the hob, basket by the sink.",
         "base_feature_units": [{"wall": "Wall 3", "units": [codes["base"][0]]}, {"wall": "Wall 2", "units": [codes["base"][-2]]}],
         "wall_cabinet_sizes": [{"wall": "Wall 3", "units": [codes["wall"][3]]}],
     }
@@ -985,6 +1002,117 @@ def test_v2_schema_rejects_unknown_codes_and_walls():
     ):
         with pytest.raises(ValidationError):
             Model.model_validate(_v2_design(menu, **bad))
+
+
+def test_stated_needs_narrow_the_schema():
+    """A need the customer states is not Qwen's to change: the enum only allows that answer."""
+    menu = _v2_menu()
+    walls = ["Wall 1", "Wall 2", "Wall 3", "Wall 4"]
+
+    def enum(prefs, field):
+        props = ai_designer.build_design_model_v2(menu, walls, prefs=prefs).model_json_schema()
+        f = props["properties"][field]
+        return set(f.get("enum") or [f.get("const")])
+
+    assert enum(KitchenPreferences(water_purifier="no"), "water_purifier") == {"NONE"}
+    assert "NONE" not in enum(KitchenPreferences(water_purifier="yes"), "water_purifier")
+    assert "NONE" in enum(KitchenPreferences(), "water_purifier")  # not stated: Qwen decides
+    assert enum(KitchenPreferences(include_cylinder=False), "lpg_cylinder") == {"NONE"}
+    assert enum(KitchenPreferences(display_unit="no"), "display_unit") == {"NONE"}
+    talls = ai_designer.allowed_codes(menu, "tall", KitchenPreferences(built_in="none"))
+    assert talls and all(c.startswith(("PANTRY", "TALL-WICKER")) for c in talls)
+
+
+def test_qwen_cannot_skip_a_needed_tower_and_reasons_are_reported(monkeypatch):
+    """Customer needs a microwave + purifier; the (mocked) model only proposes a pantry.
+    The microwave tower is added, the purifier is built, and every key item carries a reason."""
+    import config
+
+    monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v2")
+    menu = _v2_menu()
+    pantry = next(c for c, _ in menu["tall"] if c.startswith("PANTRY"))
+    fake = FakeOllama(_v2_design(menu, tall_units=[{"wall": "Wall 3", "unit": pantry}]))
+    monkeypatch.setattr(ai_designer, "_client", lambda: fake)
+    prefs = KitchenPreferences(ai_mode="ollama", built_in="microwave", water_purifier="yes", include_cylinder=False)
+    out, report = generate_kitchen(empty_plan(), prefs)
+    assert not verify_scene(out), verify_scene(out)
+    user = fake.calls[0]["messages"][1]["content"]
+    assert "NEEDS a wall water-purifier" in user and "piped gas" in user and "NEEDS a built-in microwave tower" in user
+    nodes = out["scene"]["nodes"]
+    assert by_category(nodes, "Tall Built-In Microwave"), "needed microwave tower must be built"
+    assert by_category(nodes, "Wall Aquaguard Unit"), "needed purifier must be built"
+    assert not by_category(nodes, "Base Cylinder Unit"), "piped gas: no cylinder unit"
+    ex = {e["item"]: e for e in report["explanation"]}
+    assert ex["Water purifier"]["source"] == "customer" and ex["LPG cylinder"]["source"] == "customer"
+    assert ex["Sink"]["source"] == "qwen" and ex["Sink"]["why"]
+    assert "customer needs it" in ex["Tall units"]["why"]
+
+
+@pytest.mark.parametrize("needs, present, absent", [
+    (dict(water_purifier="no", include_cylinder=False, display_unit="no", built_in="none"),
+     [], ["Wall Aquaguard Unit", "Base Cylinder Unit", "Wall Glass Unit", "Tall Built-In Microwave", "Tall Built-In Oven"]),
+    (dict(water_purifier="yes", include_cylinder=True, display_unit="yes", built_in="oven"),
+     ["Wall Aquaguard Unit", "Base Cylinder Unit", "Wall Glass Unit", "Tall Built-In Oven"], []),
+])
+def test_quick_rules_designer_follows_needs(needs, present, absent):
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="fallback", **needs))
+    assert not verify_scene(out), verify_scene(out)
+    nodes = out["scene"]["nodes"]
+    for cat in present:
+        assert by_category(nodes, cat), f"{cat} should be built for {needs}"
+    for cat in absent:
+        assert not by_category(nodes, cat), f"{cat} should not be built for {needs}"
+    assert all(e["why"] for e in report["explanation"]), report["explanation"]
+
+
+def test_brief_asking_for_drawers_fills_runs_with_drawers():
+    """'Lots of drawers' in the brief is a stated need: storage runs use drawer units."""
+    plain, _ = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="fallback"))
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="fallback", style_notes="Lots of drawers"))
+    assert not verify_scene(out), verify_scene(out)
+
+    def drawer_share(doc):
+        base = [n for n in cabinets(doc["scene"]["nodes"]) if n["placement"]["level"] == "base"
+                and n["metadata"]["category"] == "Base Unit"]
+        return sum("drawer" in (n["metadata"].get("cabinetCombination") or "").lower() for n in base), len(base)
+
+    d, n = drawer_share(out)
+    d0, _ = drawer_share(plain)
+    assert n and d == n and d > d0, (d, n, d0)
+    ex = {e["item"]: e for e in report["explanation"]}
+    assert ex["Base cabinets"]["source"] == "customer" and "brief" in ex["Base cabinets"]["need"].lower()
+
+
+def test_requested_feature_units_move_to_another_wall_instead_of_vanishing():
+    """The designer asks for more drawer units on the hob wall than fit there: they must
+    be built on the next wall (or reported), never silently dropped."""
+    from ai_designer import build_shortlist_v2, fallback_proposal
+    from catalog_loader import load_filtered_catalog
+    from rule_engine import SolverPrefs, solve_layout
+    from scene_parser import parse_scene
+
+    cat = load_filtered_catalog()
+    g = parse_scene(empty_plan())
+    groups = build_shortlist_v2(cat)
+    prop = fallback_proposal(g, groups, KitchenPreferences())
+    wanted = [it for it in groups["base"] if "drawer" in it.cabinet_combination.lower() and it.cat == "base unit"][:3]
+    prop.base_prefs = {prop.hob_wall_id: [it.aid for it in wanted]}
+    lay = solve_layout(g, cat, prop, SolverPrefs())
+    built = [p.item.aid for p in lay.placements if p.role == "storage"]
+    missing = [it for it in wanted if it.aid not in built]
+    assert not missing or any("did not fit" in w for w in lay.warnings), (missing, lay.warnings)
+    assert len(missing) < len(wanted), "at least the units that fit somewhere must be built"
+
+
+def test_needed_purifier_tries_hard_then_says_why():
+    """L-shaped room: the window wall has no wall space beside the window, so a needed
+    purifier goes to the next wall by the corner - or the report says plainly why not."""
+    doc = empty_plan(DATA / "l_shaped_room_reversed_wall.json")
+    out, report = generate_kitchen(doc, KitchenPreferences(ai_mode="fallback", water_purifier="yes"))
+    assert not verify_scene(out, expect_window="window_t6m3s0qnha8vb0d4", expect_door="door_2sqpkgv0swc2anh4")
+    built = by_category(out["scene"]["nodes"], "Wall Aquaguard Unit")
+    msgs = report["layout"]["warnings"] + report["layout"]["decisions"]
+    assert built or any("customer needs one" in m for m in msgs), msgs
 
 
 @pytest.mark.parametrize("style", ["Slab (Plain)", "Shaker -1"])

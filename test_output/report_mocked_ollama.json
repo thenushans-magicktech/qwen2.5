@@ -51,6 +51,101 @@
       ]
     }
   },
+  "customer_needs": [
+    "- Door style Slab (Plain); layout preference auto; wants tall storage.",
+    "- Water purifier: water purifier not stated.",
+    "- Gas: gas supply not stated.",
+    "- Built-in appliances: built-in appliances not stated.",
+    "- Glass display: glass display not stated.",
+    "- Cooking: cooking style not stated; household size not stated.",
+    "- Base cabinets: base cabinet style not stated."
+  ],
+  "explanation": [
+    {
+      "item": "Layout",
+      "built": "L-shape on Wall 2, Wall 3",
+      "why": "",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Sink",
+      "built": "Sink unit 1200 mm (Sink Double Shutter) on Wall 2",
+      "why": "",
+      "source": "qwen",
+      "rules": [
+        "sink moved from Wall 3 to Wall 2 to sit under window_a6jgraczhlas4vwp"
+      ],
+      "need": null
+    },
+    {
+      "item": "Hob",
+      "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 3, chimney above",
+      "why": "",
+      "source": "qwen",
+      "rules": [
+        "hob moved to Wall 3 (clearances on proposed wall failed)"
+      ],
+      "need": null
+    },
+    {
+      "item": "LPG cylinder",
+      "built": "None",
+      "why": "",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Tall units",
+      "built": "Tall pantry 600 mm (Single Shutter) on Wall 2",
+      "why": "",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Water purifier",
+      "built": "None",
+      "why": "",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Glass display",
+      "built": "None",
+      "why": "",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Base cabinets",
+      "built": "1 of 5 storage cabinets have drawers",
+      "why": "Standard shutter storage; drawers only where the designer asked.",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Feature units",
+      "built": "Wall 3: Base Unit 600 four drawer, Base Unit 600 double shutter",
+      "why": "",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Corners",
+      "built": "Wall 3 / Wall 2: 2 corner cabinets",
+      "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+      "source": "rules",
+      "rules": [],
+      "need": null
+    }
+  ],
   "proposal": {
     "layout_type": "L",
     "cabinet_walls": [
@@ -87,7 +182,9 @@
       ]
     },
     "purifier_aid": null,
+    "purifier_required": false,
     "display_aid": null,
+    "reasons": {},
     "notes": "Wall 2 has the window, Wall 1 has the door. Sink on the plain wall, hob under the window, tall unit in the middle.",
     "source": "ollama"
   },
@@ -231,12 +328,22 @@
           "opening": "Both"
         },
         {
-          "aid": "MTWAWU900330600SDSSLBOEH1S",
+          "aid": "MTWAWU300330600SSSSLLEH1S",
           "category": "Wall Unit",
           "tier": "wall",
           "role": "wall",
-          "width": 900,
+          "width": 300,
           "start_mm": 700.0,
+          "end_mm": 1000.0,
+          "opening": "Left"
+        },
+        {
+          "aid": "MTWAWU600330600SDSSLBOEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 600,
+          "start_mm": 1000.0,
           "end_mm": 1600.0,
           "opening": "Both"
         },
@@ -287,7 +394,7 @@
     "warnings": []
   },
   "nodes_added": {
-    "kitchen": 16,
+    "kitchen": 17,
     "appliance": 3,
     "fixture:toe-kick": 2,
     "fixture:filler": 2,
@@ -302,5 +409,5 @@
     "filtered_skus": 484,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.37
+  "seconds": 0.29
 }

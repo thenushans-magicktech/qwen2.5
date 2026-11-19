@@ -63,6 +63,11 @@ SOFT_KINDS = frozenset({"door", "swing", "open", "window", "chimney", "corner_op
 BLOCKING_KINDS = ("door", "swing", "window", "chimney", "corner", "corner_open")
 HARD_KINDS = frozenset({"wall", "corner"})
 STRONG_HINGE_OBSTACLES = frozenset({"wall", "door", "swing", "corner", "tall"})
+# Base-run fill styles: plain storage runs are packed with these combinations first.
+BASE_FILL_STYLES = {
+    "drawers": ("Double Drawer", "Drawer with Double Shutter", "Drawer with Single Shutter"),
+    "shutters": ("Double Shutter", "Single Shutter"),
+}
 # Placements the repair pass may drop to resolve a conflict (never sink/hob/corners).
 REMOVABLE_ROLES = ("storage", "wall", "loft", "loft_deep", "purifier", "display")
 
@@ -98,7 +103,9 @@ class Proposal:
     base_prefs: dict[str, list[str]] = field(default_factory=dict)
     wall_prefs: dict[str, list[str]] = field(default_factory=dict)
     purifier_aid: Optional[str] = None  # Wall Aquaguard Unit, hung beside the sink window
+    purifier_required: bool = False  # the customer asked for it: try harder before giving up
     display_aid: Optional[str] = None  # glass wall unit at the end of a run
+    reasons: dict[str, str] = field(default_factory=dict)  # designer's one-line reason per decision
     notes: str = ""
     source: str = "fallback"
 
@@ -114,7 +121,9 @@ class Proposal:
             "base_prefs": self.base_prefs,
             "wall_prefs": self.wall_prefs,
             "purifier_aid": self.purifier_aid,
+            "purifier_required": self.purifier_required,
             "display_aid": self.display_aid,
+            "reasons": self.reasons,
             "notes": self.notes,
             "source": self.source,
         }
@@ -126,6 +135,7 @@ class SolverPrefs:
     layout: str = "auto"  # auto | single | L | U
     cabinet_walls: Optional[list[str]] = None
     sink_under_window: bool = True
+    base_storage: str = "auto"  # auto | drawers | shutters - what the plain base runs are filled with
 
 
 @dataclass
@@ -216,6 +226,7 @@ class FillResult:
     leftover_at: str  # lo | hi | none
     penalty: float
     used_prefs: int = 0
+    used: list = field(default_factory=list)  # the requested items that were placed
 
 
 @dataclass
@@ -421,17 +432,17 @@ class Pool:
         n = int(math.floor((r + EPS) / config.GRID_MM))
         return [self.item(w) for w in _dp_fill(n, self.widths_costs)] if n >= 1 else []
 
-    def choose(self, target: float, prefs: list[CatalogItem]) -> tuple[list[CatalogItem], int]:
-        """Units for ``target`` mm: designer-preferred SKUs when they fit well, else pure DP.
+    def choose(self, target: float, prefs: list[CatalogItem]) -> tuple[list[CatalogItem], list[CatalogItem]]:
+        """Units for ``target`` mm: designer-requested SKUs when they fit, else pure DP.
 
-        Preferences are honoured only if they do not make the run worse than the
-        optimal packing: no extra narrow (< 450 mm) units, at most one extra unit,
-        and no extra leftover. This stops a small model's habit of picking the
-        first (narrowest) catalogue items from fragmenting runs.
+        Returns ``(units, used_prefs)``. A request is honoured when the rest of the run
+        can still be filled without extra empty space; it may cost up to two more
+        units and one more narrow (< 450 mm) unit than the optimal packing - the
+        designer's purpose (drawers by the hob, a basket by the sink) is worth it.
         """
         best = self._dp(target)
         if not prefs:
-            return best, 0
+            return best, []
 
         def narrow(units):
             return sum(1 for u in units if u.width < 450)
@@ -451,12 +462,21 @@ class Pool:
             chosen, units = attempt(cands)
             if (
                 chosen
-                and len(units) <= len(best) + 1
-                and narrow(units) <= narrow(best)
+                and len(units) <= len(best) + 2
+                and narrow(units) <= narrow(best) + 1
                 and left(units) <= left(best) + EPS
             ):
-                return units, len(chosen)
-        return best, 0
+                return units, chosen
+        return best, []
+
+
+def _consume(prefs: list, used: list) -> None:
+    """Remove the requested items that were placed (by identity, any position)."""
+    for it in used:
+        for i, p in enumerate(prefs):
+            if p is it:
+                del prefs[i]
+                break
 
 
 def fill_gap(gap: Gap, pool: Pool, prefs: list[CatalogItem], role: str = "storage") -> Optional[FillResult]:
@@ -464,7 +484,8 @@ def fill_gap(gap: Gap, pool: Pool, prefs: list[CatalogItem], role: str = "storag
     target = gap.length - caps_w
     if target < -EPS:
         return None
-    units, used_prefs = pool.choose(max(0.0, target), prefs)
+    units, used = pool.choose(max(0.0, target), prefs)
+    used_prefs = len(used)
     left = max(0.0, target - sum(u.width for u in units))
     soft_lo, soft_hi = gap.kind_lo in SOFT_KINDS, gap.kind_hi in SOFT_KINDS
     hard_lo, hard_hi = gap.kind_lo in HARD_KINDS, gap.kind_hi in HARD_KINDS
@@ -503,7 +524,7 @@ def fill_gap(gap: Gap, pool: Pool, prefs: list[CatalogItem], role: str = "storag
             pen += 5.0 + 0.2 * left
         if kind == "mid":
             pen += 10.0
-    return FillResult(items, left, at, pen, used_prefs)
+    return FillResult(items, left, at, pen, used_prefs, used)
 
 
 # ---------------------------------------------------------------------------
@@ -532,7 +553,9 @@ class LayoutSolver:
         self.decisions: list[str] = []
         self.warnings: list[str] = []
 
-        self.base_pool = self._pool((CAT_BASE,), "base", height=700, narrow_cats=(CAT_SPICE,))
+        self.base_pool = self._pool(
+            (CAT_BASE,), "base", height=700, narrow_cats=(CAT_SPICE,), prefer=BASE_FILL_STYLES.get(prefs.base_storage)
+        )
         self.wall_pool = self._pool((CAT_WALL,), "wall", height=600, depth=330)
         self.loft_pool = self._pool((CAT_LOFT,), "loft", height=600, depth=330)
         self.loft_deep_pool = self._pool((CAT_LOFT,), "loft", height=600, depth=560)
@@ -544,9 +567,14 @@ class LayoutSolver:
         self._init_notes = (list(self.decisions), list(self.warnings))
 
     # -- catalogue helpers -------------------------------------------------
-    def _pool(self, cats, tier, height=None, depth=None, narrow_cats=()) -> Pool:
+    def _pool(self, cats, tier, height=None, depth=None, narrow_cats=(), prefer=None) -> Pool:
+        """Default SKU per width; ``prefer`` = combinations to use first (e.g. drawer units)."""
         by_w: dict[int, CatalogItem] = {}
-        for it in self.cat.find(cats, tier=tier, height=height, depth=depth):
+        items = self.cat.find(cats, tier=tier, height=height, depth=depth)
+        if prefer:
+            rank = {canon_eq_key(c): i for i, c in enumerate(prefer)}
+            items = sorted(items, key=lambda it: rank.get(canon_eq_key(it.cabinet_combination), len(rank)))
+        for it in items:
             by_w.setdefault(it.width, it)
         narrow: dict[int, CatalogItem] = {}
         for it in self.cat.find(narrow_cats, tier=tier, height=height) if narrow_cats else []:
@@ -999,20 +1027,30 @@ class LayoutSolver:
             if self.proposal.hob_wall_id and wid != self.proposal.hob_wall_id:
                 decisions.append(f"hob moved to {self.g.walls[wid].name} (clearances on proposed wall failed)")
 
-        # 5. fill every remaining gap
+        # 5. fill every remaining gap. Requested feature units that find no room on
+        # their wall move on to the next wall (hob wall first, then its neighbours)
+        # instead of being dropped; anything still left over is reported.
         placements: list[Placement] = [a for wl in anchors.values() for a in wl]
-        for wid in self.walls:
-            prefs = self._base_prefs(wid)
+        hob_wid = hob.wall_id if hob is not None else None
+        order = sorted(self.walls, key=lambda w: (w != hob_wid, not (hob_wid and self.g.corner_between(w, hob_wid))))
+        carry: list[CatalogItem] = []
+        for wid in order:
+            prefs = self._base_prefs(wid) + carry
             for gap in self._gaps(wid, base_feats(wid), anchors[wid], caps):
                 res = fill_gap(gap, self.base_pool, prefs)
                 if res is None:
                     score += 500
                     continue
                 score += res.penalty
-                del prefs[: res.used_prefs]
+                _consume(prefs, res.used)
                 for it, st, role in res.items:
                     tier = "tall" if it.tier == "tall" else "base"
                     placements.append(Placement(it, wid, tier, st, role))
+            carry = prefs
+        if carry:
+            names = ", ".join(f"{it.category} {it.width} ({it.cabinet_combination})" for it in carry)
+            warnings.append(f"requested feature unit(s) did not fit - no free base run left: {names}")
+            score += 40 * len(carry)
         # Ergonomics penalties
         if hob is not None and not self._has_landing(hob, placements):
             score += 300
@@ -1253,7 +1291,7 @@ class LayoutSolver:
                     if r is None:
                         ok = False
                         break
-                    del pcopy[: r.used_prefs]
+                    _consume(pcopy, r.used)
                     pen += r.penalty
                     fills.append(r)
                 if not ok:
@@ -1383,9 +1421,7 @@ class LayoutSolver:
             if layout.sink is None:
                 layout.warnings.append("water purifier unit skipped: no sink")
             else:
-                x = layout.sink_window.center_mm if layout.sink_window else layout.sink.center_mm
-                if not self._place_wall_feature(layout, pur, "purifier", [(layout.sink.wall_id, x)], max_dist=1500):
-                    layout.warnings.append("water purifier unit skipped: no free wall space within 1.5 m of the sink")
+                self._place_purifier(layout, pur, required=p.purifier_required)
         disp = self._resolve(p.display_aid, WALL_GLASS_CATS, "display unit", "wall")
         if disp is not None:
             targets = []
@@ -1394,6 +1430,39 @@ class LayoutSolver:
                     targets += [(wid, lo), (wid, hi)]
             if not self._place_wall_feature(layout, disp, "display", targets, max_dist=900, avoid_chimney=True):
                 layout.warnings.append("display unit skipped: no free run end for it")
+
+    def _place_purifier(self, layout: KitchenLayout, pur: CatalogItem, required: bool) -> None:
+        """Purifier near the sink: the chosen unit, then the other purifier types and
+        sizes, then the next cabinet wall beside the corner (still within reach of the sink)."""
+        sink = layout.sink
+        x = layout.sink_window.center_mm if layout.sink_window else sink.center_mm
+        kinds, seen = [pur], {(canon_eq_key(pur.cabinet_combination), pur.opening_direction)}
+        for v in sorted(self.cat.find((CAT_AQUAGUARD,), tier="wall", height=pur.height, depth=pur.depth), key=lambda v: v.width):
+            k = (canon_eq_key(v.cabinet_combination), v.opening_direction)
+            if k not in seen:
+                seen.add(k)
+                kinds.append(v)
+        for item in kinds:
+            if self._place_wall_feature(layout, item, "purifier", [(sink.wall_id, x)], max_dist=1500):
+                return
+        near = []
+        for c in self.g.corners_of(sink.wall_id):
+            _, other, other_end = c.other(sink.wall_id)
+            if other in self.walls:
+                near.append((other, 0.0 if other_end == "start" else float(self.g.walls[other].length_mm)))
+        for item in kinds:
+            if near and self._place_wall_feature(layout, item, "purifier", near, max_dist=1200):
+                placed = layout.placements[-1]
+                layout.decisions.append(
+                    f"water purifier placed on {self.g.walls[placed.wall_id].name} beside the corner: "
+                    "no free wall space on the sink wall"
+                )
+                return
+        who = "the customer needs one, but" if required else ""
+        layout.warnings.append(
+            f"water purifier unit skipped: {who} no free wall-cabinet space within reach of the sink "
+            "(window, corner cabinets and chimney take the wall)".replace(":  ", ": ")
+        )
 
     def _place_wall_feature(self, layout, item, role, targets, max_dist=None, avoid_chimney=False) -> bool:
         """Anchor ``item`` (or a same-family width) in the wall tier nearest one of ``targets``.
@@ -1481,7 +1550,7 @@ class LayoutSolver:
                 res = fill_gap(Gap(wid, lo, hi, k_lo, k_hi), pool, prefs, role)
                 if res is None:
                     continue
-                del prefs[: res.used_prefs]
+                _consume(prefs, res.used)
                 for it, st, r in res.items:
                     layout.placements.append(Placement(it, wid, tier, st, r))
                 if res.leftover > EPS and res.leftover_at != "none":
@@ -1587,6 +1656,12 @@ def canon_eq(a: Optional[str], b: Optional[str]) -> bool:
     from catalog_loader import canon
 
     return canon(a) == canon(b)
+
+
+def canon_eq_key(a: Optional[str]) -> str:
+    from catalog_loader import canon
+
+    return canon(a)
 
 
 def _subtract(base: list[tuple[float, float]], cuts: list[tuple[float, float]]) -> list[tuple[float, float]]:

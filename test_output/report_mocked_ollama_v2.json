@@ -14,25 +14,33 @@
     "raw": {
       "room_reading": "Wall 2 has the window, Wall 1 the door near the Wall 4 corner, Wall 3 and Wall 4 are solid.",
       "design_plan": "Sink under the window on Wall 2, hob on solid Wall 3, tall storage at the end of Wall 3.",
+      "layout_why": "L-shape: window wall plus the solid wall away from the door.",
       "cabinet_walls": [
         "Wall 2",
         "Wall 3"
       ],
+      "sink_why": "Window on Wall 2, standard 900 sink.",
       "sink_wall": "Wall 2",
       "sink": "SINK-900",
+      "hob_why": "Wall 3 is solid and far from the door.",
       "hob_wall": "Wall 3",
       "hob": "HOB-900-3DRAWER",
       "hob_center_mm": 2000,
       "spice": "SPICE-300",
+      "lpg_why": "Gas supply not stated and the hob wall is busy.",
       "lpg_cylinder": "NONE",
+      "tall_why": "Reheats daily, microwave tower at the run end.",
       "tall_units": [
         {
           "wall": "Wall 3",
           "unit": "MICROWAVE-600"
         }
       ],
+      "purifier_why": "Not stated; most homes use a wall purifier.",
       "water_purifier": "AQUAGUARD-600",
+      "display_why": "Long window wall can frame the window.",
       "display_unit": "GLASS-600",
+      "features_why": "Drawers by the hob, basket by the sink.",
       "base_feature_units": [
         {
           "wall": "Wall 3",
@@ -57,6 +65,97 @@
       ]
     }
   },
+  "customer_needs": [
+    "- Door style Slab (Plain); layout preference auto; wants tall storage.",
+    "- Water purifier: water purifier not stated.",
+    "- Gas: gas supply not stated.",
+    "- Built-in appliances: built-in appliances not stated.",
+    "- Glass display: glass display not stated.",
+    "- Cooking: cooking style not stated; household size not stated.",
+    "- Base cabinets: base cabinet style not stated."
+  ],
+  "explanation": [
+    {
+      "item": "Layout",
+      "built": "L-shape on Wall 2, Wall 3",
+      "why": "L-shape: window wall plus the solid wall away from the door.",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Sink",
+      "built": "Sink unit 900 mm (Sink Double Shutter) on Wall 2",
+      "why": "Window on Wall 2, standard 900 sink.",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Hob",
+      "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 3, chimney above",
+      "why": "Wall 3 is solid and far from the door.",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "LPG cylinder",
+      "built": "None",
+      "why": "Gas supply not stated and the hob wall is busy.",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Tall units",
+      "built": "Microwave tower 600 mm (Built-In Microwave With 1 Shutter And 3 Drawer) on Wall 3",
+      "why": "Reheats daily, microwave tower at the run end.",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Water purifier",
+      "built": "Water purifier cabinet 600 mm (Aquaguard Single Shutter) on Wall 2",
+      "why": "Not stated; most homes use a wall purifier.",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Glass display",
+      "built": "Glass display cabinet 600 mm (Slab - Double Glass Shutter) on Wall 2",
+      "why": "Long window wall can frame the window.",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Base cabinets",
+      "built": "2 of 5 storage cabinets have drawers",
+      "why": "Standard shutter storage; drawers only where the designer asked.",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Feature units",
+      "built": "Wall 3: Base Unit 600 four drawer; Wall 2: Vegetable basket 600 open wicker unit with 1 bottom drawer",
+      "why": "Drawers by the hob, basket by the sink.",
+      "source": "qwen",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Corners",
+      "built": "Wall 3 / Wall 2: 2 corner cabinets",
+      "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+      "source": "rules",
+      "rules": [],
+      "need": null
+    }
+  ],
   "proposal": {
     "layout_type": "L",
     "cabinet_walls": [
@@ -95,7 +194,18 @@
       ]
     },
     "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "purifier_required": false,
     "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "reasons": {
+      "layout": "L-shape: window wall plus the solid wall away from the door.",
+      "sink": "Window on Wall 2, standard 900 sink.",
+      "hob": "Wall 3 is solid and far from the door.",
+      "lpg": "Gas supply not stated and the hob wall is busy.",
+      "tall": "Reheats daily, microwave tower at the run end.",
+      "purifier": "Not stated; most homes use a wall purifier.",
+      "display": "Long window wall can frame the window.",
+      "features": "Drawers by the hob, basket by the sink."
+    },
     "notes": "Wall 2 has the window, Wall 1 the door near the Wall 4 corner, Wall 3 and Wall 4 are solid. Sink under the window on Wall 2, hob on solid Wall 3, tall storage at the end of Wall 3.",
     "source": "ollama"
   },
@@ -311,5 +421,5 @@
     "filtered_skus": 484,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.23
+  "seconds": 0.2
 }

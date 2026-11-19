@@ -171,7 +171,7 @@
     "Wall Aquaguard Unit": {
       "family": "Wall", "zone": "wet", "status": "offered",
       "purpose": "Wall cabinet that houses the water purifier.",
-      "choose_when": "Almost every Indian kitchen: on the sink wall right beside the window (water inlet and power near the sink).",
+      "choose_when": "When the household uses a wall-mounted purifier (most Indian homes): on the sink wall right beside the window (water inlet and power near the sink). Not needed with an under-sink RO.",
       "avoid": "Far from the sink; above the hob.",
       "prompt_note": "houses the water purifier - beside the sink window",
       "combinations": {

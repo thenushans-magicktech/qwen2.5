@@ -6,8 +6,8 @@ READ THE ROOM
 - A wall with less than 1200 mm of free run cannot carry cabinets.
 
 ZONES
-- WET zone: the sink is centred under the window (daylight, fresh air, view while washing). The water purifier (Aquaguard) unit hangs on the same wall beside the window. The vegetable wicker basket sits near the sink (wash, then cut).
-- COOKING zone: hob + chimney on a SOLID wall with no window (wind from a window blows the flame out and the chimney needs a solid wall). Spice pull-out right beside the hob. Drawer units for pans, kadai and ladles on the hob wall. LPG cylinder unit on the other side of the hob when the wall is long enough.
+- WET zone: the sink is centred under the window (daylight, fresh air, view while washing). If the household needs a wall water purifier (Aquaguard), its cabinet hangs on the same wall beside the window. The vegetable wicker basket sits near the sink (wash, then cut).
+- COOKING zone: hob + chimney on a SOLID wall with no window (wind from a window blows the flame out and the chimney needs a solid wall). Spice pull-out right beside the hob. Drawer units for pans, kadai and ladles on the hob wall. LPG cylinder unit on the other side of the hob only for homes on LPG, when the wall is long enough.
 - STORAGE zone: tall units (pantry, built-in oven or microwave) and the grain trolley at the END of a run, ideally the end nearest the entrance. Never in front of a window, never right beside the hob.
 
 WORK TRIANGLE
@@ -26,6 +26,16 @@ SIZES
 - Spice pull-out: 300; 150 only in very tight runs.
 - Wall cabinets: wide double-shutter units (600-900) look calm and aligned. Avoid many narrow units.
 - Tall units: one or two per kitchen. A built-in oven or microwave tall unit for families who bake or reheat a lot; otherwise a pantry.
+
+CUSTOMER NEEDS
+- Needs the customer stated are fixed: follow them exactly (purifier, gas, built-in appliances, display).
+- When a need is not stated, decide from the brief and the room, and say so in the reason.
+  Purifier not stated: most Indian homes use a wall purifier, but skip it if the brief mentions an under-sink RO.
+  Gas not stated: an LPG unit only if the hob wall is long enough. Display not stated: only for a long run or a
+  'display / glass / open look' brief.
+- Read the brief: bakes -> oven tower; reheats daily -> microwave tower; big family or heavy cooking -> 900 drawer
+  hob, more drawers, grain trolley; small family or light cooking -> compact units.
+- Every *_why names the room fact or the customer need that decides the choice, e.g. "customer has piped gas".
 
 CORNERS
 - Corners take only corner cabinets. The solver adds them automatically; never list them.

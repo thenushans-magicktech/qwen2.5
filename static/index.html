@@ -121,6 +121,23 @@ details.more summary { cursor: pointer; font-size: 13px; font-weight: 600; color
 details.more summary::before { content: "▸"; font-size: 11px; transition: transform .15s; }
 details.more[open] summary::before { transform: rotate(90deg); }
 details.more summary::-webkit-details-marker { display: none; }
+.needs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.needs label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 4px; }
+.needs select { padding: 7px 9px; font-size: 13px; }
+@media (max-width: 420px) { .needs { grid-template-columns: 1fr; } }
+ul.explain { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); column-gap: 28px; }
+ul.explain > li { padding: 10px 0; border-top: 1px solid var(--line); }
+.ex-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ex-head b { font-size: 13.5px; }
+.ex-built { font-size: 13.5px; margin-top: 2px; }
+.ex-why { font-size: 13px; color: var(--muted); margin-top: 3px; }
+.ex-why i { font-style: normal; font-weight: 600; color: var(--text); }
+.ex-rule { font-size: 12.5px; color: var(--warn); background: var(--warn-soft); border-radius: 7px; padding: 4px 8px; margin-top: 5px; }
+.src { font-size: 11px; font-weight: 650; padding: 1px 8px; border-radius: 999px; }
+.src.qwen { background: var(--accent-soft); color: var(--accent); }
+.src.customer { background: var(--ok-soft); color: var(--ok); }
+.src.rules-designer { background: var(--warn-soft); color: var(--warn); }
+.src.rules { background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
 .walls-pick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .walls-pick label { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 12.5px; cursor: pointer; }
 .walls-pick input { accent-color: var(--accent); margin: 0; }
@@ -306,9 +323,26 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
         <div class="toggles">
           <div class="toggle"><div>Tall storage<small>Pantry, oven or microwave tower</small></div><label class="switch"><input type="checkbox" id="tall" checked aria-label="Tall storage"><span></span></label></div>
           <div class="toggle"><div>Loft cabinets<small>Above the wall cabinets, if the ceiling is high enough</small></div><label class="switch"><input type="checkbox" id="loft" aria-label="Loft cabinets"><span></span></label></div>
-          <div class="toggle"><div>LPG cylinder cabinet<small>Next to the hob</small></div>
-            <select id="cyl" class="mini-select" aria-label="LPG cylinder cabinet"><option value="">If it fits</option><option value="true">Yes</option><option value="false">No</option></select>
-          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="label">Household needs <span class="sub">(a stated need is always followed)</span></span>
+        <div class="needs">
+          <div><label for="need-pur">Water purifier (Aquaguard)</label>
+            <select id="need-pur"><option value="auto">Let the designer decide</option><option value="yes">Needed, on the wall</option><option value="no">Not needed</option></select></div>
+          <div><label for="cyl">Gas supply</label>
+            <select id="cyl"><option value="">Let the designer decide</option><option value="true">LPG cylinder</option><option value="false">Piped gas</option></select></div>
+          <div><label for="need-tower">Built-in oven / microwave</label>
+            <select id="need-tower"><option value="auto">Let the designer decide</option><option value="none">None</option><option value="microwave">Microwave</option><option value="oven">Oven</option><option value="oven_microwave">Oven + microwave</option></select></div>
+          <div><label for="need-disp">Glass display cabinet</label>
+            <select id="need-disp"><option value="auto">Let the designer decide</option><option value="yes">Yes, one</option><option value="no">No</option></select></div>
+          <div><label for="need-base">Base cabinets</label>
+            <select id="need-base"><option value="auto">Let the designer decide</option><option value="drawers">More drawers</option><option value="shutters">Mostly shutters</option></select></div>
+          <div><label for="need-cook">Cooking</label>
+            <select id="need-cook"><option value="auto">Not stated</option><option value="heavy">Heavy, every day</option><option value="light">Light</option></select></div>
+          <div><label for="need-size">People at home</label>
+            <select id="need-size"><option value="">Not stated</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option value="8">7 or more</option></select></div>
         </div>
       </div>
 
@@ -353,6 +387,12 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       <div class="kpis" id="kpis"></div>
     </section>
 
+    <section class="card hidden" id="design-card" aria-labelledby="h-design">
+        <h3 id="h-design">Why these choices</h3>
+        <div id="ai-badge"></div>
+        <div id="ai-notes"></div>
+        <ul class="explain" id="explain"></ul>
+      </section>
     <section class="card" aria-labelledby="h-view">
       <div class="viewer-head">
         <h2 id="h-view" class="hidden">Preview</h2>
@@ -391,13 +431,7 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       </div>
     </section>
 
-    <div class="grid2 hidden" id="results">
-      <section class="card" aria-labelledby="h-design">
-        <h3 id="h-design">The design</h3>
-        <div id="ai-badge"></div>
-        <div id="ai-notes"></div>
-        <dl class="choices" id="choices"></dl>
-      </section>
+    <div class="stack hidden" id="results">
       <section class="card" aria-labelledby="h-rules">
         <h3 id="h-rules">Design rules check</h3>
         <ul class="checks" id="checks"></ul>
@@ -407,7 +441,7 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
         </div>
         <details class="tech" id="tech-box"><summary>Technical log</summary><ul id="tech"></ul></details>
       </section>
-      <section class="card" style="grid-column:1/-1" aria-labelledby="h-sched">
+      <section class="card" aria-labelledby="h-sched">
         <h3 id="h-sched">Cabinet list</h3>
         <div class="scroll-x"><table id="schedule"></table></div>
       </section>
@@ -730,6 +764,9 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
     const t = $("#notes");
     const v = t.value.trim();
     if (!v.toLowerCase().includes(b.textContent.toLowerCase())) t.value = v ? `${v.replace(/[.,;]?$/, "")}, ${b.textContent.toLowerCase()}` : b.textContent;
+    if (/drawer/i.test(b.textContent)) $("#need-base").value = "drawers";
+    if (/microwave/i.test(b.textContent) && $("#need-tower").value === "auto") $("#need-tower").value = "microwave";
+    if (/bake/i.test(b.textContent) && $("#need-tower").value === "auto") $("#need-tower").value = "oven";
     t.focus();
   });
 
@@ -745,6 +782,12 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       include_tall: $("#tall").checked,
       include_loft: $("#loft").checked,
       include_cylinder: cyl === "" ? null : cyl === "true",
+      water_purifier: $("#need-pur").value,
+      built_in: $("#need-tower").value,
+      display_unit: $("#need-disp").value,
+      base_storage: $("#need-base").value,
+      cooking: $("#need-cook").value,
+      household_size: $("#need-size").value ? Number($("#need-size").value) : null,
       cabinet_walls: walls.length ? walls : null,
       style_notes: $("#notes").value.trim(),
     };
@@ -759,6 +802,7 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
   function hideResults() {
     $("#results").classList.add("hidden");
     $("#banner").classList.add("hidden");
+    $("#design-card").classList.add("hidden");
   }
   function startProgress(isAI) {
     $("#progress").classList.add("show");
@@ -871,29 +915,17 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
     $("#ai-notes").innerHTML = notes;
 
     const src = state.output || state.input;
+    const SRC = { qwen: "Qwen", customer: "Your requirement", "rules-designer": "Quick rules", rules: "Design rules" };
+    const exp = r.explanation || [];
+    $("#explain").innerHTML = exp.map((e) => `<li>
+        <div class="ex-head"><b>${esc(e.item)}</b><span class="src ${esc(e.source)}">${esc(SRC[e.source] || e.source)}</span></div>
+        <div class="ex-built">${esc(e.built)}</div>
+        ${e.need ? `<div class="ex-why"><i>Customer:</i> ${esc(e.need)}</div>` : ""}
+        ${e.why ? `<div class="ex-why"><i>Why:</i> ${esc(e.why)}</div>` : ""}
+        ${(e.rules || []).map((m) => `<div class="ex-rule">Rules: ${esc(m)}</div>`).join("")}
+      </li>`).join("") || "<li class=\"sub\">No explanation available for this design.</li>";
     const window_ = !!(src && Object.values(src.scene.nodes).some((n) => n.type === "window"));
-    const one = (p, extra = "") => {
-      if (!p) return "–";
-      const combo = nodeMeta(p.aid).cabinetCombination;
-      return `${esc(nameOf(p.category))} ${p.width} mm${combo ? ` <span class="sub">(${esc(combo)})</span>` : ""} on ${esc(wallName(p.wall))}${extra}`;
-    };
-    const many = (ps) => ps.length ? ps.map((p) => `${esc(nameOf(p.category))} ${p.width} mm on ${esc(wallName(p.wall))}`).join("<br>") : "–";
     const sink = byRole("sink")[0], hob = byRole("hob")[0];
-    const corners = (lay.corners || []);
-    const rows = [
-      ["Layout", `${esc(cap(layoutName))} · ${esc(walls.map(wallName).join(", "))}`],
-      ["Sink", one(sink, window_ && sink ? ", centred under the window" : "")],
-      ["Hob", one(hob, hob ? ", chimney above" : "")],
-      ["Next to the hob", many([...byRole("spice"), ...byRole("cylinder")])],
-      ["Tall units", many(byRole("tall"))],
-      ["Water purifier", many(byRole("purifier"))],
-      ["Display", many(byRole("display"))],
-      ["Corners", corners.length ? corners.map((c) => {
-        const units = [c.base_unit, c.wall_unit, c.loft_unit].filter(Boolean).length;
-        return `${esc(wallName(c.walls[0]))} / ${esc(wallName(c.walls[1]))}: ${units ? `${units} corner cabinet${units > 1 ? "s" : ""}` : "kept open"}`;
-      }).join("<br>") : "No corners"],
-    ];
-    $("#choices").innerHTML = rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join("");
 
     // rule checks
     const issues = r.validation_issues || [];
@@ -934,6 +966,7 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
     }
     $("#schedule").innerHTML = `<thead><tr><th>Level</th><th>Cabinet</th><th class="n">Width</th><th class="n">From–to (mm)</th><th>Catalogue code</th></tr></thead><tbody>${body.join("")}</tbody>`;
     $("#results").classList.remove("hidden");
+    $("#design-card").classList.remove("hidden");
   }
 
   $("#go").addEventListener("click", generate);

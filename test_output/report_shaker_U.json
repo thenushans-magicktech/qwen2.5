@@ -4,6 +4,97 @@
     "prompt_version": "v2",
     "mode": "fallback"
   },
+  "customer_needs": [
+    "- Door style Shaker -1; layout preference U; wants tall storage.",
+    "- Water purifier: water purifier not stated.",
+    "- Gas: gas supply not stated.",
+    "- Built-in appliances: built-in appliances not stated.",
+    "- Glass display: glass display not stated.",
+    "- Cooking: cooking style not stated; household size not stated.",
+    "- Base cabinets: base cabinet style not stated."
+  ],
+  "explanation": [
+    {
+      "item": "Layout",
+      "built": "U-shape on Wall 1, Wall 2, Wall 3",
+      "why": "U-shape on the walls with the longest free runs.",
+      "source": "customer",
+      "rules": [],
+      "need": "Customer asked for U layout"
+    },
+    {
+      "item": "Sink",
+      "built": "Sink unit 1200 mm (Sink Double Shutter) on Wall 2",
+      "why": "1200 mm suits a 4000 mm window-wall run.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Hob",
+      "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 3, chimney above",
+      "why": "Drawer hob unit on Wall 3, a different wall from the sink.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "LPG cylinder",
+      "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+      "why": "Hob wall is long enough for a cylinder unit.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Tall units",
+      "built": "Tall pantry 600 mm (Single Shutter) on Wall 1",
+      "why": "Pantry at a run end.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Water purifier",
+      "built": "Water purifier cabinet 600 mm (Aquaguard Single Shutter) on Wall 2",
+      "why": "Standard beside the sink window.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Glass display",
+      "built": "None",
+      "why": "Not requested.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Base cabinets",
+      "built": "2 of 6 storage cabinets have drawers",
+      "why": "Standard shutter storage; drawers only where the designer asked.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Feature units",
+      "built": "Wall 3: Base Unit 600 four drawer; Wall 2: Grain trolley 600 grain trolley with 1 external drawer",
+      "why": "Drawers by the hob, grain trolley on the sink wall.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Corners",
+      "built": "Wall 1 / Wall 2: 2 corner cabinets; Wall 3 / Wall 2: 2 corner cabinets",
+      "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+      "source": "rules",
+      "rules": [],
+      "need": null
+    }
+  ],
   "proposal": {
     "layout_type": "U",
     "cabinet_walls": [
@@ -39,7 +130,18 @@
     },
     "wall_prefs": {},
     "purifier_aid": "MTWAWAU600330600SASSDS1LEHNS",
+    "purifier_required": false,
     "display_aid": null,
+    "reasons": {
+      "layout": "U-shape on the walls with the longest free runs.",
+      "sink": "1200 mm suits a 4000 mm window-wall run.",
+      "hob": "Drawer hob unit on Wall 3, a different wall from the sink.",
+      "lpg": "Hob wall is long enough for a cylinder unit.",
+      "tall": "Pantry at a run end.",
+      "purifier": "Standard beside the sink window.",
+      "display": "Not requested.",
+      "features": "Drawers by the hob, grain trolley on the sink wall."
+    },
     "notes": "U-shaped kitchen: sink on Wall 2 under the window, hob on Wall 3, tall storage on Wall 1.",
     "source": "fallback"
   },
@@ -52,22 +154,22 @@
     "placements": {
       "wall_1oy5ecjq6k11pfoo": [
         {
+          "aid": "MTBABGT600560700DGTEDDS1PUEHNS",
+          "category": "Base Grain Trolley",
+          "tier": "base",
+          "role": "storage",
+          "width": 600,
+          "start_mm": 1700.0,
+          "end_mm": 2300.0,
+          "opening": "Pull Out"
+        },
+        {
           "aid": "MTBABU700560700SDSDS1BOEH1S",
           "category": "Base Unit",
           "tier": "base",
           "role": "storage",
           "width": 700,
-          "start_mm": 1700.0,
-          "end_mm": 2400.0,
-          "opening": "Both"
-        },
-        {
-          "aid": "MTBABU600560700SDSDS1BOEH1S",
-          "category": "Base Unit",
-          "tier": "base",
-          "role": "storage",
-          "width": 600,
-          "start_mm": 2400.0,
+          "start_mm": 2300.0,
           "end_mm": 3000.0,
           "opening": "Both"
         },
@@ -304,7 +406,7 @@
       }
     ],
     "loft_walls": [],
-    "score": 37.54,
+    "score": 34.54,
     "decisions": [
       "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2800-3400 mm"
     ],
@@ -326,5 +428,5 @@
     "filtered_skus": 484,
     "door_style": "Shaker -1"
   },
-  "seconds": 0.36
+  "seconds": 0.29
 }

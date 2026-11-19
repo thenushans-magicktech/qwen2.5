@@ -37,7 +37,8 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import BaseModel, ConfigDict, Field
 
 import config
-from ai_designer import AIUnavailable, KitchenPreferences, design_kitchen, ensure_model
+from ai_designer import AIUnavailable, KitchenPreferences, base_storage_need, customer_needs, design_kitchen, ensure_model
+from explain import explain_design
 from catalog_loader import available_door_styles, catalog_status, load_catalog, load_filtered_catalog, refresh_catalog
 from rule_engine import SolverError, SolverPrefs, solve_layout, validate_layout
 from scene_hydrator import hydrate_scene, scene_seed
@@ -81,6 +82,7 @@ def generate_kitchen(
             layout=prefs.layout,
             cabinet_walls=prefs.cabinet_walls,
             sink_under_window=prefs.sink_under_window,
+            base_storage=base_storage_need(prefs)[0],
         ),
     )
     step("Building the 3D scene: cabinets, appliances, countertops, panels")
@@ -89,6 +91,8 @@ def generate_kitchen(
     issues = [msg for msg, _ in validate_layout(layout)]
     report = {
         "ai": ai_info,
+        "customer_needs": customer_needs(prefs),
+        "explanation": explain_design(proposal, layout, prefs, geometry, catalog),
         "proposal": proposal.to_dict(),
         "layout": layout.summary(),
         "nodes_added": stats,
@@ -194,13 +198,45 @@ class JobStore:
         finally:
             with self.lock:
                 job["finished"] = time.time()
+            self._save(job)
+
+    @staticmethod
+    def _path(job_id: str) -> Path:
+        return Path(config.JOBS_DIR) / f"{job_id}.json"
+
+    def _save(self, job: dict) -> None:
+        """Keep finished designs on disk so their links survive a server restart."""
+        try:
+            Path(config.JOBS_DIR).mkdir(parents=True, exist_ok=True)
+            with self.lock:
+                data = json.dumps(job, ensure_ascii=False)
+            self._path(job["id"]).write_text(data, encoding="utf-8")
+        except OSError as exc:  # pragma: no cover - disk full / read-only
+            log.warning("could not save design %s: %s", job.get("id"), exc)
+
+    def _load(self, job_id: str) -> Optional[dict]:
+        if not job_id.isalnum():
+            return None
+        path = self._path(job_id)
+        if not path.is_file():
+            return None
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
 
     def get(self, job_id: str) -> dict:
         with self.lock:
             job = self.jobs.get(job_id)
+        if job is None:
+            job = self._load(job_id)
             if job is None:
-                raise HTTPException(status_code=404, detail="job not found (it may have expired)")
-            return job
+                raise HTTPException(status_code=404, detail="design not found (it may have been deleted)")
+            with self.lock:
+                self.jobs[job_id] = job
+                while len(self.jobs) > self.keep:
+                    self.jobs.popitem(last=False)
+        return job
 
     def public(self, job: dict) -> dict:
         with self.lock:
@@ -257,7 +293,8 @@ app = FastAPI(
 
 @app.get("/", include_in_schema=False)
 def ui() -> FileResponse:
-    return FileResponse(STATIC_DIR / "index.html", media_type="text/html")
+    # no-cache: a normal browser refresh always picks up the latest UI
+    return FileResponse(STATIC_DIR / "index.html", media_type="text/html", headers={"Cache-Control": "no-cache"})
 
 
 @app.get("/health")

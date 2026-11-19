@@ -40,6 +40,8 @@ AI_SHORTLIST_MAX = 45
 #      + short option codes; v1 = the original prompt, kept for A/B comparison.
 AI_PROMPT_VERSION = os.getenv("MAGICKHOME_PROMPT_VERSION", "v2")
 KNOWLEDGE_DIR = Path(os.getenv("MAGICKHOME_KNOWLEDGE_DIR", str(BASE_DIR / "knowledge")))
+# Finished web-UI designs are saved here so ?job=<id> links survive a server restart.
+JOBS_DIR = Path(os.getenv("MAGICKHOME_JOBS_DIR", str(BASE_DIR / "designs")))
 
 # ---------------------------------------------------------------------------
 # Catalogue sources

@@ -4,6 +4,99 @@
     "prompt_version": "v2",
     "mode": "fallback"
   },
+  "customer_needs": [
+    "- Door style Slab (Plain); layout preference auto; wants tall storage.",
+    "- Water purifier: water purifier not stated.",
+    "- Gas: gas supply not stated.",
+    "- Built-in appliances: built-in appliances not stated.",
+    "- Glass display: glass display not stated.",
+    "- Cooking: cooking style not stated; household size not stated.",
+    "- Base cabinets: base cabinet style not stated."
+  ],
+  "explanation": [
+    {
+      "item": "Layout",
+      "built": "L-shape on Wall 1, Wall 2",
+      "why": "L-shape on the walls with the longest free runs.",
+      "source": "customer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Sink",
+      "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
+      "why": "1200 mm suits a 4000 mm window-wall run.",
+      "source": "rules-designer",
+      "rules": [
+        "Designer chose 1200 mm; the rules used 1050 mm so it centres under the window."
+      ],
+      "need": null
+    },
+    {
+      "item": "Hob",
+      "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 1, chimney above",
+      "why": "Drawer hob unit on Wall 1, a different wall from the sink.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "LPG cylinder",
+      "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+      "why": "Hob wall is long enough for a cylinder unit.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Tall units",
+      "built": "Tall pantry 600 mm (Single Shutter) on Wall 2",
+      "why": "Pantry at a run end.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Water purifier",
+      "built": "Water purifier cabinet 600 mm (Aquaguard Single Shutter) on Wall 2",
+      "why": "Standard beside the sink window.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Glass display",
+      "built": "None",
+      "why": "Not requested.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Base cabinets",
+      "built": "2 of 4 storage cabinets have drawers",
+      "why": "Standard shutter storage; drawers only where the designer asked.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Feature units",
+      "built": "Wall 1: Base Unit 600 four drawer; Wall 2: Grain trolley 600 grain trolley with 1 external drawer",
+      "why": "Drawers by the hob, grain trolley on the sink wall.",
+      "source": "rules-designer",
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Corners",
+      "built": "Wall 2 / Wall 1: 3 corner cabinets",
+      "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+      "source": "rules",
+      "rules": [],
+      "need": null
+    }
+  ],
   "proposal": {
     "layout_type": "L",
     "cabinet_walls": [
@@ -38,7 +131,18 @@
     },
     "wall_prefs": {},
     "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "purifier_required": false,
     "display_aid": null,
+    "reasons": {
+      "layout": "L-shape on the walls with the longest free runs.",
+      "sink": "1200 mm suits a 4000 mm window-wall run.",
+      "hob": "Drawer hob unit on Wall 1, a different wall from the sink.",
+      "lpg": "Hob wall is long enough for a cylinder unit.",
+      "tall": "Pantry at a run end.",
+      "purifier": "Standard beside the sink window.",
+      "display": "Not requested.",
+      "features": "Drawers by the hob, grain trolley on the sink wall."
+    },
     "notes": "L-shaped kitchen: sink on Wall 2 under the window, hob on Wall 1, tall storage on Wall 2.",
     "source": "fallback"
   },
@@ -50,14 +154,14 @@
     "placements": {
       "wall_1oy5ecjq6k11pfoo": [
         {
-          "aid": "MTBABSP300560700DSPSLPUEHNS",
-          "category": "Base Spice Pull Out",
+          "aid": "MTBABCU600560800SCSSSLLEHNS",
+          "category": "Base Cylinder Unit",
           "tier": "base",
-          "role": "spice",
-          "width": 300,
-          "start_mm": 1200.0,
-          "end_mm": 1500.0,
-          "opening": "Pull Out"
+          "role": "cylinder",
+          "width": 600,
+          "start_mm": 1090.0,
+          "end_mm": 1690.0,
+          "opening": "Left"
         },
         {
           "aid": "MTBABHU900560700DTDASLPUEHNS",
@@ -65,29 +169,29 @@
           "tier": "base",
           "role": "hob",
           "width": 900,
-          "start_mm": 1500.0,
-          "end_mm": 2400.0,
+          "start_mm": 1690.0,
+          "end_mm": 2590.0,
           "opening": "Pull Out"
         },
         {
-          "aid": "MTBABCU600560800SCSSSLREHNS",
-          "category": "Base Cylinder Unit",
+          "aid": "MTBABSP300560700DSPSLPUEHNS",
+          "category": "Base Spice Pull Out",
           "tier": "base",
-          "role": "cylinder",
-          "width": 600,
-          "start_mm": 2400.0,
-          "end_mm": 3000.0,
-          "opening": "Right"
+          "role": "spice",
+          "width": 300,
+          "start_mm": 2590.0,
+          "end_mm": 2890.0,
+          "opening": "Pull Out"
         },
         {
-          "aid": "MTBCBCL1050560700SBCLSLLEH1S",
-          "category": "Blind corner unit – L",
+          "aid": "MTBABU600560700DFDSLPUEHNS",
+          "category": "Base Unit",
           "tier": "base",
-          "role": "corner",
-          "width": 1050,
-          "start_mm": 3000.0,
-          "end_mm": 4050.0,
-          "opening": "Left"
+          "role": "storage",
+          "width": 600,
+          "start_mm": 2890.0,
+          "end_mm": 3490.0,
+          "opening": "Pull Out"
         },
         {
           "aid": "MTLOLU1200330600SDSSLBOEHNS",
@@ -95,17 +199,17 @@
           "tier": "loft",
           "role": "loft",
           "width": 1200,
-          "start_mm": 1450.0,
-          "end_mm": 2650.0,
+          "start_mm": 1100.0,
+          "end_mm": 2300.0,
           "opening": "Both"
         },
         {
-          "aid": "MTLOLU750330600SDSSLBOEHNS",
+          "aid": "MTLOLU1100330600SDSSLBOEHNS",
           "category": "Loft - Modular",
           "tier": "loft",
           "role": "loft",
-          "width": 750,
-          "start_mm": 2650.0,
+          "width": 1100,
+          "start_mm": 2300.0,
           "end_mm": 3400.0,
           "opening": "Both"
         },
@@ -120,12 +224,22 @@
           "opening": "Both"
         },
         {
-          "aid": "MTWAWU950330600SDSSLBOEH1S",
+          "aid": "MTWAWU550330600SSSSLLEH1S",
           "category": "Wall Unit",
           "tier": "wall",
           "role": "wall",
-          "width": 950,
-          "start_mm": 2450.0,
+          "width": 550,
+          "start_mm": 1090.0,
+          "end_mm": 1640.0,
+          "opening": "Left"
+        },
+        {
+          "aid": "MTWAWU750330600SDSSLBOEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 750,
+          "start_mm": 2650.0,
           "end_mm": 3400.0,
           "opening": "Both"
         },
@@ -142,34 +256,54 @@
       ],
       "wall_56i56ymve0xf69fm": [
         {
-          "aid": "MTBABU750560700SDSSLBOEH1S",
+          "aid": "MTBCBCR1050560700SBCRSLREH1S",
+          "category": "Blind corner unit – R",
+          "tier": "base",
+          "role": "corner",
+          "width": 1050,
+          "start_mm": 50.0,
+          "end_mm": 1100.0,
+          "opening": "Right"
+        },
+        {
+          "aid": "MTBABU350560700SSSSLLEH1S",
           "category": "Base Unit",
           "tier": "base",
           "role": "storage",
-          "width": 750,
-          "start_mm": 641.2,
-          "end_mm": 1391.2,
-          "opening": "Both"
+          "width": 350,
+          "start_mm": 1100.0,
+          "end_mm": 1450.0,
+          "opening": "Left"
         },
         {
-          "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+          "aid": "MTBABSU1050560700SSDSSLBOEHNS",
           "category": "Base Sink Unit",
           "tier": "base",
           "role": "sink",
-          "width": 1200,
-          "start_mm": 1391.2,
-          "end_mm": 2591.2,
+          "width": 1050,
+          "start_mm": 1466.2,
+          "end_mm": 2516.2,
           "opening": "Both"
         },
         {
-          "aid": "MTBABU850560700SDSSLBOEH1S",
+          "aid": "MTBABGT600560700DGTEDSLPUEHNS",
+          "category": "Base Grain Trolley",
+          "tier": "base",
+          "role": "storage",
+          "width": 600,
+          "start_mm": 2516.2,
+          "end_mm": 3116.2,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTBABU300560700SSSSLREH1S",
           "category": "Base Unit",
           "tier": "base",
           "role": "storage",
-          "width": 850,
-          "start_mm": 2591.2,
-          "end_mm": 3441.2,
-          "opening": "Both"
+          "width": 300,
+          "start_mm": 3116.2,
+          "end_mm": 3416.2,
+          "opening": "Right"
         },
         {
           "aid": "MTLOLU500330600SSSSLLEHNS",
@@ -187,8 +321,8 @@
           "tier": "loft",
           "role": "loft",
           "width": 600,
-          "start_mm": 2841.2,
-          "end_mm": 3441.2,
+          "start_mm": 2816.2,
+          "end_mm": 3416.2,
           "opening": "Both"
         },
         {
@@ -197,8 +331,8 @@
           "tier": "loft",
           "role": "loft_deep",
           "width": 600,
-          "start_mm": 3441.2,
-          "end_mm": 4041.2,
+          "start_mm": 3416.2,
+          "end_mm": 4016.2,
           "opening": "Both"
         },
         {
@@ -207,8 +341,8 @@
           "tier": "tall",
           "role": "tall",
           "width": 600,
-          "start_mm": 3441.2,
-          "end_mm": 4041.2,
+          "start_mm": 3416.2,
+          "end_mm": 4016.2,
           "opening": "Right"
         },
         {
@@ -227,23 +361,23 @@
           "tier": "wall",
           "role": "purifier",
           "width": 600,
-          "start_mm": 2841.2,
-          "end_mm": 3441.2,
+          "start_mm": 2816.2,
+          "end_mm": 3416.2,
           "opening": "Right"
         }
       ]
     },
     "chimney": {
       "wall_id": "wall_1oy5ecjq6k11pfoo",
-      "center_mm": 1950.0
+      "center_mm": 2140.0
     },
     "corners": [
       {
         "walls": [
-          "wall_1oy5ecjq6k11pfoo",
-          "wall_56i56ymve0xf69fm"
+          "wall_56i56ymve0xf69fm",
+          "wall_1oy5ecjq6k11pfoo"
         ],
-        "base_unit": "MTBCBCL1050560700SBCLSLLEH1S",
+        "base_unit": "MTBCBCR1050560700SBCRSLREH1S",
         "wall_unit": "MTWCWLC650650600SLCSLBOEH1S",
         "loft_unit": "MTLCLLCM650650600SLCMSLBOEHNS",
         "open_tiers": []
@@ -253,19 +387,21 @@
       "wall_1oy5ecjq6k11pfoo",
       "wall_56i56ymve0xf69fm"
     ],
-    "score": 27.51,
+    "score": 62.66,
     "decisions": [
-      "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2841-3441 mm",
+      "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2816-3416 mm",
+      "Wall 1: Base Cylinder Unit 600 hinged Left (towards door) -> MTBABCU600560800SCSSSLLEHNS",
+      "Wall 2: Base Unit 300 hinged Right (towards tall) -> MTBABU300560700SSSSLREH1S",
       "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005601940SSSSLREH4S",
       "Wall 2: Wall Aquaguard Unit 600 hinged Right (towards tall) -> MTWAWAU600330600SASSSLREHNS"
     ],
     "warnings": []
   },
   "nodes_added": {
-    "kitchen": 18,
+    "kitchen": 21,
     "appliance": 3,
     "fixture:toe-kick": 3,
-    "fixture:slab": 16,
+    "fixture:slab": 18,
     "fixture:countertop": 2,
     "fixture:backsplash": 6,
     "fixture:filler": 11,
@@ -277,5 +413,5 @@
     "filtered_skus": 484,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.3
+  "seconds": 0.17
 }
