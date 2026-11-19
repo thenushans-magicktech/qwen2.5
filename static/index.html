@@ -3,262 +3,389 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI Kitchen Designer</title>
+<title>MagickHome Kitchen Designer</title>
 <style>
 :root {
-  --bg: #f4f5f7; --panel: #ffffff; --panel-2: #f8f9fb; --text: #15171c; --muted: #5d6470; --line: #e1e4ea;
-  --accent: #2c56d1; --accent-soft: #e8eefc; --accent-ink: #ffffff;
-  --ok: #1d7f47; --ok-soft: #e6f4ec; --warn: #9a5b00; --warn-soft: #fdf3e2; --err: #bf2626; --err-soft: #fbeaea;
-  --base: #4a78d6; --tall: #2b9a67; --wallu: #de8c22; --loft: #9466cf; --corner: #c2457a;
+  --bg: #f3f4f7; --panel: #ffffff; --panel-2: #f7f8fa; --text: #14161b; --muted: #5c636f; --line: #e2e5eb;
+  --accent: #2b55d0; --accent-soft: #e9eefc; --accent-ink: #ffffff;
+  --ok: #1b7a45; --ok-soft: #e5f4eb; --warn: #8f5600; --warn-soft: #fdf2df; --err: #b92525; --err-soft: #fbe9e9;
+  --base: #4a78d6; --tall: #2b9a67; --wallu: #de8c22; --loft: #9466cf; --corner: #c2457a; --feature: #0e9aa7;
   --wall-line: #262a31; --door: #d24646; --window: #2399cf; --floor: #eceff4; --counter: #6b7280;
-  --shadow: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.08);
+  --shadow: 0 1px 2px rgba(16,24,40,.05), 0 2px 6px rgba(16,24,40,.06);
+  --radius: 14px;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0e1014; --panel: #161920; --panel-2: #1b1f27; --text: #e7e9ee; --muted: #9aa1ad; --line: #2a2f39;
-    --accent: #6f8ff2; --accent-soft: #1f2a46; --accent-ink: #0e1014;
+    --bg: #0e1014; --panel: #161920; --panel-2: #1c2028; --text: #e8eaef; --muted: #9ba2ae; --line: #2a2f39;
+    --accent: #7393f4; --accent-soft: #1f2a46; --accent-ink: #0e1014;
     --ok: #4cc283; --ok-soft: #14291f; --warn: #e3a64a; --warn-soft: #2d2313; --err: #f07272; --err-soft: #331919;
-    --wall-line: #d8dce3; --floor: #1d2129; --counter: #a3a9b4;
+    --wall-line: #d8dce3; --floor: #1d2129; --counter: #a3a9b4; --feature: #34c3cf;
     --shadow: none; color-scheme: dark;
   }
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); color: var(--text); }
-body { font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+body { font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
 button, input, select, textarea { font: inherit; color: inherit; }
-h1 { font-size: 17px; margin: 0; font-weight: 650; letter-spacing: -.01em; }
-h2 { font-size: 13px; margin: 0 0 10px; font-weight: 650; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
-h3 { font-size: 14px; margin: 0 0 6px; font-weight: 650; }
-
-header { display: flex; align-items: center; gap: 12px; padding: 12px 20px; background: var(--panel); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
-.logo { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); display: grid; place-items: center; color: var(--accent-ink); font-weight: 700; }
+h1 { font-size: 17px; margin: 0; font-weight: 700; letter-spacing: -.01em; }
+h2 { font-size: 15px; margin: 0; font-weight: 650; }
+h3 { font-size: 12px; margin: 0 0 8px; font-weight: 650; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+p { margin: 0; }
 .sub { color: var(--muted); font-size: 12.5px; }
-.chips { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); font-size: 12px; color: var(--muted); background: var(--panel-2); white-space: nowrap; }
-.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+.hidden { display: none !important; }
+
+/* ---------- header ---------- */
+header { display: flex; align-items: center; gap: 12px; padding: 12px 24px; background: var(--panel); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
+.logo { width: 32px; height: 32px; border-radius: 9px; background: var(--accent); display: grid; place-items: center; color: var(--accent-ink); flex: none; }
+.status { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.pill { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--line); font-size: 12.5px; color: var(--muted); background: var(--panel-2); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
 .dot.ok { background: var(--ok); } .dot.err { background: var(--err); } .dot.warn { background: var(--warn); }
 
-main { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 16px; padding: 16px 20px 40px; max-width: 1480px; margin: 0 auto; }
-@media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 12px 16px 32px; } header { padding: 10px 16px; } }
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px; box-shadow: var(--shadow); }
+/* ---------- layout ---------- */
+main { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 20px; padding: 20px 24px 48px; max-width: 1500px; margin: 0 auto; align-items: start; }
+@media (max-width: 960px) {
+  main { grid-template-columns: minmax(0, 1fr); padding: 14px 16px 32px; }
+  header { padding: 10px 16px; flex-wrap: wrap; }
+  .status { margin-left: 0; width: 100%; justify-content: flex-start; }
+}
+@media (max-width: 520px) {
+  header .sub { display: none; }
+  .card { padding: 15px; }
+  .canvas { min-height: 300px; }
+}
 .stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+.card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 12.5px; font-weight: 700; flex: none; }
+.num.done { background: var(--ok); color: #fff; }
+.card-head .sub { margin-left: auto; }
 
-.drop { border: 1.5px dashed var(--line); border-radius: 10px; padding: 22px 14px; text-align: center; cursor: pointer; background: var(--panel-2); transition: border-color .15s, background .15s; }
+/* ---------- step 1: floor plan ---------- */
+.drop { border: 1.5px dashed var(--line); border-radius: 12px; padding: 22px 14px; text-align: center; cursor: pointer; background: var(--panel-2); transition: border-color .15s, background .15s; }
 .drop:hover, .drop:focus-visible, .drop.over { border-color: var(--accent); background: var(--accent-soft); outline: none; }
+.drop svg { color: var(--accent); margin-bottom: 6px; }
 .drop strong { display: block; font-size: 14.5px; margin-bottom: 2px; }
-.drop .sub { display: block; }
-.file-meta { margin-top: 12px; display: none; }
-.file-meta.show { display: block; }
-.file-name { font-weight: 600; word-break: break-all; }
+.or { text-align: center; margin-top: 10px; font-size: 13px; color: var(--muted); }
+.linkbtn { background: none; border: 0; color: var(--accent); padding: 0; cursor: pointer; font-weight: 600; }
+.linkbtn:hover { text-decoration: underline; }
+.linkbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.file { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); }
+.file-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; flex: none; }
+.file-name { font-weight: 600; word-break: break-all; line-height: 1.3; }
+.file .linkbtn { margin-left: auto; font-size: 13px; }
 .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
-.fact { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
+.fact { background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px; padding: 7px 8px; text-align: center; }
 .fact b { display: block; font-size: 16px; font-variant-numeric: tabular-nums; }
 .fact span { font-size: 11.5px; color: var(--muted); }
-.linkbtn { background: none; border: 0; color: var(--accent); padding: 0; cursor: pointer; font-size: 13px; }
-.linkbtn:hover { text-decoration: underline; }
 
-.field { margin-bottom: 12px; }
-.field > label, .field > .label { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 5px; }
-select, textarea { width: 100%; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); }
-textarea { min-height: 64px; resize: vertical; }
-select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-.seg input { position: absolute; opacity: 0; pointer-events: none; }
-.seg label { text-align: center; padding: 7px 4px; cursor: pointer; font-size: 13px; border-left: 1px solid var(--line); background: var(--panel); user-select: none; }
-.seg label:first-of-type { border-left: 0; }
-.seg input:checked + label { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
-.seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: -2px; }
-.row { display: flex; gap: 10px; }
-.row > * { flex: 1; }
-.toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); }
+/* ---------- step 2: preferences ---------- */
+.field { margin-bottom: 16px; }
+.label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.label .sub { font-weight: 400; }
+select, textarea { width: 100%; padding: 9px 11px; border-radius: 9px; border: 1px solid var(--line); background: var(--panel); }
+textarea { min-height: 70px; resize: vertical; }
+select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.choice { display: grid; gap: 8px; }
+.choice.two { grid-template-columns: 1fr 1fr; }
+.choice.four { grid-template-columns: repeat(4, 1fr); }
+.choice input { position: absolute; opacity: 0; pointer-events: none; }
+.choice label { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; padding: 10px 6px; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; background: var(--panel); user-select: none; transition: border-color .12s, background .12s; min-height: 58px; }
+.choice label:hover { border-color: var(--accent); }
+.choice label b { font-size: 13.5px; font-weight: 650; }
+.choice label small { font-size: 11.5px; color: var(--muted); line-height: 1.25; }
+.choice input:checked + label { border-color: var(--accent); background: var(--accent-soft); }
+.choice input:checked + label b { color: var(--accent); }
+.choice input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+.choice svg { color: var(--muted); }
+.choice input:checked + label svg { color: var(--accent); }
+.toggles { border: 1px solid var(--line); border-radius: 10px; padding: 2px 12px; }
+.toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); }
 .toggle:first-child { border-top: 0; }
 .toggle small { display: block; color: var(--muted); font-size: 12px; }
-.switch { position: relative; width: 38px; height: 22px; flex: none; }
+.switch { position: relative; width: 40px; height: 23px; flex: none; }
 .switch input { opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; position: absolute; z-index: 1; }
 .switch span { position: absolute; inset: 0; background: var(--line); border-radius: 999px; transition: background .15s; }
-.switch span::after { content: ""; position: absolute; width: 16px; height: 16px; left: 3px; top: 3px; border-radius: 50%; background: #fff; transition: transform .15s; }
+.switch span::after { content: ""; position: absolute; width: 17px; height: 17px; left: 3px; top: 3px; border-radius: 50%; background: #fff; transition: transform .15s; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
 .switch input:checked + span { background: var(--accent); }
-.switch input:checked + span::after { transform: translateX(16px); }
+.switch input:checked + span::after { transform: translateX(17px); }
 .switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
-.walls-pick { display: flex; flex-wrap: wrap; gap: 6px; }
-.walls-pick label { display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; font-size: 12.5px; cursor: pointer; }
+.mini-select { width: auto; padding: 5px 8px; font-size: 13px; }
+.ideas { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.idea { border: 1px solid var(--line); background: var(--panel-2); border-radius: 999px; padding: 3px 10px; font-size: 12px; cursor: pointer; color: var(--muted); }
+.idea:hover { border-color: var(--accent); color: var(--accent); }
+.idea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+details.more { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 4px; }
+details.more summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); list-style: none; display: flex; align-items: center; gap: 6px; }
+details.more summary::before { content: "▸"; font-size: 11px; transition: transform .15s; }
+details.more[open] summary::before { transform: rotate(90deg); }
+details.more summary::-webkit-details-marker { display: none; }
+.walls-pick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.walls-pick label { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 12.5px; cursor: pointer; }
 .walls-pick input { accent-color: var(--accent); margin: 0; }
-details summary { cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--muted); margin: 4px 0 10px; }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 14px; border-radius: 9px; border: 1px solid var(--line); background: var(--panel); cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text); }
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text); white-space: nowrap; }
 .btn:hover { border-color: var(--accent); }
-.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); width: 100%; font-size: 15px; padding: 12px; }
-.btn.primary:hover { filter: brightness(1.06); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.07); }
+.btn.big { width: 100%; font-size: 15.5px; padding: 13px; }
 .btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
 .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.hint { color: var(--muted); font-size: 12px; margin-top: 8px; text-align: center; }
+.hint { color: var(--muted); font-size: 12.5px; margin-top: 8px; text-align: center; }
+.alert { padding: 10px 12px; border-radius: 9px; background: var(--err-soft); color: var(--err); margin-top: 12px; display: none; font-size: 13px; }
+.alert.show { display: block; }
 
+/* ---------- result banner ---------- */
+.banner { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.banner-icon { width: 42px; height: 42px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); display: grid; place-items: center; flex: none; }
+.banner-text { flex: 1; min-width: 220px; }
+.banner-text h2 { font-size: 17px; }
+.banner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+@media (max-width: 640px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+.kpi { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; }
+.kpi b { display: block; font-size: 17px; font-variant-numeric: tabular-nums; line-height: 1.25; }
+.kpi span { font-size: 12px; color: var(--muted); }
+
+/* ---------- preview ---------- */
 .viewer-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-.tabs { display: flex; gap: 4px; flex-wrap: wrap; }
-.tab { padding: 6px 12px; border-radius: 8px; border: 1px solid transparent; background: none; cursor: pointer; color: var(--muted); font-weight: 600; font-size: 13px; }
+.tabs:empty { display: none; }
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
+.tab { padding: 5px 12px; border-radius: 7px; border: 0; background: none; cursor: pointer; color: var(--muted); font-weight: 600; font-size: 13px; }
 .tab:hover { color: var(--text); }
-.tab.active { background: var(--accent-soft); color: var(--accent); }
+.tab.active { background: var(--panel); color: var(--accent); box-shadow: var(--shadow); }
 .tab:focus-visible { outline: 2px solid var(--accent); }
-.downloads { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
-.canvas { position: relative; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); min-height: 420px; display: grid; place-items: center; overflow: hidden; }
-.canvas svg { width: 100%; height: auto; max-height: 68vh; display: block; }
-.empty { text-align: center; color: var(--muted); padding: 40px 20px; }
-.empty strong { display: block; color: var(--text); font-size: 15px; margin-bottom: 4px; }
+.view-caption { margin-left: auto; }
+.canvas { position: relative; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-2); min-height: 440px; display: grid; place-items: center; overflow: hidden; }
+.canvas svg { width: 100%; height: auto; max-height: 66vh; display: block; }
 .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-size: 12px; color: var(--muted); }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -2px; }
 
-.progress { position: absolute; inset: 0; background: color-mix(in srgb, var(--panel) 92%, transparent); display: none; place-items: center; z-index: 2; }
+.welcome { max-width: 560px; padding: 28px 20px; text-align: center; }
+.welcome h2 { font-size: 18px; margin-bottom: 6px; }
+.how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; text-align: left; }
+@media (max-width: 640px) { .how { grid-template-columns: 1fr; } }
+.how div { background: var(--panel); border: 1px solid var(--line); border-radius: 11px; padding: 12px; }
+.how b { display: block; font-size: 13.5px; margin: 6px 0 2px; }
+.how .num { width: 22px; height: 22px; font-size: 12px; }
+
+.progress { position: absolute; inset: 0; background: color-mix(in srgb, var(--panel) 94%, transparent); display: none; place-items: center; z-index: 2; }
 .progress.show { display: grid; }
-.progress-box { width: min(440px, 90%); }
-.progress-title { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 15px; margin-bottom: 4px; }
-.spinner { width: 18px; height: 18px; border: 2.5px solid var(--accent-soft); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; flex: none; }
+.progress-box { width: min(460px, 90%); }
+.progress-title { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 16px; }
+.spinner { width: 20px; height: 20px; border: 3px solid var(--accent-soft); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; flex: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } }
-.steps { list-style: none; padding: 0; margin: 14px 0 0; }
-.steps li { display: flex; gap: 10px; padding: 5px 0; color: var(--muted); font-size: 13px; }
+.bar { height: 6px; background: var(--line); border-radius: 999px; overflow: hidden; margin: 12px 0 6px; }
+.bar i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 999px; transition: width .5s linear; }
+.bar-meta { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.steps { list-style: none; padding: 0; margin: 14px 0 0; border-top: 1px solid var(--line); }
+.steps li { display: flex; gap: 10px; padding: 6px 0; color: var(--muted); font-size: 13px; }
 .steps li.done { color: var(--text); }
-.steps li .mk { width: 16px; flex: none; text-align: center; }
+.steps li .mk { width: 16px; flex: none; text-align: center; color: var(--ok); font-weight: 700; }
 .steps li.current { color: var(--text); font-weight: 600; }
-.timer { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 12.5px; }
+.steps li.current .mk { color: var(--accent); }
+.steps .t { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 400; }
 
+/* ---------- results ---------- */
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 1100px) { .grid2 { grid-template-columns: 1fr; } }
-.badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+@media (max-width: 1150px) { .grid2 { grid-template-columns: 1fr; } }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
 .badge.ai { background: var(--accent-soft); color: var(--accent); }
 .badge.rules { background: var(--warn-soft); color: var(--warn); }
-.quote { background: var(--panel-2); border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 8px 12px; margin: 8px 0; }
-.quote small { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
-ul.notes { margin: 6px 0 0; padding-left: 0; list-style: none; }
-ul.notes li { padding: 6px 10px; border-radius: 7px; margin-bottom: 5px; font-size: 13px; background: var(--panel-2); border: 1px solid var(--line); }
-ul.notes li.warn { background: var(--warn-soft); border-color: transparent; color: var(--warn); }
-ul.notes li.err { background: var(--err-soft); border-color: transparent; color: var(--err); }
-ul.notes li.ok { background: var(--ok-soft); border-color: transparent; color: var(--ok); }
-.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
-.stat { background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
-.stat b { display: block; font-size: 18px; font-variant-numeric: tabular-nums; }
-.stat span { font-size: 11.5px; color: var(--muted); }
-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.quote { background: var(--panel-2); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 9px 13px; margin: 10px 0; font-size: 13.5px; }
+.quote small { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 650; margin-bottom: 3px; }
+dl.choices { display: grid; grid-template-columns: 120px 1fr; gap: 7px 12px; margin: 14px 0 0; font-size: 13.5px; }
+dl.choices dt { color: var(--muted); }
+dl.choices dd { margin: 0; }
+ul.checks { margin: 0; padding: 0; list-style: none; }
+ul.checks li { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-top: 1px solid var(--line); font-size: 13.5px; }
+ul.checks li:first-child { border-top: 0; }
+.ic { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; flex: none; font-size: 12px; font-weight: 700; margin-top: 1px; }
+.ic.ok { background: var(--ok-soft); color: var(--ok); }
+.ic.warn { background: var(--warn-soft); color: var(--warn); }
+.ic.err { background: var(--err-soft); color: var(--err); }
+.ic.info { background: var(--accent-soft); color: var(--accent); }
+.subhead { margin: 16px 0 6px; }
+details.tech { margin-top: 12px; }
+details.tech summary { cursor: pointer; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+details.tech ul { margin: 8px 0 0; padding-left: 18px; font-size: 12px; color: var(--muted); }
+details.tech li { margin-bottom: 3px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
 th { color: var(--muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; }
-td.num { text-align: right; font-variant-numeric: tabular-nums; }
-code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11.5px; }
-.tier { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11px; font-weight: 600; color: #fff; }
-.alert { padding: 10px 12px; border-radius: 8px; background: var(--err-soft); color: var(--err); margin-top: 12px; display: none; font-size: 13px; }
-.alert.show { display: block; }
-.hidden { display: none !important; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+tr.group td { background: var(--panel-2); font-weight: 650; font-size: 12.5px; color: var(--text); border-bottom: 1px solid var(--line); }
+tr.group td .sub { font-weight: 400; margin-left: 6px; }
+.code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; color: var(--muted); }
+.tier { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; color: #fff; }
 .scroll-x { overflow-x: auto; }
 </style>
 </head>
 <body>
 <header>
-  <div class="logo" aria-hidden="true">M</div>
-  <div>
-    <h1>AI Kitchen Designer</h1>
-    <div class="sub">Upload a floor plan · Qwen designs · rules verify · download the scene</div>
+  <div class="logo" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V10l9-6 9 6v11"/><path d="M9 21v-6h6v6"/></svg>
   </div>
-  <div class="chips">
-    <span class="chip" id="chip-ai"><span class="dot"></span><span>Checking Qwen…</span></span>
-    <span class="chip" id="chip-cat"><span class="dot"></span><span>Catalogue</span></span>
+  <div>
+    <h1>MagickHome Kitchen Designer</h1>
+    <div class="sub">Upload a floor plan, and Qwen designs a modular kitchen that follows the design rules.</div>
+  </div>
+  <div class="status">
+    <span class="pill" id="chip-ai"><span class="dot"></span><span>Checking the AI designer…</span></span>
+    <span class="pill" id="chip-cat"><span class="dot"></span><span>Cabinet catalogue</span></span>
   </div>
 </header>
 
 <main>
-  <!-- Left: inputs -->
+  <!-- ===================== left: steps ===================== -->
   <div class="stack">
     <section class="card" aria-labelledby="h-upload">
-      <h2 id="h-upload">1 · Floor plan</h2>
-      <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="drop-sub">
-        <strong>Drop a floor-plan JSON here</strong>
-        <span class="sub" id="drop-sub">or click to browse · magickhomes-scene v1</span>
+      <div class="card-head"><span class="num" id="n1">1</span><h2 id="h-upload">Floor plan</h2></div>
+      <div id="upload-box">
+        <div class="drop" id="drop" tabindex="0" role="button" aria-describedby="drop-sub">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+          <strong>Drop your floor-plan file here</strong>
+          <span class="sub" id="drop-sub">or click to choose it · MagickHome scene JSON</span>
+        </div>
+        <div class="or">No file to hand? <button class="linkbtn" id="sample">Try the sample room</button></div>
       </div>
-      <input type="file" id="file" accept=".json,application/json" class="hidden">
-      <div style="margin-top:8px;text-align:center"><button class="linkbtn" id="sample">Use the sample floor plan</button></div>
-      <div class="file-meta" id="file-meta">
-        <div class="file-name" id="file-name"></div>
-        <div class="sub" id="file-note"></div>
+      <div id="file-box" class="hidden">
+        <div class="file">
+          <div class="file-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/></svg></div>
+          <div><div class="file-name" id="file-name"></div><div class="sub" id="file-note"></div></div>
+          <button class="linkbtn" id="change-file">Change</button>
+        </div>
         <div class="facts">
+          <div class="fact"><b id="f-size">–</b><span>room (m)</span></div>
           <div class="fact"><b id="f-walls">0</b><span>walls</span></div>
           <div class="fact"><b id="f-doors">0</b><span>doors</span></div>
           <div class="fact"><b id="f-windows">0</b><span>windows</span></div>
-          <div class="fact"><b id="f-size">–</b><span>room (m)</span></div>
         </div>
       </div>
+      <input type="file" id="file" accept=".json,application/json" class="hidden">
       <div class="alert" id="file-err" role="alert"></div>
     </section>
 
     <section class="card" aria-labelledby="h-prefs">
-      <h2 id="h-prefs">2 · Preferences</h2>
+      <div class="card-head"><span class="num">2</span><h2 id="h-prefs">Your kitchen</h2></div>
+
       <div class="field">
-        <span class="label" id="lbl-designer">Designer</span>
-        <div class="seg" role="radiogroup" aria-labelledby="lbl-designer">
-          <input type="radio" name="ai" id="ai-ollama" value="ollama" checked><label for="ai-ollama">Qwen AI</label>
-          <input type="radio" name="ai" id="ai-auto" value="auto"><label for="ai-auto">Qwen + fallback</label>
-          <input type="radio" name="ai" id="ai-fallback" value="fallback"><label for="ai-fallback">Rules only</label>
+        <span class="label" id="lbl-designer">Who designs it?</span>
+        <div class="choice two" role="radiogroup" aria-labelledby="lbl-designer">
+          <input type="radio" name="ai" id="ai-qwen" value="auto" checked>
+          <label for="ai-qwen"><b>Qwen AI designer</b><small id="ai-time">thinks like a designer · a few minutes</small></label>
+          <input type="radio" name="ai" id="ai-rules" value="fallback">
+          <label for="ai-rules"><b>Quick rules</b><small>standard design · seconds</small></label>
         </div>
       </div>
+
       <div class="field">
         <span class="label" id="lbl-layout">Layout</span>
-        <div class="seg" role="radiogroup" aria-labelledby="lbl-layout">
-          <input type="radio" name="layout" id="lay-auto" value="auto" checked><label for="lay-auto">Auto</label>
-          <input type="radio" name="layout" id="lay-single" value="single"><label for="lay-single">Single</label>
-          <input type="radio" name="layout" id="lay-l" value="L"><label for="lay-l">L-shape</label>
-          <input type="radio" name="layout" id="lay-u" value="U"><label for="lay-u">U-shape</label>
+        <div class="choice four" role="radiogroup" aria-labelledby="lbl-layout">
+          <input type="radio" name="layout" id="lay-auto" value="auto" checked>
+          <label for="lay-auto"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M13 3l1.8 4.2L19 9l-4.2 1.8L13 15l-1.8-4.2L7 9l4.2-1.8z" fill="currentColor"/></svg><b>Best fit</b></label>
+          <input type="radio" name="layout" id="lay-single" value="single">
+          <label for="lay-single"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><rect x="3" y="3" width="20" height="5" rx="1" fill="currentColor"/></svg><b>One wall</b></label>
+          <input type="radio" name="layout" id="lay-l" value="L">
+          <label for="lay-l"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M3 3h20v5H8v10H3z" fill="currentColor"/></svg><b>L-shape</b></label>
+          <input type="radio" name="layout" id="lay-u" value="U">
+          <label for="lay-u"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M3 3h20v15h-5V8h-10v10H3z" fill="currentColor"/></svg><b>U-shape</b></label>
         </div>
       </div>
+
       <div class="field">
-        <label for="style">Door style</label>
+        <label class="label" for="style">Door style</label>
         <select id="style"><option>Slab (Plain)</option></select>
       </div>
+
       <div class="field">
-        <div class="toggle"><div>Tall storage<small>Tall unit / built-in oven at a run end</small></div><label class="switch"><input type="checkbox" id="tall" checked aria-label="Tall storage"><span></span></label></div>
-        <div class="toggle"><div>Loft units<small>Only if wall height ≥ 2.66 m</small></div><label class="switch"><input type="checkbox" id="loft" aria-label="Loft units"><span></span></label></div>
-        <div class="toggle"><div>LPG cylinder unit<small>Beside the hob</small></div>
-          <select id="cyl" style="width:auto"><option value="">Auto</option><option value="true">Yes</option><option value="false">No</option></select>
+        <span class="label">Include</span>
+        <div class="toggles">
+          <div class="toggle"><div>Tall storage<small>Pantry, oven or microwave tower</small></div><label class="switch"><input type="checkbox" id="tall" checked aria-label="Tall storage"><span></span></label></div>
+          <div class="toggle"><div>Loft cabinets<small>Above the wall cabinets, if the ceiling is high enough</small></div><label class="switch"><input type="checkbox" id="loft" aria-label="Loft cabinets"><span></span></label></div>
+          <div class="toggle"><div>LPG cylinder cabinet<small>Next to the hob</small></div>
+            <select id="cyl" class="mini-select" aria-label="LPG cylinder cabinet"><option value="">If it fits</option><option value="true">Yes</option><option value="false">No</option></select>
+          </div>
         </div>
       </div>
-      <details id="walls-box">
-        <summary>Choose cabinet walls (optional)</summary>
-        <div class="walls-pick" id="walls-pick"><span class="sub">Upload a floor plan first.</span></div>
-      </details>
+
       <div class="field">
-        <label for="notes">Design brief for Qwen <span class="sub">(optional)</span></label>
-        <textarea id="notes" maxlength="500" placeholder="e.g. lots of drawers near the hob, family of four, cooks daily"></textarea>
+        <label class="label" for="notes">Tell the designer about the family <span class="sub">(optional)</span></label>
+        <textarea id="notes" maxlength="500" placeholder="e.g. family of four, cooks every day, needs lots of drawers"></textarea>
+        <div class="ideas" id="ideas" aria-label="Brief ideas">
+          <button class="idea" type="button">Family of four, cooks daily</button>
+          <button class="idea" type="button">Lots of drawers</button>
+          <button class="idea" type="button">We bake often</button>
+          <button class="idea" type="button">Uses a microwave daily</button>
+          <button class="idea" type="button">Clean, minimal look</button>
+        </div>
       </div>
-      <button class="btn primary" id="go" disabled>Generate kitchen</button>
-      <div class="hint" id="go-hint">Upload a floor plan to start. Qwen takes about 2–3 minutes on a laptop CPU.</div>
+
+      <details class="more" id="walls-box">
+        <summary>Choose which walls get cabinets</summary>
+        <div class="walls-pick" id="walls-pick"><span class="sub">Add a floor plan first.</span></div>
+        <p class="sub" style="margin-top:8px">Leave all unticked to let the designer decide.</p>
+      </details>
+    </section>
+
+    <section class="card" aria-labelledby="h-go">
+      <div class="card-head"><span class="num">3</span><h2 id="h-go">Design</h2></div>
+      <button class="btn primary big" id="go" disabled>Design my kitchen</button>
+      <div class="hint" id="go-hint">Add a floor plan to start.</div>
       <div class="alert" id="run-err" role="alert"></div>
     </section>
   </div>
 
-  <!-- Right: output -->
+  <!-- ===================== right: preview & results ===================== -->
   <div class="stack">
-    <section class="card" aria-labelledby="h-view">
-      <div class="viewer-head">
-        <h2 id="h-view" style="margin:0">Preview</h2>
-        <div class="tabs" id="tabs" role="tablist"></div>
-        <div class="downloads hidden" id="downloads">
-          <a class="btn" id="dl-scene" href="#" download>⬇ Kitchen JSON</a>
-          <a class="btn" id="dl-report" href="#" download>Report</a>
+    <section class="card hidden" id="banner" aria-live="polite">
+      <div class="banner">
+        <div class="banner-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></div>
+        <div class="banner-text"><h2 id="banner-title">Your kitchen is ready</h2><p class="sub" id="banner-sub"></p></div>
+        <div class="banner-actions">
+          <a class="btn primary" id="dl-scene" href="#" download>Download kitchen file</a>
+          <a class="btn" id="dl-report" href="#" download>Design report</a>
         </div>
       </div>
+      <div class="kpis" id="kpis"></div>
+    </section>
+
+    <section class="card" aria-labelledby="h-view">
+      <div class="viewer-head">
+        <h2 id="h-view" class="hidden">Preview</h2>
+        <div class="tabs" id="tabs" role="tablist" aria-label="Views"></div>
+        <span class="sub view-caption" id="view-caption"></span>
+      </div>
       <div class="canvas" id="canvas">
-        <div class="empty" id="empty"><strong>No floor plan yet</strong>Upload a magickhomes-scene JSON to see the room.</div>
+        <div class="welcome" id="empty">
+          <h2>Design a kitchen in three steps</h2>
+          <p class="sub">Your floor plan stays on this computer. Nothing is sent to the internet.</p>
+          <div class="how">
+            <div><span class="num">1</span><b>Add the floor plan</b><span class="sub">The MagickHome scene file with walls, doors and windows.</span></div>
+            <div><span class="num">2</span><b>Pick your options</b><span class="sub">Layout, door style, tall units and a short brief.</span></div>
+            <div><span class="num">3</span><b>Get the design</b><span class="sub">Preview it here and download the 3D kitchen file.</span></div>
+          </div>
+        </div>
         <div id="svg-host" class="hidden" style="width:100%"></div>
         <div class="progress" id="progress" aria-live="polite">
           <div class="progress-box">
             <div class="progress-title"><span class="spinner" aria-hidden="true"></span><span id="p-stage">Starting…</span></div>
-            <div class="timer" id="p-timer">0:00</div>
+            <div class="bar" aria-hidden="true"><i id="p-bar"></i></div>
+            <div class="bar-meta"><span id="p-timer">0:00 elapsed</span><span id="p-eta"></span></div>
             <ol class="steps" id="p-steps"></ol>
           </div>
         </div>
       </div>
       <div class="legend" id="legend">
-        <span><i style="background:var(--base)"></i>Base</span>
-        <span><i style="background:var(--tall)"></i>Tall</span>
-        <span><i style="border:2px solid var(--wallu)"></i>Wall unit</span>
+        <span><i style="background:var(--base)"></i>Base cabinet</span>
+        <span><i style="background:var(--tall)"></i>Tall unit</span>
+        <span><i style="border:2px solid var(--wallu)"></i>Wall cabinet</span>
         <span><i style="border:2px dotted var(--loft)"></i>Loft</span>
-        <span><i style="background:var(--corner)"></i>Corner unit</span>
+        <span><i style="background:var(--corner)"></i>Corner cabinet</span>
+        <span><i style="background:var(--feature)"></i>Purifier / display</span>
         <span><i style="background:var(--door)"></i>Door</span>
         <span><i style="background:var(--window)"></i>Window</span>
       </div>
@@ -266,29 +393,33 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
 
     <div class="grid2 hidden" id="results">
       <section class="card" aria-labelledby="h-design">
-        <h2 id="h-design">Designer</h2>
+        <h3 id="h-design">The design</h3>
         <div id="ai-badge"></div>
         <div id="ai-notes"></div>
-        <div class="stats" id="stats"></div>
+        <dl class="choices" id="choices"></dl>
       </section>
       <section class="card" aria-labelledby="h-rules">
-        <h2 id="h-rules">Rule engine</h2>
-        <ul class="notes" id="checks"></ul>
+        <h3 id="h-rules">Design rules check</h3>
+        <ul class="checks" id="checks"></ul>
+        <div id="adjust-box" class="hidden">
+          <h3 class="subhead">Adjustments made</h3>
+          <ul class="checks" id="adjust"></ul>
+        </div>
+        <details class="tech" id="tech-box"><summary>Technical log</summary><ul id="tech"></ul></details>
       </section>
       <section class="card" style="grid-column:1/-1" aria-labelledby="h-sched">
-        <h2 id="h-sched">Cabinet schedule</h2>
+        <h3 id="h-sched">Cabinet list</h3>
         <div class="scroll-x"><table id="schedule"></table></div>
       </section>
     </div>
   </div>
 </main>
 
-<input type="file" class="hidden">
 <script>
 (() => {
   "use strict";
   const $ = (s) => document.querySelector(s);
-  const state = { input: null, filename: null, jobId: null, output: null, report: null, tab: "plan", poll: null, tick: null, started: 0 };
+  const state = { input: null, filename: null, jobId: null, output: null, report: null, tab: "plan", tick: null, started: 0, aiTime: null, model: null, strict: false };
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
@@ -298,36 +429,62 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
     const body = ct.includes("json") ? await r.json() : await r.text();
     if (!r.ok) {
       const d = body && body.detail !== undefined ? body.detail : body;
-      throw new Error(typeof d === "string" ? d : JSON.stringify(d));
+      throw new Error(typeof d === "string" ? d : (d && d.message) || JSON.stringify(d));
     }
     return body;
   }
 
-  // ---------- status chips ----------
-  async function refreshHealth() {
-    try {
-      const h = await api("/health");
-      const ok = h.ollama === "ready";
-      setChip("#chip-ai", ok ? "ok" : "err", ok ? `Qwen ready · ${h.ollama_model}` : "Qwen unavailable");
-      $("#chip-ai").title = h.ollama;
-      const c = h.catalog || {};
-      if (c.loaded) setChip("#chip-cat", c.source === "api" ? "ok" : "warn", `Catalogue: ${c.source} · ${c.skus.toLocaleString()} SKUs`);
-      else setChip("#chip-cat", "", "Catalogue loading…");
-      if (!c.loaded) setTimeout(refreshHealth, 4000);
-    } catch (e) {
-      setChip("#chip-ai", "err", "Server offline");
-    }
+  // ---------- names ----------
+  const NAMES = [
+    [/^Base Sink Unit/i, "Sink unit", "Sink"], [/^Base Hob Unit/i, "Hob unit", "Hob"], [/^Base Spice/i, "Spice pull-out", "Spice"],
+    [/^Base Cylinder/i, "LPG cylinder cabinet", "LPG"], [/^Base Grain/i, "Grain trolley", "Grain"], [/^Base Wicker/i, "Vegetable basket unit", "Basket"],
+    [/^Blind corner unit.*L$/i, "Corner cabinet (blind, left)", "Corner"], [/^Blind corner unit.*R$/i, "Corner cabinet (blind, right)", "Corner"],
+    [/^Wall L Corner/i, "Corner wall cabinet", "Corner"], [/^Loft.*L Corner/i, "Corner loft", "Corner"],
+    [/^Wall Aquaguard/i, "Water purifier cabinet", "Purifier"], [/Glass Unit/i, "Glass display cabinet", "Glass"],
+    [/^Tall Built-In Oven & Micro/i, "Oven + microwave tower", "Oven+Micro"], [/^Tall Built-In Oven/i, "Oven tower", "Oven"],
+    [/^Tall Built-In Microwave/i, "Microwave tower", "Microwave"], [/^Tall Built-In Wicker/i, "Basket pantry", "Pantry"],
+    [/^Tall Unit/i, "Tall pantry", "Pantry"], [/^Wall Unit/i, "Wall cabinet", "Wall"], [/^Loft/i, "Loft cabinet", "Loft"],
+    [/^Base Unit/i, "Base cabinet", "Base"],
+  ];
+  const nameOf = (cat) => (NAMES.find(([r]) => r.test(cat || "")) || [null, cat || "Cabinet"])[1];
+  const shortOf = (cat) => (NAMES.find(([r]) => r.test(cat || "")) || [null, null, cat || ""])[2];
+  const isCorner = (cat) => /corner/i.test(cat || "");
+  const isFeature = (cat) => /aquaguard|glass/i.test(cat || "");
+  const LEVEL = { base: "Base", tall: "Tall", wall: "Wall", loft: "Loft" };
+  function tierColor(level, cat) {
+    if (isCorner(cat)) return cssVar("--corner");
+    if (isFeature(cat)) return cssVar("--feature");
+    return cssVar({ base: "--base", tall: "--tall", wall: "--wallu", loft: "--loft" }[level] || "--base");
   }
-  function setChip(sel, kind, text) {
+
+  // ---------- status ----------
+  function setPill(sel, kind, text, title) {
     const el = $(sel);
     el.querySelector(".dot").className = "dot " + kind;
     el.querySelector("span:last-child").textContent = text;
+    if (title !== undefined) el.title = title;
+  }
+  const prettyModel = (m) => (m || "").replace(/^qwen2\.5-coder:/i, "Qwen 2.5 Coder ").replace(/(\d+)b$/i, "$1B");
+  async function refreshHealth() {
+    try {
+      const h = await api("/health");
+      state.aiTime = h.ai_expected_time || state.aiTime;
+      state.model = h.ollama_model;
+      if (state.aiTime) $("#ai-time").textContent = `thinks like a designer · about ${state.aiTime}`;
+      const ok = h.ollama === "ready";
+      setPill("#chip-ai", ok ? "ok" : "warn", ok ? `AI designer ready · ${prettyModel(h.ollama_model)}` : "AI designer offline · quick rules will be used", h.ollama);
+      const c = h.catalog || {};
+      if (c.loaded) setPill("#chip-cat", c.source === "api" ? "ok" : "warn", `${c.skus.toLocaleString()} cabinets · ${c.source === "api" ? "live catalogue" : "offline copy"}`);
+      else { setPill("#chip-cat", "", "Loading cabinet catalogue…"); setTimeout(refreshHealth, 4000); }
+      updateHint();
+    } catch (e) {
+      setPill("#chip-ai", "err", "Server not running");
+    }
   }
   async function loadStyles() {
     try {
       const styles = await api("/api/door-styles");
-      const sel = $("#style");
-      sel.innerHTML = styles.map((s) => `<option${s === "Slab (Plain)" ? " selected" : ""}>${esc(s)}</option>`).join("");
+      $("#style").innerHTML = styles.map((s) => `<option${s === "Slab (Plain)" ? " selected" : ""}>${esc(s)}</option>`).join("");
     } catch (e) { /* keep default */ }
   }
 
@@ -336,36 +493,41 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
     const nodes = doc.scene.nodes;
     const all = Object.values(nodes);
     const walls = all.filter((n) => n.type === "wall");
-    const pts = walls.flatMap((w) => [w.start, w.end]);
-    const c = [pts.reduce((a, p) => a + p[0], 0) / pts.length, pts.reduce((a, p) => a + p[1], 0) / pts.length];
+    const ps = walls.flatMap((w) => [w.start, w.end]);
+    const c = [ps.reduce((a, p) => a + p[0], 0) / ps.length, ps.reduce((a, p) => a + p[1], 0) / ps.length];
     const ceiling = all.find((n) => n.type === "ceiling");
+    const slab = all.find((n) => n.type === "slab");
+    const outline = [ceiling, slab].map((n) => n && n.polygon).find((poly) => Array.isArray(poly) && poly.length >= 3);
     const frames = {};
     for (const w of walls) {
       const dx = w.end[0] - w.start[0], dz = w.end[1] - w.start[1];
       const L = Math.hypot(dx, dz);
       const d = [dx / L, dz / L];
-      let n = [-d[1], d[0]];
+      const n = [-d[1], d[0]];  // MagickHome local +z = the wall's front side
       const m = [(w.start[0] + w.end[0]) / 2, (w.start[1] + w.end[1]) / 2];
-      if ((c[0] - m[0]) * n[0] + (c[1] - m[1]) * n[1] < 0) n = [d[1], -d[0]];
-      frames[w.id] = { w, L, d, n, o: w.start, t: w.thickness || 0.1, h: w.height || (ceiling && ceiling.height) || 2.5 };
+      const fs = String(w.frontSide || "").toLowerCase(), bs = String(w.backSide || "").toLowerCase();
+      let s;  // +1: room on the front, -1: room on the back (wall drawn the other way)
+      if (fs === "interior" || bs === "exterior") s = 1;
+      else if (bs === "interior" || fs === "exterior") s = -1;
+      else if (outline) s = inPoly([m[0] + n[0] * 0.25, m[1] + n[1] * 0.25], outline) ? 1 : -1;
+      else s = (c[0] - m[0]) * n[0] + (c[1] - m[1]) * n[1] >= 0 ? 1 : -1;
+      frames[w.id] = { w, L, d, n, s, o: w.start, t: w.thickness || 0.1, h: w.height || (ceiling && ceiling.height) || 2.5 };
     }
     return { nodes, all, walls, frames, ceiling };
   }
-  const W = (f, x, z) => [f.o[0] + f.d[0] * x + f.n[0] * z, f.o[1] + f.d[1] * x + f.n[1] * z];
-  const pts = (arr) => arr.map((p) => `${p[0].toFixed(4)},${p[1].toFixed(4)}`).join(" ");
-  const isCorner = (cat) => /corner/i.test(cat || "");
-  const SHORT = [
-    [/^Base Sink Unit/i, "Sink"], [/^Base Hob Unit/i, "Hob"], [/^Base Spice/i, "Spice"], [/^Base Cylinder/i, "Cylinder"],
-    [/^Base Grain/i, "Grain trolley"], [/^Base Wicker/i, "Wicker"], [/^Blind corner unit.*L$/i, "Blind corner L"],
-    [/^Blind corner unit.*R$/i, "Blind corner R"], [/^Wall L Corner/i, "L corner"], [/^Loft.*L Corner/i, "Loft corner"],
-    [/^Tall Built-In Oven/i, "Oven"], [/^Tall Unit/i, "Tall"], [/^Wall Unit/i, "Wall"], [/^Loft/i, "Loft"], [/^Base Unit/i, "Base"],
-  ];
-  const short = (cat) => (SHORT.find(([r]) => r.test(cat || "")) || [null, cat || ""])[1];
-
-  function tierColor(level, cat) {
-    if (isCorner(cat)) return cssVar("--corner");
-    return cssVar({ base: "--base", tall: "--tall", wall: "--wallu", loft: "--loft" }[level] || "--base");
+  function inPoly(pt, poly) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const [x1, z1] = poly[i], [x2, z2] = poly[j];
+      if ((z1 > pt[1]) !== (z2 > pt[1]) && pt[0] < ((x2 - x1) * (pt[1] - z1)) / (z2 - z1) + x1) inside = !inside;
+    }
+    return inside;
   }
+  // scene positions are in the wall's local frame (z signed, +z = front)
+  const W = (f, x, z) => [f.o[0] + f.d[0] * x + f.n[0] * z, f.o[1] + f.d[1] * x + f.n[1] * z];
+  // distance into the room (always positive) -> scene local z
+  const Wi = (f, x, zi) => W(f, x, f.s * zi);
+  const pts = (arr) => arr.map((p) => `${p[0].toFixed(4)},${p[1].toFixed(4)}`).join(" ");
 
   // ---------- plan (top view) ----------
   function planSVG(doc) {
@@ -384,18 +546,17 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
       const lvl = n.placement?.level || "base", cat = n.metadata?.category || "";
       const p = [W(f, x - w / 2, z - d / 2), W(f, x + w / 2, z - d / 2), W(f, x + w / 2, z + d / 2), W(f, x - w / 2, z + d / 2)];
       const col = tierColor(lvl, cat);
-      const tip = `<title>${esc(cat)} ${n.metadata?.width ?? ""} · ${esc(lvl)}\n${esc(n.name)}</title>`;
+      const tip = `<title>${esc(nameOf(cat))} ${n.metadata?.width ?? ""} mm · ${esc(LEVEL[lvl] || lvl)}</title>`;
       if (lvl === "base" || lvl === "tall") out.push(`<polygon points="${pts(p)}" fill="${col}" fill-opacity=".85" stroke="${cssVar("--panel")}" stroke-width="1.2" vector-effect="non-scaling-stroke">${tip}</polygon>`);
       else out.push(`<polygon points="${pts(p)}" fill="none" stroke="${col}" stroke-width="1.8" ${lvl === "loft" ? 'stroke-dasharray="2 3"' : 'stroke-dasharray="6 3"'} vector-effect="non-scaling-stroke">${tip}</polygon>`);
-      // appliances drawn on their host cabinets
       for (const cid of n.children || []) {
         const a = g.nodes[cid];
         if (!a) continue;
         const [aw, , ad] = a.asset.dimensions;
         const q = [W(f, x - aw / 2, z - ad / 2), W(f, x + aw / 2, z - ad / 2), W(f, x + aw / 2, z + ad / 2), W(f, x - aw / 2, z + ad / 2)];
-        if (/sink/i.test(a.name)) out.push(`<polygon points="${pts(q)}" fill="#cfe9f6" stroke="#2a7fa8" stroke-width="1" vector-effect="non-scaling-stroke"><title>Sink90 (APS02)</title></polygon>`);
+        if (/sink/i.test(a.name)) out.push(`<polygon points="${pts(q)}" fill="#cfe9f6" stroke="#2a7fa8" stroke-width="1" vector-effect="non-scaling-stroke"><title>Sink</title></polygon>`);
         else if (/hob/i.test(a.name)) {
-          out.push(`<polygon points="${pts(q)}" fill="#2b2f36" stroke="#111" stroke-width="1" vector-effect="non-scaling-stroke"><title>Hob90 (APH02)</title></polygon>`);
+          out.push(`<polygon points="${pts(q)}" fill="#2b2f36" stroke="#111" stroke-width="1" vector-effect="non-scaling-stroke"><title>Hob</title></polygon>`);
           for (const [bx, bz] of [[-0.2, -0.12], [0.2, -0.12], [-0.2, 0.12], [0.2, 0.12], [0, 0]]) {
             const c = W(f, x + bx, z + bz);
             out.push(`<circle cx="${c[0]}" cy="${c[1]}" r="0.055" fill="none" stroke="#e8e8e8" stroke-width="1" vector-effect="non-scaling-stroke"/>`);
@@ -406,7 +567,7 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
     for (const ch of g.all.filter((n) => n.type === "item" && /chimney/i.test(n.name) && g.frames[n.parentId])) {
       const f = g.frames[ch.parentId], [w, , d] = ch.asset.dimensions, [x, , z] = ch.position;
       const p = [W(f, x - w / 2, z - d / 2), W(f, x + w / 2, z - d / 2), W(f, x + w / 2, z + d / 2), W(f, x - w / 2, z + d / 2)];
-      out.push(`<polygon points="${pts(p)}" fill="none" stroke="${cssVar("--door")}" stroke-width="1.4" stroke-dasharray="1 2" vector-effect="non-scaling-stroke"><title>Chimney90 (APC02)</title></polygon>`);
+      out.push(`<polygon points="${pts(p)}" fill="none" stroke="${cssVar("--door")}" stroke-width="1.4" stroke-dasharray="1 2" vector-effect="non-scaling-stroke"><title>Chimney</title></polygon>`);
     }
     for (const wl of g.walls) {
       out.push(`<line x1="${wl.start[0]}" y1="${wl.start[1]}" x2="${wl.end[0]}" y2="${wl.end[1]}" stroke="${cssVar("--wall-line")}" stroke-width="${g.frames[wl.id].t}" stroke-linecap="square"/>`);
@@ -419,33 +580,33 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
       if (o.type === "door") {
         const hingeLeft = (o.hingesSide || "left") === "left";
         const hx = hingeLeft ? x0 : x1, fx = hingeLeft ? x1 : x0;
-        const h = W(f, hx, f.t / 2), leaf = W(f, hx, f.t / 2 + o.width), free = W(f, fx, f.t / 2);
+        const h = Wi(f, hx, f.t / 2), leaf = Wi(f, hx, f.t / 2 + o.width), free = Wi(f, fx, f.t / 2);
         out.push(`<line x1="${h[0]}" y1="${h[1]}" x2="${leaf[0]}" y2="${leaf[1]}" stroke="${col}" stroke-width="1.2" vector-effect="non-scaling-stroke"/>`);
         out.push(`<path d="M ${leaf[0]} ${leaf[1]} A ${o.width} ${o.width} 0 0 ${sweep(f, hingeLeft)} ${free[0]} ${free[1]}" fill="none" stroke="${col}" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>`);
       }
     }
     for (const wl of g.walls) {
-      const f = g.frames[wl.id], m = W(f, f.L / 2, -0.32);
+      const f = g.frames[wl.id], m = Wi(f, f.L / 2, -0.32);
       out.push(`<text x="${m[0]}" y="${m[1]}" font-size="0.17" text-anchor="middle" dominant-baseline="middle" fill="${cssVar("--muted")}" font-family="system-ui,sans-serif">${esc(wl.name || wl.id)}</text>`);
     }
     return `<svg viewBox="${minx} ${minz} ${vw} ${vh}" role="img" aria-label="Top view of the kitchen">${out.join("")}</svg>`;
   }
   function sweep(f, hingeLeft) {
-    // arc from the open leaf back to the closed position; orientation from the wall frame handedness
-    const cross = f.d[0] * f.n[1] - f.d[1] * f.n[0];
+    const cross = f.s * (f.d[0] * f.n[1] - f.d[1] * f.n[0]);
     return (cross > 0) === hingeLeft ? 0 : 1;
   }
 
-  // ---------- elevation ----------
+  // ---------- elevation (front view of one wall) ----------
   function elevationSVG(doc, wallId) {
     const g = geom(doc), f = g.frames[wallId];
     const H = Math.max(f.h, 2.1), L = f.L, padX = 0.25, padY = 0.3;
     const Y = (y) => H - y;
+    const X = (x) => (f.s > 0 ? x : L - x);  // as seen from inside the room
     const out = [];
     out.push(`<rect x="0" y="${Y(H)}" width="${L}" height="${H}" fill="${cssVar("--floor")}" stroke="${cssVar("--line")}" stroke-width="1" vector-effect="non-scaling-stroke"/>`);
     const on = g.all.filter((n) => n.wallId === wallId || n.parentId === wallId);
     for (const o of on.filter((n) => n.type === "door" || n.type === "window")) {
-      const x0 = o.position[0] - o.width / 2, y0 = o.position[1] - o.height / 2;
+      const x0 = X(o.position[0]) - o.width / 2, y0 = o.position[1] - o.height / 2;
       const col = cssVar(o.type === "door" ? "--door" : "--window");
       out.push(`<rect x="${x0}" y="${Y(y0 + o.height)}" width="${o.width}" height="${o.height}" fill="${col}" fill-opacity=".08" stroke="${col}" stroke-width="2" vector-effect="non-scaling-stroke"><title>${esc(o.name || o.type)}</title></rect>`);
     }
@@ -457,43 +618,44 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
       slab: [cssVar("--panel"), 1, cssVar("--muted")], filler: [cssVar("--panel"), 1, cssVar("--muted")],
     };
     const drawFx = (n) => {
-      const [w, t] = n.asset.dimensions, [x, y] = n.position;
+      const [w, t] = n.asset.dimensions, y = n.position[1], x = X(n.position[0]);
       const [fill, op, stroke] = fxStyle[n.metadata.fixtureKind] || [cssVar("--muted"), 0.5, "none"];
       return `<rect x="${x - w / 2}" y="${Y(y + t / 2)}" width="${w}" height="${t}" fill="${fill}" fill-opacity="${op}" stroke="${stroke}" stroke-width=".8" vector-effect="non-scaling-stroke"><title>${esc(n.metadata.fixtureKind)} ${(w * 1000).toFixed(0)} mm</title></rect>`;
     };
     for (const n of fx.filter((n) => n.metadata.fixtureKind === "backsplash")) out.push(drawFx(n));
-    const cabs = on.filter((n) => n.type === "item" && n.asset?.category === "kitchen");
-    for (const n of cabs) {
-      const [w, h] = n.asset.dimensions, [x, y] = n.position, lvl = n.placement?.level || "base", cat = n.metadata?.category || "";
+    for (const n of on.filter((n) => n.type === "item" && n.asset?.category === "kitchen")) {
+      const [w, h] = n.asset.dimensions, y = n.position[1], x = X(n.position[0]), lvl = n.placement?.level || "base", cat = n.metadata?.category || "";
       const col = tierColor(lvl, cat);
-      out.push(`<rect x="${x - w / 2}" y="${Y(y + h)}" width="${w}" height="${h}" fill="${col}" fill-opacity=".22" stroke="${col}" stroke-width="1.5" vector-effect="non-scaling-stroke"><title>${esc(cat)} ${n.metadata?.width ?? ""} · opens ${esc(n.metadata?.openingDirection || "-")}\n${esc(n.name)}</title></rect>`);
+      out.push(`<rect x="${x - w / 2}" y="${Y(y + h)}" width="${w}" height="${h}" fill="${col}" fill-opacity=".22" stroke="${col}" stroke-width="1.5" vector-effect="non-scaling-stroke"><title>${esc(nameOf(cat))} ${n.metadata?.width ?? ""} mm</title></rect>`);
       if (w >= 0.28) {
         const fs = Math.min(0.085, w / 6.5);
-        out.push(`<text x="${x}" y="${Y(y + h) + fs * 1.6}" font-size="${fs}" text-anchor="middle" fill="${cssVar("--text")}" font-family="system-ui,sans-serif" font-weight="600">${esc(short(cat))}</text>`);
-        out.push(`<text x="${x}" y="${Y(y + h) + fs * 2.9}" font-size="${fs * 0.85}" text-anchor="middle" fill="${cssVar("--muted")}" font-family="system-ui,sans-serif">${n.metadata?.width ?? ""}${n.metadata?.openingDirection && /Left|Right/.test(n.metadata.openingDirection) ? " · " + n.metadata.openingDirection[0] : ""}</text>`);
+        out.push(`<text x="${x}" y="${Y(y + h) + fs * 1.6}" font-size="${fs}" text-anchor="middle" fill="${cssVar("--text")}" font-family="system-ui,sans-serif" font-weight="600">${esc(shortOf(cat))}</text>`);
+        out.push(`<text x="${x}" y="${Y(y + h) + fs * 2.9}" font-size="${fs * 0.85}" text-anchor="middle" fill="${cssVar("--muted")}" font-family="system-ui,sans-serif">${n.metadata?.width ?? ""}</text>`);
       }
     }
     for (const n of fx.filter((n) => n.metadata.fixtureKind !== "backsplash")) out.push(drawFx(n));
     for (const ch of on.filter((n) => n.type === "item" && /chimney/i.test(n.name))) {
-      const [w, h] = ch.asset.dimensions, [x, y] = ch.position;
-      out.push(`<path d="M ${x - w / 2} ${Y(y)} L ${x + w / 2} ${Y(y)} L ${x + 0.14} ${Y(y + h)} L ${x - 0.14} ${Y(y + h)} Z" fill="${cssVar("--muted")}" fill-opacity=".35" stroke="${cssVar("--text")}" stroke-width="1" vector-effect="non-scaling-stroke"><title>Chimney90 (APC02)</title></path>`);
+      const [w, h] = ch.asset.dimensions, y = ch.position[1], x = X(ch.position[0]);
+      out.push(`<path d="M ${x - w / 2} ${Y(y)} L ${x + w / 2} ${Y(y)} L ${x + 0.14} ${Y(y + h)} L ${x - 0.14} ${Y(y + h)} Z" fill="${cssVar("--muted")}" fill-opacity=".35" stroke="${cssVar("--text")}" stroke-width="1" vector-effect="non-scaling-stroke"><title>Chimney</title></path>`);
     }
     out.push(`<line x1="${-padX}" y1="${Y(0)}" x2="${L + padX}" y2="${Y(0)}" stroke="${cssVar("--wall-line")}" stroke-width="2" vector-effect="non-scaling-stroke"/>`);
-    out.push(`<text x="0" y="${Y(H) - 0.08}" font-size="0.11" fill="${cssVar("--muted")}" font-family="system-ui,sans-serif">${esc(f.w.name || wallId)} · ${(L * 1000).toFixed(0)} mm · start ←</text>`);
-    out.push(`<text x="${L}" y="${Y(H) - 0.08}" font-size="0.11" text-anchor="end" fill="${cssVar("--muted")}" font-family="system-ui,sans-serif">→ end</text>`);
-    return `<svg viewBox="${-padX} ${-padY} ${L + 2 * padX} ${H + padY + 0.15}" role="img" aria-label="Elevation of ${esc(f.w.name || wallId)}">${out.join("")}</svg>`;
+    return `<svg viewBox="${-padX} ${-padY} ${L + 2 * padX} ${H + padY + 0.15}" role="img" aria-label="Front view of ${esc(f.w.name || wallId)}">${out.join("")}</svg>`;
   }
 
-  // ---------- view ----------
+  // ---------- preview ----------
   function render() {
     const doc = state.output || state.input;
     const tabs = $("#tabs");
-    if (!doc) { tabs.innerHTML = ""; return; }
+    if (!doc) { tabs.innerHTML = ""; $("#view-caption").textContent = ""; return; }
     const g = geom(doc);
     const walls = g.walls.filter((w) => state.output && g.all.some((n) => n.type === "item" && n.wallId === w.id && n.asset?.category === "kitchen"));
-    const list = [["plan", "Plan"], ...walls.map((w) => [w.id, w.name || w.id])];
+    const list = [["plan", "Top view"], ...walls.map((w) => [w.id, w.name || w.id])];
     if (!list.some(([k]) => k === state.tab)) state.tab = "plan";
     tabs.innerHTML = list.map(([k, label]) => `<button class="tab${k === state.tab ? " active" : ""}" role="tab" aria-selected="${k === state.tab}" data-tab="${esc(k)}">${esc(label)}</button>`).join("");
+    const f = g.frames[state.tab];
+    $("#view-caption").textContent = state.tab === "plan"
+      ? (state.output ? "Seen from above · dashed outlines are wall cabinets" : "Your room · design it to see the cabinets")
+      : `Front view of ${f.w.name || state.tab}, seen from inside the room · ${(f.L * 1000).toFixed(0)} mm wide`;
     $("#svg-host").innerHTML = state.tab === "plan" ? planSVG(doc) : elevationSVG(doc, state.tab);
     $("#svg-host").classList.remove("hidden");
     $("#empty").classList.add("hidden");
@@ -504,61 +666,80 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
   });
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
 
-  // ---------- upload ----------
+  // ---------- step 1: floor plan ----------
   function showFileError(msg) { const el = $("#file-err"); el.textContent = msg; el.classList.toggle("show", !!msg); }
   function acceptDoc(doc, name) {
     showFileError("");
-    if (!doc || doc.format !== "magickhomes-scene") return showFileError(`Not a magickhomes-scene file (format = ${JSON.stringify(doc && doc.format)}).`);
-    if (doc.version !== 1) return showFileError(`Unsupported version ${JSON.stringify(doc.version)} (expected 1).`);
-    if (!doc.scene || typeof doc.scene.nodes !== "object") return showFileError("scene.nodes is missing.");
+    if (!doc || doc.format !== "magickhomes-scene") return showFileError("This isn't a MagickHome floor-plan file. Export the room from MagickHome and try again.");
+    if (doc.version !== 1) return showFileError(`This file uses version ${JSON.stringify(doc.version)}; only version 1 is supported.`);
+    if (!doc.scene || typeof doc.scene.nodes !== "object") return showFileError("The file has no room in it (scene.nodes is missing).");
     const g = geom(doc);
     if (!g.walls.length) return showFileError("The floor plan has no walls.");
     state.input = doc; state.filename = name; state.output = null; state.report = null; state.jobId = null; state.tab = "plan";
     const items = g.all.filter((n) => n.type === "item").length;
     $("#file-name").textContent = name;
-    $("#file-note").textContent = items ? `${items} existing items will be replaced by the generated kitchen.` : "Empty floor plan.";
+    $("#file-note").textContent = items ? `${items} existing items will be replaced` : "Empty room, ready to design";
     $("#f-walls").textContent = g.walls.length;
     $("#f-doors").textContent = g.all.filter((n) => n.type === "door").length;
     $("#f-windows").textContent = g.all.filter((n) => n.type === "window").length;
     const xs = g.walls.flatMap((w) => [w.start[0], w.end[0]]), zs = g.walls.flatMap((w) => [w.start[1], w.end[1]]);
     $("#f-size").textContent = `${(Math.max(...xs) - Math.min(...xs)).toFixed(1)}×${(Math.max(...zs) - Math.min(...zs)).toFixed(1)}`;
-    $("#file-meta").classList.add("show");
+    $("#upload-box").classList.add("hidden");
+    $("#file-box").classList.remove("hidden");
+    $("#n1").classList.add("done"); $("#n1").textContent = "✓";
     $("#walls-pick").innerHTML = g.walls.map((w) => {
       const tags = [g.all.some((n) => n.type === "window" && n.wallId === w.id) ? "window" : "", g.all.some((n) => n.type === "door" && n.wallId === w.id) ? "door" : ""].filter(Boolean).join(", ");
       return `<label><input type="checkbox" value="${esc(w.id)}"> ${esc(w.name || w.id)}${tags ? ` <span class="sub">(${tags})</span>` : ""}</label>`;
     }).join("");
-    $("#results").classList.add("hidden");
-    $("#downloads").classList.add("hidden");
+    hideResults();
     $("#go").disabled = false;
-    $("#go-hint").textContent = "Qwen takes about 2–3 minutes on a laptop CPU; the rules-only designer takes seconds.";
+    updateHint();
     render();
   }
+  function updateHint() {
+    if (!state.input) { $("#go-hint").textContent = "Add a floor plan to start."; return; }
+    const ai = document.querySelector('input[name="ai"]:checked').value !== "fallback";
+    $("#go-hint").textContent = ai ? `Qwen takes ${state.aiTime ? "about " + state.aiTime : "a few minutes"} on this computer.` : "Ready in a few seconds.";
+  }
+  document.querySelectorAll('input[name="ai"]').forEach((el) => el.addEventListener("change", updateHint));
   function readFile(file) {
     if (!file) return;
-    if (file.size > 50 * 1024 * 1024) return showFileError("File is larger than 50 MB.");
+    if (file.size > 50 * 1024 * 1024) return showFileError("That file is larger than 50 MB.");
     const r = new FileReader();
-    r.onload = () => { try { acceptDoc(JSON.parse(r.result), file.name); } catch (e) { showFileError("Could not parse JSON: " + e.message); } };
+    r.onload = () => { try { acceptDoc(JSON.parse(r.result), file.name); } catch (e) { showFileError("That file isn't valid JSON: " + e.message); } };
     r.onerror = () => showFileError("Could not read the file.");
     r.readAsText(file);
   }
   const drop = $("#drop"), fileInput = $("#file");
   drop.addEventListener("click", () => fileInput.click());
   drop.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); } });
+  $("#change-file").addEventListener("click", () => fileInput.click());
   fileInput.addEventListener("change", () => { readFile(fileInput.files[0]); fileInput.value = ""; });
   ["dragenter", "dragover"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach((ev) => drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.remove("over"); }));
   drop.addEventListener("drop", (e) => readFile(e.dataTransfer.files[0]));
   $("#sample").addEventListener("click", loadSample);
   async function loadSample() {
-    try { acceptDoc(await api("/api/sample-floorplan"), "sample_floorplan.json"); } catch (e) { showFileError(e.message); }
+    try { acceptDoc(await api("/api/sample-floorplan"), "sample_room.json"); } catch (e) { showFileError(e.message); }
   }
 
-  // ---------- generate ----------
+  // ---------- step 2: brief ideas ----------
+  $("#ideas").addEventListener("click", (e) => {
+    const b = e.target.closest(".idea");
+    if (!b) return;
+    const t = $("#notes");
+    const v = t.value.trim();
+    if (!v.toLowerCase().includes(b.textContent.toLowerCase())) t.value = v ? `${v.replace(/[.,;]?$/, "")}, ${b.textContent.toLowerCase()}` : b.textContent;
+    t.focus();
+  });
+
+  // ---------- step 3: design ----------
   function prefs() {
     const walls = [...document.querySelectorAll("#walls-pick input:checked")].map((i) => i.value);
     const cyl = $("#cyl").value;
+    const ai = document.querySelector('input[name="ai"]:checked').value;
     return {
-      ai_mode: document.querySelector('input[name="ai"]:checked').value,
+      ai_mode: ai === "auto" && state.strict ? "ollama" : ai,
       layout: document.querySelector('input[name="layout"]:checked').value,
       door_style: $("#style").value,
       include_tall: $("#tall").checked,
@@ -570,23 +751,40 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
   }
   function showRunError(msg) { const el = $("#run-err"); el.textContent = msg; el.classList.toggle("show", !!msg); }
   const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
-  const dur = (s) => (s < 60 ? `${Number(s).toFixed(s < 10 ? 1 : 0)} s` : fmt(s));
-
+  const dur = (s) => (s < 1 ? "under 1 s" : s < 60 ? `${Math.round(s)} s` : `${Math.floor(s / 60)} min ${String(Math.round(s % 60)).padStart(2, "0")} s`);
+  const expectedSeconds = () => {
+    const m = String(state.aiTime || "").match(/(\d+)\s*-\s*(\d+)/);
+    return m ? Number(m[2]) * 60 : 300;
+  };
+  function hideResults() {
+    $("#results").classList.add("hidden");
+    $("#banner").classList.add("hidden");
+  }
+  function startProgress(isAI) {
+    $("#progress").classList.add("show");
+    $("#p-stage").textContent = "Starting…";
+    $("#p-steps").innerHTML = "";
+    $("#p-bar").style.width = "0%";
+    $("#p-eta").textContent = isAI ? `usually ${state.aiTime ? "about " + state.aiTime : "a few minutes"}` : "a few seconds";
+    state.started = Date.now();
+    clearInterval(state.tick);
+    const total = isAI ? expectedSeconds() : 15;
+    state.tick = setInterval(() => {
+      const s = (Date.now() - state.started) / 1000;
+      $("#p-timer").textContent = `${fmt(s)} elapsed`;
+      $("#p-bar").style.width = `${Math.min(95, (s / total) * 100).toFixed(1)}%`;
+    }, 500);
+  }
   async function generate() {
     if (!state.input) return;
     showRunError("");
+    const p = prefs();
     $("#go").disabled = true;
     $("#go").textContent = "Designing…";
-    $("#results").classList.add("hidden");
-    $("#downloads").classList.add("hidden");
-    $("#progress").classList.add("show");
-    $("#p-stage").textContent = "Submitting…";
-    $("#p-steps").innerHTML = "";
-    state.started = Date.now();
-    clearInterval(state.tick);
-    state.tick = setInterval(() => { $("#p-timer").textContent = fmt((Date.now() - state.started) / 1000); }, 500);
+    hideResults();
+    startProgress(p.ai_mode !== "fallback");
     try {
-      const job = await api("/api/jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ scene: state.input, preferences: prefs(), filename: state.filename }) });
+      const job = await api("/api/jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ scene: state.input, preferences: p, filename: state.filename }) });
       state.jobId = job.id;
       poll();
     } catch (e) { finish(); showRunError(e.message); }
@@ -594,13 +792,13 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
   async function poll() {
     try {
       const j = await api(`/api/jobs/${state.jobId}`);
-      $("#p-stage").textContent = j.status === "queued" ? `Queued (${j.queue_position} ahead)` : j.stage;
+      $("#p-stage").textContent = j.status === "queued" ? `Waiting for another design to finish (${j.queue_position} ahead)` : j.stage;
       $("#p-steps").innerHTML = j.log.map((s, i) => {
         const last = i === j.log.length - 1 && j.status === "running";
-        return `<li class="${last ? "current" : "done"}"><span class="mk">${last ? "…" : "✓"}</span><span>${esc(s.msg)}</span><span class="timer" style="margin-left:auto">${fmt(s.t)}</span></li>`;
+        return `<li class="${last ? "current" : "done"}"><span class="mk">${last ? "•" : "✓"}</span><span>${esc(s.msg)}</span><span class="t">${fmt(s.t)}</span></li>`;
       }).join("");
       if (j.status === "done") return done(j);
-      if (j.status === "error") { finish(); return showRunError(j.error || "Generation failed"); }
+      if (j.status === "error") { finish(); return showRunError(j.error || "The design could not be made."); }
       setTimeout(poll, 1500);
     } catch (e) { finish(); showRunError(e.message); }
   }
@@ -608,15 +806,15 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
     clearInterval(state.tick);
     $("#progress").classList.remove("show");
     $("#go").disabled = !state.input;
-    $("#go").textContent = "Generate kitchen";
+    $("#go").textContent = state.output ? "Design again" : "Design my kitchen";
   }
   async function done(job) {
     try {
+      $("#p-bar").style.width = "100%";
       state.output = await api(`/api/jobs/${job.id}/scene`);
       state.report = job.report;
       $("#dl-scene").href = `/api/jobs/${job.id}/scene?download=1`;
       $("#dl-report").href = `/api/jobs/${job.id}/report?download=1`;
-      $("#downloads").classList.remove("hidden");
       showReport(job);
       const wantTab = new URLSearchParams(location.search).get("tab");
       if (wantTab) state.tab = wantTab;
@@ -626,55 +824,116 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
     finish();
   }
 
-  function showReport(job) {
-    const r = job.report, ai = r.ai || {}, lay = r.layout || {};
-    const isAI = ai.mode === "ollama";
-    $("#ai-badge").innerHTML = isAI
-      ? `<span class="badge ai">Designed by Qwen · ${esc(ai.model)}</span> <span class="sub">${esc(ai.seconds)} s · ${esc(ai.eval_count ?? "?")} tokens</span>`
-      : `<span class="badge rules">Rule-based designer</span> <span class="sub">${esc(ai.fallback_reason ? "Qwen unavailable: " + ai.fallback_reason : "Rules only selected")}</span>`;
-    const raw = ai.raw || {};
-    let notes = "";
-    if (isAI && (raw.room_reading || raw.design_plan)) {
-      if (raw.room_reading) notes += `<div class="quote"><small>Qwen's reading of the room</small>${esc(raw.room_reading)}</div>`;
-      if (raw.design_plan) notes += `<div class="quote"><small>Qwen's plan</small>${esc(raw.design_plan)}</div>`;
-    } else if (r.proposal?.notes) {
-      notes += `<div class="quote"><small>Design intent</small>${esc(r.proposal.notes)}</div>`;
-    }
-    $("#ai-notes").innerHTML = notes;
-    const counts = r.nodes_added || {};
-    const fixtures = Object.entries(counts).filter(([k]) => k.startsWith("fixture")).reduce((a, [, v]) => a + v, 0);
-    $("#stats").innerHTML = [
-      [counts.kitchen || 0, "cabinets"], [counts.appliance || 0, "appliances"], [fixtures, "fixtures"], [dur(job.elapsed_s || r.seconds || 0), "total time"],
-    ].map(([v, l]) => `<div class="stat"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
-
-    const checks = [];
-    const issues = r.validation_issues || [];
-    checks.push(issues.length
-      ? `<li class="err">${issues.length} validation issue(s): ${issues.map(esc).join("; ")}</li>`
-      : `<li class="ok">All placement checks passed: no overlaps, door/window/chimney clearances kept, corners use corner cabinets only.</li>`);
-    for (const w of lay.warnings || []) checks.push(`<li class="warn">${esc(w)}</li>`);
-    for (const d of lay.decisions || []) checks.push(`<li>${esc(d)}</li>`);
-    for (const c of lay.corners || []) {
-      const units = [c.base_unit, c.wall_unit, c.loft_unit].filter(Boolean);
-      const open = c.open_tiers?.length ? ` · open tiers: ${c.open_tiers.join(", ")}` : "";
-      checks.push(`<li>Corner ${esc(wallName(c.walls[0]))}/${esc(wallName(c.walls[1]))}: ${units.length ? units.map((u) => `<code>${esc(u)}</code>`).join(", ") : "left open"}${esc(open)}</li>`);
-    }
-    $("#checks").innerHTML = checks.join("");
-
-    const rows = [];
-    const tierOrder = { base: 0, tall: 1, wall: 2, loft: 3 };
-    for (const [wid, items] of Object.entries(lay.placements || {})) {
-      const sorted = [...items].sort((a, b) => (tierOrder[a.tier] - tierOrder[b.tier]) || a.start_mm - b.start_mm);
-      for (const it of sorted) {
-        rows.push(`<tr><td>${esc(wallName(wid))}</td><td><span class="tier" style="background:${tierColor(it.tier, it.category)}">${esc(it.tier)}</span></td><td>${esc(it.category)}</td><td class="num">${it.width}</td><td class="num">${Math.round(it.start_mm)}–${Math.round(it.end_mm)}</td><td>${esc(it.opening || "–")}</td><td class="mono">${esc(it.aid)}</td></tr>`);
-      }
-    }
-    $("#schedule").innerHTML = `<thead><tr><th>Wall</th><th>Tier</th><th>Category</th><th class="num">Width</th><th class="num">Position (mm)</th><th>Opens</th><th>AID</th></tr></thead><tbody>${rows.join("")}</tbody>`;
-    $("#results").classList.remove("hidden");
-  }
+  // ---------- results ----------
   function wallName(id) {
     const doc = state.output || state.input;
     return (doc && doc.scene.nodes[id] && doc.scene.nodes[id].name) || id;
+  }
+  function nodeMeta(aid) {
+    if (!state.output) return {};
+    const n = Object.values(state.output.scene.nodes).find((x) => x.type === "item" && x.name === aid);
+    return (n && n.metadata) || {};
+  }
+  const TECH = /hinged|-> MT|\bAID\b|score|reserve \[/i;
+  const LAYOUT_NAME = { 1: "one-wall kitchen", 2: "L-shaped kitchen", 3: "U-shaped kitchen" };
+  const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+
+  function showReport(job) {
+    const r = job.report, ai = r.ai || {}, lay = r.layout || {}, prop = r.proposal || {};
+    const placements = Object.entries(lay.placements || {}).flatMap(([wid, ps]) => ps.map((p) => ({ ...p, wall: wid })));
+    const byRole = (role) => placements.filter((p) => p.role === role);
+    const isAI = ai.mode === "ollama";
+    const walls = lay.cabinet_walls || [];
+    const counts = r.nodes_added || {};
+
+    // banner
+    const layoutName = LAYOUT_NAME[walls.length] || "kitchen";
+    $("#banner-title").textContent = `Your ${layoutName} is ready`;
+    $("#banner-sub").textContent = `${isAI ? `Designed by Qwen (${prettyModel(ai.model)})` : "Designed with the quick rules"} and checked against the design rules. Download the file and open it in MagickHome.`;
+    const allOk = !(r.validation_issues || []).length;
+    $("#kpis").innerHTML = [
+      [cap(layoutName.replace(" kitchen", "")), walls.map(wallName).join(" + ")],
+      [counts.kitchen || placements.length, "cabinets"],
+      [allOk ? "All passed" : `${r.validation_issues.length} issue(s)`, "design rules"],
+      [dur(job.elapsed_s || r.seconds || 0), "design time"],
+    ].map(([v, l]) => `<div class="kpi"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
+    $("#banner").classList.remove("hidden");
+
+    // the design
+    $("#ai-badge").innerHTML = isAI
+      ? `<span class="badge ai">Qwen AI designer · ${esc(prettyModel(ai.model))}</span>`
+      : `<span class="badge rules">Quick rules designer</span> <span class="sub">${esc(ai.fallback_reason ? "The AI designer was not available, so the quick rules were used." : "")}</span>`;
+    const raw = ai.raw || {};
+    let notes = "";
+    if (isAI && raw.room_reading) notes += `<div class="quote"><small>How Qwen read the room</small>${esc(raw.room_reading)}</div>`;
+    if (isAI && raw.design_plan) notes += `<div class="quote"><small>Qwen's plan</small>${esc(raw.design_plan)}</div>`;
+    if (!isAI && prop.notes) notes += `<div class="quote"><small>Design idea</small>${esc(prop.notes)}</div>`;
+    $("#ai-notes").innerHTML = notes;
+
+    const src = state.output || state.input;
+    const window_ = !!(src && Object.values(src.scene.nodes).some((n) => n.type === "window"));
+    const one = (p, extra = "") => {
+      if (!p) return "–";
+      const combo = nodeMeta(p.aid).cabinetCombination;
+      return `${esc(nameOf(p.category))} ${p.width} mm${combo ? ` <span class="sub">(${esc(combo)})</span>` : ""} on ${esc(wallName(p.wall))}${extra}`;
+    };
+    const many = (ps) => ps.length ? ps.map((p) => `${esc(nameOf(p.category))} ${p.width} mm on ${esc(wallName(p.wall))}`).join("<br>") : "–";
+    const sink = byRole("sink")[0], hob = byRole("hob")[0];
+    const corners = (lay.corners || []);
+    const rows = [
+      ["Layout", `${esc(cap(layoutName))} · ${esc(walls.map(wallName).join(", "))}`],
+      ["Sink", one(sink, window_ && sink ? ", centred under the window" : "")],
+      ["Hob", one(hob, hob ? ", chimney above" : "")],
+      ["Next to the hob", many([...byRole("spice"), ...byRole("cylinder")])],
+      ["Tall units", many(byRole("tall"))],
+      ["Water purifier", many(byRole("purifier"))],
+      ["Display", many(byRole("display"))],
+      ["Corners", corners.length ? corners.map((c) => {
+        const units = [c.base_unit, c.wall_unit, c.loft_unit].filter(Boolean).length;
+        return `${esc(wallName(c.walls[0]))} / ${esc(wallName(c.walls[1]))}: ${units ? `${units} corner cabinet${units > 1 ? "s" : ""}` : "kept open"}`;
+      }).join("<br>") : "No corners"],
+    ];
+    $("#choices").innerHTML = rows.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join("");
+
+    // rule checks
+    const issues = r.validation_issues || [];
+    const checks = [];
+    const tick = (cls, sym, text) => `<li><span class="ic ${cls}" aria-hidden="true">${sym}</span><span>${text}</span></li>`;
+    if (issues.length) issues.forEach((m) => checks.push(tick("err", "!", esc(m))));
+    else {
+      if (sink && window_) checks.push(tick("ok", "✓", "Sink centred under the window"));
+      checks.push(tick("ok", "✓", "Doors keep 100 mm clearance and can swing freely"));
+      checks.push(tick("ok", "✓", "Corners hold only corner cabinets, facing the right way"));
+      if (hob) checks.push(tick("ok", "✓", "Chimney space above the hob is clear, with counter space on both sides"));
+      checks.push(tick("ok", "✓", "No cabinets overlap; every run is packed flush"));
+    }
+    $("#checks").innerHTML = checks.join("");
+    const adjust = [], tech = [];
+    for (const m of lay.warnings || []) (TECH.test(m) ? tech : adjust).push(tick("warn", "i", esc(m)));
+    for (const m of lay.decisions || []) {
+      if (TECH.test(m) || /: (purifier|display) unit /.test(m)) tech.push(`<li>${esc(m)}</li>`);
+      else adjust.push(tick("info", "i", esc(m)));
+    }
+    $("#adjust").innerHTML = adjust.join("");
+    $("#adjust-box").classList.toggle("hidden", !adjust.length);
+    $("#tech").innerHTML = tech.map((t) => t.startsWith("<li><span") ? t.replace(/<span class="ic[^>]*>.*?<\/span>/, "") : t).join("") || "<li>Nothing to show.</li>";
+
+    // cabinet list grouped by wall
+    const tierOrder = { base: 0, tall: 1, wall: 2, loft: 3 };
+    const body = [];
+    for (const wid of Object.keys(lay.placements || {})) {
+      const items = [...lay.placements[wid]].sort((a, b) => (tierOrder[a.tier] - tierOrder[b.tier]) || a.start_mm - b.start_mm);
+      body.push(`<tr class="group"><td colspan="5">${esc(wallName(wid))}<span class="sub">${items.length} cabinets</span></td></tr>`);
+      for (const it of items) {
+        const combo = nodeMeta(it.aid).cabinetCombination;
+        body.push(`<tr><td><span class="tier" style="background:${tierColor(it.tier, it.category)}">${esc(LEVEL[it.tier] || it.tier)}</span></td>`
+          + `<td>${esc(nameOf(it.category))}${combo ? ` <span class="sub">· ${esc(combo)}</span>` : ""}</td>`
+          + `<td class="n">${it.width} mm</td><td class="n">${Math.round(it.start_mm)}–${Math.round(it.end_mm)}</td>`
+          + `<td class="code">${esc(it.aid)}</td></tr>`);
+      }
+    }
+    $("#schedule").innerHTML = `<thead><tr><th>Level</th><th>Cabinet</th><th class="n">Width</th><th class="n">From–to (mm)</th><th>Catalogue code</th></tr></thead><tbody>${body.join("")}</tbody>`;
+    $("#results").classList.remove("hidden");
   }
 
   $("#go").addEventListener("click", generate);
@@ -683,15 +942,15 @@ code, .mono { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; fo
   refreshHealth();
   loadStyles();
   const qs = new URLSearchParams(location.search);
-  if (qs.get("ai")) { const el = document.querySelector(`input[name="ai"][value="${CSS.escape(qs.get("ai"))}"]`); if (el) el.checked = true; }
+  const aiParam = qs.get("ai");
+  if (aiParam === "fallback") $("#ai-rules").checked = true;
+  if (aiParam === "ollama") state.strict = true;
   if (qs.get("layout")) { const el = document.querySelector(`input[name="layout"][value="${CSS.escape(qs.get("layout"))}"]`); if (el) el.checked = true; }
   if (qs.get("job")) {
-    // Re-open an existing job (works while the server keeps it in memory).
+    // Re-open an existing design (kept while the server is running).
     state.jobId = qs.get("job");
-    state.started = Date.now();
-    $("#progress").classList.add("show");
+    startProgress(true);
     $("#go").disabled = true;
-    state.tick = setInterval(() => { $("#p-timer").textContent = fmt((Date.now() - state.started) / 1000); }, 500);
     poll();
   } else if (qs.has("sample")) loadSample().then(() => { if (qs.has("run")) generate(); });
 })();

@@ -1,0 +1,1646 @@
+{
+ "meta": {
+  "model": "qwen2.5-coder:3b",
+  "ai_mode": "ollama",
+  "started": "2026-11-19 14:48"
+ },
+ "results": [
+  {
+   "room": "reference",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 85.7,
+   "passed": 12,
+   "applicable": 14,
+   "checks": {
+    "reads_room": false,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": false,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "reads_room",
+    "tall_well_placed"
+   ],
+   "corrections": [],
+   "hob_shift_mm": 290,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 184.1,
+   "llm": {
+    "seconds": 181.9,
+    "prompt_tokens": 4241,
+    "prompt_seconds": 96.1,
+    "eval_count": 500,
+    "eval_seconds": 79.6,
+    "attempts": 1
+   },
+   "reading": "Window Wall: Wall 2, Door Wall: Wall 4, Door Corner: Wall 4, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink (SINK-900) centred at 1991 mm on Wall 2. COOKING zone: Hob (HOB-900-3DRAWER) on Wall 1, centered at 2150 mm. Tall STORAGE zone: Tall pantry (PANTRY-600) at the end of Wall 1 near the entrance. WORK TRIANGLE: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Tall pantry (PANTRY-600).",
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 2150.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "notes": "Window Wall: Wall 2, Door Wall: Wall 4, Door Corner: Wall 4, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink (SINK-900) centred at 1991 mm on Wall 2. COOKING zone: Hob (HOB-900-3DRAWER) on Wall 1, centered at 2150 mm. Tall STORAGE zone: Tall pantry (PANTRY-600) at the end of Wall 1 near the entrance. WORK TRIANGLE: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Tall pantry (PANTRY-600).",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2"
+   ]
+  },
+  {
+   "room": "compact",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 91.7,
+   "passed": 11,
+   "applicable": 12,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": null,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": false,
+    "walls_connected": true,
+    "uses_the_room": null,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "tall_well_placed"
+   ],
+   "corrections": [],
+   "hob_shift_mm": null,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Built-In Wicker Basket"
+    ]
+   },
+   "verify_errors": [
+    "expected 1 Base Hob Unit, got 0"
+   ],
+   "seconds": 96.7,
+   "llm": {
+    "seconds": 96.3,
+    "prompt_tokens": 4236,
+    "prompt_seconds": 13.0,
+    "eval_count": 514,
+    "eval_seconds": 83.2,
+    "attempts": 1
+   },
+   "reading": "Window Wall: Wall 2, Door Wall: Wall 4, Door Corner: Wall 1, Long Solid Walls: Wall 1, Wall 2 WET zone: Sink (SINK-900) at 1350 mm on Wall 2, Wet Zone: Purifier (AQUAGUARD-600) beside the window. COOKING zone: Hob (HOB-900-3DRAWER) at 1200 mm on Wall 1, Hob Center: 1200 mm, Hob Wall: Wall 1, Hob Centre Range: 1050-1350 mm. STORAGE zone: Tall Storage (TALL-OVEN-600) at the end of Wall 1, near the entrance. Work Triangle: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Tall Storage (TALL-OVEN-60",
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1200.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATBIWB6005601940SOBWBSSLLEH2S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU600330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU600330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "notes": "Window Wall: Wall 2, Door Wall: Wall 4, Door Corner: Wall 1, Long Solid Walls: Wall 1, Wall 2 WET zone: Sink (SINK-900) at 1350 mm on Wall 2, Wet Zone: Purifier (AQUAGUARD-600) beside the window. COOKING zone: Hob (HOB-900-3DRAWER) at 1200 mm on Wall 1, Hob Center: 1200 mm, Hob Wall: Wall 1, Hob Centre Range: 1050-1350 mm. STORAGE zone: Tall Storage (TALL-OVEN-600) at the end of Wall 1, near the entrance. Work Triangle: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Tall Storage (TALL-OVEN-60",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2"
+   ]
+  },
+  {
+   "room": "window_short_wall",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 85.7,
+   "passed": 12,
+   "applicable": 14,
+   "checks": {
+    "reads_room": false,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": false
+   },
+   "failed": [
+    "reads_room",
+    "wall_cabinets_planned"
+   ],
+   "corrections": [],
+   "hob_shift_mm": 0,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 104.0,
+   "llm": {
+    "seconds": 103.6,
+    "prompt_tokens": 4237,
+    "prompt_seconds": 13.7,
+    "eval_count": 544,
+    "eval_seconds": 89.8,
+    "attempts": 1
+   },
+   "reading": "Window Wall: Wall 2, Door Wall: Wall 3, Door Corner: Near the Wall 3 corner, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink (SINK-900) centred at 1500 on Wall 2. COOKING zone: Hob (HOB-900-3DRAWER) on Wall 1, centered at 1700. Tall STORAGE zone: Pantry (PANTRY-600) at the end of Wall 1 near the entrance. WORK TRIANGLE: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Pantry (PANTRY-600).",
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1700.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABU800560700DSDDSSLBOEH1S"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "notes": "Window Wall: Wall 2, Door Wall: Wall 3, Door Corner: Near the Wall 3 corner, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink (SINK-900) centred at 1500 on Wall 2. COOKING zone: Hob (HOB-900-3DRAWER) on Wall 1, centered at 1700. Tall STORAGE zone: Pantry (PANTRY-600) at the end of Wall 1 near the entrance. WORK TRIANGLE: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Pantry (PANTRY-600).",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2"
+   ]
+  },
+  {
+   "room": "door_by_window_corner",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 78.6,
+   "passed": 11,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": false,
+    "hob_position_sane": false,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": false,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "hob_clear_of_door",
+    "hob_position_sane",
+    "tall_well_placed"
+   ],
+   "corrections": [
+    "cylinder unit dropped: no room beside the hob with chimney/sink clearances",
+    "display unit skipped: no free run end for it"
+   ],
+   "hob_shift_mm": 100,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 101.4,
+   "llm": {
+    "seconds": 101.0,
+    "prompt_tokens": 4241,
+    "prompt_seconds": 15.0,
+    "eval_count": 507,
+    "eval_seconds": 86.0,
+    "attempts": 1
+   },
+   "reading": "Window Wall: Wall 2, Door Wall: Wall 1, Door Corner: Wall 2, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink (SINK-900) centred at 1800 mm on Wall 2. COOKING zone: Hob (HOB-900-3DRAWER) on Wall 1, farther from the door. Tall STORAGE zone: Tall pantry (PANTRY-600) at the free end of Wall 1 near the entrance. WORK TRIANGLE: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Tall pantry (PANTRY-600).",
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1700.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "notes": "Window Wall: Wall 2, Door Wall: Wall 1, Door Corner: Wall 2, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink (SINK-900) centred at 1800 mm on Wall 2. COOKING zone: Hob (HOB-900-3DRAWER) on Wall 1, farther from the door. Tall STORAGE zone: Tall pantry (PANTRY-600) at the free end of Wall 1 near the entrance. WORK TRIANGLE: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Tall pantry (PANTRY-600).",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2"
+   ]
+  },
+  {
+   "room": "no_window",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 100.0,
+   "passed": 12,
+   "applicable": 12,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": null,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [],
+   "corrections": [],
+   "hob_shift_mm": 10,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 114.0,
+   "llm": {
+    "seconds": 113.5,
+    "prompt_tokens": 4201,
+    "prompt_seconds": 13.7,
+    "eval_count": 573,
+    "eval_seconds": 99.8,
+    "attempts": 1
+   },
+   "reading": "Window Wall: Wall 1, Door Wall: Wall 4, Door Corner: Wall 1, Long Solid Walls: Wall 1, Wall 2, Wall 3 WET zone: Sink (SINK-900) under the window, Purifier (AQUAGUARD-600) beside the window, Wicker Basket (WICKER-600) near the sink. COOKING zone: Hob (HOB-900-3DRAWER) on Wall 2, far from the door, Spices (SPICE-300) beside the hob. STORAGE zone: Tall Pantry (PANTRY-600) at the end of Wall 1, near the entrance. Work Triangle: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Tall Pantry (PANTRY-600).",
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1700.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ],
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "notes": "Window Wall: Wall 1, Door Wall: Wall 4, Door Corner: Wall 1, Long Solid Walls: Wall 1, Wall 2, Wall 3 WET zone: Sink (SINK-900) under the window, Purifier (AQUAGUARD-600) beside the window, Wicker Basket (WICKER-600) near the sink. COOKING zone: Hob (HOB-900-3DRAWER) on Wall 2, far from the door, Spices (SPICE-300) beside the hob. STORAGE zone: Tall Pantry (PANTRY-600) at the end of Wall 1, near the entrance. Work Triangle: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Tall Pantry (PANTRY-600).",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "big_U",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 92.9,
+   "passed": 13,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": false,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "features_zoned"
+   ],
+   "corrections": [],
+   "hob_shift_mm": 40,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Built-In Wicker Basket"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 147.9,
+   "llm": {
+    "seconds": 147.4,
+    "prompt_tokens": 4258,
+    "prompt_seconds": 16.4,
+    "eval_count": 692,
+    "eval_seconds": 130.9,
+    "attempts": 1
+   },
+   "reading": "Window Wall: Wall 2, Door Wall: Wall 4, Door Corner: Wall 1, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink SINK-1050 on Wall 2, Wet Zone: Purifier AQUAGUARD-600 on Wall 2, Wet Zone: Wicker WICKER-600 near the sink. COOKING zone: Hob HOB-900-3DRAWER on Wall 1, Hob Center: 1700 mm, Hob Center Range: 1100-2500 mm. STORAGE zone: Tall Storage TALL-WICKER-600 on Wall 3, Tall Storage TALL-OVEN-600 on Wall 3. WORK TRIANGLE: Sink SINK-1050 on Wall 2, Hob HOB-900-3DRAWER on Wall 1, Tall Storage T3",
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1050560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1700.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATBIWB6005601940SOBWBSSLLEH2S"
+     },
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATBIWB6005601940SOBWBSSLLEH2S"
+     }
+    ],
+    "base_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABU600560700DFDSLPUEHNS"
+     ],
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABU600560700DFDSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABU600560700DFDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU900330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "notes": "Window Wall: Wall 2, Door Wall: Wall 4, Door Corner: Wall 1, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink SINK-1050 on Wall 2, Wet Zone: Purifier AQUAGUARD-600 on Wall 2, Wet Zone: Wicker WICKER-600 near the sink. COOKING zone: Hob HOB-900-3DRAWER on Wall 1, Hob Center: 1700 mm, Hob Center Range: 1100-2500 mm. STORAGE zone: Tall Storage TALL-WICKER-600 on Wall 3, Tall Storage TALL-OVEN-600 on Wall 3. WORK TRIANGLE: Sink SINK-1050 on Wall 2, Hob HOB-900-3DRAWER on Wall 1, Tall Storage T3",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "window_near_corner",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 92.9,
+   "passed": 13,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": false,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "tall_well_placed"
+   ],
+   "corrections": [
+    "hob moved to Wall 2 (clearances on proposed wall failed)"
+   ],
+   "hob_shift_mm": null,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 122.5,
+   "llm": {
+    "seconds": 121.6,
+    "prompt_tokens": 4257,
+    "prompt_seconds": 15.2,
+    "eval_count": 593,
+    "eval_seconds": 106.3,
+    "attempts": 1
+   },
+   "reading": "Window Wall: Wall 2, Door Wall: Wall 4, Door Corner: Wall 1, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink (SINK-900) at 2900 mm on Wall 2, Wet Zone: Purifier (AQUAGUARD-600) beside the window. COOKING zone: Hob (HOB-900-3DRAWER) at 1700 mm on Wall 1, Hob Center: 1700 mm, Hob Wall: Wall 1, Hob Centre Range: 1100-2200 mm. Tall Storage: Pantry (PANTRY-600) at the end of Wall 1, near the entrance.",
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1700.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "notes": "Window Wall: Wall 2, Door Wall: Wall 4, Door Corner: Wall 1, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink (SINK-900) at 2900 mm on Wall 2, Wet Zone: Purifier (AQUAGUARD-600) beside the window. COOKING zone: Hob (HOB-900-3DRAWER) at 1700 mm on Wall 1, Hob Center: 1700 mm, Hob Wall: Wall 1, Hob Centre Range: 1100-2200 mm. Tall Storage: Pantry (PANTRY-600) at the end of Wall 1, near the entrance.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2"
+   ]
+  },
+  {
+   "room": "narrow_galley",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 66.7,
+   "passed": 8,
+   "applicable": 12,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": null,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": false,
+    "hob_position_sane": false,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": false,
+    "walls_connected": true,
+    "uses_the_room": null,
+    "features_zoned": false,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "hob_clear_of_door",
+    "hob_position_sane",
+    "tall_well_placed",
+    "features_zoned"
+   ],
+   "corrections": [
+    "hob moved to Wall 2 (clearances on proposed wall failed)",
+    "tall unit(s) dropped: they left no legal hob position",
+    "display unit skipped: no free run end for it"
+   ],
+   "hob_shift_mm": null,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Built-In Wicker Basket"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 102.5,
+   "llm": {
+    "seconds": 101.9,
+    "prompt_tokens": 4245,
+    "prompt_seconds": 16.3,
+    "eval_count": 526,
+    "eval_seconds": 85.5,
+    "attempts": 1
+   },
+   "reading": "Window Wall: Wall 2, Door Wall: Wall 1, Door Corner: Wall 2, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink (SINK-900) at 2400 mm, Purifier (AQUAGUARD-600) beside the window. COOKING zone: Hob (HOB-900-3DRAWER) at 1200 mm, Spice Pull-out (SPICE-300) right beside the hob. STORAGE zone: Tall Storage (TALL-OVEN-600) at the end of Wall 1 near the entrance. Work Triangle: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Tall Storage (TALL-OVEN-600).",
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1200.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATBIWB6005601940SOBWBSSLLEH2S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABU600560700DFDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "notes": "Window Wall: Wall 2, Door Wall: Wall 1, Door Corner: Wall 2, Long Solid Walls: Wall 1, Wall 3 WET zone: Sink (SINK-900) at 2400 mm, Purifier (AQUAGUARD-600) beside the window. COOKING zone: Hob (HOB-900-3DRAWER) at 1200 mm, Spice Pull-out (SPICE-300) right beside the hob. STORAGE zone: Tall Storage (TALL-OVEN-600) at the end of Wall 1 near the entrance. Work Triangle: Sink (SINK-900) -> Hob (HOB-900-3DRAWER) -> Tall Storage (TALL-OVEN-600).",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 2"
+   ]
+  },
+  {
+   "room": "reference",
+   "version": "v1",
+   "mode": "ollama",
+   "score": 100.0,
+   "passed": 13,
+   "applicable": 13,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": null,
+    "wall_cabinets_planned": true
+   },
+   "failed": [],
+   "corrections": [],
+   "hob_shift_mm": 9,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 171.0,
+   "llm": {
+    "seconds": 170.3,
+    "prompt_tokens": 2754,
+    "prompt_seconds": 73.8,
+    "eval_count": 643,
+    "eval_seconds": 96.3,
+    "attempts": 1
+   },
+   "reading": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 1 (id wall_1oy5ecjq6k11pfoo) has the door, Wall 3 (id wall_49fdugi4g7vj12pf) and Wall 4 (id wall_7sna3rldnsuwipgy) are solid and long. The work triangle is established with the sink on Wall 2, the hob on Wall 3, and the tall storage on Wall 4. The sink is centred under the window, and the hob is on a solid wall with a long free run, ensuring the chimney can be ducted and the cook is not in the door's path.",
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_49fdugi4g7vj12pf",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1991.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATU6005601940SDSSLBOEH4S"
+     }
+    ],
+    "base_prefs": {},
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "display_aid": null,
+    "notes": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 1 (id wall_1oy5ecjq6k11pfoo) has the door, Wall 3 (id wall_49fdugi4g7vj12pf) and Wall 4 (id wall_7sna3rldnsuwipgy) are solid and long. The work triangle is established with the sink on Wall 2, the hob on Wall 3, and the tall storage on Wall 4. The sink is centred under the window, and the hob is on a solid wall with a long free run, ensuring the chimney can be ducted and the cook is not in the door's path.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "compact",
+   "version": "v1",
+   "mode": "ollama",
+   "score": 91.7,
+   "passed": 11,
+   "applicable": 12,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": null,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": false,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": null,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "sink_size_suits_wall"
+   ],
+   "corrections": [
+    "tall unit(s) dropped: they left no legal hob position"
+   ],
+   "hob_shift_mm": 200,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Built-In Oven"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 142.9,
+   "llm": {
+    "seconds": 142.4,
+    "prompt_tokens": 2731,
+    "prompt_seconds": 60.3,
+    "eval_count": 587,
+    "eval_seconds": 82.0,
+    "attempts": 1
+   },
+   "reading": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 4 (id wall_7sna3rldnsuwipgy) has the door, Walls 1 and 3 are solid and long. The work triangle is sink (on Wall 2) - hob (on Wall 3) - tall storage (on Wall 1).",
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_49fdugi4g7vj12pf",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1350.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATBIO6005601940SODBOS2BDOSLLEH1S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABGT600560700DGTEDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "display_aid": null,
+    "notes": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 4 (id wall_7sna3rldnsuwipgy) has the door, Walls 1 and 3 are solid and long. The work triangle is sink (on Wall 2) - hob (on Wall 3) - tall storage (on Wall 1).",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "window_short_wall",
+   "version": "v1",
+   "mode": "ollama",
+   "score": 84.6,
+   "passed": 11,
+   "applicable": 13,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": false,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": false,
+    "uses_the_room": true,
+    "features_zoned": null,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "sink_size_suits_wall",
+    "walls_connected"
+   ],
+   "corrections": [
+    "added window wall Wall 2 so the sink can sit under the window"
+   ],
+   "hob_shift_mm": 0,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Built-In Oven"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 159.4,
+   "llm": {
+    "seconds": 158.8,
+    "prompt_tokens": 2750,
+    "prompt_seconds": 63.6,
+    "eval_count": 538,
+    "eval_seconds": 95.2,
+    "attempts": 1
+   },
+   "reading": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 4 (id wall_7sna3rldnsuwipgy) has the door, Wall 1 (id wall_1oy5ecjq6k11pfoo) and Wall 3 (id wall_49fdugi4g7vj12pf) are solid and long. The work triangle is established with the sink on Wall 2, the hob on Wall 1, and the tall storage on Wall 3.",
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1500.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATBIO6005601940SODBOS2BDOSLLEH1S"
+     }
+    ],
+    "base_prefs": {},
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU750330600SDSSLBOEH1S",
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU750330600SDSSLBOEH1S",
+      "MTWAWU800330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "display_aid": null,
+    "notes": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 4 (id wall_7sna3rldnsuwipgy) has the door, Wall 1 (id wall_1oy5ecjq6k11pfoo) and Wall 3 (id wall_49fdugi4g7vj12pf) are solid and long. The work triangle is established with the sink on Wall 2, the hob on Wall 1, and the tall storage on Wall 3.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "door_by_window_corner",
+   "version": "v1",
+   "mode": "ollama",
+   "score": 76.9,
+   "passed": 10,
+   "applicable": 13,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": false,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": false,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": null,
+    "wall_cabinets_planned": false
+   },
+   "failed": [
+    "sink_size_suits_wall",
+    "tall_well_placed",
+    "wall_cabinets_planned"
+   ],
+   "corrections": [],
+   "hob_shift_mm": 50,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Built-In Oven"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 178.7,
+   "llm": {
+    "seconds": 178.0,
+    "prompt_tokens": 2752,
+    "prompt_seconds": 76.7,
+    "eval_count": 609,
+    "eval_seconds": 101.1,
+    "attempts": 1
+   },
+   "reading": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 1 (id wall_1oy5ecjq6k11pfoo) has the door, and Walls 3 and 4 (id wall_49fdugi4g7vj12pf and id wall_7sna3rldnsuwipgy) are solid and long. The work triangle is established with the sink on Wall 2, the hob on Wall 3, and the tall storage on Wall 4.",
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_49fdugi4g7vj12pf",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1800.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATBIO6005601940SODBOS2BDOSLLEH1S"
+     }
+    ],
+    "base_prefs": {},
+    "wall_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ],
+     "wall_7sna3rldnsuwipgy": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "display_aid": null,
+    "notes": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 1 (id wall_1oy5ecjq6k11pfoo) has the door, and Walls 3 and 4 (id wall_49fdugi4g7vj12pf and id wall_7sna3rldnsuwipgy) are solid and long. The work triangle is established with the sink on Wall 2, the hob on Wall 3, and the tall storage on Wall 4.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "no_window",
+   "version": "v1",
+   "mode": "ollama",
+   "score": 91.7,
+   "passed": 11,
+   "applicable": 12,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": null,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": false,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "sink_size_suits_wall"
+   ],
+   "corrections": [],
+   "hob_shift_mm": 10,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 157.0,
+   "llm": {
+    "seconds": 156.4,
+    "prompt_tokens": 2717,
+    "prompt_seconds": 66.3,
+    "eval_count": 616,
+    "eval_seconds": 90.0,
+    "attempts": 1
+   },
+   "reading": "Window: Wall 1, Door: Wall 4, Solid and Long Walls: Wall 1, Wall 2, Wall 3 Sink: Centred under the window on Wall 1. Hob: On Wall 2, far end of the long run. Tall Storage: On Wall 3, far end of the long run.",
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1800.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATU6005601940SDSSLBOEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABGT600560700DGTEDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU750330600SDSSLBOEH1S",
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU1000330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "display_aid": null,
+    "notes": "Window: Wall 1, Door: Wall 4, Solid and Long Walls: Wall 1, Wall 2, Wall 3 Sink: Centred under the window on Wall 1. Hob: On Wall 2, far end of the long run. Tall Storage: On Wall 3, far end of the long run.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "big_U",
+   "version": "v1",
+   "mode": "ollama",
+   "score": 85.7,
+   "passed": 12,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": false,
+    "uses_the_room": true,
+    "features_zoned": false,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "walls_connected",
+    "features_zoned"
+   ],
+   "corrections": [
+    "added window wall Wall 2 so the sink can sit under the window"
+   ],
+   "hob_shift_mm": 10,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Built-In Oven"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 151.9,
+   "llm": {
+    "seconds": 151.0,
+    "prompt_tokens": 2756,
+    "prompt_seconds": 46.7,
+    "eval_count": 688,
+    "eval_seconds": 104.3,
+    "attempts": 1
+   },
+   "reading": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 4 (id wall_7sna3rldnsuwipgy) has the door, Wall 1 (id wall_1oy5ecjq6k11pfoo) and Wall 3 (id wall_49fdugi4g7vj12pf) are solid and long. The work triangle is established with the sink on Wall 2, the hob on Wall 1, and the tall storage on Wall 3.",
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 2250.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATBIO6005601940SODBOS2BDOSLLEH1S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABGT600560700DGTEDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABGT600560700DGTEDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "display_aid": null,
+    "notes": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 4 (id wall_7sna3rldnsuwipgy) has the door, Wall 1 (id wall_1oy5ecjq6k11pfoo) and Wall 3 (id wall_49fdugi4g7vj12pf) are solid and long. The work triangle is established with the sink on Wall 2, the hob on Wall 1, and the tall storage on Wall 3.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "window_near_corner",
+   "version": "v1",
+   "mode": "ollama",
+   "score": 71.4,
+   "passed": 10,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": false,
+    "sink_size_suits_wall": false,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": false,
+    "uses_the_room": true,
+    "features_zoned": false,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "hob_position_sane",
+    "sink_size_suits_wall",
+    "walls_connected",
+    "features_zoned"
+   ],
+   "corrections": [
+    "added window wall Wall 2 so the sink can sit under the window",
+    "tall unit(s) dropped: they left no legal hob position"
+   ],
+   "hob_shift_mm": 960,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 156.9,
+   "llm": {
+    "seconds": 155.8,
+    "prompt_tokens": 2752,
+    "prompt_seconds": 64.7,
+    "eval_count": 582,
+    "eval_seconds": 91.0,
+    "attempts": 1
+   },
+   "reading": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 4 (id wall_7sna3rldnsuwipgy) has the door, Wall 1 (id wall_1oy5ecjq6k11pfoo) and Wall 3 (id wall_49fdugi4g7vj12pf) are solid and long. The work triangle is established with the sink on Wall 2, the hob on Wall 1, and the tall storage on Wall 3.",
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 2900.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATU6005601940SDSSLBOEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABGT600560700DGTEDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU700330600SDSSLBOEH1S",
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU700330600SDSSLBOEH1S",
+      "MTWAWU800330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "display_aid": null,
+    "notes": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 4 (id wall_7sna3rldnsuwipgy) has the door, Wall 1 (id wall_1oy5ecjq6k11pfoo) and Wall 3 (id wall_49fdugi4g7vj12pf) are solid and long. The work triangle is established with the sink on Wall 2, the hob on Wall 1, and the tall storage on Wall 3.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2"
+   ]
+  },
+  {
+   "room": "narrow_galley",
+   "version": "v1",
+   "mode": "ollama",
+   "score": 75.0,
+   "passed": 9,
+   "applicable": 12,
+   "checks": {
+    "reads_room": false,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": null,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": false,
+    "uses_the_room": null,
+    "features_zoned": false,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "reads_room",
+    "walls_connected",
+    "features_zoned"
+   ],
+   "corrections": [],
+   "hob_shift_mm": 100,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 163.6,
+   "llm": {
+    "seconds": 162.6,
+    "prompt_tokens": 2739,
+    "prompt_seconds": 70.4,
+    "eval_count": 576,
+    "eval_seconds": 92.1,
+    "attempts": 1
+   },
+   "reading": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 4 (id wall_7sna3rldnsuwipgy) has the door, and Walls 1 and 3 are solid and long. The sink goes on Wall 2, centred under the window. The hob goes on Wall 4, on a different wall from the sink, to allow for a long free run and a chimney duct. The tall storage goes at the far end of the run on Wall 4.",
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_56i56ymve0xf69fm",
+     "wall_7sna3rldnsuwipgy"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_7sna3rldnsuwipgy",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 2400.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_7sna3rldnsuwipgy",
+      "aid": "MTTATU6005601940SDSSLBOEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_7sna3rldnsuwipgy": [
+      "MTBABGT600560700DGTEDSLPUEHNS",
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ],
+     "wall_7sna3rldnsuwipgy": [
+      "MTWAWU600330600SDSSLBOEH1S",
+      "MTWAWU700330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "display_aid": null,
+    "notes": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 4 (id wall_7sna3rldnsuwipgy) has the door, and Walls 1 and 3 are solid and long. The sink goes on Wall 2, centred under the window. The hob goes on Wall 4, on a different wall from the sink, to allow for a long free run and a chimney duct. The tall storage goes at the far end of the run on Wall 4.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 2",
+    "Wall 4"
+   ]
+  }
+ ]
+}

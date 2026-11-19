@@ -45,15 +45,46 @@ CAT_WALL = "wall unit"
 CAT_WALL_CORNER = "wall l corner"
 CAT_TALL = "tall unit"
 CAT_OVEN = "tall built-in oven"
+CAT_MICRO = "tall built-in microwave"
+CAT_OVEN_MICRO = "tall built-in oven & micro"
+CAT_TALL_WICKER = "tall built-in wicker basket"
+CAT_AQUAGUARD = "wall aquaguard unit"
+CAT_WALL_GLASS = "wall glass unit"
+CAT_WALL_SHAKER_GLASS = "wall shaker glass unit"
 CAT_LOFT = "loft - modular"
 CAT_LOFT_FRAME = "loft - frame with shutter"
 CAT_LOFT_CORNER = "loft - l corner - modular"
 # Corner-only categories: the only cabinets allowed where two runs meet.
 CORNER_CATS = (CAT_BCU_L, CAT_BCU_R, CAT_WALL_CORNER, CAT_LOFT_CORNER)
 
+def corner_side_for(item) -> Optional[str]:
+    """Side of the cabinet ("left"/"right", seen from inside the room) where the corner
+    must be, read from the catalogue's 3D models.
+
+    * L-shaped corner units (Wall L Corner, Loft L Corner, Base L corner unit) exist in
+      one orientation only: their open (door) side faces the room only when the corner
+      is on the viewer's RIGHT.
+    * Blind corner units come in two hands: "- L" has the door on the left and the blind
+      panel on the right (corner on the RIGHT); "- R" is the mirror (corner on the LEFT).
+
+    Map to a wall end with ``Wall.end_at(side)`` - for walls whose room side is the back,
+    the viewer's right is the wall's start.
+    """
+    c, combo = item.cat, canon(item.cabinet_combination)
+    if "l corner" in c or combo.endswith("l corner"):
+        return "right"
+    if "blind corner" in c or "blind corner" in combo:
+        if c.endswith(" - l") or combo.endswith("left"):
+            return "right"
+        if c.endswith(" - r") or combo.endswith("right"):
+            return "left"
+    return None
+
+
 BASE_STORAGE_CATS = (CAT_BASE, CAT_CYLINDER, CAT_GRAIN, CAT_WICKER)
 WALL_STORAGE_CATS = (CAT_WALL,)
-TALL_CATS = (CAT_TALL, CAT_OVEN)
+WALL_GLASS_CATS = (CAT_WALL_GLASS, CAT_WALL_SHAKER_GLASS)
+TALL_CATS = (CAT_TALL, CAT_OVEN, CAT_MICRO, CAT_OVEN_MICRO, CAT_TALL_WICKER)
 LOFT_CATS = (CAT_LOFT, CAT_LOFT_FRAME)
 
 _DASHES = re.compile(r"[‐-―−]")

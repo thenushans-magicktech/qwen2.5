@@ -101,9 +101,11 @@ class SceneHydrator:
         if not meta.get("textures"):
             meta["textures"] = copy.deepcopy(self.presets.get("shutterTextures", {}).get(p.tier, []))
         nid = self.ids.item()
-        placement = {"level": p.tier, "side": 1, "designSource": config.DESIGN_SOURCE}
+        # Rooms on a wall's back side (frontSide == "exterior"): mirror depth and rotation.
+        placement = {"level": p.tier, "side": wall.side_sign, "designSource": config.DESIGN_SOURCE}
         if p.corner_end:
-            placement["cornerOrientation"] = "left" if p.corner_end == "end" else "right"
+            # hand of the corner unit as seen from the room ("left" = door left, blind right)
+            placement["cornerOrientation"] = "left" if wall.side_of(p.corner_end) == "right" else "right"
             placement["cornerAtEnd"] = p.corner_end == "end"
         return {
             "object": "node",
@@ -113,8 +115,8 @@ class SceneHydrator:
             "parentId": wall.id,
             "visible": True,
             "metadata": meta,
-            "position": [p.center_mm / 1000.0, p.pos_y(), p.pos_z(wall)],
-            "rotation": list(config.CABINET_ROTATION),
+            "position": [p.center_mm / 1000.0, p.pos_y(), wall.side_sign * p.pos_z(wall)],
+            "rotation": _facing(wall),
             "scale": [1, 1, 1],
             "children": [],
             "wallId": wall.id,
@@ -212,8 +214,8 @@ class SceneHydrator:
                 wall.id,
                 wall.id,
                 host["wallT"],
-                [host["position"][0], y, _r(z + self._zshift(wall))],
-                list(config.CABINET_ROTATION),
+                [host["position"][0], y, _r(wall.side_sign * (z + self._zshift(wall)))],
+                _facing(wall),
                 host["id"],
             )
             self._attach(chim, wall.id)
@@ -237,7 +239,7 @@ class SceneHydrator:
             "depthM": _r(depth),
             "color": self.presets.get("fixtureColors", {}).get(kind) or config.FIXTURE_COLORS.get(kind, "#e8e8e8"),
             "materialSlot": slot,
-            "side": 1,
+            "side": wall.side_sign,
             "wallT": center_mm / wall.length_mm,
             "designSource": config.DESIGN_SOURCE_FIXTURE,
             "fromDesignResponse": True,
@@ -255,7 +257,7 @@ class SceneHydrator:
             "parentId": wall.id,
             "visible": True,
             "metadata": meta,
-            "position": [center_mm / 1000.0, _r(y), _r(z + self._zshift(wall))],
+            "position": [center_mm / 1000.0, _r(y), _r(wall.side_sign * (z + self._zshift(wall)))],
             "rotation": list(config.FIXTURE_ROTATION),
             "scale": [1, 1, 1],
             "children": [],
@@ -531,7 +533,7 @@ class SceneHydrator:
             inset = cfg["cutout_inset_mm"]
             hw, hd = (w - 2 * inset) / 2000.0, (d - 2 * inset) / 2000.0
             cx = (p.center_mm - ct_center_mm) / 1000.0
-            cz = p.pos_z(wall) - ct_z
+            cz = wall.side_sign * (p.pos_z(wall) - ct_z)
             holes.append({"outline": _rounded_rect(cx - hw, cx + hw, cz - hd, cz + hd, 0.015)})
         return holes
 
@@ -600,6 +602,15 @@ class SceneHydrator:
         self._add_floor()
         self.doc["exportedAt"] = datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
         return self.doc
+
+
+def _facing(wall: Wall) -> list[float]:
+    """Cabinet / chimney rotation so the front faces the room.
+
+    Catalogue models face -z; [0, pi, 0] turns them to the wall's front (+z). When the
+    room is on the wall's back side they keep [0, 0, 0] and sit at negative z.
+    """
+    return list(config.CABINET_ROTATION) if wall.front_interior else [0, 0, 0]
 
 
 def _cut(spans: list[tuple[float, float]], a: float, b: float) -> list[tuple[float, float]]:

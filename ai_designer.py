@@ -1,4 +1,4 @@
-"""AI interior designer: local Ollama ``qwen2.5-coder:3b`` with a deterministic fallback.
+"""AI interior designer: local Ollama Qwen 2.5 Coder (``config.OLLAMA_MODEL``) with a deterministic fallback.
 
 Qwen's job is *design intent* - which walls carry cabinets, where the sink / hob /
 tall units go and which SKUs to use. It never emits coordinates that are
@@ -6,9 +6,19 @@ trusted blindly: :mod:`rule_engine` snaps and validates everything.
 
 Hallucination guard: the response format is a JSON schema generated from a
 Pydantic model whose fields are ``Literal`` enums built from the filtered
-catalogue shortlist (35-45 SKUs) and the scene's wall ids. Ollama compiles the
-schema into a grammar, so the model can only produce valid AIDs / wall ids;
-the reply is then re-validated with the same Pydantic model.
+catalogue shortlist (35-45 SKUs) and the scene's walls. Ollama compiles the
+schema into a grammar, so the model can only produce valid options; the reply
+is then re-validated with the same Pydantic model.
+
+Two prompt versions (``config.AI_PROMPT_VERSION``):
+
+* ``v2`` (default) teaches Qwen with the knowledge pack in ``knowledge/``
+  (designer playbook, worked examples, a designer note on every option) and
+  uses short readable option codes (``SINK-900``, ``HOB-900-3DRAWER``) and wall
+  names instead of 30-character AIDs and wall ids. It also offers the water
+  purifier, glass display and built-in microwave / oven-micro units.
+* ``v1`` is the original prompt, kept for A/B comparison
+  (``designer_benchmark.py``).
 """
 from __future__ import annotations
 
@@ -21,17 +31,23 @@ from typing import Literal, Optional
 from pydantic import BaseModel, Field, ValidationError, create_model
 
 import config
+import design_knowledge
 from catalog_loader import (
+    CAT_AQUAGUARD,
     CAT_BASE,
     CAT_CYLINDER,
     CAT_GRAIN,
     CAT_HOB,
+    CAT_MICRO,
     CAT_OVEN,
+    CAT_OVEN_MICRO,
     CAT_SINK,
     CAT_SPICE,
     CAT_TALL,
+    CAT_TALL_WICKER,
     CAT_WALL,
     CAT_WICKER,
+    WALL_GLASS_CATS,
     Catalog,
     CatalogItem,
     canon,
@@ -58,6 +74,15 @@ class KitchenPreferences(BaseModel):
     include_cylinder: Optional[bool] = Field(None, description="LPG cylinder unit beside the hob (None = auto)")
     sink_under_window: bool = True
     style_notes: str = Field("", max_length=500, description="Free-text brief passed to the AI designer")
+    # Household needs. "auto" = not stated: Qwen decides and explains why. Any other
+    # value is the customer's requirement and is enforced (Qwen cannot override it).
+    water_purifier: Literal["auto", "yes", "no"] = Field("auto", description="Wall purifier (Aquaguard) cabinet")
+    built_in: Literal["auto", "none", "microwave", "oven", "oven_microwave"] = Field(
+        "auto", description="Built-in appliance tower(s) the household needs"
+    )
+    display_unit: Literal["auto", "yes", "no"] = Field("auto", description="Glass display wall cabinet")
+    cooking: Literal["auto", "heavy", "light"] = Field("auto", description="Daily heavy cooking or light cooking")
+    household_size: Optional[int] = Field(None, ge=1, le=20, description="People living in the home")
     ai_mode: Literal["auto", "ollama", "fallback"] = Field(
         "auto", description="auto = Ollama with deterministic fallback; ollama = require the LLM"
     )
@@ -70,9 +95,7 @@ class KitchenPreferences(BaseModel):
 # Catalogue shortlist (what the LLM may choose from)
 # ---------------------------------------------------------------------------
 
-def build_shortlist(catalog: Catalog, max_items: int = config.AI_SHORTLIST_MAX) -> dict[str, list[CatalogItem]]:
-    """~35-45 representative SKUs grouped by design slot."""
-
+def _picker(catalog: Catalog):
     def pick(cat, widths, opening=None, combination=None, height=None, depth=None, limit=None):
         out = []
         for w in widths:
@@ -80,6 +103,13 @@ def build_shortlist(catalog: Catalog, max_items: int = config.AI_SHORTLIST_MAX) 
             if found:
                 out.append(found[0])
         return out[:limit] if limit else out
+
+    return pick
+
+
+def build_shortlist(catalog: Catalog, max_items: int = config.AI_SHORTLIST_MAX) -> dict[str, list[CatalogItem]]:
+    """v1: ~35-45 representative SKUs grouped by design slot."""
+    pick = _picker(catalog)
 
     groups = {
         "sink": pick((CAT_SINK,), [1200, 1050, 900, 800], opening="Both", height=700),
@@ -131,6 +161,129 @@ def shortlist_items(groups: dict[str, list[CatalogItem]]) -> list[CatalogItem]:
     return out
 
 
+def build_shortlist_v2(catalog: Catalog) -> dict[str, list[CatalogItem]]:
+    """v2 menu: designer-default option first in every group (small models favour
+    the first options), only *feature* base units (the solver fills plain storage),
+    plus the purifier, glass display and built-in microwave / oven-micro units."""
+    pick = _picker(catalog)
+
+    def first_of(cat, width, **kw):
+        # prefer a left-hinged single shutter; the hinge pass flips it where needed
+        return pick(cat, [width], opening="Left", **kw) or pick(cat, [width], **kw)
+
+    groups = {
+        "sink": pick((CAT_SINK,), [900, 1050, 1200, 800], opening="Both", height=700),
+        "hob": (
+            pick((CAT_HOB,), [900], combination="Triple Drawer - A", height=700)
+            + pick((CAT_HOB,), [900], combination="Hob Double Drawer", height=700)
+            + pick((CAT_HOB,), [750], combination="Triple Drawer - A", height=700)
+            + pick((CAT_HOB,), [900], combination="Hob Double Shutter", height=700)
+        ),
+        "spice": pick((CAT_SPICE,), [300, 150], height=700),
+        "cylinder": pick((CAT_CYLINDER,), [600], opening="Right", height=800),
+        "tall": (
+            pick((CAT_TALL,), [600], opening="Left", combination="Single Shutter", height=1940)
+            + pick((CAT_TALL,), [800, 900], combination="Double Shutter", height=1940, limit=1)
+            + first_of((CAT_OVEN,), 600, height=1940)[:1]
+            + first_of((CAT_MICRO,), 600, height=1940)[:1]
+            + first_of((CAT_OVEN_MICRO,), 600, height=1940)[:1]
+            + first_of((CAT_TALL_WICKER,), 600, height=1940)[:1]
+        ),
+        "base": (
+            pick((CAT_BASE,), [600, 800], combination="Four Drawer", height=700)
+            + pick((CAT_BASE,), [900], combination="Double Drawer", height=700)
+            + pick((CAT_BASE,), [800], combination="Drawer with Double Shutter", height=700)
+            + pick((CAT_GRAIN,), [600, 450], height=700)
+            + pick((CAT_WICKER,), [600, 450], height=700)
+        ),
+        "wall": (
+            pick((CAT_WALL,), [600, 700, 800, 900, 1000], combination="Double Shutter", height=600, depth=330)
+            + pick((CAT_WALL,), [450], opening="Left", height=600, depth=330)
+        ),
+        "purifier": [x for w in (600, 450, 750) for x in first_of((CAT_AQUAGUARD,), w, height=600, depth=330)],
+        "display": pick(WALL_GLASS_CATS, [600, 800, 900], combination=None, height=600, depth=330),
+    }
+    missing = [k for k in ("sink", "hob", "base", "wall") if not groups[k]]
+    if missing:
+        raise SolverError(f"catalogue shortlist is missing required groups: {missing}")
+    return groups
+
+
+# Short, readable option codes for the v2 prompt ---------------------------------
+
+V2_GROUP_ORDER = ("sink", "hob", "spice", "cylinder", "tall", "base", "wall", "purifier", "display")
+V2_GROUP_TITLES = {
+    "sink": "SINK UNIT - one, centred under the window",
+    "hob": "HOB UNIT - one, on a solid wall; chimney above",
+    "spice": "SPICE PULL-OUT - right beside the hob (or NONE)",
+    "cylinder": "LPG CYLINDER UNIT - beside the hob (or NONE)",
+    "tall": "TALL UNITS - end of a run, near the entrance",
+    "base": "BASE FEATURE UNITS - 1-3 per wall with a purpose; the solver fills the rest",
+    "wall": "WALL CABINET SIZES - preferred sizes per wall",
+    "purifier": "WATER PURIFIER UNIT - wall cabinet beside the sink window (or NONE)",
+    "display": "GLASS DISPLAY WALL UNIT - one, at the end of a run (or NONE)",
+}
+
+
+def option_code(group: str, it: CatalogItem) -> str:
+    c, w = canon(it.cabinet_combination), it.width
+    if group == "sink":
+        return f"SINK-{w}"
+    if group == "hob":
+        return f"HOB-{w}-" + ("3DRAWER" if "triple" in c else "2DRAWER" if "drawer" in c else "SHUTTER")
+    if group == "spice":
+        return f"SPICE-{w}"
+    if group == "cylinder":
+        return f"LPG-{w}"
+    if group == "base":
+        if it.cat == CAT_GRAIN:
+            return f"GRAIN-{w}"
+        if it.cat == CAT_WICKER:
+            return f"WICKER-{w}"
+        if c == "four drawer":
+            return f"DRAWERS4-{w}"
+        if c == "double drawer":
+            return f"DRAWERS2-{w}"
+        if "drawer with" in c:
+            return f"DRAWER-SHUTTER-{w}"
+        return f"SHUTTER-{w}"
+    if group == "wall":
+        return f"WALL-{w}" + ("" if it.opening_direction == "Both" else "-1DOOR")
+    if group == "purifier":
+        return f"AQUAGUARD-{w}"
+    if group == "display":
+        return f"GLASS-{w}"
+    if group == "tall":
+        tag = {CAT_OVEN: "OVEN", CAT_MICRO: "MICROWAVE", CAT_OVEN_MICRO: "OVEN-MICRO", CAT_TALL_WICKER: "TALL-WICKER"}.get(it.cat)
+        return f"{tag}-{w}" if tag else f"PANTRY-{w}" + ("-2DOOR" if it.opening_direction == "Both" else "")
+    return f"{group.upper()}-{w}"
+
+
+def build_menu(groups: dict[str, list[CatalogItem]]) -> dict[str, list[tuple[str, CatalogItem]]]:
+    """group -> [(code, item)] with codes unique across the whole menu."""
+    seen: set[str] = set()
+    menu = {}
+    for g in V2_GROUP_ORDER:
+        opts = []
+        for it in groups.get(g, []):
+            code = base = option_code(g, it)
+            k = 2
+            while code in seen:
+                code, k = f"{base}-{k}", k + 1
+            seen.add(code)
+            opts.append((code, it))
+        menu[g] = opts
+    return menu
+
+
+def wall_labels(geometry: RoomGeometry) -> dict[str, str]:
+    """label -> wall id: the scene's wall names when unique ("Wall 1"), else W1, W2, ..."""
+    names = [(geometry.walls[w].name or "").strip() for w in geometry.wall_order]
+    if all(names) and len(set(names)) == len(names) and all(len(n) <= 24 for n in names):
+        return dict(zip(names, geometry.wall_order))
+    return {f"W{i + 1}": w for i, w in enumerate(geometry.wall_order)}
+
+
 # ---------------------------------------------------------------------------
 # Structured-output schema
 # ---------------------------------------------------------------------------
@@ -180,6 +333,107 @@ def build_design_model(groups: dict[str, list[CatalogItem]], wall_ids: list[str]
         tall_units=(list[TallChoice], Field(min_length=1 if require_tall and groups["tall"] else 0, max_length=2)),
         base_runs=(list[BaseRun], Field(max_length=3)),
         wall_runs=(list[WallRun], Field(max_length=3)),
+    )
+
+
+TALL_KIND = {CAT_OVEN: "oven", CAT_MICRO: "microwave", CAT_OVEN_MICRO: "oven_microwave"}
+PANTRY_CATS = (CAT_TALL, CAT_TALL_WICKER)
+# Tall towers that satisfy each built-in appliance need.
+BUILT_IN_CATS = {
+    "microwave": (CAT_MICRO, CAT_OVEN_MICRO),
+    "oven": (CAT_OVEN, CAT_OVEN_MICRO),
+    "oven_microwave": (CAT_OVEN_MICRO,),
+}
+
+
+def allowed_codes(menu, group: str, prefs: Optional["KitchenPreferences"]) -> list[str]:
+    """Option codes Qwen may use for ``group`` after applying the customer's stated needs.
+
+    "NONE" is included when leaving the item out is allowed. A stated need removes the
+    other choices from the schema, so the model cannot contradict the customer.
+    """
+    opts = menu.get(group, [])
+    codes = [c for c, _ in opts]
+    p = prefs
+    if group == "purifier":
+        need = p.water_purifier if p else "auto"
+        return ["NONE"] if need == "no" or not codes else codes if need == "yes" else codes + ["NONE"]
+    if group == "display":
+        need = p.display_unit if p else "auto"
+        return ["NONE"] if need == "no" or not codes else codes if need == "yes" else codes + ["NONE"]
+    if group == "cylinder":
+        need = p.include_cylinder if p else None
+        return ["NONE"] if need is False or not codes else codes if need else codes + ["NONE"]
+    if group == "tall":
+        need = p.built_in if p else "auto"
+        if need == "auto":
+            return codes
+        keep = PANTRY_CATS + (BUILT_IN_CATS.get(need, ()))
+        return [c for c, it in opts if it.cat in keep] or codes
+    if group == "spice":
+        return codes + ["NONE"]
+    return codes
+
+
+def build_design_model_v2(
+    menu: dict[str, list[tuple[str, CatalogItem]]],
+    walls: list[str],
+    require_tall: bool = False,
+    prefs: Optional["KitchenPreferences"] = None,
+) -> type[BaseModel]:
+    """v2 schema: enums of option codes and wall names.
+
+    Every key decision is preceded by a short ``*_why`` field: the model states its
+    reason first and then commits to the option (explainable, and the reason steers
+    the choice). Customer needs narrow the enums (see :func:`allowed_codes`).
+    """
+    Wall = _lit(walls)
+
+    def codes(group: str):
+        return _lit(allowed_codes(menu, group, prefs) or ["NONE"])
+
+    def why(what: str):
+        return (str, Field(max_length=110, description=f"one short sentence: the room fact or customer need behind the {what}"))
+
+    Base, WallUnit, Tall = codes("base"), codes("wall"), codes("tall")
+    FeatureRun = create_model(
+        "FeatureRun",
+        wall=(Wall, ...),
+        units=(list[Base], Field(max_length=3, description="feature base units for this wall")),
+    )
+    WallSizes = create_model(
+        "WallSizes",
+        wall=(Wall, ...),
+        units=(list[WallUnit], Field(max_length=2, description="preferred wall-cabinet sizes for this wall")),
+    )
+    TallChoice = create_model("TallChoiceV2", wall=(Wall, ...), unit=(Tall, ...))
+    include_tall = prefs.include_tall if prefs else True
+    need_tall = 1 if require_tall and include_tall and menu.get("tall") else 0
+    return create_model(
+        "KitchenDesignV2",
+        room_reading=(str, Field(max_length=240, description="window wall, door wall and its corner, long solid walls")),
+        design_plan=(str, Field(max_length=200, description="zones and work triangle in one or two sentences")),
+        layout_why=why("choice of cabinet walls"),
+        cabinet_walls=(list[Wall], Field(min_length=1, max_length=3)),
+        sink_why=why("sink unit and its wall"),
+        sink_wall=(Wall, ...),
+        sink=(codes("sink"), ...),
+        hob_why=why("hob unit, its wall and position"),
+        hob_wall=(Wall, ...),
+        hob=(codes("hob"), ...),
+        hob_center_mm=(int, Field(ge=0, le=20000, description="hob centre, mm from the hob wall's start")),
+        spice=(codes("spice"), ...),
+        lpg_why=why("LPG cylinder unit decision"),
+        lpg_cylinder=(codes("cylinder"), ...),
+        tall_why=why("tall units"),
+        tall_units=(list[TallChoice], Field(min_length=need_tall, max_length=2 if include_tall else 0)),
+        purifier_why=why("water purifier decision"),
+        water_purifier=(codes("purifier"), ...),
+        display_why=why("glass display decision"),
+        display_unit=(codes("display"), ...),
+        features_why=why("feature base units"),
+        base_feature_units=(list[FeatureRun], Field(max_length=3)),
+        wall_cabinet_sizes=(list[WallSizes], Field(max_length=3)),
     )
 
 
@@ -261,6 +515,133 @@ def _user_prompt(geometry: RoomGeometry, groups, prefs: KitchenPreferences) -> s
 
 
 # ---------------------------------------------------------------------------
+# v2 prompt: knowledge pack + readable room facts
+# ---------------------------------------------------------------------------
+
+def _hob_range(segs: list[tuple[float, float]]) -> Optional[tuple[int, int]]:
+    """Comfortable hob-centre range on the longest free run: room for a corner
+    unit or landing + spice pull-out on each side (about 1050 mm)."""
+    if not segs:
+        return None
+    s, e = max(segs, key=lambda t: t[1] - t[0])
+    if e - s < 1800:
+        return None
+    m = min(1050.0, (e - s) / 2 - 150)
+    return int(round((s + m) / 50) * 50), int(round((e - m) / 50) * 50)
+
+
+def room_brief_v2(geometry: RoomGeometry, labels: dict[str, str]) -> list[str]:
+    """Facts a designer reads off the plan: wall order, corners, openings, free runs, zones."""
+    name = {wid: label for label, wid in labels.items()}
+    lines = []
+    for wid in geometry.wall_order:
+        w = geometry.walls[wid]
+        a, b = name.get(w.neighbor_start), name.get(w.neighbor_end)
+        run = (f"from the {a} corner" if a else "from a free end") + (f" to the {b} corner" if b else " to a free end")
+        facts = [f"{name[wid]}: {w.length_mm} mm, {run}."]
+        if not w.openings:
+            facts.append("Solid.")
+        for o in sorted(w.windows, key=lambda o: o.start_mm):
+            facts.append(f"WINDOW {o.start_mm:.0f}-{o.end_mm:.0f} (centre {o.center_mm:.0f}).")
+        for o in sorted(w.doors, key=lambda o: o.start_mm):
+            near = a if o.center_mm < w.length_mm / 2 else b
+            facts.append(f"DOOR {o.start_mm:.0f}-{o.end_mm:.0f}" + (f" (near the {near} corner)." if near else "."))
+        segs = [(s, e) for s, e in _free_segments(geometry, wid) if e - s >= 300]
+        free = max((e - s for s, e in segs), default=0.0)
+        if segs:
+            facts.append("Free run " + ", ".join(f"{s:.0f}-{e:.0f} ({e - s:.0f} mm)" for s, e in segs) + ".")
+        else:
+            facts.append("No free run.")
+        if free < config.MIN_CABINET_WALL_MM:
+            facts.append("Too short for cabinets.")
+        elif w.windows:
+            win = max(w.windows, key=lambda o: o.width_mm)
+            facts.append(f"Wet zone: sink centred at {win.center_mm:.0f}.")
+        else:
+            rng = _hob_range(segs)
+            facts.append(f"Hob centre range {rng[0]}-{rng[1]}." if rng else "Too short for the hob: storage only.")
+        lines.append("- " + " ".join(facts))
+    for wid in geometry.wall_order:
+        w = geometry.walls[wid]
+        adj = [c.other(wid)[1] for c in geometry.corners_of(wid)]
+        if w.windows and len(adj) == 2:
+            lo, hi = w.usable
+            aisle = (hi - lo) - 2 * config.CORNER_DEPTH_MM
+            lines.append(
+                f"- U-shape on {name[wid]}: aisle between the {name[adj[0]]} and {name[adj[1]]} runs "
+                f"would be {aisle:.0f} mm (needs {config.MIN_AISLE_MM}+)."
+            )
+    h = min(w.height_m for w in geometry.walls.values())
+    lines.append(f"- Wall height {h * 1000:.0f} mm.")
+    return lines
+
+
+def _menu_lines(menu: dict[str, list[tuple[str, CatalogItem]]]) -> list[str]:
+    lines = ["CATALOGUE MENU - choose by CODE (code | width | type | designer note):"]
+    for g in V2_GROUP_ORDER:
+        if not menu.get(g):
+            continue
+        lines.append(f"{V2_GROUP_TITLES[g]}:")
+        for code, it in menu[g]:
+            note = design_knowledge.note_for(it)
+            kind = it.cabinet_combination or it.category
+            lines.append(f"  {code} | {it.width} mm | {kind}" + (f" | {note}" if note else ""))
+    return lines
+
+
+def customer_needs(prefs: KitchenPreferences) -> list[str]:
+    """The household's needs in plain words (shown to Qwen and in the report)."""
+    p = prefs
+    pur = {"yes": "NEEDS a wall water-purifier (Aquaguard) cabinet", "no": "does NOT want a water-purifier cabinet"}.get(
+        p.water_purifier, "water purifier not stated")
+    gas = "uses an LPG cylinder - needs a cylinder unit" if p.include_cylinder else (
+        "has piped gas - no cylinder unit" if p.include_cylinder is False else "gas supply not stated")
+    tower = {
+        "none": "no built-in oven or microwave", "microwave": "NEEDS a built-in microwave tower",
+        "oven": "NEEDS a built-in oven tower", "oven_microwave": "NEEDS a built-in oven + microwave tower",
+    }.get(p.built_in, "built-in appliances not stated")
+    disp = {"yes": "WANTS one glass display cabinet", "no": "does NOT want glass display cabinets"}.get(
+        p.display_unit, "glass display not stated")
+    cook = {"heavy": "heavy daily cooking (many vessels, pressure cookers)", "light": "light cooking"}.get(
+        p.cooking, "cooking style not stated")
+    size = f"{p.household_size} people in the home" if p.household_size else "household size not stated"
+    return [
+        f"- Door style {p.door_style}; layout preference {p.layout}; {'wants' if p.include_tall else 'NO'} tall storage.",
+        f"- Water purifier: {pur}.",
+        f"- Gas: {gas}.",
+        f"- Built-in appliances: {tower}.",
+        f"- Glass display: {disp}.",
+        f"- Cooking: {cook}; {size}.",
+    ]
+
+
+def _user_prompt_v2(geometry: RoomGeometry, menu, labels: dict[str, str], prefs: KitchenPreferences) -> str:
+    # The menu comes first: it is identical for every room of one door style, so
+    # Ollama can reuse the cached prompt prefix between requests.
+    lines = _menu_lines(menu)
+    lines += ["", "ROOM (mm measured along each wall from its start; walls listed in order around the room):"]
+    lines += room_brief_v2(geometry, labels)
+    lines += ["", "CUSTOMER NEEDS (stated needs are fixed; 'not stated' means you decide and say why):"]
+    lines += customer_needs(prefs)
+    if prefs.cabinet_walls:
+        inv = {wid: label for label, wid in labels.items()}
+        names = [inv[w] for w in prefs.cabinet_walls if w in inv]
+        lines.append(f"- Use exactly these cabinet walls: {', '.join(names)}.")
+    if prefs.style_notes:
+        lines.append(f"- Brief from the customer: {prefs.style_notes}")
+    lines += [
+        "",
+        "TASK - fill the JSON fields in order:",
+        "1. room_reading: the window wall, the door wall and which corner the door is near, the long solid walls.",
+        "2. design_plan: the zones and the work triangle in one or two sentences.",
+        "3. the decisions, using ONLY codes and wall names from this message. Before each decision write its",
+        "   *_why: one short sentence naming the room fact or customer need that decides it.",
+        "   hob_center_mm is measured from the hob wall's start and should sit inside that wall's hob centre range.",
+    ]
+    return "\n".join(lines)
+
+
+# ---------------------------------------------------------------------------
 # Ollama
 # ---------------------------------------------------------------------------
 
@@ -290,7 +671,7 @@ def ensure_model(client=None, auto_pull: bool = config.OLLAMA_AUTO_PULL, wait: b
     """Raise :class:`AIUnavailable` unless the Ollama model is ready (pull if missing).
 
     ``wait=False`` fails fast while another thread is downloading the model, so
-    API requests in ``auto`` mode fall back instead of blocking on a 2 GB pull.
+    API requests in ``auto`` mode fall back instead of blocking on a multi-GB pull.
     """
     client = client or _client()
     try:
@@ -307,7 +688,7 @@ def ensure_model(client=None, auto_pull: bool = config.OLLAMA_AUTO_PULL, wait: b
     try:
         if want in _model_names(client):  # another thread finished the pull
             return
-        log.info("pulling %s (one-time download, ~2 GB)...", want)
+        log.info("pulling %s (one-time download, several GB)...", want)
         last = -1
         for prog in client.pull(want, stream=True):
             total = getattr(prog, "total", None) or 0
@@ -324,15 +705,38 @@ def ensure_model(client=None, auto_pull: bool = config.OLLAMA_AUTO_PULL, wait: b
         _PULL_LOCK.release()
 
 
-def design_with_ollama(geometry: RoomGeometry, groups, prefs: KitchenPreferences, client=None) -> tuple[Proposal, dict]:
+def _secs(resp, key: str) -> Optional[float]:
+    ns = getattr(resp, key, None)
+    return round(ns / 1e9, 1) if isinstance(ns, (int, float)) else None
+
+
+def build_messages(geometry: RoomGeometry, groups, prefs: KitchenPreferences, version: str):
+    """``(messages, Model, to_proposal)`` for one prompt version."""
+    if version == "v1":
+        Model = build_design_model(groups, geometry.wall_order, require_tall=prefs.include_tall)
+        system, user = SYSTEM_PROMPT, _user_prompt(geometry, groups, prefs)
+
+        def to_proposal(d):
+            return _design_to_proposal(d, prefs)
+    else:
+        menu, labels = build_menu(groups), wall_labels(geometry)
+        Model = build_design_model_v2(menu, list(labels), require_tall=prefs.include_tall, prefs=prefs)
+        system, user = design_knowledge.system_prompt(), _user_prompt_v2(geometry, menu, labels, prefs)
+
+        def to_proposal(d):
+            return _design_to_proposal_v2(d, menu, labels, prefs)
+    messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
+    return messages, Model, to_proposal
+
+
+def design_with_ollama(
+    geometry: RoomGeometry, groups, prefs: KitchenPreferences, client=None, version: Optional[str] = None
+) -> tuple[Proposal, dict]:
+    version = version or config.AI_PROMPT_VERSION
     client = client or _client()
     ensure_model(client, wait=prefs.ai_mode == "ollama")
-    Model = build_design_model(groups, geometry.wall_order, require_tall=prefs.include_tall)
+    messages, Model, to_proposal = build_messages(geometry, groups, prefs, version)
     schema = Model.model_json_schema()
-    messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": _user_prompt(geometry, groups, prefs)},
-    ]
     errors = []
     for attempt in range(config.AI_MAX_RETRIES + 1):
         t0 = time.time()
@@ -357,12 +761,17 @@ def design_with_ollama(geometry: RoomGeometry, groups, prefs: KitchenPreferences
         info = {
             "mode": "ollama",
             "model": config.OLLAMA_MODEL,
+            "prompt_version": version,
             "attempts": attempt + 1,
             "seconds": round(time.time() - t0, 1),
+            "prompt_tokens": getattr(resp, "prompt_eval_count", None),
+            "prompt_seconds": _secs(resp, "prompt_eval_duration"),
             "eval_count": getattr(resp, "eval_count", None),
+            "eval_seconds": _secs(resp, "eval_duration"),
+            "load_seconds": _secs(resp, "load_duration"),
             "raw": json.loads(design.model_dump_json()),
         }
-        return _design_to_proposal(design, prefs), info
+        return to_proposal(design), info
     raise AIUnavailable(f"model reply failed schema validation: {errors[-1] if errors else 'unknown'}")
 
 
@@ -394,19 +803,60 @@ def _design_to_proposal(d, prefs: KitchenPreferences) -> Proposal:
     )
 
 
+def _design_to_proposal_v2(d, menu, labels: dict[str, str], prefs: KitchenPreferences) -> Proposal:
+    code = {c: it.aid for opts in menu.values() for c, it in opts}
+
+    def aid(c):
+        return None if c in (None, "NONE") else code[c]
+
+    base_prefs: dict[str, list[str]] = {}
+    for run in d.base_feature_units:
+        base_prefs.setdefault(labels[run.wall], []).extend(code[u] for u in run.units)
+    wall_prefs: dict[str, list[str]] = {}
+    for run in d.wall_cabinet_sizes:
+        wall_prefs.setdefault(labels[run.wall], []).extend(code[u] for u in run.units)
+    walls = list(dict.fromkeys(labels[w] for w in d.cabinet_walls))
+    return Proposal(
+        layout_type={1: "single", 2: "L"}.get(len(walls), "U"),
+        cabinet_walls=list(dict.fromkeys(prefs.cabinet_walls or walls)),
+        sink_wall_id=labels[d.sink_wall],
+        sink_aid=code[d.sink],
+        hob_wall_id=labels[d.hob_wall],
+        hob_aid=code[d.hob],
+        hob_center_mm=float(d.hob_center_mm),
+        spice_aid=aid(d.spice),
+        cylinder_aid=aid(d.lpg_cylinder) if prefs.include_cylinder is not False else None,
+        tall_units=[(labels[t.wall], code[t.unit]) for t in d.tall_units] if prefs.include_tall else [],
+        base_prefs=base_prefs,
+        wall_prefs=wall_prefs,
+        purifier_aid=aid(d.water_purifier),
+        display_aid=aid(d.display_unit),
+        notes=f"{d.room_reading.strip()} {d.design_plan.strip()}".strip(),
+        source="ollama",
+    )
+
+
 # ---------------------------------------------------------------------------
 # Deterministic fallback designer
 # ---------------------------------------------------------------------------
 
-def _free_len(geometry: RoomGeometry, wid: str) -> float:
+def _free_segments(geometry: RoomGeometry, wid: str) -> list[tuple[float, float]]:
+    """Usable spans of a wall's base zone after door clearances."""
     wall = geometry.walls[wid]
     lo, hi = wall.usable
     cuts = sorted(d.interval(config.DOOR_CLEARANCE_MM) for d in wall.doors)
-    best, cur = 0.0, lo
+    segs, cur = [], lo
     for a, b in cuts:
-        best = max(best, min(a, hi) - cur)
+        if min(a, hi) > cur:
+            segs.append((cur, min(a, hi)))
         cur = max(cur, b)
-    return max(best, hi - cur)
+    if hi > cur:
+        segs.append((cur, hi))
+    return segs
+
+
+def _free_len(geometry: RoomGeometry, wid: str) -> float:
+    return max((b - a for a, b in _free_segments(geometry, wid)), default=0.0)
 
 
 def fallback_proposal(geometry: RoomGeometry, groups, prefs: KitchenPreferences) -> Proposal:
@@ -423,7 +873,10 @@ def fallback_proposal(geometry: RoomGeometry, groups, prefs: KitchenPreferences)
 
     by = {k: {it.aid: it for it in v} for k, v in groups.items()}
     sink_free = _free_len(geometry, sink_wall)
-    sink = next((it for it in groups["sink"] if it.width <= max(900, sink_free - 1800)), groups["sink"][-1])
+    # playbook sizes: 800 small, 900 standard, 1050 from 3000 mm free, 1200 from 3600 mm free
+    want = 800 if sink_free < 2400 else 900 if sink_free < 3000 else 1050 if sink_free < 3600 else 1200
+    sinks = sorted(groups["sink"], key=lambda it: (abs(it.width - want), -it.width))
+    sink = sinks[0]
     hob = groups["hob"][0]
     spice = groups["spice"][0] if groups["spice"] else None
     cyl = None
@@ -460,6 +913,8 @@ def fallback_proposal(geometry: RoomGeometry, groups, prefs: KitchenPreferences)
         tall_units=talls,
         base_prefs=base_prefs,
         wall_prefs={},
+        # water purifier beside the sink window (v2 shortlist only)
+        purifier_aid=groups["purifier"][0].aid if groups.get("purifier") and window_walls else None,
         notes=(
             f"{layout_type}-shaped kitchen: sink on {geometry.walls[sink_wall].name}"
             f"{' under the window' if window_walls else ''}, hob on {geometry.walls[hob_wall].name}"
@@ -469,14 +924,17 @@ def fallback_proposal(geometry: RoomGeometry, groups, prefs: KitchenPreferences)
     )
 
 
-def design_kitchen(geometry: RoomGeometry, catalog: Catalog, prefs: KitchenPreferences) -> tuple[Proposal, dict]:
+def design_kitchen(
+    geometry: RoomGeometry, catalog: Catalog, prefs: KitchenPreferences, version: Optional[str] = None
+) -> tuple[Proposal, dict]:
     """Return ``(proposal, ai_info)`` according to ``prefs.ai_mode``."""
-    groups = build_shortlist(catalog)
+    version = version or config.AI_PROMPT_VERSION
+    groups = build_shortlist_v2(catalog) if version == "v2" else build_shortlist(catalog)
     n = len(shortlist_items(groups))
-    info: dict = {"shortlist_size": n}
+    info: dict = {"shortlist_size": n, "prompt_version": version}
     if prefs.ai_mode in ("auto", "ollama"):
         try:
-            proposal, ai = design_with_ollama(geometry, groups, prefs)
+            proposal, ai = design_with_ollama(geometry, groups, prefs, version=version)
             info.update(ai)
             return proposal, info
         except AIUnavailable as exc:

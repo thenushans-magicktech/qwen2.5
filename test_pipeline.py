@@ -74,28 +74,61 @@ def empty_plan(path: Path = PRIMARY) -> dict:
 
 
 class Frame:
-    """Wall-local -> world transform derived straight from the JSON."""
+    """MagickHome wall-local -> world transform, derived straight from the JSON.
 
-    def __init__(self, wall: dict, centroid):
+    Local +x runs start -> end and local +z is the wall's FRONT side, (-dz, dx) in world
+    x/z. ``sign`` is +1 when the room is on the front (``frontSide == "interior"``) and
+    -1 when it is on the back, so cabinets must sit at ``sign * (face + depth / 2)``.
+    """
+
+    def __init__(self, wall: dict, outline, centroid):
         (x1, z1), (x2, z2) = wall["start"], wall["end"]
         self.length = math.hypot(x2 - x1, z2 - z1)
         self.o = (x1, z1)
         self.d = ((x2 - x1) / self.length, (z2 - z1) / self.length)
-        n = (-self.d[1], self.d[0])
-        mid = ((x1 + x2) / 2, (z1 + z2) / 2)
-        if (centroid[0] - mid[0]) * n[0] + (centroid[1] - mid[1]) * n[1] < 0:
-            n = (self.d[1], -self.d[0])
-        self.n = n
+        self.n = (-self.d[1], self.d[0])  # front normal = local +z
+        fs, bs = str(wall.get("frontSide", "")).lower(), str(wall.get("backSide", "")).lower()
+        if fs == "interior" or bs == "exterior":
+            self.sign = 1
+        elif bs == "interior" or fs == "exterior":
+            self.sign = -1
+        else:  # no side info: probe the room outline, else the centroid
+            mid = ((x1 + x2) / 2, (z1 + z2) / 2)
+            probe = (mid[0] + self.n[0] * 0.25, mid[1] + self.n[1] * 0.25)
+            if outline:
+                self.sign = 1 if point_in_polygon(probe, outline) else -1
+            else:
+                self.sign = 1 if (centroid[0] - mid[0]) * self.n[0] + (centroid[1] - mid[1]) * self.n[1] >= 0 else -1
+        self.inward = (self.n[0] * self.sign, self.n[1] * self.sign)
 
     def world(self, x, z):
         return (self.o[0] + self.d[0] * x + self.n[0] * z, self.o[1] + self.d[1] * x + self.n[1] * z)
+
+
+def point_in_polygon(pt, poly) -> bool:
+    x, z = pt
+    inside = False
+    for i in range(len(poly)):
+        (x1, z1), (x2, z2) = poly[i], poly[(i + 1) % len(poly)]
+        if (z1 > z) != (z2 > z) and x < (x2 - x1) * (z - z1) / (z2 - z1) + x1:
+            inside = not inside
+    return inside
+
+
+def room_outline(nodes: dict):
+    for kind in ("slab", "ceiling"):
+        for n in nodes.values():
+            if n["type"] == kind and isinstance(n.get("polygon"), list) and len(n["polygon"]) >= 3:
+                return [tuple(p) for p in n["polygon"]]
+    return None
 
 
 def frames(nodes: dict) -> dict[str, Frame]:
     walls = {k: n for k, n in nodes.items() if n["type"] == "wall"}
     pts = [p for w in walls.values() for p in (w["start"], w["end"])]
     c = (sum(p[0] for p in pts) / len(pts), sum(p[1] for p in pts) / len(pts))
-    return {k: Frame(w, c) for k, w in walls.items()}
+    outline = room_outline(nodes)
+    return {k: Frame(w, outline, c) for k, w in walls.items()}
 
 
 def sat(a, b, tol=1e-4) -> bool:
@@ -202,27 +235,42 @@ def verify_scene(doc: dict, expect_window: str | None = WINDOW_ID, expect_door: 
             E(f"{n['id']}: asset.src is not a .glb")
         if n["parentId"] != n["wallId"] or n["wallId"] not in walls:
             E(f"{n['id']}: parentId/wallId mismatch")
-        if n["rotation"] != [0, PI, 0] or n["scale"] != [1, 1, 1] or a["scale"] != [0.01, 0.01, 0.01]:
+        want_rot = [0, PI, 0] if fr[n["wallId"]].sign > 0 else [0, 0, 0]  # front faces the room
+        if n["rotation"] != want_rot or n["scale"] != [1, 1, 1] or a["scale"] != [0.01, 0.01, 0.01]:
             E(f"{n['id']}: rotation/scale mismatch")
+        if n["placement"].get("side") != fr[n["wallId"]].sign:
+            E(f"{n['id']}: placement.side {n['placement'].get('side')} but the room is on side {fr[n['wallId']].sign}")
         w, h, d = a["dimensions"]
         if abs(a["offset"][1] - h / 2) > TOL:
             E(f"{n['id']}: offset {a['offset']} != h/2")
         lvl = n["placement"]["level"]
-        if n["placement"].get("designSource") != "ai-kitchen-v1" or n["placement"].get("side") != 1:
+        if n["placement"].get("designSource") != "ai-kitchen-v1":
             E(f"{n['id']}: placement block {n['placement']}")
         want_y = (0.0 if n["metadata"]["height"] >= 800 else 0.1) if lvl == "base" else y_by_level[lvl]
         if abs(n["position"][1] - want_y) > TOL:
             E(f"{n['id']}: {lvl} y={n['position'][1]} expected {want_y}")
         face = walls[n["wallId"]].get("thickness", 0.1) / 2  # back of cabinet on the wall face
-        want_z = face + d / 2  # = 0.33 / 0.215 / 0.375 for the production 100 mm walls
+        want_z = fr[n["wallId"]].sign * (face + d / 2)  # 0.33 / 0.215 / 0.375 on the room side
         if abs(n["position"][2] - want_z) > TOL:
             E(f"{n['id']}: z={n['position'][2]} expected {want_z}")
         L = fr[n["wallId"]].length
-        if abs(n["wallT"] - n["position"][0] / L) > 1e-9:
+        L_mm = round(L * 1000)  # spec: wallT = center_mm / round(hypot(dx, dz) * 1000)
+        if abs(n["wallT"] - n["position"][0] * 1000 / L_mm) > 1e-9:
             E(f"{n['id']}: wallT inconsistent")
         lo, hi = interval(n)
         if lo < -TOL or hi > L + TOL:
             E(f"{n['id']}: outside wall [0, {L}]")
+
+    # -- every cabinet stands inside the room (MagickHome wall frames + room outline) -----
+    outline = room_outline(nodes)
+    if outline:
+        for n in cabs:
+            poly, _ = box(n, fr[n["wallId"]])
+            cx = sum(p[0] for p in poly) / 4
+            cz = sum(p[1] for p in poly) / 4
+            shrunk = [(cx + (p[0] - cx) * 0.98, cz + (p[1] - cz) * 0.98) for p in poly]
+            if not all(point_in_polygon(p, outline) for p in shrunk):
+                E(f"{n['metadata']['category']} {n['id']} on {walls[n['wallId']].get('name')} is outside the room")
 
     # -- sink under window ------------------------------------------------------------
     sinks = by_category(nodes, "Base Sink Unit")
@@ -335,6 +383,11 @@ def verify_scene(doc: dict, expect_window: str | None = WINDOW_ID, expect_door: 
                 for end_b in ("start", "end"):
                     if math.dist(walls[a][end_a], walls[b][end_b]) > 0.02:
                         continue
+                    fa, fb = fr[a], fr[b]
+                    da = fa.d if end_a == "start" else (-fa.d[0], -fa.d[1])  # away from the joint
+                    db = fb.d if end_b == "start" else (-fb.d[0], -fb.d[1])
+                    if db[0] * fa.inward[0] + db[1] * fa.inward[1] < 0.5 or da[0] * fb.inward[0] + da[1] * fb.inward[1] < 0.5:
+                        continue  # outside (reflex) corner or straight joint: no corner unit needed
                     for tier, levels in tier_levels.items():
                         def near(wid, end):
                             L = fr[wid].length
@@ -358,6 +411,27 @@ def verify_scene(doc: dict, expect_window: str | None = WINDOW_ID, expect_door: 
                                 if inside and not is_corner_unit(n):
                                     E(f"regular {n['metadata']['category']} {n['id']} in the "
                                       f"{walls[a]['name']}/{walls[b]['name']} corner ({tier} tier)")
+
+    # -- corner models face the right way (from the GLB geometry) -------------------------
+    # Seen from inside the room: L-shaped corner units have one hand (corner on the viewer's
+    # RIGHT); blind corner "- L" = door left / blind right -> corner on the right; "- R" -> left.
+    # On a wall whose room side is the back, the viewer's right is the wall START.
+    for n in cabs:
+        c = n["metadata"]["category"].replace("–", "-").lower().strip()
+        if "l corner" in c:
+            hand = "right"
+        elif c.startswith("blind corner"):
+            hand = "right" if c.endswith("- l") else "left" if c.endswith("- r") else None
+        else:
+            hand = None
+        if hand is None:
+            continue
+        need = "end" if (hand == "right") == (fr[n["wallId"]].sign > 0) else "start"
+        lo, hi = interval(n)
+        L = fr[n["wallId"]].length
+        at = "start" if lo < 0.2 else "end" if hi > L - 0.2 else "middle"
+        if at != need or n["placement"].get("cornerAtEnd") != (need == "end"):
+            E(f"{n['metadata']['category']} {n['id']} sits at the wall {at} but its model only fits the wall {need}")
 
     # -- fixtures --------------------------------------------------------------------------
     fixtures = [n for n in nodes.values() if n["type"] == "item" and n["asset"]["category"] == "fixture"]
@@ -504,6 +578,60 @@ def test_corner_left_open_when_no_corner_unit_fits():
     assert any("left open" in w for w in report["layout"]["warnings"])
 
 
+# -- walls whose room side is the back, and non-rectangular rooms ---------------------------
+
+DATA = ROOT / "test_data"
+REAL_ROOMS = {
+    # L-shaped room exported from MagickHome; its window wall is drawn the other way round
+    # (frontSide "exterior", backSide "interior") - cabinets there used to land outside.
+    "l_shaped_room_reversed_wall": ("window_t6m3s0qnha8vb0d4", "door_2sqpkgv0swc2anh4"),
+    "eight_wall_room": ("window_c99hnxmmb65wwkj1", "door_2sqpkgv0swc2anh4"),
+}
+
+
+@pytest.mark.parametrize("room", list(REAL_ROOMS))
+@pytest.mark.parametrize("layout", ["auto", "L", "U", "single"])
+def test_real_non_rectangular_rooms(room, layout):
+    window, door = REAL_ROOMS[room]
+    doc = empty_plan(DATA / f"{room}.json")
+    out, report = generate_kitchen(doc, KitchenPreferences(ai_mode="fallback", layout=layout))
+    errs = verify_scene(out, expect_window=window, expect_door=door)
+    assert not errs, "\n".join(errs)
+    assert not report["validation_issues"], report["validation_issues"]
+
+
+def test_l_shaped_room_sides_and_outside_corner():
+    from scene_parser import parse_scene
+
+    g = parse_scene(empty_plan(DATA / "l_shaped_room_reversed_wall.json"))
+    assert not g.walls["wall_unzzbbh7z7n6uka1"].front_interior, "window wall: room on its back side"
+    assert all(g.walls[w].front_interior for w in g.walls if w != "wall_unzzbbh7z7n6uka1")
+    # Wall 5 / Wall 6 meet at an OUTSIDE corner of the L: never a corner-cabinet corner.
+    pairs = {frozenset((c.wall_a, c.wall_b)) for c in g.corners}
+    assert frozenset(("wall_9kj3t56v1k400q7j", "wall_918glvxpk8snjsft")) not in pairs, pairs
+
+
+def test_reversed_window_wall_puts_cabinets_on_the_room_side():
+    """Same sample room with Wall 2 drawn end -> start: its cabinets must move to the wall's
+    back side (negative z, unrotated) and the corner units must swap hands."""
+    doc = empty_plan()
+    nodes = doc["scene"]["nodes"]
+    w2 = nodes[W2]
+    L = math.dist(w2["start"], w2["end"])
+    w2["start"], w2["end"] = w2["end"], w2["start"]
+    w2["frontSide"], w2["backSide"] = "exterior", "interior"
+    win = nodes[WINDOW_ID]
+    win["position"][0] = L - win["position"][0]
+    win["side"] = "back"
+    out, report = generate_kitchen(doc, KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2, W3]))
+    errs = verify_scene(out)
+    assert not errs, "\n".join(errs)
+    on_w2 = [n for n in cabinets(out["scene"]["nodes"]) if n["wallId"] == W2]
+    assert on_w2 and all(n["position"][2] < 0 and n["rotation"] == [0, 0, 0] and n["placement"]["side"] == -1 for n in on_w2)
+    fx = [n for n in out["scene"]["nodes"].values() if n["type"] == "item" and n["asset"]["category"] == "fixture" and n.get("wallId") == W2]
+    assert fx and all(n["position"][2] < 0 for n in fx), "countertop / panels must follow the cabinets"
+
+
 def test_verifier_catches_violations():
     """The checks above must actually fail on broken scenes (guards against vacuous passes)."""
     good, _ = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2]))
@@ -537,6 +665,14 @@ def test_verifier_catches_violations():
         wall = nodes[nodes[cid]["parentId"]]
         wall["children"].remove(cid)
         del nodes[cid]
+
+    def l_corner_at_start(nodes):
+        lc = next(n for n in cabinets(nodes) if n["metadata"]["category"] == "Wall L Corner")
+        L = frames(nodes)[lc["wallId"]].length
+        lc["position"][0] = L - lc["position"][0]  # mirror it to the other end of its wall
+        lc["placement"]["cornerAtEnd"] = False
+
+    assert any("only fits the wall end" in e for e in mutated(l_corner_at_start))
 
     assert any("not under window" in e for e in mutated(shift_sink))
     assert any(DOOR_ID in e for e in mutated(into_door))
@@ -614,7 +750,7 @@ def test_web_ui_job_flow():
 
     with TestClient(app) as c:
         page = c.get("/")
-        assert page.status_code == 200 and "AI Kitchen Designer" in page.text
+        assert page.status_code == 200 and "MagickHome Kitchen Designer" in page.text and "Design my kitchen" in page.text
         plan = c.get("/api/sample-floorplan").json()
         assert not [n for n in plan["scene"]["nodes"].values() if n["type"] == "item"]
         r = c.post("/api/jobs", json={"scene": plan, "preferences": {"ai_mode": "fallback"}, "filename": "my plan.json"})
@@ -708,6 +844,9 @@ def _bad_design(groups):
 def test_mocked_ollama_design_is_repaired(monkeypatch):
     from catalog_loader import load_filtered_catalog
 
+    import config
+
+    monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v1")  # original prompt (A/B baseline)
     groups = ai_designer.build_shortlist(load_filtered_catalog())
     fake = FakeOllama(_bad_design(groups), installed=False)
     monkeypatch.setattr(ai_designer, "_client", lambda: fake)
@@ -729,6 +868,9 @@ def test_customer_layout_overrides_ai_wall_count(monkeypatch):
     """Qwen proposes an L (2 walls) but the customer asked for a U."""
     from catalog_loader import load_filtered_catalog
 
+    import config
+
+    monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v1")
     groups = ai_designer.build_shortlist(load_filtered_catalog())
     fake = FakeOllama(_bad_design(groups))
     monkeypatch.setattr(ai_designer, "_client", lambda: fake)
@@ -757,6 +899,113 @@ def test_schema_rejects_hallucinated_aid():
         Model.model_validate(bad)
     n = len(ai_designer.shortlist_items(groups))
     assert 35 <= n <= 45, n
+
+
+# -- v2 prompt: knowledge pack, option codes, new feature units ---------------------
+
+def _v2_menu(door_style=None):
+    from catalog_loader import load_filtered_catalog
+
+    cat = load_filtered_catalog(door_style) if door_style else load_filtered_catalog()
+    return ai_designer.build_menu(ai_designer.build_shortlist_v2(cat))
+
+
+def _v2_design(menu, **over):
+    first = {g: opts[0][0] for g, opts in menu.items() if opts}
+    codes = {g: [c for c, _ in opts] for g, opts in menu.items()}
+    d = {
+        "room_reading": "Wall 2 has the window, Wall 1 the door near the Wall 4 corner, Wall 3 and Wall 4 are solid.",
+        "design_plan": "Sink under the window on Wall 2, hob on solid Wall 3, tall storage at the end of Wall 3.",
+        "cabinet_walls": ["Wall 2", "Wall 3"],
+        "sink_wall": "Wall 2",
+        "sink": first["sink"],
+        "hob_wall": "Wall 3",
+        "hob": first["hob"],
+        "hob_center_mm": 2000,
+        "spice": first["spice"],
+        "lpg_cylinder": "NONE",
+        "tall_units": [{"wall": "Wall 3", "unit": next(c for c in codes["tall"] if c.startswith("MICROWAVE"))}],
+        "water_purifier": first["purifier"],
+        "display_unit": first["display"],
+        "base_feature_units": [{"wall": "Wall 3", "units": [codes["base"][0]]}, {"wall": "Wall 2", "units": [codes["base"][-2]]}],
+        "wall_cabinet_sizes": [{"wall": "Wall 3", "units": [codes["wall"][3]]}],
+    }
+    d.update(over)
+    return d
+
+
+def test_v2_prompt_teaches_and_places_new_units(monkeypatch):
+    """v2: knowledge pack in the prompt, code enums in the schema, and the solver places
+    the purifier beside the window, the glass display at a run end and the microwave tall unit."""
+    import config
+    import design_knowledge
+
+    monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v2")
+    menu = _v2_menu()
+    fake = FakeOllama(_v2_design(menu))
+    monkeypatch.setattr(ai_designer, "_client", lambda: fake)
+    out, report = run(KitchenPreferences(ai_mode="ollama"), name="mocked_ollama_v2")
+    call = fake.calls[0]
+    system, user = call["messages"][0]["content"], call["messages"][1]["content"]
+    assert "WORK TRIANGLE" in system and "WORKED EXAMPLES" in system
+    assert "SINK-900 |" in user and "Hob centre range" in user and "Wet zone: sink centred at" in user
+    assert design_knowledge.note_for(menu["sink"][0][1]) in user
+    props = call["format"]["properties"]
+    assert set(props["sink"]["enum"]) == {c for c, _ in menu["sink"]}
+    assert report["ai"]["prompt_version"] == "v2"
+    errs = verify_scene(out)
+    assert not errs, "\n".join(errs)
+
+    nodes = out["scene"]["nodes"]
+    win = nodes[WINDOW_ID]
+    aqua = by_category(nodes, "Wall Aquaguard Unit")
+    assert len(aqua) == 1 and aqua[0]["wallId"] == win["wallId"]
+    w_lo, w_hi = win["position"][0] - win["width"] / 2, win["position"][0] + win["width"] / 2
+    a_lo, a_hi = interval(aqua[0])
+    assert min(abs(a_lo - w_hi), abs(w_lo - a_hi)) < 0.2, "purifier must hang right beside the window"
+    glass = [n for n in cabinets(nodes) if "Glass" in n["metadata"]["category"]]
+    assert len(glass) == 1 and glass[0]["placement"]["level"] == "wall"
+    assert by_category(nodes, "Tall Built-In Microwave"), "Qwen's microwave tall unit must be built"
+
+
+def test_v2_schema_rejects_unknown_codes_and_walls():
+    from pydantic import ValidationError
+
+    from scene_parser import parse_scene
+
+    menu = _v2_menu()
+    labels = ai_designer.wall_labels(parse_scene(empty_plan()))
+    Model = ai_designer.build_design_model_v2(menu, list(labels), require_tall=True)
+    Model.model_validate(_v2_design(menu))
+    for bad in (
+        {"sink": "SINK-950"},
+        {"hob_wall": "Wall 9"},
+        {"sink": menu["sink"][0][1].aid},  # raw AIDs are not accepted in v2
+        {"tall_units": []},  # customer wants tall storage
+    ):
+        with pytest.raises(ValidationError):
+            Model.model_validate(_v2_design(menu, **bad))
+
+
+@pytest.mark.parametrize("style", ["Slab (Plain)", "Shaker -1"])
+def test_knowledge_pack_matches_catalogue(style):
+    """Every offered option has a designer note, every catalogue category has a guide entry,
+    and the worked examples only use codes that exist in the real menu."""
+    import re
+
+    import design_knowledge
+    from catalog_loader import load_catalog
+
+    guide = design_knowledge.cabinet_guide()
+    assert not sorted({i.category for i in load_catalog().items if i.cat not in guide})
+    menu = _v2_menu(style)
+    for g in ("sink", "hob", "tall", "base", "wall", "purifier", "display"):
+        assert menu[g], f"{style}: empty menu group {g}"
+        for code, it in menu[g]:
+            assert design_knowledge.note_for(it), f"{style}: no designer note for {code} ({it.category})"
+    codes = {c for opts in menu.values() for c, _ in opts}
+    used = set(re.findall(r"\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*-\d{3,4}(?:-[A-Z0-9]+)*\b", design_knowledge.worked_examples()))
+    assert used and used <= codes, sorted(used - codes)
 
 
 def test_auto_mode_falls_back_without_server(monkeypatch):

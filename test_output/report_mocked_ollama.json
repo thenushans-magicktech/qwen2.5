@@ -1,11 +1,16 @@
 {
   "ai": {
     "shortlist_size": 41,
+    "prompt_version": "v1",
     "mode": "ollama",
-    "model": "qwen2.5-coder:3b",
+    "model": "qwen2.5-coder:7b",
     "attempts": 1,
     "seconds": 0.0,
+    "prompt_tokens": null,
+    "prompt_seconds": null,
     "eval_count": 123,
+    "eval_seconds": null,
+    "load_seconds": null,
     "raw": {
       "room_reading": "Wall 2 has the window, Wall 1 has the door.",
       "design_plan": "Sink on the plain wall, hob under the window, tall unit in the middle.",
@@ -81,6 +86,8 @@
         "MTWAWU300330600SSSSLLEH1S"
       ]
     },
+    "purifier_aid": null,
+    "display_aid": null,
     "notes": "Wall 2 has the window, Wall 1 has the door. Sink on the plain wall, hob under the window, tall unit in the middle.",
     "source": "ollama"
   },
@@ -150,6 +157,16 @@
           "start_mm": 2800.0,
           "end_mm": 3400.0,
           "opening": "Both"
+        },
+        {
+          "aid": "MTWCWLC650650600SLCSLBOEH1S",
+          "category": "Wall L Corner",
+          "tier": "wall",
+          "role": "wall_corner",
+          "width": 650,
+          "start_mm": 3400.0,
+          "end_mm": 4050.0,
+          "opening": "Both"
         }
       ],
       "wall_49fdugi4g7vj12pf": [
@@ -211,16 +228,6 @@
           "width": 600,
           "start_mm": 3450.0,
           "end_mm": 4050.0,
-          "opening": "Both"
-        },
-        {
-          "aid": "MTWCWLC650650600SLCSLBOEH1S",
-          "category": "Wall L Corner",
-          "tier": "wall",
-          "role": "wall_corner",
-          "width": 650,
-          "start_mm": 50.0,
-          "end_mm": 700.0,
           "opening": "Both"
         },
         {
@@ -295,5 +302,5 @@
     "filtered_skus": 484,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.27
+  "seconds": 0.37
 }

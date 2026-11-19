@@ -1,0 +1,351 @@
+{
+  "version": 1,
+  "about": "Designer notes for every MagickHome catalogue category. 'prompt_note', 'combinations' and 'width_notes' are shown to Qwen next to each option it can choose. status: offered = Qwen can choose it, auto = the solver adds it, not_yet = the generator does not use it yet. confirm = true marks notes a MagickHome designer should check.",
+  "categories": {
+    "Base Unit": {
+      "family": "Base", "zone": "any", "status": "offered",
+      "purpose": "General base storage under the counter.",
+      "choose_when": "Drawer versions next to the hob for utensils and pans; shutter versions for bulk storage, cleaning items and bins.",
+      "avoid": "Many narrow single-shutter units in one run.",
+      "prompt_note": "general base storage",
+      "combinations": {
+        "Four Drawer": "cutlery, ladles, small tools - best right beside the hob",
+        "Double Drawer": "deep drawers for pans, kadai and plates - hob wall",
+        "Drawer with Double Shutter": "top cutlery drawer + shelf below - all-round storage",
+        "Drawer with Single Shutter": "top drawer + narrow shelf - fill unit",
+        "Double Shutter": "bulk storage, bins, cleaning items - the solver uses these to fill runs",
+        "Single Shutter": "narrow fill unit"
+      }
+    },
+    "Base Sink Unit": {
+      "family": "Base", "zone": "wet", "status": "offered",
+      "purpose": "Carcass under the sink bowl with room for pipes, waste bin and cleaning items.",
+      "choose_when": "Always one per kitchen, centred under the window.",
+      "avoid": "Placing it on a wall without the window when a usable window wall exists.",
+      "prompt_note": "under the window",
+      "combinations": {
+        "Sink Double Shutter": "shutters, room for pipes",
+        "Sink Double Drawer": "drawers cut around the plumbing - premium",
+        "Sink Single Shutter": "for small sink units"
+      },
+      "width_notes": {
+        "800": "small kitchens (window wall under 2400 mm free)",
+        "900": "standard single-bowl sink - right for most kitchens",
+        "1050": "window wall 3000+ mm free",
+        "1200": "large or double bowl - only with 3600+ mm free"
+      }
+    },
+    "Base Hob Unit": {
+      "family": "Base", "zone": "cooking", "status": "offered",
+      "purpose": "Unit under the built-in hob; the chimney hangs above it.",
+      "choose_when": "Always one per kitchen, on a solid wall. Drawer versions are the designer default.",
+      "avoid": "Shutter versions (pans are hard to reach); placing it under a window or beside a door.",
+      "prompt_note": "hob on top, chimney above",
+      "combinations": {
+        "Triple Drawer - A": "3 drawers: ladles, pans, pressure cookers - best choice",
+        "Triple Drawer - B": "3 drawers, alternative drawer split",
+        "Hob Double Drawer": "2 deep drawers for big vessels",
+        "Hob Double Shutter": "shelf behind shutters - budget, pans hard to reach",
+        "Hob Single Shutter": "narrow shutter version - budget",
+        "Hob Triple Drawer With Flap Down": "3 drawers with a flap-down top front",
+        "Hob Double Drawer With Flap Down A": "2 drawers with a flap-down top front",
+        "Hob Double Drawer With Flap Down B": "2 drawers with a flap-down top front",
+        "Hob Double Shutter With Flap Down": "shutters with a flap-down top front",
+        "Hob Single Shutter With Flap Down": "single shutter with a flap-down top front"
+      },
+      "width_notes": {
+        "750": "compact - hob wall under 2400 mm free",
+        "900": "standard"
+      },
+      "confirm": true
+    },
+    "Base Spice Pull Out": {
+      "family": "Base", "zone": "cooking", "status": "offered",
+      "purpose": "Tall narrow pull-out for masalas, oils and sauces.",
+      "choose_when": "Always right beside the hob.",
+      "avoid": "Placing it away from the hob.",
+      "prompt_note": "masalas and oils, right beside the hob",
+      "width_notes": {"150": "only for very tight runs", "300": "standard"}
+    },
+    "Base Cylinder Unit": {
+      "family": "Base", "zone": "cooking", "status": "offered",
+      "purpose": "Houses the LPG cylinder; 800 mm high, floor-standing for easy rolling.",
+      "choose_when": "Kitchens on LPG with room beside the hob (hob wall 2700+ mm free).",
+      "avoid": "Kitchens with piped gas; tight hob walls.",
+      "prompt_note": "LPG cylinder, beside the hob (needs a long hob wall)"
+    },
+    "Base Grain Trolley": {
+      "family": "Base", "zone": "storage", "status": "offered",
+      "purpose": "Pull-out bins for atta, rice and dal.",
+      "choose_when": "Storage zone, beside a tall unit or at the end of a run.",
+      "avoid": "Beside the sink (moisture).",
+      "prompt_note": "atta, rice, dal bins - storage zone",
+      "combinations": {
+        "Grain Trolley With 1 External Drawer": "bins + an outside drawer",
+        "Grain Trolley With 1 Internal Drawer": "bins + an inner drawer behind one front"
+      }
+    },
+    "Base Wicker Basket Unit": {
+      "family": "Base", "zone": "wet", "status": "offered",
+      "purpose": "Ventilated wicker baskets for onions, potatoes and vegetables.",
+      "choose_when": "Near the sink (wash, then cut) or in the storage zone.",
+      "avoid": "Beside the hob (heat).",
+      "prompt_note": "vegetables, onions, potatoes - near the sink"
+    },
+    "Base Low Height Unit": {
+      "family": "Base", "zone": "any", "status": "not_yet",
+      "purpose": "350 mm high drawer unit.",
+      "choose_when": "Under a low window sill or a raised appliance (to confirm).",
+      "avoid": "Regular counter runs (it is not counter height).",
+      "prompt_note": "low 350 mm drawer unit",
+      "confirm": true
+    },
+    "Base Open Unit": {
+      "family": "Base", "zone": "any", "status": "not_yet",
+      "purpose": "Open base shelf.",
+      "choose_when": "At an open end of a run for cookbooks or display.",
+      "avoid": "Wet zone (dirt and splashes).",
+      "prompt_note": "open shelf at a run end"
+    },
+    "Blind corner unit - L": {
+      "family": "Base Corner", "zone": "corner", "status": "auto",
+      "purpose": "Standard L/U corner base unit (1050-1250 mm); one side is blind behind the perpendicular run.",
+      "choose_when": "Every corner where two base runs meet. L or R follows which end of the wall the corner is at.",
+      "avoid": "Regular units in a corner.",
+      "prompt_note": "corner base unit (added by the solver)"
+    },
+    "Blind corner unit - R": {
+      "family": "Base Corner", "zone": "corner", "status": "auto",
+      "purpose": "Mirror of the L version.",
+      "choose_when": "Corner at the start of the wall.",
+      "avoid": "Regular units in a corner.",
+      "prompt_note": "corner base unit (added by the solver)"
+    },
+    "Base L corner unit": {
+      "family": "Base Corner", "zone": "corner", "status": "not_yet",
+      "purpose": "960 x 960 L-shaped corner cabinet with full access from the front.",
+      "choose_when": "Both walls can give 960 mm at the corner and the customer wants easier corner access.",
+      "avoid": "Tight corners near doors or windows.",
+      "prompt_note": "full L corner cabinet 960 x 960"
+    },
+    "Blind Corner Sink Unit": {
+      "family": "Base Corner", "zone": "wet", "status": "not_yet",
+      "purpose": "Sink unit that sits in the corner.",
+      "choose_when": "The window is right at a corner, so the sink must sit in the corner.",
+      "avoid": "Normal windows away from corners.",
+      "prompt_note": "corner sink unit"
+    },
+    "Blind Corner Sink Unit w/o bottom": {
+      "family": "Base Corner", "zone": "wet", "status": "not_yet",
+      "purpose": "Corner sink unit without a bottom panel (800 mm high, floor standing).",
+      "choose_when": "Corner sink where the plumbing comes through the floor.",
+      "avoid": "Normal windows away from corners.",
+      "prompt_note": "corner sink unit, no bottom",
+      "confirm": true
+    },
+    "Blind corner cylinder unit w/o bottom - L": {
+      "family": "Base Corner", "zone": "cooking", "status": "not_yet",
+      "purpose": "LPG cylinder stored in the blind corner.",
+      "choose_when": "The hob is near a corner and the hob wall has no room for a separate cylinder unit.",
+      "avoid": "Corners far from the hob.",
+      "prompt_note": "LPG cylinder in the corner"
+    },
+    "Blind corner cylinder unit w/o bottom - R": {
+      "family": "Base Corner", "zone": "cooking", "status": "not_yet",
+      "purpose": "Mirror of the L version.",
+      "choose_when": "As the L version, corner at the start of the wall.",
+      "avoid": "Corners far from the hob.",
+      "prompt_note": "LPG cylinder in the corner"
+    },
+    "Wall Unit": {
+      "family": "Wall", "zone": "any", "status": "offered",
+      "purpose": "Wall cabinets above the counter for daily dishes, glasses and dry stock.",
+      "choose_when": "Above every base run except the window and the chimney.",
+      "avoid": "Many narrow units; wall units over the window or chimney.",
+      "prompt_note": "dishes, glasses, dry stock",
+      "combinations": {
+        "Double Shutter": "wide unit - calm, aligned look",
+        "Single Shutter": "narrow fill unit"
+      }
+    },
+    "Wall Aquaguard Unit": {
+      "family": "Wall", "zone": "wet", "status": "offered",
+      "purpose": "Wall cabinet that houses the water purifier.",
+      "choose_when": "Almost every Indian kitchen: on the sink wall right beside the window (water inlet and power near the sink).",
+      "avoid": "Far from the sink; above the hob.",
+      "prompt_note": "houses the water purifier - beside the sink window",
+      "combinations": {
+        "Aquaguard Single Shutter": "one shutter",
+        "Aquaguard Double Shutter": "two shutters"
+      }
+    },
+    "Wall Glass Unit": {
+      "family": "Wall", "zone": "display", "status": "offered",
+      "purpose": "Glass-front wall cabinet to display crockery.",
+      "choose_when": "One unit to finish a run or frame the window; lightens a long row of solid doors.",
+      "avoid": "More than one or two; above the hob (grease).",
+      "prompt_note": "glass display - one unit at the end of a run",
+      "combinations": {
+        "Slab - Double Glass Shutter": "two glass shutters",
+        "Slab - Single Glass Shutter": "one glass shutter",
+        "Aluminium - Double Glass Shutter": "aluminium frame, two glass shutters",
+        "Aluminium - Single Glass Shutter": "aluminium frame, one glass shutter"
+      }
+    },
+    "Wall Shaker Glass Unit": {
+      "family": "Wall", "zone": "display", "status": "offered",
+      "purpose": "Shaker-style glass display wall cabinet.",
+      "choose_when": "Shaker kitchens: one unit to finish a run.",
+      "avoid": "Above the hob.",
+      "prompt_note": "glass display - one unit at the end of a run"
+    },
+    "Wall Lift Up Unit": {
+      "family": "Wall", "zone": "any", "status": "not_yet",
+      "purpose": "Top-hinged or bi-fold doors that lift up, so no door swings at head height.",
+      "choose_when": "Narrow kitchens; short 300-450 mm units above the chimney or a tall appliance.",
+      "avoid": "Users who cannot reach the raised door.",
+      "prompt_note": "lift-up doors, no door at head height"
+    },
+    "Wall Open Unit": {
+      "family": "Wall", "zone": "display", "status": "not_yet",
+      "purpose": "Open wall shelves for jars and cookbooks.",
+      "choose_when": "At run ends as a style accent.",
+      "avoid": "Above the hob (grease and dust).",
+      "prompt_note": "open wall shelves"
+    },
+    "Wall Microwave Open Unit": {
+      "family": "Wall", "zone": "storage", "status": "not_yet",
+      "purpose": "430 mm deep open box for a microwave at wall level.",
+      "choose_when": "No tall microwave unit, and the counter must stay free.",
+      "avoid": "Placing it too high to lift hot food safely.",
+      "prompt_note": "microwave at wall level"
+    },
+    "Wall Spice Rack Unit": {
+      "family": "Wall", "zone": "cooking", "status": "not_yet",
+      "purpose": "Open spice rack (250 mm high, 200 mm deep) on the backsplash.",
+      "choose_when": "Beside the hob, below the wall cabinets.",
+      "avoid": "Directly above the flame.",
+      "prompt_note": "backsplash spice rack"
+    },
+    "Open Horizontal Shelf": {
+      "family": "Wall", "zone": "display", "status": "not_yet",
+      "purpose": "Floating shelf.",
+      "choose_when": "Above the counter or around the window as an accent.",
+      "avoid": "Above the hob.",
+      "prompt_note": "floating shelf"
+    },
+    "Wall Tambour Unit": {
+      "family": "Wall", "zone": "storage", "status": "not_yet",
+      "purpose": "Roller-shutter appliance garage standing on the counter (1200-1500 mm high).",
+      "choose_when": "Hide the mixer, toaster and kettle on a long counter.",
+      "avoid": "Short counters (it takes counter space).",
+      "prompt_note": "appliance garage with roller shutter",
+      "confirm": true
+    },
+    "Wall Chamfered Open Cabinets": {
+      "family": "Wall", "zone": "display", "status": "not_yet",
+      "purpose": "300 mm open end unit with a chamfered side.",
+      "choose_when": "To soften the open end of a wall-cabinet run.",
+      "avoid": "Ends against a wall.",
+      "prompt_note": "chamfered open end unit"
+    },
+    "Wall L Corner": {
+      "family": "Wall Corner", "zone": "corner", "status": "auto",
+      "purpose": "650 x 650 corner wall cabinet.",
+      "choose_when": "Every wall-cabinet corner with enough room.",
+      "avoid": "Regular wall units in a corner.",
+      "prompt_note": "corner wall cabinet (added by the solver)"
+    },
+    "Wall Open L Corner": {
+      "family": "Wall Corner", "zone": "corner", "status": "not_yet",
+      "purpose": "Open corner shelf.",
+      "choose_when": "Open corner as a display accent.",
+      "avoid": "Above the hob.",
+      "prompt_note": "open corner shelf"
+    },
+    "Tall Unit": {
+      "family": "Tall", "zone": "storage", "status": "offered",
+      "purpose": "Pantry, crockery or broom cupboard from floor to wall-cabinet top.",
+      "choose_when": "At the end of a run near the entrance.",
+      "avoid": "In front of a window; right beside the hob; in the middle of a counter run.",
+      "prompt_note": "pantry - end of a run near the entrance",
+      "combinations": {
+        "Single Shutter": "single door pantry",
+        "Double Shutter": "wide double-door pantry",
+        "Single Dual Shutter": "two stacked shutters",
+        "Double Dual Shutter": "two stacked pairs of shutters"
+      }
+    },
+    "Tall Built-In Oven": {
+      "family": "Tall", "zone": "storage", "status": "offered",
+      "purpose": "Oven at chest height with storage above and below.",
+      "choose_when": "Families who bake; near the cooking zone but not beside the hob.",
+      "avoid": "In front of a window.",
+      "prompt_note": "built-in oven at chest height"
+    },
+    "Tall Built-In Microwave": {
+      "family": "Tall", "zone": "storage", "status": "offered",
+      "purpose": "Microwave at chest height with storage.",
+      "choose_when": "Daily reheating; keeps the counter free.",
+      "avoid": "In front of a window.",
+      "prompt_note": "built-in microwave at chest height, frees the counter"
+    },
+    "Tall Built-In Oven & Micro": {
+      "family": "Tall", "zone": "storage", "status": "offered",
+      "purpose": "Oven and microwave stacked in one tall unit.",
+      "choose_when": "Families who both bake and reheat, in a medium or large kitchen.",
+      "avoid": "Small kitchens.",
+      "prompt_note": "oven + microwave stacked"
+    },
+    "Tall Built-In Wicker Basket": {
+      "family": "Tall", "zone": "storage", "status": "offered",
+      "purpose": "Tall pantry with wicker baskets.",
+      "choose_when": "Large vegetable or packet storage near the entrance.",
+      "avoid": "Beside the hob.",
+      "prompt_note": "tall pantry with wicker baskets"
+    },
+    "Tall Glass Unit": {
+      "family": "Tall", "zone": "display", "status": "not_yet",
+      "purpose": "Tall glass display cabinet.",
+      "choose_when": "Open kitchens facing the dining area.",
+      "avoid": "Small closed kitchens.",
+      "prompt_note": "tall glass display"
+    },
+    "Tall Open Unit": {
+      "family": "Tall", "zone": "display", "status": "not_yet",
+      "purpose": "Tall open shelves.",
+      "choose_when": "Open kitchens, display.",
+      "avoid": "Near the hob.",
+      "prompt_note": "tall open shelves"
+    },
+    "Loft - Modular": {
+      "family": "Loft", "zone": "storage", "status": "auto",
+      "purpose": "Storage above the wall cabinets up to the ceiling for rarely used items.",
+      "choose_when": "Walls tall enough (2.658 m+) and the customer wants lofts.",
+      "avoid": "Low ceilings.",
+      "prompt_note": "loft above wall cabinets (added by the solver)"
+    },
+    "Loft - Frame with Shutter": {
+      "family": "Loft", "zone": "storage", "status": "not_yet",
+      "purpose": "Loft built as a frame with shutters (site-built look).",
+      "choose_when": "Alternative loft construction.",
+      "avoid": "Mixing with modular lofts on one wall.",
+      "prompt_note": "framed loft",
+      "confirm": true
+    },
+    "Loft - L Corner - Modular": {
+      "family": "Loft Corner", "zone": "corner", "status": "auto",
+      "purpose": "Loft corner above a Wall L Corner.",
+      "choose_when": "Loft corners above a Wall L Corner.",
+      "avoid": "Regular lofts in a corner.",
+      "prompt_note": "loft corner (added by the solver)"
+    },
+    "Loft - L Corner - Frame with Shutter": {
+      "family": "Loft Corner", "zone": "corner", "status": "not_yet",
+      "purpose": "Framed loft corner.",
+      "choose_when": "With framed lofts.",
+      "avoid": "Mixing with modular lofts.",
+      "prompt_note": "framed loft corner"
+    }
+  }
+}

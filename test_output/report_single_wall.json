@@ -1,63 +1,13 @@
 {
   "ai": {
-    "shortlist_size": 41,
-    "mode": "ollama",
-    "model": "qwen2.5-coder:3b",
-    "attempts": 1,
-    "seconds": 134.9,
-    "eval_count": 627,
-    "raw": {
-      "room_reading": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 1 (id wall_1oy5ecjq6k11pfoo) has the door, Wall 3 (id wall_49fdugi4g7vj12pf) and Wall 4 (id wall_7sna3rldnsuwipgy) are solid and long.",
-      "design_plan": "The work triangle is: sink (on Wall 2, centred under the window), hob (on Wall 3 or Wall 4, on a different wall from the sink), and tall storage (on the far end of a run on a solid wall).",
-      "layout_type": "single",
-      "cabinet_walls": [
-        "wall_1oy5ecjq6k11pfoo",
-        "wall_49fdugi4g7vj12pf"
-      ],
-      "sink_wall_id": "wall_56i56ymve0xf69fm",
-      "sink_aid": "MTBABSU1200560700SSDSSLBOEHNS",
-      "hob_wall_id": "wall_49fdugi4g7vj12pf",
-      "hob_aid": "MTBABHU900560700DTDASLPUEHNS",
-      "hob_center_mm": 2000,
-      "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
-      "cylinder_aid": null,
-      "tall_units": [
-        {
-          "wall_id": "wall_49fdugi4g7vj12pf",
-          "aid": "MTTATU6005601940SDSSLBOEH4S"
-        }
-      ],
-      "base_runs": [],
-      "wall_runs": [
-        {
-          "wall_id": "wall_1oy5ecjq6k11pfoo",
-          "aids": [
-            "MTWAWU600330600SDSSLBOEH1S",
-            "MTWAWU700330600SDSSLBOEH1S"
-          ]
-        },
-        {
-          "wall_id": "wall_49fdugi4g7vj12pf",
-          "aids": [
-            "MTWAWU600330600SDSSLBOEH1S",
-            "MTWAWU700330600SDSSLBOEH1S"
-          ]
-        },
-        {
-          "wall_id": "wall_7sna3rldnsuwipgy",
-          "aids": [
-            "MTWAWU600330600SDSSLBOEH1S",
-            "MTWAWU700330600SDSSLBOEH1S"
-          ]
-        }
-      ]
-    }
+    "shortlist_size": 36,
+    "prompt_version": "v2",
+    "mode": "fallback"
   },
   "proposal": {
-    "layout_type": "L",
+    "layout_type": "single",
     "cabinet_walls": [
-      "wall_1oy5ecjq6k11pfoo",
-      "wall_49fdugi4g7vj12pf"
+      "wall_56i56ymve0xf69fm"
     ],
     "sink": {
       "wall_id": "wall_56i56ymve0xf69fm",
@@ -65,35 +15,28 @@
       "center_mm": null
     },
     "hob": {
-      "wall_id": "wall_49fdugi4g7vj12pf",
+      "wall_id": "wall_56i56ymve0xf69fm",
       "aid": "MTBABHU900560700DTDASLPUEHNS",
-      "center_mm": 2000.0
+      "center_mm": null
     },
     "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
-    "cylinder_aid": null,
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
     "tall_units": [
       {
-        "wall_id": "wall_49fdugi4g7vj12pf",
-        "aid": "MTTATU6005601940SDSSLBOEH4S"
+        "wall_id": "wall_56i56ymve0xf69fm",
+        "aid": "MTTATU6005601940SSSSLLEH4S"
       }
     ],
-    "base_prefs": {},
-    "wall_prefs": {
-      "wall_1oy5ecjq6k11pfoo": [
-        "MTWAWU600330600SDSSLBOEH1S",
-        "MTWAWU700330600SDSSLBOEH1S"
-      ],
-      "wall_49fdugi4g7vj12pf": [
-        "MTWAWU600330600SDSSLBOEH1S",
-        "MTWAWU700330600SDSSLBOEH1S"
-      ],
-      "wall_7sna3rldnsuwipgy": [
-        "MTWAWU600330600SDSSLBOEH1S",
-        "MTWAWU700330600SDSSLBOEH1S"
+    "base_prefs": {
+      "wall_56i56ymve0xf69fm": [
+        "MTBABU600560700DFDSLPUEHNS"
       ]
     },
-    "notes": "Wall 2 (id wall_56i56ymve0xf69fm) has the window, Wall 1 (id wall_1oy5ecjq6k11pfoo) has the door, Wall 3 (id wall_49fdugi4g7vj12pf) and Wall 4 (id wall_7sna3rldnsuwipgy) are solid and long. The work triangle is: sink (on Wall 2, centred under the window), hob (on Wall 3 or Wall 4, on a different wall from the sink), and tall storage (on the far end of a run on a solid wall).",
-    "source": "ollama"
+    "wall_prefs": {},
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": null,
+    "notes": "single-shaped kitchen: sink on Wall 2 under the window, hob on Wall 2, tall storage on Wall 2.",
+    "source": "fallback"
   },
   "layout": {
     "cabinet_walls": [
@@ -102,121 +45,113 @@
     "placements": {
       "wall_56i56ymve0xf69fm": [
         {
-          "aid": "MTBABU900560700SDSSLBOEH1S",
-          "category": "Base Unit",
-          "tier": "base",
-          "role": "storage",
-          "width": 900,
-          "start_mm": 91.2,
-          "end_mm": 991.2,
-          "opening": "Both"
-        },
-        {
-          "aid": "MTBABU600560700SDSSLBOEH1S",
-          "category": "Base Unit",
-          "tier": "base",
-          "role": "storage",
-          "width": 600,
-          "start_mm": 991.2,
-          "end_mm": 1591.2,
-          "opening": "Both"
-        },
-        {
-          "aid": "MTBABSU800560700SSDSSLBOEHNS",
-          "category": "Base Sink Unit",
-          "tier": "base",
-          "role": "sink",
-          "width": 800,
-          "start_mm": 1591.2,
-          "end_mm": 2391.2,
-          "opening": "Both"
-        },
-        {
-          "aid": "MTBABU300560700SSSSLLEH1S",
-          "category": "Base Unit",
-          "tier": "base",
-          "role": "storage",
-          "width": 300,
-          "start_mm": 2391.2,
-          "end_mm": 2691.2,
-          "opening": "Left"
-        },
-        {
-          "aid": "MTBABSP300560700DSPSLPUEHNS",
+          "aid": "MTBABSP200560700DSPSLPUEHNS",
           "category": "Base Spice Pull Out",
           "tier": "base",
           "role": "spice",
-          "width": 300,
-          "start_mm": 2691.2,
-          "end_mm": 2991.2,
+          "width": 200,
+          "start_mm": 66.2,
+          "end_mm": 266.2,
           "opening": "Pull Out"
         },
         {
-          "aid": "MTBABHU900560700DTDASLPUEHNS",
+          "aid": "MTBABHU750560700DTDASLPUEHNS",
           "category": "Base Hob Unit",
           "tier": "base",
           "role": "hob",
-          "width": 900,
-          "start_mm": 2991.2,
-          "end_mm": 3891.2,
+          "width": 750,
+          "start_mm": 266.2,
+          "end_mm": 1016.2,
           "opening": "Pull Out"
         },
         {
-          "aid": "MTBABSP150560700DSPSLPUEHNS",
-          "category": "Base Spice Pull Out",
+          "aid": "MTBABCU600560800SCSSSLREHNS",
+          "category": "Base Cylinder Unit",
           "tier": "base",
-          "role": "storage",
-          "width": 150,
-          "start_mm": 3891.2,
-          "end_mm": 4041.2,
-          "opening": "Pull Out"
+          "role": "cylinder",
+          "width": 600,
+          "start_mm": 1016.2,
+          "end_mm": 1616.2,
+          "opening": "Right"
         },
         {
-          "aid": "MTWAWU600330600SDSSLBOEH1S",
-          "category": "Wall Unit",
-          "tier": "wall",
-          "role": "wall",
-          "width": 600,
-          "start_mm": 91.2,
-          "end_mm": 691.2,
+          "aid": "MTBABSU750560700SSDSSLBOEHNS",
+          "category": "Base Sink Unit",
+          "tier": "base",
+          "role": "sink",
+          "width": 750,
+          "start_mm": 1616.2,
+          "end_mm": 2366.2,
           "opening": "Both"
         },
         {
-          "aid": "MTWAWU550330600SSSSLLEH1S",
-          "category": "Wall Unit",
+          "aid": "MTBABU600560700DFDSLPUEHNS",
+          "category": "Base Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 600,
+          "start_mm": 2366.2,
+          "end_mm": 2966.2,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTBABU450560700SSSSLREH1S",
+          "category": "Base Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 450,
+          "start_mm": 2966.2,
+          "end_mm": 3416.2,
+          "opening": "Right"
+        },
+        {
+          "aid": "MTTATU6005601940SSSSLREH4S",
+          "category": "Tall Unit",
+          "tier": "tall",
+          "role": "tall",
+          "width": 600,
+          "start_mm": 3416.2,
+          "end_mm": 4016.2,
+          "opening": "Right"
+        },
+        {
+          "aid": "MTWAWAU600330600SASSSLREHNS",
+          "category": "Wall Aquaguard Unit",
           "tier": "wall",
-          "role": "wall",
-          "width": 550,
-          "start_mm": 691.2,
-          "end_mm": 1241.2,
-          "opening": "Left"
+          "role": "purifier",
+          "width": 600,
+          "start_mm": 2816.2,
+          "end_mm": 3416.2,
+          "opening": "Right"
         }
       ]
     },
     "chimney": {
       "wall_id": "wall_56i56ymve0xf69fm",
-      "center_mm": 3441.17
+      "center_mm": 641.1700000000001
     },
     "corners": [],
     "loft_walls": [],
-    "score": 640.97,
+    "score": 171.15,
     "decisions": [
-      "designer proposed 2 wall(s) but the customer asked for layout single; re-chosen",
-      "cabinet walls chosen by solver: ['Wall 2']",
-      "hob moved to Wall 2 (clearances on proposed wall failed)"
+      "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2816-3416 mm",
+      "Wall 2: Base Unit 450 hinged Right (towards tall) -> MTBABU450560700SSSSLREH1S",
+      "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005601940SSSSLREH4S",
+      "Wall 2: Wall Aquaguard Unit 600 hinged Right (towards tall) -> MTWAWAU600330600SASSSLREHNS"
     ],
     "warnings": [
-      "tall unit(s) dropped: they left no legal hob position"
+      "hob unit narrowed 900 -> 750 mm to fit the room",
+      "spice unit narrowed 300 -> 200 mm to fit the room"
     ]
   },
   "nodes_added": {
-    "kitchen": 9,
+    "kitchen": 8,
     "appliance": 3,
     "fixture:toe-kick": 1,
-    "fixture:filler": 4,
+    "fixture:filler": 2,
     "fixture:countertop": 1,
-    "fixture:backsplash": 3,
-    "fixture:slab": 1,
+    "fixture:backsplash": 4,
+    "fixture:slab": 3,
     "fixture:floor": 1
   },
   "validation_issues": [],
@@ -225,5 +160,5 @@
     "filtered_skus": 484,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 135.56
+  "seconds": 0.17
 }

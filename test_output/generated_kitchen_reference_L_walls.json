@@ -1,7 +1,7 @@
 {
  "format": "magickhomes-scene",
  "version": 1,
- "exportedAt": "2026-11-18T12:26:26.122Z",
+ "exportedAt": "2026-11-19T10:21:44.996Z",
  "scene": {
   "nodes": {
    "site_ak8kgyj1ac61iknj": {
@@ -71,7 +71,7 @@
      "wall_7sna3rldnsuwipgy",
      "slab_jvsqwiezhnodq0cv",
      "ceiling_13bdm8luvqcre1tc",
-     "item_9y8bbq2ctjvbfhq2"
+     "item_ias3rs2unqzajcc9"
     ],
     "level": 0
    },
@@ -137,7 +137,8 @@
      "item_01yngxuaxjgv8dgq",
      "item_po4x9ub60izvoxaq",
      "item_7gxdf22iv3oltq7a",
-     "item_melwb6rsag6nmk6z"
+     "item_melwb6rsag6nmk6z",
+     "item_9y8bbq2ctjvbfhq2"
     ],
     "start": [
      -3.65,
@@ -4427,47 +4428,47 @@
     "object": "node",
     "id": "item_u2kiw2c4t9i6c9sj",
     "type": "item",
-    "name": "MTWAWU700330600SDSSLBOEH1S",
+    "name": "MTWAWAU600330600SASSSLREHNS",
     "parentId": "wall_56i56ymve0xf69fm",
     "visible": true,
     "metadata": {
      "currentVersion": 1,
-     "_id": "6afc55911e75c719a703dbe2",
-     "aid": "MTWAWU700330600SDSSLBOEH1S",
-     "description": "Wall-Wall Unit-700 × 330 × 600 mm — Shutter, Double Shutter, Slab (Plain) finish. Opens Both, External Handle. Internals: One Shelf.",
-     "width": 700,
+     "_id": "6afc55911e75c719a703dc83",
+     "aid": "MTWAWAU600330600SASSSLREHNS",
+     "description": "Wall-Wall Aquaguard Unit-600 × 330 × 600 mm — Shutter, Aquaguard Single Shutter, Slab (Plain) finish. Opens Right, External Handle. Internals: No Shelf.",
+     "width": 600,
      "depth": 330,
      "height": 600,
      "unitFamily": "Wall",
-     "category": "Wall Unit",
+     "category": "Wall Aquaguard Unit",
      "doorType": "Shutter",
-     "cabinetCombination": "Double Shutter",
-     "shutterCount": 2,
+     "cabinetCombination": "Aquaguard Single Shutter",
+     "shutterCount": 1,
      "drawerCount": 0,
      "openBoxCount": 0,
      "doorStyle": "Slab (Plain)",
-     "openingDirection": "Both",
+     "openingDirection": "Right",
      "handleType": "External Handle",
-     "internals": "One Shelf",
+     "internals": "No Shelf",
      "isApplianceAccessory": false,
      "defaultHandleName": "CH10114",
      "defaultHandleSize": 107,
      "defaultHandleFinish": "CP",
      "minHandleSize": 75,
      "maxHandleSize": 248,
-     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTWAWU700330600SDSSLBOEH1S.glb",
-     "modelKey": "catalogue-models/MTWAWU700330600SDSSLBOEH1S.glb",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTWAWU700330600SDSSLBOEH1S.png",
+     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTWAWAU600330600SASSSLREHNS.glb",
+     "modelKey": "catalogue-models/MTWAWAU600330600SASSSLREHNS.glb",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTWAWAU600330600SASSSLREHNS.png",
      "placeholderThumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/cabinet_dummythumbnail.png",
      "isActive": true,
-     "createdAt": "2026-11-17T13:24:33.182Z",
-     "updatedAt": "2026-11-17T13:24:33.182Z",
+     "createdAt": "2026-11-17T13:24:33.759Z",
+     "updatedAt": "2026-11-17T13:24:33.759Z",
      "__v": 0,
-     "id": "6afc55911e75c719a703dbe2",
-     "name": "MTWAWU700330600SDSSLBOEH1S",
-     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTWAWU700330600SDSSLBOEH1S.png",
-     "aidAssetId": "MTWAWU700330600SDSSLBOEH1S",
-     "subCategory": "Wall Unit",
+     "id": "6afc55911e75c719a703dc83",
+     "name": "MTWAWAU600330600SASSSLREHNS",
+     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTWAWAU600330600SASSSLREHNS.png",
+     "aidAssetId": "MTWAWAU600330600SASSSLREHNS",
+     "subCategory": "Wall Aquaguard Unit",
      "catalogSource": "api",
      "textures": [
       {
@@ -4731,7 +4732,7 @@
      ]
     },
     "position": [
-     3.0911704301834106,
+     3.1411700000000002,
      1.44,
      0.215
     ],
@@ -4747,16 +4748,16 @@
     ],
     "children": [],
     "wallId": "wall_56i56ymve0xf69fm",
-    "wallT": 0.7539440073618074,
+    "wallT": 0.766139024390244,
     "asset": {
-     "id": "6afc55911e75c719a703dbe2",
+     "id": "6afc55911e75c719a703dc83",
      "category": "kitchen",
-     "name": "MTWAWU700330600SDSSLBOEH1S",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTWAWU700330600SDSSLBOEH1S.png",
+     "name": "MTWAWAU600330600SASSSLREHNS",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTWAWAU600330600SASSSLREHNS.png",
      "source": "library",
-     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTWAWU700330600SDSSLBOEH1S.glb",
+     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTWAWAU600330600SASSSLREHNS.glb",
      "dimensions": [
-      0.7,
+      0.6,
       0.6,
       0.33
      ],
@@ -9475,7 +9476,7 @@
      "color": "#e8e8e8",
      "materialSlot": "door",
      "side": 1,
-     "wallT": 0.6663830317520514,
+     "wallT": 0.6907731707317073,
      "designSource": "ai-kitchen-v1-fixture",
      "fromDesignResponse": true,
      "level": "wall",
@@ -9737,7 +9738,7 @@
      ]
     },
     "position": [
-     2.7321704301834107,
+     2.83217,
      1.74,
      0.224
     ],
@@ -9753,7 +9754,7 @@
     ],
     "children": [],
     "wallId": "wall_56i56ymve0xf69fm",
-    "wallT": 0.6663830317520514,
+    "wallT": 0.6907731707317073,
     "asset": {
      "id": "fixture_slab_wall_56i56ymve0xf69fm_wall_lo_run1",
      "category": "fixture",
@@ -10089,6 +10090,309 @@
    "item_9y8bbq2ctjvbfhq2": {
     "object": "node",
     "id": "item_9y8bbq2ctjvbfhq2",
+    "type": "item",
+    "name": "Backsplash fixture_backsplash_wall_56i56ymve0xf69fm_upper0_1",
+    "parentId": "wall_56i56ymve0xf69fm",
+    "visible": true,
+    "metadata": {
+     "fixtureKind": "backsplash",
+     "fixtureId": "fixture_backsplash_wall_56i56ymve0xf69fm_upper0_1",
+     "widthM": 0.082,
+     "thicknessM": 0.6,
+     "depthM": 0.01,
+     "color": "#e8e8e8",
+     "materialSlot": "backsplash",
+     "side": 1,
+     "wallT": 0.6785781012418793,
+     "designSource": "ai-kitchen-v1-fixture",
+     "fromDesignResponse": true,
+     "textures": [
+      {
+       "_id": "6a991fb3d9ab0af9a6d9cdc3",
+       "aid": "MHB038",
+       "code": "40",
+       "type": "Backsplash",
+       "brand": "Nil",
+       "profile": [
+        "Nil"
+       ],
+       "category": "Tile",
+       "family": "Unknown",
+       "shutter": "Unknown",
+       "name": "Coimbatore_Backsplash_Parallel",
+       "width": 300,
+       "height": 600,
+       "isGroup": false,
+       "groupNormalToken": "MHBC010FM017S011_groupnormal",
+       "groupAORMToken": "MHBC010FM017S011_groupAORM",
+       "isAvailable": true,
+       "textureWidth": 609,
+       "textureHeight": 609,
+       "colorCode": "Nil",
+       "isFrosted": false,
+       "glassOpacity": "Nil",
+       "normalIntensity": "Nil",
+       "useTexture": true,
+       "metalic": "Nil",
+       "roughness": "Nil",
+       "materialName": "BacksplashM",
+       "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHB038.jpg",
+       "thumbnailKey": "thumbnail-texture/MHB038.jpg",
+       "texture1K": {
+        "baseColor": {
+         "key": "texture-material/1K/MHB038_baseColor_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB038_baseColor_1K.ktx2"
+        },
+        "normalOverride": {
+         "key": "texture-material/1K/MHB038_normalOverride_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB038_normalOverride_1K.ktx2"
+        },
+        "aormOverride": {
+         "key": "texture-material/1K/MHB038_aormOverride_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB038_aormOverride_1K.ktx2"
+        }
+       },
+       "texture2K": {
+        "baseColor": {
+         "key": "texture-material/2K/MHB038_baseColor_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB038_baseColor_2K.ktx2"
+        },
+        "normalOverride": {
+         "key": "texture-material/2K/MHB038_normalOverride_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB038_normalOverride_2K.ktx2"
+        },
+        "aormOverride": {
+         "key": "texture-material/2K/MHB038_aormOverride_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB038_aormOverride_2K.ktx2"
+        }
+       },
+       "texture512": {
+        "baseColor": {
+         "key": "texture-material/512/MHB038_baseColor_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB038_baseColor_512.ktx2"
+        },
+        "normalOverride": {
+         "key": "texture-material/512/MHB038_normalOverride_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB038_normalOverride_512.ktx2"
+        },
+        "aormOverride": {
+         "key": "texture-material/512/MHB038_aormOverride_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB038_aormOverride_512.ktx2"
+        }
+       },
+       "isActive": true,
+       "__v": 0,
+       "createdAt": "2026-09-03T07:20:19.212Z",
+       "updatedAt": "2026-10-27T13:15:56.239Z"
+      },
+      {
+       "_id": "6a991fb3d9ab0af9a6d9cdb2",
+       "aid": "MHB021",
+       "code": "23",
+       "type": "Backsplash",
+       "brand": "Nil",
+       "profile": [
+        "Nil"
+       ],
+       "category": "Tile",
+       "family": "Ceramic",
+       "shutter": "Matte",
+       "name": "Colliseum_White",
+       "width": 300,
+       "height": 600,
+       "isGroup": false,
+       "groupNormalToken": "MHBC010FM001S006_groupnormal",
+       "groupAORMToken": "MHBC010FM001S006_groupAORM",
+       "isAvailable": true,
+       "textureWidth": 609,
+       "textureHeight": 609,
+       "colorCode": "Nil",
+       "isFrosted": false,
+       "glassOpacity": "Nil",
+       "normalIntensity": "Nil",
+       "useTexture": true,
+       "metalic": "Nil",
+       "roughness": "Nil",
+       "materialName": "BacksplashM",
+       "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHB021.jpg",
+       "thumbnailKey": "thumbnail-texture/MHB021.jpg",
+       "texture1K": {
+        "baseColor": {
+         "key": "texture-material/1K/MHB021_baseColor_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_baseColor_1K.ktx2"
+        },
+        "normalOverride": {
+         "key": "texture-material/1K/MHB021_normalOverride_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_normalOverride_1K.ktx2"
+        },
+        "aormOverride": {
+         "key": "texture-material/1K/MHB021_aormOverride_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_aormOverride_1K.ktx2"
+        }
+       },
+       "texture2K": {
+        "baseColor": {
+         "key": "texture-material/2K/MHB021_baseColor_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_baseColor_2K.ktx2"
+        },
+        "normalOverride": {
+         "key": "texture-material/2K/MHB021_normalOverride_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_normalOverride_2K.ktx2"
+        },
+        "aormOverride": {
+         "key": "texture-material/2K/MHB021_aormOverride_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_aormOverride_2K.ktx2"
+        }
+       },
+       "texture512": {
+        "baseColor": {
+         "key": "texture-material/512/MHB021_baseColor_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_baseColor_512.ktx2"
+        },
+        "normalOverride": {
+         "key": "texture-material/512/MHB021_normalOverride_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_normalOverride_512.ktx2"
+        },
+        "aormOverride": {
+         "key": "texture-material/512/MHB021_aormOverride_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_aormOverride_512.ktx2"
+        }
+       },
+       "isActive": true,
+       "__v": 0,
+       "createdAt": "2026-09-03T07:20:19.211Z",
+       "updatedAt": "2026-10-27T13:15:56.227Z"
+      },
+      {
+       "_id": "6a991fb3d9ab0af9a6d9cdb2",
+       "aid": "MHB021",
+       "code": "23",
+       "type": "Backsplash",
+       "brand": "Nil",
+       "profile": [
+        "Nil"
+       ],
+       "category": "Tile",
+       "family": "Ceramic",
+       "shutter": "Matte",
+       "name": "Colliseum_White",
+       "width": 300,
+       "height": 600,
+       "isGroup": false,
+       "groupNormalToken": "MHBC010FM001S006_groupnormal",
+       "groupAORMToken": "MHBC010FM001S006_groupAORM",
+       "isAvailable": true,
+       "textureWidth": 609,
+       "textureHeight": 609,
+       "colorCode": "Nil",
+       "isFrosted": false,
+       "glassOpacity": "Nil",
+       "normalIntensity": "Nil",
+       "useTexture": true,
+       "metalic": "Nil",
+       "roughness": "Nil",
+       "materialName": "BacksplashM",
+       "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHB021.jpg",
+       "thumbnailKey": "thumbnail-texture/MHB021.jpg",
+       "texture1K": {
+        "baseColor": {
+         "key": "texture-material/1K/MHB021_baseColor_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_baseColor_1K.ktx2"
+        },
+        "normalOverride": {
+         "key": "texture-material/1K/MHB021_normalOverride_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_normalOverride_1K.ktx2"
+        },
+        "aormOverride": {
+         "key": "texture-material/1K/MHB021_aormOverride_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHB021_aormOverride_1K.ktx2"
+        }
+       },
+       "texture2K": {
+        "baseColor": {
+         "key": "texture-material/2K/MHB021_baseColor_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_baseColor_2K.ktx2"
+        },
+        "normalOverride": {
+         "key": "texture-material/2K/MHB021_normalOverride_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_normalOverride_2K.ktx2"
+        },
+        "aormOverride": {
+         "key": "texture-material/2K/MHB021_aormOverride_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHB021_aormOverride_2K.ktx2"
+        }
+       },
+       "texture512": {
+        "baseColor": {
+         "key": "texture-material/512/MHB021_baseColor_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_baseColor_512.ktx2"
+        },
+        "normalOverride": {
+         "key": "texture-material/512/MHB021_normalOverride_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_normalOverride_512.ktx2"
+        },
+        "aormOverride": {
+         "key": "texture-material/512/MHB021_aormOverride_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHB021_aormOverride_512.ktx2"
+        }
+       },
+       "isActive": true,
+       "__v": 0,
+       "createdAt": "2026-09-03T07:20:19.211Z",
+       "updatedAt": "2026-10-27T13:15:56.227Z"
+      }
+     ]
+    },
+    "position": [
+     2.782170215091705,
+     1.74,
+     0.055
+    ],
+    "rotation": [
+     0,
+     0,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ],
+    "children": [],
+    "wallId": "wall_56i56ymve0xf69fm",
+    "wallT": 0.6785781012418793,
+    "asset": {
+     "id": "fixture_backsplash_wall_56i56ymve0xf69fm_upper0_1",
+     "category": "fixture",
+     "name": "backsplash",
+     "thumbnail": "",
+     "source": "library",
+     "src": "asset://fixture/backsplash",
+     "dimensions": [
+      0.082,
+      0.6,
+      0.01
+     ],
+     "offset": [
+      0,
+      0,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ]
+    }
+   },
+   "item_ias3rs2unqzajcc9": {
+    "object": "node",
+    "id": "item_ias3rs2unqzajcc9",
     "type": "item",
     "name": "Floor",
     "parentId": "level_d48imrjpuiv83tez",

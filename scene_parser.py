@@ -72,6 +72,23 @@ class Wall:
     inset_end_mm: float = 0.0
     neighbor_start: Optional[str] = None
     neighbor_end: Optional[str] = None
+    # MagickHome wall frame: local +z is the wall's FRONT side, (-dz, dx) in world
+    # x/z. ``front_interior`` says whether the room is on that front side
+    # (frontSide == "interior") or on the back (a wall drawn in the other direction).
+    front_interior: bool = True
+
+    @property
+    def side_sign(self) -> int:
+        """+1 when the room is on the wall's front (scene z > 0), -1 when it is on the back."""
+        return 1 if self.front_interior else -1
+
+    def side_of(self, end: str) -> str:
+        """Which hand a wall end is on for someone standing in the room facing the wall."""
+        return "right" if (end == "end") == self.front_interior else "left"
+
+    def end_at(self, side: str) -> str:
+        """Wall end ("start"/"end") on the viewer's ``side`` ("left"/"right")."""
+        return "end" if (side == "right") == self.front_interior else "start"
 
     @property
     def length_m(self) -> float:
@@ -197,6 +214,38 @@ def _unit(dx: float, dz: float) -> tuple[float, float]:
     return (dx / n, dz / n)
 
 
+def _point_in_polygon(pt: tuple[float, float], poly: list[tuple[float, float]]) -> bool:
+    x, z = pt
+    inside = False
+    for i in range(len(poly)):
+        (x1, z1), (x2, z2) = poly[i], poly[(i + 1) % len(poly)]
+        if (z1 > z) != (z2 > z) and x < (x2 - x1) * (z - z1) / (z2 - z1) + x1:
+            inside = not inside
+    return inside
+
+
+def _front_is_interior(w: dict, front, mid, outline, centroid) -> bool:
+    """Is the room on the wall's front side?
+
+    1. MagickHome's own ``frontSide`` / ``backSide`` ("interior" / "exterior"),
+    2. else a point-in-polygon test against the slab / ceiling outline (correct for
+       L-shaped and other non-convex rooms),
+    3. else the outline centroid (convex rooms only).
+    """
+    fs, bs = str(w.get("frontSide") or "").lower(), str(w.get("backSide") or "").lower()
+    if fs == "interior" or bs == "exterior":
+        return True
+    if bs == "interior" or fs == "exterior":
+        return False
+    if outline and len(outline) >= 3:
+        eps = 0.25
+        a = _point_in_polygon((mid[0] + front[0] * eps, mid[1] + front[1] * eps), outline)
+        b = _point_in_polygon((mid[0] - front[0] * eps, mid[1] - front[1] * eps), outline)
+        if a != b:
+            return a
+    return (centroid[0] - mid[0]) * front[0] + (centroid[1] - mid[1]) * front[1] >= 0
+
+
 def parse_scene(doc: dict) -> RoomGeometry:
     nodes = _nodes(doc)
     raw_walls = [n for n in nodes.values() if n.get("type") == "wall"]
@@ -216,6 +265,7 @@ def parse_scene(doc: dict) -> RoomGeometry:
         poly = (slab or {}).get("polygon")
         if isinstance(poly, list) and len(poly) >= 3:
             outline = [tuple(p) for p in poly]
+    real_outline = bool(outline)
     if not outline:
         outline = [tuple(w["start"]) for w in raw_walls]
     cx = sum(p[0] for p in outline) / len(outline)
@@ -227,11 +277,10 @@ def parse_scene(doc: dict) -> RoomGeometry:
     for w in sorted(raw_walls, key=lambda n: level_children.index(n["id"]) if n["id"] in level_children else 1e9):
         start, end = tuple(map(float, w["start"])), tuple(map(float, w["end"]))
         d = _unit(end[0] - start[0], end[1] - start[1])
-        # Interior normal: the perpendicular that points at the room centroid.
-        n1 = (-d[1], d[0])
+        front = (-d[1], d[0])  # MagickHome's local +z for this wall
         mid = ((start[0] + end[0]) / 2, (start[1] + end[1]) / 2)
-        if (cx - mid[0]) * n1[0] + (cz - mid[1]) * n1[1] < 0:
-            n1 = (d[1], -d[0])
+        front_in = _front_is_interior(w, front, mid, outline if real_outline else None, (cx, cz))
+        n1 = front if front_in else (-front[0], -front[1])  # interior normal
         walls[w["id"]] = Wall(
             id=w["id"],
             name=w.get("name") or w["id"],
@@ -242,6 +291,7 @@ def parse_scene(doc: dict) -> RoomGeometry:
             height_m=float(w.get("height") or ceiling_h or config.DEFAULT_WALL_HEIGHT_M),
             direction=d,
             normal=n1,
+            front_interior=front_in,
         )
         order.append(w["id"])
 

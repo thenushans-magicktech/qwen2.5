@@ -33,6 +33,7 @@ from typing import Iterable, Optional
 import config
 from catalog_loader import (
     BASE_STORAGE_CATS,
+    CAT_AQUAGUARD,
     CAT_BASE,
     CAT_BCU_L,
     CAT_BCU_R,
@@ -46,8 +47,10 @@ from catalog_loader import (
     CAT_WALL_CORNER,
     CORNER_CATS,
     TALL_CATS,
+    WALL_GLASS_CATS,
     Catalog,
     CatalogItem,
+    corner_side_for,
 )
 from scene_parser import Corner, Opening, RoomGeometry, Wall
 
@@ -60,6 +63,8 @@ SOFT_KINDS = frozenset({"door", "swing", "open", "window", "chimney", "corner_op
 BLOCKING_KINDS = ("door", "swing", "window", "chimney", "corner", "corner_open")
 HARD_KINDS = frozenset({"wall", "corner"})
 STRONG_HINGE_OBSTACLES = frozenset({"wall", "door", "swing", "corner", "tall"})
+# Placements the repair pass may drop to resolve a conflict (never sink/hob/corners).
+REMOVABLE_ROLES = ("storage", "wall", "loft", "loft_deep", "purifier", "display")
 
 # Vertical extent of each placement zone (metres) - used for opening clashes.
 ZONE_Y = {"base": (0.0, 0.84), "wall": (1.44, 2.04), "loft": (2.058, config.LOFT_TOP_M)}
@@ -92,6 +97,8 @@ class Proposal:
     tall_units: list[tuple[str, str]] = field(default_factory=list)  # (wall_id, aid)
     base_prefs: dict[str, list[str]] = field(default_factory=dict)
     wall_prefs: dict[str, list[str]] = field(default_factory=dict)
+    purifier_aid: Optional[str] = None  # Wall Aquaguard Unit, hung beside the sink window
+    display_aid: Optional[str] = None  # glass wall unit at the end of a run
     notes: str = ""
     source: str = "fallback"
 
@@ -106,6 +113,8 @@ class Proposal:
             "tall_units": [{"wall_id": w, "aid": a} for w, a in self.tall_units],
             "base_prefs": self.base_prefs,
             "wall_prefs": self.wall_prefs,
+            "purifier_aid": self.purifier_aid,
+            "display_aid": self.display_aid,
             "notes": self.notes,
             "source": self.source,
         }
@@ -532,6 +541,7 @@ class LayoutSolver:
 
         self.walls = self._resolve_cabinet_walls()
         self.static = self._static_features()
+        self._init_notes = (list(self.decisions), list(self.warnings))
 
     # -- catalogue helpers -------------------------------------------------
     def _pool(self, cats, tier, height=None, depth=None, narrow_cats=()) -> Pool:
@@ -662,6 +672,86 @@ class LayoutSolver:
 
     # -- main entry ------------------------------------------------------------
     def solve(self) -> KitchenLayout:
+        try:
+            layout = self._solve_walls()
+            problem, error = self._layout_problem(layout), None
+        except SolverError as exc:  # e.g. a U on a window wall too short for two corners
+            layout, problem, error = None, "the proposed walls cannot fit a kitchen", exc
+        if problem is None or self.prefs.cabinet_walls:
+            if layout is None:
+                raise error
+            return layout
+        # Hard rules (a hob, the sink centred under the window) win over a layout
+        # *preference*: try other connected wall sets, closest to the proposal first.
+        # Walls the customer named explicitly are never changed.
+        full = list(self.walls)
+        order = {w: i for i, w in enumerate(self.g.wall_order)}
+        for keep in self._alternative_wall_sets(full, layout):
+            self.walls = sorted(keep, key=lambda w: order.get(w, 99))
+            self.decisions, self.warnings = list(self._init_notes[0]), list(self._init_notes[1])
+            try:
+                alt = self._solve_walls()
+            except SolverError:
+                continue
+            if self._layout_problem(alt) is None:
+                want = {"single": 1, "L": 2, "U": 3}.get(self.prefs.layout)
+                pref = f" instead of the requested {self.prefs.layout} layout" if want and want != len(keep) else ""
+                names = ", ".join(self.g.walls[w].name for w in self.walls)
+                alt.decisions.append(f"cabinet walls changed to {names}{pref}: {problem}")
+                return alt
+        self.walls = full
+        if layout is None:
+            raise error
+        return layout
+
+    def _layout_problem(self, layout: KitchenLayout) -> Optional[str]:
+        if layout.hob is None:
+            return "the proposed walls left no legal place for the hob"
+        if self._sink_off_window(layout):
+            return "the window is at a corner, so the run on the other wall would push the sink off the window centre"
+        return None
+
+    def _alternative_wall_sets(self, full: list[str], layout: Optional[KitchenLayout]) -> list[list[str]]:
+        """Connected wall sets that keep the window (sink) wall: same size first, then one more, then fewer."""
+        g = self.g
+        usable = [
+            w for w in g.wall_order
+            if max((b - a for a, b in self.free_base_segments(g.walls[w])), default=0) >= config.MIN_CABINET_WALL_MM
+        ]
+        if layout is not None:
+            anchor = layout.sink_window.wall_id if layout.sink_window else (layout.sink.wall_id if layout.sink else None)
+        else:  # no layout at all: keep the widest usable window's wall when sinks go under windows
+            wins = [o for o in g.windows if o.wall_id in usable] if self.prefs.sink_under_window else []
+            anchor = max(wins, key=lambda o: o.width_mm).wall_id if wins else None
+
+        def connected(ws):
+            if len(ws) == 1:
+                return True
+            seen, todo = {ws[0]}, [ws[0]]
+            while todo:
+                a = todo.pop()
+                for b in ws:
+                    if b not in seen and g.corner_between(a, b):
+                        seen.add(b)
+                        todo.append(b)
+            return len(seen) == len(ws)
+
+        n, cands = len(full), []
+        for r in (1, 2, 3):
+            for ws in itertools.combinations(usable, r):
+                ws = list(ws)
+                if set(ws) == set(full) or (anchor and anchor not in ws) or not connected(ws):
+                    continue
+                cands.append(ws)
+        rank = lambda ws: (0 if len(ws) == n else 1 if len(ws) == n + 1 else 2, -len(set(ws) & set(full)))  # noqa: E731
+        return sorted(cands, key=rank)
+
+    @staticmethod
+    def _sink_off_window(layout: KitchenLayout) -> bool:
+        s, w = layout.sink, layout.sink_window
+        return s is not None and w is not None and s.wall_id == w.wall_id and abs(s.center_mm - w.center_mm) > 1.0
+
+    def _solve_walls(self) -> KitchenLayout:
         corners = [
             c for c in self.g.corners if c.wall_a in self.walls and c.wall_b in self.walls
         ]
@@ -791,7 +881,8 @@ class LayoutSolver:
                 continue
             p_end, secondary, s_end = corner.other(primary)
             pw, sw = self.g.walls[primary], self.g.walls[secondary]
-            cat = CAT_BCU_L if p_end == "end" else CAT_BCU_R
+            # "- L" = blind panel on the viewer's right (see catalog_loader.corner_side_for)
+            cat = CAT_BCU_L if self.g.walls[primary].side_of(p_end) == "right" else CAT_BCU_R
             bcu = self._default((cat,), width=1050, tier="base", height=700) or self._default((cat,), tier="base", height=700)
             if bcu is None:
                 return None
@@ -871,11 +962,23 @@ class LayoutSolver:
                     caps[key].insert(0, t_item)
                 else:
                     caps[key].append(t_item)
-            best_hob = self._place_hob(hob_item, spice_item, None if drop_cyl else cyl_item, sink, sink_wall, base_feats, anchors, caps)
+            # Compact rooms: a narrower hob unit / spice pull-out of the same type
+            # before giving anything up (a kitchen must always have its hob).
+            for hob_try, spice_try in self._hob_variants(hob_item, spice_item):
+                best_hob = self._place_hob(hob_try, spice_try, None if drop_cyl else cyl_item, sink, sink_wall, base_feats, anchors, caps)
+                if best_hob is not None:
+                    break
             if best_hob is not None:
                 break
         warnings.extend(cap_warn)
         score += cap_pen
+        if best_hob is not None:
+            placed = {p.role: p.item for p in best_hob[1]}
+            for role, want in (("hob", hob_item), ("spice", spice_item)):
+                got = placed.get(role)
+                if want is not None and got is not None and got.width != want.width:
+                    warnings.append(f"{role} unit narrowed {want.width} -> {got.width} mm to fit the room")
+                    score += 0.2 * (want.width - got.width)
         if best_hob is not None and drop_cyl:
             warnings.append("cylinder unit dropped: no room beside the hob with chimney/sink clearances")
             score += 80
@@ -925,7 +1028,7 @@ class LayoutSolver:
     def _bcu_fits(self, corner: Corner, primary: str) -> bool:
         """Static check: can a blind corner unit sit on ``primary`` at this corner?"""
         p_end, secondary, s_end = corner.other(primary)
-        cat = CAT_BCU_L if p_end == "end" else CAT_BCU_R
+        cat = CAT_BCU_L if self.g.walls[primary].side_of(p_end) == "right" else CAT_BCU_R
         bcu = self._default((cat,), width=1050, tier="base", height=700) or self._default((cat,), tier="base", height=700)
         if bcu is None:
             return False
@@ -955,6 +1058,35 @@ class LayoutSolver:
                 if res and (best is None or res[0] + bonus < best[0]):
                     best = (res[0] + bonus, res[1], wid)
         return best
+
+    def _hob_variants(self, hob_item, spice_item):
+        """(hob, spice) pairs: as proposed, then narrower units of the same type.
+
+        Hob units never go below the hob appliance width (Hob90 is 750 mm wide).
+        """
+        min_hob = config.APPLIANCES["hob"]["dims_mm"][0]
+        hobs = [hob_item] + sorted(
+            (
+                h for h in self.cat.find((CAT_HOB,), height=hob_item.height)
+                if min_hob <= h.width < hob_item.width
+                and canon_eq(h.cabinet_combination, hob_item.cabinet_combination)
+                and h.opening_direction == hob_item.opening_direction
+            ),
+            key=lambda h: -h.width,
+        )
+        spices = [spice_item]
+        if spice_item is not None:
+            spices += sorted(
+                (s for s in self.cat.find((CAT_SPICE,), height=spice_item.height) if s.width < spice_item.width),
+                key=lambda s: -s.width,
+            )
+        seen = set()
+        for s in spices:
+            for h in hobs:
+                key = (h.aid, s.aid if s else None)
+                if key not in seen:
+                    seen.add(key)
+                    yield h, s
 
     def _base_prefs(self, wid: str) -> list[CatalogItem]:
         out = []
@@ -1151,9 +1283,10 @@ class LayoutSolver:
         """Corner rule for the wall / loft tier: a corner cabinet, or the corner stays empty.
 
         Regular cabinets are never placed where two runs meet. Wall tier tries a
-        Wall L Corner (650x650) on either wall, then a wall blind corner unit
-        (730/830, L or R by wall end). Loft tier uses a Loft L Corner above a
-        Wall L Corner. Otherwise both walls keep the corner square clear.
+        Wall L Corner (650x650) on the wall that has the corner on the viewer's right
+        (the model has no mirrored version), then a wall blind corner unit (730/830, L or R by
+        wall end) on either wall. Loft tier uses a Loft L Corner above a Wall L
+        Corner. Otherwise both walls keep the corner square clear.
         """
         walls = self.g.walls
         depth_reg = config.WALL_UNIT_DEPTH_MM
@@ -1196,8 +1329,11 @@ class LayoutSolver:
             for x, x_end, y, y_end in order:
                 if kind == "L":
                     item, reserve = spec, spec.depth
+                    need = corner_side_for(item)
+                    if need is not None and walls[x].end_at(need) != x_end:
+                        continue  # one-handed L model: the corner must be on the viewer's right
                 else:
-                    cat = CAT_BCU_L if x_end == "end" else CAT_BCU_R
+                    cat = CAT_BCU_L if walls[x].side_of(x_end) == "right" else CAT_BCU_R
                     item, reserve = self._default((cat,), width=spec, tier="wall", height=600), depth_reg
                     if item is None:
                         continue
@@ -1222,13 +1358,107 @@ class LayoutSolver:
     def _plan_wall_tier(self, layout: KitchenLayout) -> None:
         for cp in layout.corner_plans:
             self._place_corner_tier(layout, cp, "wall")
-
+        self._place_wall_features(layout)
         for wid in self.walls:
-            cover = self._coverage(layout, wid, "base", extra_corner=True)
-            if layout.chimney and layout.chimney["wall_id"] == wid:
-                f = next(f for f in layout.features[(wid, "wall")] if f.kind == "chimney")
-                cover = merge_intervals(cover + [(f.lo, f.hi)], join=config.MAX_FILLER_MM + 10)
-            self._fill_tier(layout, wid, "wall", cover, self.wall_pool, self._wall_prefs(wid), "wall")
+            self._fill_tier(layout, wid, "wall", self._wall_cover(layout, wid), self.wall_pool, self._wall_prefs(wid), "wall")
+
+    def _wall_cover(self, layout: KitchenLayout, wid: str) -> list[tuple[float, float]]:
+        """Spans of ``wid`` that may carry wall cabinets: above base runs, plus the chimney bay."""
+        cover = self._coverage(layout, wid, "base", extra_corner=True)
+        if layout.chimney and layout.chimney["wall_id"] == wid:
+            f = next(f for f in layout.features[(wid, "wall")] if f.kind == "chimney")
+            cover = merge_intervals(cover + [(f.lo, f.hi)], join=config.MAX_FILLER_MM + 10)
+        return cover
+
+    def _place_wall_features(self, layout: KitchenLayout) -> None:
+        """Designer feature units in the wall tier, anchored before the runs are filled.
+
+        * water purifier (Wall Aquaguard Unit): on the sink wall, as close to the
+          window / sink as the wall space allows (within 1.5 m);
+        * glass display unit: at the end of a wall-cabinet run, away from the chimney.
+        """
+        p = self.proposal
+        pur = self._resolve(p.purifier_aid, (CAT_AQUAGUARD,), "water purifier unit", "wall")
+        if pur is not None:
+            if layout.sink is None:
+                layout.warnings.append("water purifier unit skipped: no sink")
+            else:
+                x = layout.sink_window.center_mm if layout.sink_window else layout.sink.center_mm
+                if not self._place_wall_feature(layout, pur, "purifier", [(layout.sink.wall_id, x)], max_dist=1500):
+                    layout.warnings.append("water purifier unit skipped: no free wall space within 1.5 m of the sink")
+        disp = self._resolve(p.display_aid, WALL_GLASS_CATS, "display unit", "wall")
+        if disp is not None:
+            targets = []
+            for wid in self.walls:
+                for lo, hi in self._wall_cover(layout, wid):
+                    targets += [(wid, lo), (wid, hi)]
+            if not self._place_wall_feature(layout, disp, "display", targets, max_dist=900, avoid_chimney=True):
+                layout.warnings.append("display unit skipped: no free run end for it")
+
+    def _place_wall_feature(self, layout, item, role, targets, max_dist=None, avoid_chimney=False) -> bool:
+        """Anchor ``item`` (or a same-family width) in the wall tier nearest one of ``targets``.
+
+        Every candidate is scored by how well the leftover spaces either side can
+        still be filled with regular wall units (same penalties as run filling),
+        so a feature unit never leaves an unfillable hole.
+        """
+        family = [item] + sorted(
+            (
+                c
+                for c in self.cat.find((item.cat,), tier="wall", height=item.height, depth=item.depth)
+                if c.aid != item.aid
+                and canon_eq(c.cabinet_combination, item.cabinet_combination)
+                and c.opening_direction == item.opening_direction
+                and c.width % config.GRID_MM == 0
+            ),
+            key=lambda c: (abs(c.width - item.width), -c.width),
+        )
+        by_wall: dict[str, list[float]] = {}
+        for wid, x in targets:
+            by_wall.setdefault(wid, []).append(x)
+        chimney = layout.chimney
+        best = None
+        for wid, xs in by_wall.items():
+            feats = layout.features[(wid, "wall")]
+            anchors = [q for q in layout.placements if q.wall_id == wid and "wall" in q.zones]
+            for c_lo, c_hi in self._wall_cover(layout, wid):
+                for gap in self._gaps(wid, feats, anchors):
+                    lo, hi = max(gap.lo, c_lo), min(gap.hi, c_hi)
+                    if hi - lo < self.wall_pool.min_width - EPS:
+                        continue
+                    k_lo = gap.kind_lo if abs(lo - gap.lo) <= EPS else "open"
+                    k_hi = gap.kind_hi if abs(hi - gap.hi) <= EPS else "open"
+                    for rank, it in enumerate(family):
+                        if it.width > hi - lo + EPS:
+                            continue
+                        for st in sorted({round(lo, 3), round(hi - it.width, 3)}):
+                            centre = st + it.width / 2.0
+                            dist = min(abs(centre - x) for x in xs)
+                            if max_dist is not None and dist > max_dist + it.width / 2.0:
+                                continue
+                            pen = 0.05 * dist + 20.0 * rank
+                            if avoid_chimney and chimney and chimney["wall_id"] == wid:
+                                if abs(centre - chimney["center_mm"]) < config.CHIMNEY_WIDTH_MM / 2 + it.width / 2 + 600:
+                                    pen += 200.0
+                            ok = True
+                            for sub in (Gap(wid, lo, st, k_lo, "anchor"), Gap(wid, st + it.width, hi, "anchor", k_hi)):
+                                if sub.length <= EPS:
+                                    continue
+                                res = fill_gap(sub, self.wall_pool, [], "wall")
+                                if res is None:
+                                    ok = False
+                                    break
+                                pen += res.penalty
+                            if ok and (best is None or pen < best[0] - 1e-9):
+                                best = (pen, it, wid, st)
+        if best is None or best[0] >= 1000:
+            return False
+        _, it, wid, st = best
+        layout.placements.append(Placement(it, wid, "wall", st, role))
+        layout.decisions.append(
+            f"{self.g.walls[wid].name}: {role} unit {it.category} {it.width} at {st:.0f}-{st + it.width:.0f} mm"
+        )
+        return True
 
     def _coverage(self, layout, wid, zone, extra_corner=False) -> list[tuple[float, float]]:
         iv = [(p.start_mm, p.end_mm) for p in layout.placements if p.wall_id == wid and zone in p.zones]
@@ -1320,7 +1550,11 @@ class LayoutSolver:
                 hinge = next(iter(weak))
             if hinge is None:
                 continue
-            want = next(o for o, s in config.HINGE_SIDE_FOR_OPENING.items() if s == hinge)
+            # HINGE_SIDE_FOR_OPENING is written for a wall seen from its front; mirror it
+            # for walls whose room side is the back.
+            wall_ = self.g.walls[p.wall_id]
+            seen = "start" if wall_.side_of(hinge) == "left" else "end"
+            want = next(o for o, s in config.HINGE_SIDE_FOR_OPENING.items() if s == seen)
             if p.item.opening_direction == want:
                 continue
             v = self.cat.variant(p.item, want)
@@ -1339,7 +1573,7 @@ class LayoutSolver:
             issues = validate_layout(layout)
             if not issues:
                 return
-            removable = [(msg, p) for msg, p in issues if p is not None and p.role in ("storage", "wall", "loft", "loft_deep")]
+            removable = [(msg, p) for msg, p in issues if p is not None and p.role in REMOVABLE_ROLES]
             if not removable:
                 for msg, _ in issues:
                     layout.warnings.append("unresolved: " + msg)
@@ -1403,13 +1637,20 @@ def validate_layout(layout: KitchenLayout) -> list[tuple[str, Optional[Placement
                     if overlaps(p.start_mm, p.end_mm, *strip) and p.item.cat not in CORNER_CATS:
                         issues.append((f"regular cabinet {p.label()} in the {g.walls[cp.primary].name}/"
                                        f"{g.walls[cp.secondary].name} corner ({zone} tier)", p))
+    # corner models must face the right way (L-shaped units: wall end only; blind L/R by end)
+    for p in layout.placements:
+        side = corner_side_for(p.item) if p.item.cat in CORNER_CATS else None
+        need = g.walls[p.wall_id].end_at(side) if side else None
+        if need and p.corner_end and p.corner_end != need:
+            issues.append((f"{p.label()} on {g.walls[p.wall_id].name} must sit at the wall {need}, "
+                           f"not the {p.corner_end} (its 3D model would face the wrong way)", p))
     # same wall / zone overlaps
     for wid in layout.cabinet_walls:
         for zone in ("base", "wall", "loft"):
             ps = layout.on(wid, zone)
             for a, b in zip(ps, ps[1:]):
                 if overlaps(a.start_mm, a.end_mm, b.start_mm, b.end_mm):
-                    victim = b if b.role in ("storage", "wall", "loft", "loft_deep") else a
+                    victim = b if b.role in REMOVABLE_ROLES else a
                     issues.append((f"{a.label()} overlaps {b.label()} on {zone} tier", victim))
     # world-space 3D collisions (corners between walls)
     boxes = [(p, *placement_box(p, g.walls[p.wall_id])) for p in layout.placements]
@@ -1422,7 +1663,7 @@ def validate_layout(layout: KitchenLayout) -> list[tuple[str, Optional[Placement
             if ya[0] >= yb[1] - 1e-4 or yb[0] >= ya[1] - 1e-4:
                 continue
             if convex_overlap(polya, polyb):
-                victim = pb if pb.role in ("storage", "wall", "loft", "loft_deep") else pa
+                victim = pb if pb.role in REMOVABLE_ROLES else pa
                 issues.append((f"3D collision {pa.label()} x {pb.label()}", victim))
     # chimney vs wall cabinets (3D)
     if layout.chimney:

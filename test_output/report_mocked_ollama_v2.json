@@ -1,0 +1,315 @@
+{
+  "ai": {
+    "shortlist_size": 36,
+    "prompt_version": "v2",
+    "mode": "ollama",
+    "model": "qwen2.5-coder:7b",
+    "attempts": 1,
+    "seconds": 0.0,
+    "prompt_tokens": null,
+    "prompt_seconds": null,
+    "eval_count": 123,
+    "eval_seconds": null,
+    "load_seconds": null,
+    "raw": {
+      "room_reading": "Wall 2 has the window, Wall 1 the door near the Wall 4 corner, Wall 3 and Wall 4 are solid.",
+      "design_plan": "Sink under the window on Wall 2, hob on solid Wall 3, tall storage at the end of Wall 3.",
+      "cabinet_walls": [
+        "Wall 2",
+        "Wall 3"
+      ],
+      "sink_wall": "Wall 2",
+      "sink": "SINK-900",
+      "hob_wall": "Wall 3",
+      "hob": "HOB-900-3DRAWER",
+      "hob_center_mm": 2000,
+      "spice": "SPICE-300",
+      "lpg_cylinder": "NONE",
+      "tall_units": [
+        {
+          "wall": "Wall 3",
+          "unit": "MICROWAVE-600"
+        }
+      ],
+      "water_purifier": "AQUAGUARD-600",
+      "display_unit": "GLASS-600",
+      "base_feature_units": [
+        {
+          "wall": "Wall 3",
+          "units": [
+            "DRAWERS4-600"
+          ]
+        },
+        {
+          "wall": "Wall 2",
+          "units": [
+            "WICKER-600"
+          ]
+        }
+      ],
+      "wall_cabinet_sizes": [
+        {
+          "wall": "Wall 3",
+          "units": [
+            "WALL-900"
+          ]
+        }
+      ]
+    }
+  },
+  "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+      "wall_56i56ymve0xf69fm",
+      "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+      "wall_id": "wall_56i56ymve0xf69fm",
+      "aid": "MTBABSU900560700SSDSSLBOEHNS",
+      "center_mm": null
+    },
+    "hob": {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTBABHU900560700DTDASLPUEHNS",
+      "center_mm": 2000.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+      {
+        "wall_id": "wall_49fdugi4g7vj12pf",
+        "aid": "MTTATBIM6005601940SODBMS3DSLLEH1S"
+      }
+    ],
+    "base_prefs": {
+      "wall_49fdugi4g7vj12pf": [
+        "MTBABU600560700DFDSLPUEHNS"
+      ],
+      "wall_56i56ymve0xf69fm": [
+        "MTBABWB600560700ODWB1DSLPUEHNS"
+      ]
+    },
+    "wall_prefs": {
+      "wall_49fdugi4g7vj12pf": [
+        "MTWAWU900330600SDSSLBOEH1S"
+      ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "notes": "Wall 2 has the window, Wall 1 the door near the Wall 4 corner, Wall 3 and Wall 4 are solid. Sink under the window on Wall 2, hob on solid Wall 3, tall storage at the end of Wall 3.",
+    "source": "ollama"
+  },
+  "layout": {
+    "cabinet_walls": [
+      "wall_56i56ymve0xf69fm",
+      "wall_49fdugi4g7vj12pf"
+    ],
+    "placements": {
+      "wall_56i56ymve0xf69fm": [
+        {
+          "aid": "MTBABWB600560700ODWB1DSLPUEHNS",
+          "category": "Base Wicker Basket Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 600,
+          "start_mm": 91.2,
+          "end_mm": 691.2,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTBABU850560700SDSSLBOEH1S",
+          "category": "Base Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 850,
+          "start_mm": 691.2,
+          "end_mm": 1541.2,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTBABSU900560700SSDSSLBOEHNS",
+          "category": "Base Sink Unit",
+          "tier": "base",
+          "role": "sink",
+          "width": 900,
+          "start_mm": 1541.2,
+          "end_mm": 2441.2,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTBABU1000560700SDSSLBOEH1S",
+          "category": "Base Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 1000,
+          "start_mm": 2441.2,
+          "end_mm": 3441.2,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTWAWU550330600SSSSLLEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 550,
+          "start_mm": 91.2,
+          "end_mm": 641.2,
+          "opening": "Left"
+        },
+        {
+          "aid": "MTWAWAU600330600SASSSLLEHNS",
+          "category": "Wall Aquaguard Unit",
+          "tier": "wall",
+          "role": "purifier",
+          "width": 600,
+          "start_mm": 641.2,
+          "end_mm": 1241.2,
+          "opening": "Left"
+        },
+        {
+          "aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+          "category": "Wall Glass Unit",
+          "tier": "wall",
+          "role": "display",
+          "width": 600,
+          "start_mm": 2800.0,
+          "end_mm": 3400.0,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTWCWLC650650600SLCSLBOEH1S",
+          "category": "Wall L Corner",
+          "tier": "wall",
+          "role": "wall_corner",
+          "width": 650,
+          "start_mm": 3400.0,
+          "end_mm": 4050.0,
+          "opening": "Both"
+        }
+      ],
+      "wall_49fdugi4g7vj12pf": [
+        {
+          "aid": "MTBCBCR1050560700SBCRSLREH1S",
+          "category": "Blind corner unit – R",
+          "tier": "base",
+          "role": "corner",
+          "width": 1050,
+          "start_mm": 50.0,
+          "end_mm": 1100.0,
+          "opening": "Right"
+        },
+        {
+          "aid": "MTBABU550560700SSSSLLEH1S",
+          "category": "Base Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 550,
+          "start_mm": 1100.0,
+          "end_mm": 1650.0,
+          "opening": "Left"
+        },
+        {
+          "aid": "MTBABHU900560700DTDASLPUEHNS",
+          "category": "Base Hob Unit",
+          "tier": "base",
+          "role": "hob",
+          "width": 900,
+          "start_mm": 1650.0,
+          "end_mm": 2550.0,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTBABSP300560700DSPSLPUEHNS",
+          "category": "Base Spice Pull Out",
+          "tier": "base",
+          "role": "spice",
+          "width": 300,
+          "start_mm": 2550.0,
+          "end_mm": 2850.0,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTBABU600560700DFDSLPUEHNS",
+          "category": "Base Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 600,
+          "start_mm": 2850.0,
+          "end_mm": 3450.0,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTTATBIM6005601940SODBMS3DSLREH1S",
+          "category": "Tall Built-In Microwave",
+          "tier": "tall",
+          "role": "tall",
+          "width": 600,
+          "start_mm": 3450.0,
+          "end_mm": 4050.0,
+          "opening": "Right"
+        },
+        {
+          "aid": "MTWAWU900330600SDSSLBOEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 900,
+          "start_mm": 700.0,
+          "end_mm": 1600.0,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTWAWU850330600SDSSLBOEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 850,
+          "start_mm": 2600.0,
+          "end_mm": 3450.0,
+          "opening": "Both"
+        }
+      ]
+    },
+    "chimney": {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "center_mm": 2100.0
+    },
+    "corners": [
+      {
+        "walls": [
+          "wall_49fdugi4g7vj12pf",
+          "wall_56i56ymve0xf69fm"
+        ],
+        "base_unit": "MTBCBCR1050560700SBCRSLREH1S",
+        "wall_unit": "MTWCWLC650650600SLCSLBOEH1S",
+        "loft_unit": null,
+        "open_tiers": []
+      }
+    ],
+    "loft_walls": [],
+    "score": 34.0,
+    "decisions": [
+      "Wall 2: purifier unit Wall Aquaguard Unit 600 at 641-1241 mm",
+      "Wall 2: display unit Wall Glass Unit 600 at 2800-3400 mm",
+      "Wall 3: Tall Built-In Microwave 600 hinged Right (towards wall) -> MTTATBIM6005601940SODBMS3DSLREH1S"
+    ],
+    "warnings": []
+  },
+  "nodes_added": {
+    "kitchen": 16,
+    "appliance": 3,
+    "fixture:toe-kick": 2,
+    "fixture:filler": 4,
+    "fixture:countertop": 2,
+    "fixture:backsplash": 5,
+    "fixture:slab": 6,
+    "fixture:floor": 1
+  },
+  "validation_issues": [],
+  "catalog": {
+    "source": "api",
+    "filtered_skus": 484,
+    "door_style": "Slab (Plain)"
+  },
+  "seconds": 0.23
+}

@@ -13,13 +13,17 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 
 # ---------------------------------------------------------------------------
-# Local LLM (Ollama). qwen2.5-coder:3b runs comfortably on a 16 GB RAM CPU-only
-# laptop (~2 GB weights, ~3 GB resident with an 8k context).
+# Local LLM (Ollama). qwen2.5-coder:7b is Apache-2.0 licensed (commercial use
+# allowed); it needs ~5-5.5 GB RAM with an 8k context and takes ~4-5 min per
+# design on a CPU-only laptop. qwen2.5-coder:3b is faster (~2 min) but under the
+# Qwen RESEARCH licence (non-commercial) - set OLLAMA_MODEL to use it for tests.
 # ---------------------------------------------------------------------------
 OLLAMA_HOST = os.getenv("OLLAMA_HOST", "http://127.0.0.1:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:3b")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:7b")
 OLLAMA_AUTO_PULL = os.getenv("OLLAMA_AUTO_PULL", "1") not in ("0", "false", "False")
-OLLAMA_TIMEOUT_S = float(os.getenv("OLLAMA_TIMEOUT_S", "900"))  # CPU inference is slow
+OLLAMA_TIMEOUT_S = float(os.getenv("OLLAMA_TIMEOUT_S", "1200"))  # CPU inference is slow (7B: first design ~8 min)
+# Shown to users while Qwen designs (rough CPU-laptop timing for the model above).
+AI_EXPECTED_TIME = os.getenv("AI_EXPECTED_TIME", "4-5 minutes" if "7b" in OLLAMA_MODEL else "2-3 minutes")
 OLLAMA_KEEP_ALIVE = os.getenv("OLLAMA_KEEP_ALIVE", "10m")
 OLLAMA_OPTIONS = {
     "temperature": 0,
@@ -30,6 +34,12 @@ OLLAMA_OPTIONS = {
 AI_MAX_RETRIES = 1
 AI_SHORTLIST_MIN = 35
 AI_SHORTLIST_MAX = 45
+
+# Designer knowledge taught to Qwen through the prompt (no GPU / no training).
+# v2 = knowledge pack from KNOWLEDGE_DIR (playbook, cabinet guide, worked examples)
+#      + short option codes; v1 = the original prompt, kept for A/B comparison.
+AI_PROMPT_VERSION = os.getenv("MAGICKHOME_PROMPT_VERSION", "v2")
+KNOWLEDGE_DIR = Path(os.getenv("MAGICKHOME_KNOWLEDGE_DIR", str(BASE_DIR / "knowledge")))
 
 # ---------------------------------------------------------------------------
 # Catalogue sources

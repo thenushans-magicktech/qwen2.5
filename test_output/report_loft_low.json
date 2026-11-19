@@ -1,6 +1,7 @@
 {
   "ai": {
-    "shortlist_size": 41,
+    "shortlist_size": 36,
+    "prompt_version": "v2",
     "mode": "fallback"
   },
   "proposal": {
@@ -37,6 +38,8 @@
       ]
     },
     "wall_prefs": {},
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": null,
     "notes": "U-shaped kitchen: sink on Wall 2 under the window, hob on Wall 3, tall storage on Wall 1.",
     "source": "fallback"
   },
@@ -161,13 +164,23 @@
           "opening": "Left"
         },
         {
-          "aid": "MTWAWU600330600SDSSLBOEH1S",
-          "category": "Wall Unit",
+          "aid": "MTWAWAU600330600SASSSLLEHNS",
+          "category": "Wall Aquaguard Unit",
           "tier": "wall",
-          "role": "wall",
+          "role": "purifier",
           "width": 600,
           "start_mm": 2800.0,
           "end_mm": 3400.0,
+          "opening": "Left"
+        },
+        {
+          "aid": "MTWCWLC650650600SLCSLBOEH1S",
+          "category": "Wall L Corner",
+          "tier": "wall",
+          "role": "wall_corner",
+          "width": 650,
+          "start_mm": 3400.0,
+          "end_mm": 4050.0,
           "opening": "Both"
         }
       ],
@@ -233,16 +246,6 @@
           "opening": "Pull Out"
         },
         {
-          "aid": "MTWCWLC650650600SLCSLBOEH1S",
-          "category": "Wall L Corner",
-          "tier": "wall",
-          "role": "wall_corner",
-          "width": 650,
-          "start_mm": 50.0,
-          "end_mm": 700.0,
-          "opening": "Both"
-        },
-        {
           "aid": "MTWAWU900330600SDSSLBOEH1S",
           "category": "Wall Unit",
           "tier": "wall",
@@ -303,6 +306,7 @@
     "loft_walls": [],
     "score": 37.54,
     "decisions": [
+      "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2800-3400 mm",
       "Wall 1: no loft (wall height 2.500 m < 2.658 m)",
       "Wall 2: no loft (wall height 2.500 m < 2.658 m)",
       "Wall 3: no loft (wall height 2.500 m < 2.658 m)"
@@ -325,5 +329,5 @@
     "filtered_skus": 484,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.41
+  "seconds": 0.36
 }

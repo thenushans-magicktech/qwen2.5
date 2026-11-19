@@ -1,6 +1,7 @@
 {
   "ai": {
-    "shortlist_size": 41,
+    "shortlist_size": 36,
+    "prompt_version": "v2",
     "mode": "fallback"
   },
   "proposal": {
@@ -36,6 +37,8 @@
       ]
     },
     "wall_prefs": {},
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "display_aid": null,
     "notes": "L-shaped kitchen: sink on Wall 2 under the window, hob on Wall 1, tall storage on Wall 2.",
     "source": "fallback"
   },
@@ -159,14 +162,14 @@
           "opening": "Left"
         },
         {
-          "aid": "MTWAWU700330600SDSSLBOEH1S",
-          "category": "Wall Unit",
+          "aid": "MTWAWAU600330600SASSSLREHNS",
+          "category": "Wall Aquaguard Unit",
           "tier": "wall",
-          "role": "wall",
-          "width": 700,
-          "start_mm": 2741.2,
+          "role": "purifier",
+          "width": 600,
+          "start_mm": 2841.2,
           "end_mm": 3441.2,
-          "opening": "Both"
+          "opening": "Right"
         }
       ]
     },
@@ -189,7 +192,9 @@
     "loft_walls": [],
     "score": 27.51,
     "decisions": [
-      "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005601940SSSSLREH4S"
+      "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2841-3441 mm",
+      "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005601940SSSSLREH4S",
+      "Wall 2: Wall Aquaguard Unit 600 hinged Right (towards tall) -> MTWAWAU600330600SASSSLREHNS"
     ],
     "warnings": []
   },
@@ -199,7 +204,7 @@
     "fixture:toe-kick": 3,
     "fixture:slab": 6,
     "fixture:countertop": 2,
-    "fixture:backsplash": 5,
+    "fixture:backsplash": 6,
     "fixture:filler": 2,
     "fixture:floor": 1
   },
@@ -209,5 +214,5 @@
     "filtered_skus": 484,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.21
+  "seconds": 0.2
 }

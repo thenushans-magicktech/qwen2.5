@@ -4,7 +4,7 @@ Pipeline (100 % offline):
     empty magickhomes-scene v1 JSON
       -> scene_parser   (walls, openings, corners)
       -> catalog_loader (Assets API or Finalised_Asset_Catalogue_Sheet.xlsx)
-      -> ai_designer    (local Ollama qwen2.5-coder:3b, schema-locked; deterministic fallback)
+      -> ai_designer    (local Ollama Qwen 2.5 Coder, schema-locked; deterministic fallback)
       -> rule_engine    (spatial / ergonomic solver: snapping, packing, clearances)
       -> scene_hydrator (cabinet, appliance and fixture nodes)
     -> hydrated magickhomes-scene v1 JSON for the Three.js renderer
@@ -64,7 +64,7 @@ def generate_kitchen(
     if prefs.ai_mode == "fallback":
         step("Designing with the rule-based designer")
     else:
-        step(f"Qwen ({config.OLLAMA_MODEL}) is designing the kitchen - about 2-3 min on CPU")
+        step(f"Qwen ({config.OLLAMA_MODEL}) is designing the kitchen - about {config.AI_EXPECTED_TIME} on CPU")
     proposal, ai_info = design_kitchen(geometry, catalog, prefs)
     if not prefs.include_tall:
         proposal.tall_units = []
@@ -250,7 +250,7 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(
     title="MagickHome AI Kitchen Layout Generator",
     version="1.0.0",
-    description="Offline kitchen layout generation: Ollama qwen2.5-coder:3b + deterministic rule solver.",
+    description="Offline kitchen layout generation: local Ollama Qwen 2.5 Coder + deterministic rule solver.",
     lifespan=lifespan,
 )
 
@@ -267,7 +267,13 @@ def health() -> dict:
         ensure_model(auto_pull=False)
     except AIUnavailable as exc:
         status = f"unavailable: {exc}"
-    return {"status": "ok", "ollama_model": config.OLLAMA_MODEL, "ollama": status, "catalog": catalog_status()}
+    return {
+        "status": "ok",
+        "ollama_model": config.OLLAMA_MODEL,
+        "ai_expected_time": config.AI_EXPECTED_TIME,
+        "ollama": status,
+        "catalog": catalog_status(),
+    }
 
 
 @app.get("/api/door-styles")
