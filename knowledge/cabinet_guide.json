@@ -200,18 +200,18 @@
       "prompt_note": "glass display - one unit at the end of a run"
     },
     "Wall Lift Up Unit": {
-      "family": "Wall", "zone": "any", "status": "not_yet",
+      "family": "Wall", "zone": "any", "status": "auto",
       "purpose": "Top-hinged or bi-fold doors that lift up, so no door swings at head height.",
-      "choose_when": "Narrow kitchens; short 300-450 mm units above the chimney or a tall appliance.",
-      "avoid": "Users who cannot reach the raised door.",
-      "prompt_note": "lift-up doors, no door at head height"
+      "choose_when": "Wall-door style 'lift_up': a modern look with no door swinging at head height; good in narrow kitchens and above the counter where people work.",
+      "avoid": "Users who cannot reach the raised door (short or elderly users with tall wall units).",
+      "prompt_note": "lift-up doors (used when wall_style is lift_up)"
     },
     "Wall Open Unit": {
-      "family": "Wall", "zone": "display", "status": "not_yet",
-      "purpose": "Open wall shelves for jars and cookbooks.",
-      "choose_when": "At run ends as a style accent.",
-      "avoid": "Above the hob (grease and dust).",
-      "prompt_note": "open wall shelves"
+      "family": "Wall", "zone": "display", "status": "offered",
+      "purpose": "Open shelf wall unit for daily-use jars, tea, coffee and cookbooks.",
+      "choose_when": "One unit at a run end to break a long row of doors, or when daily items need quick reach.",
+      "avoid": "Above or beside the hob (grease and dust settle on open shelves); more than one per kitchen.",
+      "prompt_note": "open shelves - one unit at a run end, away from the hob"
     },
     "Wall Microwave Open Unit": {
       "family": "Wall", "zone": "storage", "status": "not_yet",
@@ -305,11 +305,11 @@
       "prompt_note": "tall pantry with wicker baskets"
     },
     "Tall Glass Unit": {
-      "family": "Tall", "zone": "display", "status": "not_yet",
-      "purpose": "Tall glass display cabinet.",
-      "choose_when": "Open kitchens facing the dining area.",
-      "avoid": "Small closed kitchens.",
-      "prompt_note": "tall glass display"
+      "family": "Tall", "zone": "display", "status": "offered",
+      "purpose": "Glass-front tall crockery unit for dinner sets, glassware and serving bowls.",
+      "choose_when": "The customer wants a crockery unit, or a family that hosts guests and has room for a second tall unit at the dining or entrance end.",
+      "avoid": "Beside the hob or sink (steam and grease cloud the glass); small closed kitchens with one short run.",
+      "prompt_note": "crockery unit - glass doors; at the run end nearest the dining area, away from the hob"
     },
     "Tall Open Unit": {
       "family": "Tall", "zone": "display", "status": "not_yet",

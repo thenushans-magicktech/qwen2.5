@@ -39,6 +39,15 @@ AI_SHORTLIST_MAX = 45
 # v2 = knowledge pack from KNOWLEDGE_DIR (playbook, cabinet guide, worked examples)
 #      + short option codes; v1 = the original prompt, kept for A/B comparison.
 AI_PROMPT_VERSION = os.getenv("MAGICKHOME_PROMPT_VERSION", "v2")
+# Which AI designer: "qwen" (local / Colab Ollama) or "gemini" (Google API, needs GEMINI_API_KEY in the
+# environment - never stored in files). A request can override it with preferences.ai_provider.
+AI_PROVIDER = os.getenv("MAGICKHOME_AI_PROVIDER", "qwen")
+GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
+GEMINI_TIMEOUT_S = float(os.getenv("GEMINI_TIMEOUT_S", "240"))
+# Off (default): Gemini designs from its own judgement - it gets the plain room facts, the cabinet
+# list, the customer's needs and the answer format, but NOT the MagickHome knowledge pack (playbook,
+# worked examples, cabinet notes, rule hints). Set GEMINI_USE_KNOWLEDGE=1 to give it the same prompt as Qwen.
+GEMINI_USE_KNOWLEDGE = os.getenv("GEMINI_USE_KNOWLEDGE", "0").strip().lower() not in ("", "0", "false", "no", "off")
 KNOWLEDGE_DIR = Path(os.getenv("MAGICKHOME_KNOWLEDGE_DIR", str(BASE_DIR / "knowledge")))
 # Finished web-UI designs are saved here so ?job=<id> links survive a server restart.
 JOBS_DIR = Path(os.getenv("MAGICKHOME_JOBS_DIR", str(BASE_DIR / "designs")))
@@ -129,6 +138,13 @@ TIER_DEPTHS_MM = {"base": (560,), "wall": (330, 650), "tall": (560,), "loft": (3
 FLOOR_STANDING_HEIGHT_MM = 800  # base units this tall sit at y=0 (no plinth)
 
 LOFT_TOP_M = POS_Y_M["loft"] + 0.6  # 2.658
+# Height by ceiling: wall cabinets hang from 1440 mm and their top lines up with the tall
+# units' top (tall units stand on the 100 mm plinth). With lofts the standard 600 / 1940 pair
+# is kept (lofts sit on top). Without lofts the tallest pair whose top stays at least
+# CEILING_GAP_MM below the ceiling is used, so storage reaches up instead of leaving a dust shelf.
+WALL_TALL_HEIGHTS_MM = ((900, 2240), (700, 2040), (600, 1940))  # tallest first
+STANDARD_WALL_TALL_MM = (600, 1940)
+CEILING_GAP_MM = 50
 DEFAULT_WALL_THICKNESS_M = 0.1
 DEFAULT_WALL_HEIGHT_M = 2.5
 

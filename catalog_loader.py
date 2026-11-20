@@ -54,6 +54,11 @@ CAT_WALL_SHAKER_GLASS = "wall shaker glass unit"
 CAT_LOFT = "loft - modular"
 CAT_LOFT_FRAME = "loft - frame with shutter"
 CAT_LOFT_CORNER = "loft - l corner - modular"
+CAT_WALL_LIFTUP = "wall lift up unit"   # flap-up / bi-fold wall cabinets (a wall-door style)
+CAT_WALL_OPEN = "wall open unit"        # open shelf unit for daily-use jars at a run end
+CAT_TALL_GLASS = "tall glass unit"      # crockery unit
+# Categories made in one neutral finish ("Common", no handle): kept for every door style.
+STYLE_FREE_CATS = (CAT_WALL_OPEN,)
 # Corner-only categories: the only cabinets allowed where two runs meet.
 CORNER_CATS = (CAT_BCU_L, CAT_BCU_R, CAT_WALL_CORNER, CAT_LOFT_CORNER)
 
@@ -84,7 +89,7 @@ def corner_side_for(item) -> Optional[str]:
 BASE_STORAGE_CATS = (CAT_BASE, CAT_CYLINDER, CAT_GRAIN, CAT_WICKER)
 WALL_STORAGE_CATS = (CAT_WALL,)
 WALL_GLASS_CATS = (CAT_WALL_GLASS, CAT_WALL_SHAKER_GLASS)
-TALL_CATS = (CAT_TALL, CAT_OVEN, CAT_MICRO, CAT_OVEN_MICRO, CAT_TALL_WICKER)
+TALL_CATS = (CAT_TALL, CAT_OVEN, CAT_MICRO, CAT_OVEN_MICRO, CAT_TALL_WICKER, CAT_TALL_GLASS)
 LOFT_CATS = (CAT_LOFT, CAT_LOFT_FRAME)
 
 _DASHES = re.compile(r"[‐-―−]")
@@ -249,6 +254,7 @@ class Catalog:
         self.items: list[CatalogItem] = list(items)
         self.source = source
         self.by_aid: dict[str, CatalogItem] = {it.aid: it for it in self.items}
+        self._origin: Optional[tuple["Catalog", dict]] = None  # (parent, filter args) for at_heights()
 
     def __len__(self) -> int:
         return len(self.items)
@@ -272,16 +278,43 @@ class Catalog:
         for it in self.items:
             if active_only and not it.is_active:
                 continue
-            if door_style and style_key(it.door_style) != ds:
+            style_free = it.cat in STYLE_FREE_CATS
+            if door_style and style_key(it.door_style) != ds and not style_free:
                 continue
-            if handle_type and canon(it.handle_type) != ht:
+            if handle_type and canon(it.handle_type) != ht and not style_free:
                 continue
             if tier_heights is not None and it.height not in tier_heights.get(it.tier, ()):
                 continue
             if tier_depths is not None and it.depth not in tier_depths.get(it.tier, ()):
                 continue
             out.append(it)
-        return Catalog(out, self.source)
+        res = Catalog(out, self.source)
+        res._origin = (self, dict(door_style=door_style, handle_type=handle_type, active_only=active_only,
+                                  tier_heights=tier_heights, tier_depths=tier_depths))
+        return res
+
+    def at_heights(self, wall_mm: int, tall_mm: int) -> "Catalog":
+        """The same selection (door style, handle, depths) with the wall tier at ``wall_mm``
+        and the tall tier at ``tall_mm`` - used when the ceiling allows taller units."""
+        if self._origin is None:
+            return self
+        parent, args = self._origin
+        heights = dict(args.get("tier_heights") or {})
+        heights.update(wall=(wall_mm,), tall=(tall_mm,))
+        return parent.filter(**{**args, "tier_heights": heights})
+
+    def height_variant(self, item: CatalogItem, height: int) -> Optional[CatalogItem]:
+        """The same cabinet (category, width, depth, combination, opening) at another height:
+        exact internals and door type first, then the closest match."""
+        if item.height == height:
+            return item
+        same = [it for it in self.find(item.cat, width=item.width, depth=item.depth, height=height)
+                if canon(it.cabinet_combination) == canon(item.cabinet_combination)]
+        if not same:
+            return None
+        return min(same, key=lambda it: (it.opening_direction != item.opening_direction,
+                                         canon(it.internals) != canon(item.internals),
+                                         canon(it.door_type) != canon(item.door_type)))
 
     def find(
         self,

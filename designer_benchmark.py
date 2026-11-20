@@ -262,15 +262,21 @@ def score_design(geometry, catalog, report: dict, prefs: KitchenPreferences) -> 
 # Runner
 # ---------------------------------------------------------------------------
 
-def run_one(room: Room, version: str, ai_mode: str) -> dict:
+def run_one(room: Room, version: str, ai_mode: str, designer: str = "qwen") -> dict:
+    """One design. ``designer`` = "qwen" or "gemini:<model>"; results are labelled with it."""
     config.AI_PROMPT_VERSION = version
+    provider, _, model = designer.partition(":")
+    if provider == "gemini" and model:
+        config.GEMINI_MODEL = model
+    label = version if designer == "qwen" else designer
     doc = room.build()
-    prefs = KitchenPreferences(ai_mode=ai_mode)
+    prefs = KitchenPreferences(ai_mode=ai_mode, ai_provider=provider)
     t0 = time.time()
     try:
         out, report = generate_kitchen(doc, prefs)
     except Exception as exc:  # a failed design is a result too
-        return {"room": room.key, "version": version, "error": f"{type(exc).__name__}: {exc}", "seconds": round(time.time() - t0, 1)}
+        return {"room": room.key, "version": label, "error": f"{type(exc).__name__}: {exc}", "seconds": round(time.time() - t0, 1)}
+    version = label
     geometry = parse_scene(doc)
     catalog = load_filtered_catalog(prefs.door_style, prefs.handle_type)
     from test_pipeline import verify_scene
@@ -286,8 +292,11 @@ def run_one(room: Room, version: str, ai_mode: str) -> dict:
         **s,
         "verify_errors": errs,
         "seconds": round(time.time() - t0, 1),
-        "llm": {k: ai.get(k) for k in ("seconds", "prompt_tokens", "prompt_seconds", "eval_count", "eval_seconds", "attempts")},
+        "llm": {k: ai.get(k) for k in ("model", "seconds", "prompt_tokens", "prompt_seconds", "eval_count", "eval_seconds",
+                                       "thinking_tokens", "attempts")},
+        "thoughts": (ai.get("thoughts") or "")[:4000],
         "reading": report["proposal"].get("notes", ""),
+        "explanation": report.get("explanation"),
         "proposal": report["proposal"],
         "layout_walls": [geometry.walls[w].name for w in report["layout"]["cabinet_walls"]],
     }
@@ -355,6 +364,8 @@ def write_report(results: list[dict], path: Path, meta: dict) -> None:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--versions", nargs="+", default=["v2", "v1"], choices=["v1", "v2"])
+    ap.add_argument("--designer", default="qwen",
+                    help='"qwen" (Ollama) or "gemini:<model>", e.g. gemini:gemini-flash-latest (needs GEMINI_API_KEY)')
     ap.add_argument("--rooms", nargs="+", default=["all"])
     ap.add_argument("--ai-mode", default="ollama", choices=["ollama", "fallback", "auto"])
     ap.add_argument("--out", default=str(ROOT / "benchmark"))
@@ -364,12 +375,13 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
     started = time.strftime("%Y-%m-%d %H:%M")
     stamp = time.strftime("%Y%m%d_%H%M%S")
-    meta = {"model": config.OLLAMA_MODEL, "ai_mode": args.ai_mode, "started": started}
+    model = config.OLLAMA_MODEL if args.designer == "qwen" else args.designer.partition(":")[2]
+    meta = {"model": model, "designer": args.designer, "ai_mode": args.ai_mode, "started": started}
     results = []
     # One version at a time so Ollama can reuse the cached prompt prefix.
     for v in args.versions:
         for room in rooms:
-            r = run_one(room, v, args.ai_mode)
+            r = run_one(room, v, args.ai_mode, args.designer)
             results.append(r)
             msg = r.get("error") or f"score {r['score']:.0f}% ({r['passed']}/{r['applicable']}), fixes {len(r['corrections'])}, failed {r['failed']}"
             print(f"[{v}] {room.key:22s} {r['seconds']:6.0f}s  {msg}", flush=True)

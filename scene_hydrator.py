@@ -221,6 +221,16 @@ class SceneHydrator:
             self._attach(chim, wall.id)
 
     # -- fixtures ---------------------------------------------------------------------
+    def _wall_zone(self, spec: dict) -> dict:
+        """A fixture spec made for 600 mm wall units, stretched to this kitchen's wall-cabinet height."""
+        h = (self.layout.heights or {}).get("wall_mm", 600) / 1000.0
+        return dict(spec, y=config.POS_Y_M["wall"] + h / 2, thickness=h)
+
+    def _tall_zone(self, spec: dict) -> dict:
+        """A fixture spec made for 1940 mm tall units, stretched to this kitchen's tall-unit height."""
+        h = (self.layout.heights or {}).get("tall_mm", 1940) / 1000.0
+        return dict(spec, y=config.POS_Y_M["tall"] + h / 2, thickness=h)
+
     def _fixture(self, wall: Wall, kind: str, suffix: str, x0_mm: float, x1_mm: float, y: float, z: float,
                  thickness: float, depth: float, level: Optional[str] = None, **extra) -> Optional[dict]:
         width = (x1_mm - x0_mm) / 1000.0
@@ -386,7 +396,7 @@ class SceneHydrator:
             for side in ("lo", "hi"):
                 x = run[0].start_mm if side == "lo" else run[-1].end_mm
                 kind, target, dist = self._end(wall, "base", run, side)
-                tf = config.TALL_FILLER
+                tf = self._tall_zone(config.TALL_FILLER)
                 if kind == "filler":
                     a, b = (target, x) if side == "lo" else (x, target)
                     self._fixture(wall, "filler", f"tall_{side}_run{i}", a, b, tf["y"], tf["z"], tf["thickness"],
@@ -402,11 +412,11 @@ class SceneHydrator:
                     s = config.TALL_SIDE_SLAB_COUNTER
                     self._fixture(wall, "slab", f"tall_side_{side}_run{i}_counter", a, a + P, s["y"], s["z"], s["thickness"],
                                   s["depth"], level="tall", extraDepthM=config.PANEL_T_M)
-                    s = config.TALL_SIDE_SLAB_WALL if wall_next else dict(config.WALL_SLAB, depth=0.578, z=0.339)
+                    s = self._wall_zone(config.TALL_SIDE_SLAB_WALL if wall_next else dict(config.WALL_SLAB, depth=0.578, z=0.339))
                     self._fixture(wall, "slab", f"tall_side_{side}_run{i}_upper", a, a + P, s["y"], s["z"], s["thickness"],
                                   s["depth"], level="tall", extraDepthM=config.PANEL_T_M)
                 else:
-                    s = config.TALL_SIDE_SLAB_FULL
+                    s = self._tall_zone(config.TALL_SIDE_SLAB_FULL)
                     self._fixture(wall, "slab", f"tall_side_{side}_run{i}_full", a, a + P, s["y"], s["z"], s["thickness"],
                                   s["depth"], level="tall", extraDepthM=config.PANEL_T_M)
 
@@ -421,7 +431,7 @@ class SceneHydrator:
                 depth = end_unit.item.depth / 1000.0
                 if kind == "filler" or (kind == "neighbor" and dist > EPS):
                     a, b = (target, x) if side == "lo" else (x, target)
-                    wf = config.WALL_FILLER
+                    wf = self._wall_zone(config.WALL_FILLER)
                     front_z = face + depth + config.PANEL_T_M / 2
                     self._fixture(wall, "filler", f"wall_{side}_run{i}", a, b, wf["y"], front_z, wf["thickness"],
                                   config.PANEL_T_M, level="wall", frontShiftM=0)
@@ -431,18 +441,19 @@ class SceneHydrator:
                 elif kind == "exposed":
                     a = x - P if side == "lo" else x
                     d = depth + config.PANEL_T_M
-                    ws = config.WALL_SLAB
+                    ws = self._wall_zone(config.WALL_SLAB)
                     self._fixture(wall, "slab", f"wall_{side}_run{i}", a, a + P, ws["y"], face + d / 2, ws["thickness"], d,
                                   level="wall", frontShiftM=0, extraDepthM=config.PANEL_T_M)
                     occupied.append((a, a + P))
             for j, (a, b) in enumerate(zip(run, run[1:])):
                 if b.start_mm - a.end_mm > EPS:
-                    wf = config.WALL_FILLER
+                    wf = self._wall_zone(config.WALL_FILLER)
                     self._fixture(wall, "filler", f"wall_mid_run{i}_{j}", a.end_mm, b.start_mm, wf["y"], wf["z"],
                                   wf["thickness"], config.PANEL_T_M, level="wall", frontShiftM=0)
                     occupied.append((a.end_mm, b.start_mm))
         # upper backsplash: counter spans not covered by wall-tier items or windows
         bk = config.BACKSPLASH
+        up = self._wall_zone({"y": bk["upper_y"], "thickness": bk["thickness"]})
         # the perpendicular wall's corner cabinets occupy the wall-tier corner zone
         occupied += [(f.lo, f.hi) for f in lay.features.get((wall.id, "wall"), []) if f.kind == "corner"]
         for k, (c0, c1) in enumerate(counter_spans):
@@ -450,11 +461,11 @@ class SceneHydrator:
             for a, b in occupied:
                 spans = _cut(spans, a, b)
             for w in wall.windows:
-                if w.top_m > 1.44 and w.bottom_m < 2.04:
+                if w.top_m > up["y"] - up["thickness"] / 2 and w.bottom_m < up["y"] + up["thickness"] / 2:
                     spans = _cut(spans, w.start_mm, w.end_mm)
             for m, (a, b) in enumerate(spans):
                 if b - a >= 10:
-                    self._fixture(wall, "backsplash", f"upper{k}_{m}", a, b, bk["upper_y"], bk["z"], bk["thickness"], bk["depth"])
+                    self._fixture(wall, "backsplash", f"upper{k}_{m}", a, b, up["y"], bk["z"], up["thickness"], bk["depth"])
 
         # ---- lofts -----------------------------------------------------------------
         loft_ps = lay.on(wall.id, "loft")

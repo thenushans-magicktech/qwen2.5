@@ -28,14 +28,30 @@ SIZES
 - Tall units: one or two per kitchen. A built-in oven or microwave tall unit for families who bake or reheat a lot; otherwise a pantry.
 
 CUSTOMER NEEDS
-- Needs the customer stated are fixed: follow them exactly (purifier, gas, built-in appliances, display).
+- Needs the customer stated are fixed: follow them exactly (purifier, gas, built-in appliances, display, lofts,
+  wall doors, open shelves, crockery).
 - When a need is not stated, decide from the brief and the room, and say so in the reason.
   Purifier not stated: most Indian homes use a wall purifier, but skip it if the brief mentions an under-sink RO.
   Gas not stated: an LPG unit only if the hob wall is long enough. Display not stated: only for a long run or a
   'display / glass / open look' brief.
 - Read the brief: bakes -> oven tower; reheats daily -> microwave tower; big family or heavy cooking -> 900 drawer
   hob, more drawers, grain trolley; small family or light cooking -> compact units.
+- base_storage (style of the plain base cabinets) when not stated: "drawers" for heavy daily cooking or 5+ people
+  (pans and vessels stay reachable); "mixed" (a cutlery drawer on top, shelf below) for most homes; "shutters" for
+  light cooking or a tight budget.
 - Every *_why names the room fact or the customer need that decides the choice, e.g. "customer has piped gas".
+
+UPPER STORAGE (lofts, wall doors, open shelves, crockery)
+- Lofts: most Indian kitchens have lofts above the wall cabinets for big vessels, festival items and bulk stock.
+  Say yes when the ceiling allows (2658 mm+) unless the customer said no or the brief asks for a minimal, airy look.
+- Without lofts the wall and tall units are made taller automatically (700 or 900 mm wall units with 2040 or
+  2240 mm tall units), so storage reaches up to the ceiling instead of leaving a dusty top shelf.
+- wall_style: "shutters" (hinged doors) is the standard and costs least. "lift_up" (flap-up doors) for a modern
+  look, narrow kitchens where open doors hit heads, or a brief that mentions lift-up / flap-up / hydraulic doors.
+- Open shelf unit (OPEN-...): at most one, at a run end away from the hob, for daily jars, tea and coffee. Only for
+  a brief that mentions open shelves or an open look - otherwise NONE (open shelves gather grease and dust).
+- Crockery unit (CROCKERY-... tall unit): for families who host guests or a brief that mentions crockery, dinner
+  sets or a showcase; at the run end nearest the dining area, never beside the hob or sink.
 
 CORNERS
 - Corners take only corner cabinets. The solver adds them automatically; never list them.

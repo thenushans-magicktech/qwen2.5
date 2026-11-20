@@ -45,6 +45,8 @@ from catalog_loader import (
     CAT_SPICE,
     CAT_WALL,
     CAT_WALL_CORNER,
+    CAT_WALL_LIFTUP,
+    CAT_WALL_OPEN,
     CORNER_CATS,
     TALL_CATS,
     WALL_GLASS_CATS,
@@ -66,10 +68,13 @@ STRONG_HINGE_OBSTACLES = frozenset({"wall", "door", "swing", "corner", "tall"})
 # Base-run fill styles: plain storage runs are packed with these combinations first.
 BASE_FILL_STYLES = {
     "drawers": ("Double Drawer", "Drawer with Double Shutter", "Drawer with Single Shutter"),
+    "mixed": ("Drawer with Double Shutter", "Drawer with Single Shutter"),  # top drawer + shelf below
     "shutters": ("Double Shutter", "Single Shutter"),
 }
 # Placements the repair pass may drop to resolve a conflict (never sink/hob/corners).
-REMOVABLE_ROLES = ("storage", "wall", "loft", "loft_deep", "purifier", "display")
+REMOVABLE_ROLES = ("storage", "wall", "loft", "loft_deep", "purifier", "display", "open")
+# Wall-door style "lift_up": these flap-up combinations are used first where the width exists.
+LIFT_UP_COMBOS = ("Single Top Lift Shutter", "Bi-Fold Lift Shutter")
 
 # Vertical extent of each placement zone (metres) - used for opening clashes.
 ZONE_Y = {"base": (0.0, 0.84), "wall": (1.44, 2.04), "loft": (2.058, config.LOFT_TOP_M)}
@@ -105,6 +110,10 @@ class Proposal:
     purifier_aid: Optional[str] = None  # Wall Aquaguard Unit, hung beside the sink window
     purifier_required: bool = False  # the customer asked for it: try harder before giving up
     display_aid: Optional[str] = None  # glass wall unit at the end of a run
+    open_unit_aid: Optional[str] = None  # open wall shelf unit at the end of a run
+    base_storage: Optional[str] = None  # designer's base cabinet style: drawers | mixed | shutters
+    lofts: Optional[bool] = None  # designer's loft decision (used when the customer did not say)
+    wall_style: Optional[str] = None  # designer's wall-door style: shutters | lift_up
     reasons: dict[str, str] = field(default_factory=dict)  # designer's one-line reason per decision
     notes: str = ""
     source: str = "fallback"
@@ -123,6 +132,10 @@ class Proposal:
             "purifier_aid": self.purifier_aid,
             "purifier_required": self.purifier_required,
             "display_aid": self.display_aid,
+            "open_unit_aid": self.open_unit_aid,
+            "base_storage": self.base_storage,
+            "lofts": self.lofts,
+            "wall_style": self.wall_style,
             "reasons": self.reasons,
             "notes": self.notes,
             "source": self.source,
@@ -135,7 +148,11 @@ class SolverPrefs:
     layout: str = "auto"  # auto | single | L | U
     cabinet_walls: Optional[list[str]] = None
     sink_under_window: bool = True
-    base_storage: str = "auto"  # auto | drawers | shutters - what the plain base runs are filled with
+    base_storage: str = "auto"  # auto | drawers | mixed | shutters - what the plain base runs are filled with
+    wall_style: str = "shutters"  # shutters | lift_up - doors of the plain wall cabinets
+    # Set by solve_layout() from the ceiling height (see height_plan); 600 / 1940 = standard.
+    wall_height_mm: int = 600
+    tall_height_mm: int = 1940
 
 
 @dataclass
@@ -245,6 +262,7 @@ class KitchenLayout:
     decisions: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     score: float = 0.0
+    heights: dict = field(default_factory=dict)  # height plan: wall_mm, tall_mm, lofts, ceiling_mm, why
 
     def on(self, wall_id: str, *zones: str) -> list[Placement]:
         zs = set(zones) if zones else {"base", "wall", "loft"}
@@ -313,6 +331,7 @@ class KitchenLayout:
                 for c in self.corner_plans
             ],
             "loft_walls": self.loft_walls,
+            "heights": self.heights,
             "score": round(self.score, 2),
             "decisions": self.decisions,
             "warnings": self.warnings,
@@ -412,10 +431,12 @@ def _dp_fill(n_steps: int, widths_costs: tuple[tuple[int, float], ...]) -> tuple
 class Pool:
     """Default SKU per width for one fill context (e.g. base storage)."""
 
-    def __init__(self, items_by_width: dict[int, CatalogItem], narrow: Optional[dict[int, CatalogItem]] = None):
+    def __init__(self, items_by_width: dict[int, CatalogItem], narrow: Optional[dict[int, CatalogItem]] = None,
+                 extra_cost: Optional[dict[int, float]] = None):
         self.by_width = dict(items_by_width)
         self.narrow = {w: it for w, it in (narrow or {}).items() if w not in self.by_width}
-        costs = [(w, _unit_cost(w)) for w in self.by_width] + [(w, _unit_cost(w, True)) for w in self.narrow]
+        extra = extra_cost or {}
+        costs = [(w, _unit_cost(w) + extra.get(w, 0.0)) for w in self.by_width] + [(w, _unit_cost(w, True)) for w in self.narrow]
         self.widths_costs = tuple(sorted(c for c in costs if c[0] % config.GRID_MM == 0))
         self.min_width = min((w for w, _ in self.widths_costs), default=10**9)
         # Narrow units (e.g. 150 mm pull-outs) are a last resort for the DP only;
@@ -552,11 +573,22 @@ class LayoutSolver:
         self.prefs = prefs
         self.decisions: list[str] = []
         self.warnings: list[str] = []
+        # Wall / tall heights from the height plan; the wall zone grows with the wall cabinets.
+        self.wall_h, self.tall_h = prefs.wall_height_mm, prefs.tall_height_mm
+        wall_y0 = ZONE_Y["wall"][0]
+        self.zone_y = dict(ZONE_Y, wall=(wall_y0, wall_y0 + self.wall_h / 1000.0))
 
         self.base_pool = self._pool(
             (CAT_BASE,), "base", height=700, narrow_cats=(CAT_SPICE,), prefer=BASE_FILL_STYLES.get(prefs.base_storage)
         )
-        self.wall_pool = self._pool((CAT_WALL,), "wall", height=600, depth=330)
+        lift = prefs.wall_style == "lift_up"
+        self.wall_pool = self._pool((CAT_WALL, CAT_WALL_LIFTUP) if lift else (CAT_WALL,), "wall", height=self.wall_h,
+                                    depth=330, prefer=LIFT_UP_COMBOS if lift else None)
+        if not self.wall_pool.by_width:  # no wall units at this height: standard height
+            self.wall_pool = self._pool((CAT_WALL,), "wall", height=600, depth=330)
+        elif lift:  # pack runs with widths that have a lift-up version whenever the run still fills
+            by_w = self.wall_pool.by_width
+            self.wall_pool = Pool(by_w, extra_cost={w: 0.4 for w, it in by_w.items() if it.cat != CAT_WALL_LIFTUP})
         self.loft_pool = self._pool((CAT_LOFT,), "loft", height=600, depth=330)
         self.loft_deep_pool = self._pool((CAT_LOFT,), "loft", height=600, depth=560)
         if not self.base_pool.by_width:
@@ -648,7 +680,7 @@ class LayoutSolver:
 
     def _door_features(self, wall: Wall, zone: str) -> list[Feature]:
         out = []
-        y0, _ = ZONE_Y[zone]
+        y0, _ = self.zone_y[zone]
         for d in wall.doors:
             if d.top_m > y0 + 1e-6:
                 lo, hi = d.interval(config.DOOR_CLEARANCE_MM)
@@ -660,7 +692,7 @@ class LayoutSolver:
         for wid, wall in self.g.walls.items():
             for zone in ("base", "wall", "loft"):
                 fl = self._door_features(wall, zone)
-                y0, y1 = ZONE_Y[zone]
+                y0, y1 = self.zone_y[zone]
                 if zone != "base":
                     for w in wall.windows:
                         if w.top_m > y0 + 1e-6 and w.bottom_m < y1 - 1e-6:
@@ -676,7 +708,7 @@ class LayoutSolver:
                     if wid == door.wall_id:
                         continue
                     for zone in ("base", "wall", "loft"):
-                        if door.top_m <= ZONE_Y[zone][0]:
+                        if door.top_m <= self.zone_y[zone][0]:
                             continue
                         for lo, hi in self._project(poly, wall, ZONE_DEPTH_MM[zone]):
                             feats[(wid, zone)].append(Feature(lo, hi, "swing", door.id))
@@ -1139,6 +1171,9 @@ class LayoutSolver:
         for aid in self.proposal.wall_prefs.get(wid, []):
             it = self.cat.get(aid)
             if it is not None and it.cat == CAT_WALL and it.depth == 330 and it.width % config.GRID_MM == 0:
+                if self.prefs.wall_style == "lift_up":  # same width, flap-up door where one exists
+                    lift = self.wall_pool.by_width.get(it.width)
+                    it = lift if lift is not None and lift.cat == CAT_WALL_LIFTUP else it
                 out.append(it)
         return out
 
@@ -1351,7 +1386,7 @@ class LayoutSolver:
         candidates: list[tuple[str, object]] = []
         order = [(a, a_end, b, b_end), (b, b_end, a, a_end)]
         if zone == "wall":
-            lc = self._default((CAT_WALL_CORNER,), tier="wall", height=600)
+            lc = self._default((CAT_WALL_CORNER,), tier="wall", height=self.wall_h)
             if lc is not None:
                 candidates.append(("L", lc))
             candidates += [("blind", 730), ("blind", 830)]
@@ -1372,7 +1407,7 @@ class LayoutSolver:
                         continue  # one-handed L model: the corner must be on the viewer's right
                 else:
                     cat = CAT_BCU_L if walls[x].side_of(x_end) == "right" else CAT_BCU_R
-                    item, reserve = self._default((cat,), width=spec, tier="wall", height=600), depth_reg
+                    item, reserve = self._default((cat,), width=spec, tier="wall", height=self.wall_h), depth_reg
                     if item is None:
                         continue
                 lo, hi = walls[x].usable
@@ -1413,7 +1448,9 @@ class LayoutSolver:
 
         * water purifier (Wall Aquaguard Unit): on the sink wall, as close to the
           window / sink as the wall space allows (within 1.5 m);
-        * glass display unit: at the end of a wall-cabinet run, away from the chimney.
+        * glass display unit: at the end of a wall-cabinet run, away from the chimney;
+        * open shelf unit: at a run end too (the free one after the display), away from
+          the chimney so jars on it stay out of the cooking grease.
         """
         p = self.proposal
         pur = self._resolve(p.purifier_aid, (CAT_AQUAGUARD,), "water purifier unit", "wall")
@@ -1430,6 +1467,11 @@ class LayoutSolver:
                     targets += [(wid, lo), (wid, hi)]
             if not self._place_wall_feature(layout, disp, "display", targets, max_dist=900, avoid_chimney=True):
                 layout.warnings.append("display unit skipped: no free run end for it")
+        op = self._resolve(p.open_unit_aid, (CAT_WALL_OPEN,), "open shelf unit", "wall")
+        if op is not None:
+            targets = [(wid, x) for wid in self.walls for lo, hi in self._wall_cover(layout, wid) for x in (lo, hi)]
+            if not self._place_wall_feature(layout, op, "open", targets, max_dist=900, avoid_chimney=True):
+                layout.warnings.append("open shelf unit skipped: no free run end for it")
 
     def _place_purifier(self, layout: KitchenLayout, pur: CatalogItem, required: bool) -> None:
         """Purifier near the sink: the chosen unit, then the other purifier types and
@@ -1787,5 +1829,84 @@ def suggest_cabinet_walls(g: RoomGeometry, layout: str = "auto") -> list[str]:
     return [anchor, neighbors[0]]
 
 
+def height_plan(geometry: RoomGeometry, lofts: bool) -> dict:
+    """Wall / tall cabinet heights for this room (lowest wall height = the ceiling).
+
+    * lofts wanted and the ceiling reaches the loft top: standard 600 wall / 1940 tall
+      units with lofts above them;
+    * otherwise the tallest matching pair (900/2240, 700/2040, 600/1940) whose top stays
+      ``CEILING_GAP_MM`` below the ceiling - more storage, no dust shelf on top.
+    The wall cabinets' top always lines up with the tall units' top.
+    """
+    ceiling = round(min(w.height_m for w in geometry.walls.values()) * 1000)
+    bottom = round(config.POS_Y_M["wall"] * 1000)
+    loft_top = round(config.LOFT_TOP_M * 1000)
+    std_w, std_t = config.STANDARD_WALL_TALL_MM
+    if lofts and ceiling + 1 >= loft_top:
+        return {"wall_mm": std_w, "tall_mm": std_t, "lofts": True, "ceiling_mm": ceiling, "top_mm": bottom + std_w,
+                "why": f"Lofts fill the space above: {std_w} mm wall and {std_t} mm tall units with lofts on top "
+                       f"up to {loft_top} mm (ceiling {ceiling} mm)."}
+    w, t = next(((w, t) for w, t in config.WALL_TALL_HEIGHTS_MM if bottom + w <= ceiling - config.CEILING_GAP_MM),
+                (std_w, std_t))
+    if ceiling + 1 < loft_top:
+        lead = f"No lofts: the ceiling ({ceiling} mm) is below the {loft_top} mm a loft needs, so"
+    else:
+        lead = "No lofts, so"
+    tail = ("the tallest units that fit are used" if (w, t) != (std_w, std_t)
+            else "standard heights are used")
+    return {"wall_mm": w, "tall_mm": t, "lofts": False, "ceiling_mm": ceiling, "top_mm": bottom + w,
+            "why": f"{lead} {tail}: {w} mm wall and {t} mm tall units, tops level at {bottom + w} mm "
+                   f"under a {ceiling} mm ceiling."}
+
+
+def _proposal_at_heights(proposal: Proposal, catalog: Catalog, hcat: Catalog, wall_mm: int, tall_mm: int):
+    """Swap the designer's wall / tall SKUs for the same cabinets at the planned heights."""
+    notes: list[str] = []
+
+    def swap(aid: Optional[str]) -> Optional[str]:
+        it = catalog.get(aid) if aid else None
+        if it is None or it.tier not in ("wall", "tall"):
+            return aid
+        v = hcat.height_variant(it, wall_mm if it.tier == "wall" else tall_mm)
+        if v is None:
+            notes.append(f"{it.category} {it.width} has no {wall_mm if it.tier == 'wall' else tall_mm} mm version - left out")
+            return None
+        return v.aid
+
+    from dataclasses import replace
+
+    return replace(
+        proposal,
+        tall_units=[(w, a) for w, a in ((w, swap(a)) for w, a in proposal.tall_units) if a],
+        wall_prefs={w: [a for a in map(swap, aids) if a] for w, aids in proposal.wall_prefs.items()},
+        purifier_aid=swap(proposal.purifier_aid),
+        display_aid=swap(proposal.display_aid),
+        open_unit_aid=swap(proposal.open_unit_aid),
+    ), notes
+
+
 def solve_layout(geometry: RoomGeometry, catalog: Catalog, proposal: Proposal, prefs: Optional[SolverPrefs] = None) -> KitchenLayout:
-    return LayoutSolver(geometry, catalog, proposal, prefs or SolverPrefs()).solve()
+    from dataclasses import replace
+
+    prefs = prefs or SolverPrefs()
+    plan = height_plan(geometry, prefs.include_loft)
+    notes: list[str] = []
+    if (plan["wall_mm"], plan["tall_mm"]) != (prefs.wall_height_mm, prefs.tall_height_mm):
+        hcat = catalog.at_heights(plan["wall_mm"], plan["tall_mm"])
+        if hcat is not catalog:
+            proposal, notes = _proposal_at_heights(proposal, catalog, hcat, plan["wall_mm"], plan["tall_mm"])
+            catalog = hcat
+        else:  # catalogue without filter history (tests): keep the given heights
+            w, t = prefs.wall_height_mm, prefs.tall_height_mm
+            plan.update(wall_mm=w, tall_mm=t, top_mm=round(config.POS_Y_M["wall"] * 1000) + w,
+                        why=f"{w} mm wall and {t} mm tall units (only these heights are loaded).")
+    wanted_lofts = prefs.include_loft
+    prefs = replace(prefs, include_loft=plan["lofts"], wall_height_mm=plan["wall_mm"], tall_height_mm=plan["tall_mm"])
+    layout = LayoutSolver(geometry, catalog, proposal, prefs).solve()
+    layout.heights = plan
+    layout.decisions.insert(0, f"heights: {plan['why']}")
+    if wanted_lofts and not plan["lofts"]:
+        layout.decisions.insert(0, f"no loft: the ceiling ({plan['ceiling_mm']} mm) is lower than the "
+                                   f"{round(config.LOFT_TOP_M * 1000)} mm a loft needs")
+    layout.warnings.extend(notes)
+    return layout

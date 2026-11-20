@@ -1,0 +1,2385 @@
+{
+ "meta": {
+  "model": "qwen2.5-coder:7b",
+  "designer": "qwen",
+  "ai_mode": "ollama",
+  "started": "2026-11-20 10:01"
+ },
+ "results": [
+  {
+   "room": "reference",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 100.0,
+   "passed": 14,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [],
+   "corrections": [],
+   "hob_shift_mm": 10,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 34.0,
+   "llm": {
+    "model": "qwen2.5-coder:7b",
+    "seconds": 30.6,
+    "prompt_tokens": 4813,
+    "prompt_seconds": 4.0,
+    "eval_count": 751,
+    "eval_seconds": 22.1,
+    "thinking_tokens": null,
+    "attempts": 1
+   },
+   "thoughts": "",
+   "reading": "Window wall: Wall 2, Door wall: Wall 1, Door near Wall 4 corner, Long solid walls: Wall 2, Wall 3, Wall 4 WET zone: Sink centred at 1991 on Wall 2. COOKING zone: Hob on Wall 1, Chimney on Wall 3. STORAGE zone: Tall pantry at the free end of Wall 3 near the entrance. Work triangle: Sink -> Hob -> Tall Pan.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "U-shape on Wall 1, Wall 2, Wall 3",
+     "why": "U-shape on Wall 2 with an aisle of 2880 mm, allowing for more storage and counter space.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 4100 mm long, door 85-985 mm, longest free run 2965 mm",
+      "Wall 2: 4100 mm long, window 1241-2741 mm, longest free run 4000 mm",
+      "Wall 3: 4100 mm long, longest free run 4000 mm",
+      "Not used: Wall 4: 4100 mm long, longest free run 4000 mm",
+      "U-shape aisle between the side runs: 2880 mm (needs 1200+)",
+      "2 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": null,
+     "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
+     "why": "Window wall is 4100 mm, allowing for a SINK-1050.",
+     "source": "qwen",
+     "details": [
+      "Unit: 1050 x 560 x 700 mm (W x D x H) - shutters, room for pipes; window wall 3000+ mm free",
+      "Window 1500 mm wide, centre at 1991 mm; sink centre at 1991 mm (centred)",
+      "Wall 2 free run 4000 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 1, chimney above",
+     "why": "Long hob wall, centered at 2150 on Wall 1, with a 3-drawer hob unit.",
+     "source": "qwen",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 1 has no window - a solid wall for the chimney",
+      "Nearest door on this wall is 705 mm from the hob (keep 600+)",
+      "Asked for the hob centre at 2150 mm; built at 2140 mm",
+      "Beside it: Spice pull-out 300 mm (Spice Pullout) / Base cabinet 900 mm (Double Drawer)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 2.3 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "qwen",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "None",
+     "why": "Gas supply not stated, so no LPG unit.",
+     "source": "qwen",
+     "details": [
+      "Hob wall free run 2965 mm (a cylinder unit needs about 600 mm more)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 3",
+     "why": "Customer wants tall storage, so a pantry at the free end of Wall 3.",
+     "source": "qwen",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 3 at 3450-4050 mm - end of the run, clear of windows",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "None",
+     "why": "Water purifier not stated, so no purifier cabinet.",
+     "source": "qwen",
+     "details": [
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "None",
+     "why": "Glass display not stated, so no display unit.",
+     "source": "qwen",
+     "details": [],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer units: 9 of 9 storage cabinets have drawers",
+     "why": "Customer wants tall storage, so a pantry at the free end of Wall 3.",
+     "source": "qwen",
+     "details": [
+      "3 x Base cabinet - Drawer with Single Shutter",
+      "3 x Base cabinet - Double Drawer",
+      "1 x Vegetable basket - Open Wicker Unit With 1 Bottom Drawer",
+      "1 x Grain trolley - Grain Trolley With 1 External Drawer",
+      "1 x Base cabinet - Four Drawer",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "4 of 4 requested units built",
+     "why": "Drawers right beside the hob for easy access to cutlery and tools.",
+     "source": "qwen",
+     "details": [
+      "Base cabinet 800 mm (Four Drawer): asked for Wall 1 -> built on Wall 3 at 1700-2500 mm (moved from Wall 1: no room there) - cutlery, ladles, small tools - best right beside the hob",
+      "Base cabinet 900 mm (Double Drawer): asked for Wall 1 -> built on Wall 1 at 2590-3490 mm - deep drawers for pans, kadai and plates - hob wall",
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> built on Wall 2 at 2516-3116 mm - vegetables, onions, potatoes - near the sink",
+      "Grain trolley 600 mm (Grain Trolley With 1 External Drawer): asked for Wall 3 -> built on Wall 3 at 1100-1700 mm - bins + an outside drawer"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "8 wall cabinets",
+     "why": "Wide units for a calm, aligned look.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 2 cabinets (550, 750 mm); sizes asked 900, 900; kept clear: chimney zone",
+      "Wall 2: 2 cabinets (500, 600 mm); sizes asked 800; kept clear: window 1241-2741",
+      "Wall 3: 4 cabinets (600, 850, 700, 600 mm); sizes asked 600"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "2 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 2 / Wall 1: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 2; wall - Corner wall cabinet 650 mm (L Corner) on Wall 1",
+      "Wall 3 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 3; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1050560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 2150.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU800560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "purifier_required": false,
+    "display_aid": null,
+    "base_storage": "drawers",
+    "reasons": {
+     "layout": "U-shape on Wall 2 with an aisle of 2880 mm, allowing for more storage and counter space.",
+     "sink": "Window wall is 4100 mm, allowing for a SINK-1050.",
+     "hob": "Long hob wall, centered at 2150 on Wall 1, with a 3-drawer hob unit.",
+     "lpg": "Gas supply not stated, so no LPG unit.",
+     "tall": "Customer wants tall storage, so a pantry at the free end of Wall 3.",
+     "purifier": "Water purifier not stated, so no purifier cabinet.",
+     "display": "Glass display not stated, so no display unit.",
+     "features": "Drawers right beside the hob for easy access to cutlery and tools.",
+     "storage": "Customer wants tall storage, so a pantry at the free end of Wall 3.",
+     "wall_cabinets": "Wide units for a calm, aligned look."
+    },
+    "notes": "Window wall: Wall 2, Door wall: Wall 1, Door near Wall 4 corner, Long solid walls: Wall 2, Wall 3, Wall 4 WET zone: Sink centred at 1991 on Wall 2. COOKING zone: Hob on Wall 1, Chimney on Wall 3. STORAGE zone: Tall pantry at the free end of Wall 3 near the entrance. Work triangle: Sink -> Hob -> Tall Pan.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "compact",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 91.7,
+   "passed": 11,
+   "applicable": 12,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": null,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": false,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": null,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "sink_size_suits_wall"
+   ],
+   "corrections": [
+    "hob moved to Wall 3 (clearances on proposed wall failed)",
+    "tall unit(s) dropped: they left no legal hob position"
+   ],
+   "hob_shift_mm": null,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 27.6,
+   "llm": {
+    "model": "qwen2.5-coder:7b",
+    "seconds": 26.3,
+    "prompt_tokens": 4808,
+    "prompt_seconds": 0.7,
+    "eval_count": 774,
+    "eval_seconds": 25.3,
+    "thinking_tokens": null,
+    "attempts": 1
+   },
+   "thoughts": "",
+   "reading": "Window wall: Wall 2, Door wall: Wall 4, Door near: Wall 4 corner, Long solid walls: Wall 1 and Wall 3 WET zone: sink centred at 1350 on Wall 2. COOKING zone: hob on Wall 1, 1050 mm from the door. STORAGE zone: tall pantry at the free end of Wall 3 near the entrance.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "U-shape on Wall 1, Wall 2, Wall 3",
+     "why": "U-shape on Wall 2 with an aisle of 1480 mm, allowing for a compact yet functional layout.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 2400 mm long, longest free run 2300 mm",
+      "Wall 2: 2700 mm long, window 850-1850 mm, longest free run 2600 mm",
+      "Wall 3: 2400 mm long, longest free run 2300 mm",
+      "Not used: Wall 4: 2700 mm long, door 1600-2500 mm, longest free run 1450 mm",
+      "U-shape aisle between the side runs: 1480 mm (needs 1200+)",
+      "2 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": null,
+     "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
+     "why": "Window wall is Wall 2, and the sink is centred at 1350, which is standard for most kitchens.",
+     "source": "qwen",
+     "details": [
+      "Unit: 1050 x 560 x 700 mm (W x D x H) - shutters, room for pipes; window wall 3000+ mm free",
+      "Window 1000 mm wide, centre at 1350 mm; sink centre at 1350 mm (centred)",
+      "Wall 2 free run 2600 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 3, chimney above",
+     "why": "Solid wall, hob centre range is 1050-1350, and it's farther from the door.",
+     "source": "qwen",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 3 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Beside it: Spice pull-out 300 mm (Spice Pullout) / free end",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 1.8 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [
+      "hob moved to Wall 3 (clearances on proposed wall failed)"
+     ],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "qwen",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "None",
+     "why": "Not stated, and the hob wall is too short for an LPG unit.",
+     "source": "qwen",
+     "details": [
+      "Hob wall free run 2300 mm (a cylinder unit needs about 600 mm more)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": "Tall pantry 600 mm (Single Shutter)",
+     "built": "None",
+     "why": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "source": "qwen",
+     "details": [
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [
+      "tall unit(s) dropped: they left no legal hob position"
+     ],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "None",
+     "why": "Water purifier not stated, and the customer already has an under-sink RO purifier.",
+     "source": "qwen",
+     "details": [
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "None",
+     "why": "Glass display not stated, and it's not a 'display / glass / open look' brief.",
+     "source": "qwen",
+     "details": [],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer units: 1 of 3 storage cabinets have drawers",
+     "why": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "source": "qwen",
+     "details": [
+      "2 x Spice pull-out - Spice Pullout",
+      "1 x Base cabinet - Drawer with Single Shutter",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "0 of 4 requested units built",
+     "why": "Drawers are best right beside the hob for heavy daily cooking.",
+     "source": "qwen",
+     "details": [
+      "Base cabinet 800 mm (Four Drawer): asked for Wall 1 -> did not fit anywhere",
+      "Base cabinet 900 mm (Double Drawer): asked for Wall 1 -> did not fit anywhere",
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> did not fit anywhere",
+      "Grain trolley 600 mm (Grain Trolley With 1 External Drawer): asked for Wall 3 -> did not fit anywhere"
+     ],
+     "rules": [
+      "requested feature unit(s) did not fit - no free base run left: Base Unit 800 (Four Drawer), Base Unit 900 (Double Drawer), Base Wicker Basket Unit 600 (Open Wicker Unit With 1 Bottom Drawer), Base Grain Trolley 600 (Grain Trolley With 1 External Drawer)"
+     ],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "2 wall cabinets",
+     "why": "Preferred sizes per wall for a calm, aligned look.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 1 cabinets (750 mm); sizes asked 900, 800",
+      "Wall 2: 0 cabinets (- mm); sizes asked 800; kept clear: window 850-1850",
+      "Wall 3: 1 cabinets (600 mm); sizes asked 600; kept clear: chimney zone"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "2 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 1 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Left) on Wall 1; wall - Corner wall cabinet 650 mm (L Corner) on Wall 1",
+      "Wall 3 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 3; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1050560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1150.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU800560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "purifier_required": false,
+    "display_aid": null,
+    "base_storage": "drawers",
+    "reasons": {
+     "layout": "U-shape on Wall 2 with an aisle of 1480 mm, allowing for a compact yet functional layout.",
+     "sink": "Window wall is Wall 2, and the sink is centred at 1350, which is standard for most kitchens.",
+     "hob": "Solid wall, hob centre range is 1050-1350, and it's farther from the door.",
+     "lpg": "Not stated, and the hob wall is too short for an LPG unit.",
+     "tall": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "purifier": "Water purifier not stated, and the customer already has an under-sink RO purifier.",
+     "display": "Glass display not stated, and it's not a 'display / glass / open look' brief.",
+     "features": "Drawers are best right beside the hob for heavy daily cooking.",
+     "storage": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "wall_cabinets": "Preferred sizes per wall for a calm, aligned look."
+    },
+    "notes": "Window wall: Wall 2, Door wall: Wall 4, Door near: Wall 4 corner, Long solid walls: Wall 1 and Wall 3 WET zone: sink centred at 1350 on Wall 2. COOKING zone: hob on Wall 1, 1050 mm from the door. STORAGE zone: tall pantry at the free end of Wall 3 near the entrance.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "window_short_wall",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 92.9,
+   "passed": 13,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": false,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "sink_size_suits_wall"
+   ],
+   "corrections": [],
+   "hob_shift_mm": 50,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 31.5,
+   "llm": {
+    "model": "qwen2.5-coder:7b",
+    "seconds": 30.1,
+    "prompt_tokens": 4809,
+    "prompt_seconds": 0.6,
+    "eval_count": 779,
+    "eval_seconds": 29.2,
+    "thinking_tokens": null,
+    "attempts": 1
+   },
+   "thoughts": "",
+   "reading": "Window wall: Wall 2, Door wall: Wall 4, Door near: Wall 3 corner, Long solid walls: Wall 1 and Wall 3 WET zone: sink centred at 1500 on Wall 2. COOKING zone: hob on Wall 1, far from the door. STORAGE zone: tall pantry at the free end of Wall 1 near the entrance.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "U-shape on Wall 1, Wall 2, Wall 3",
+     "why": "U-shape on Wall 2 with an aisle of 1780 mm, allowing for a compact layout with tall storage.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 4200 mm long, longest free run 4100 mm",
+      "Wall 2: 3000 mm long, window 900-2100 mm, longest free run 2900 mm",
+      "Wall 3: 4200 mm long, longest free run 4100 mm",
+      "Not used: Wall 4: 3000 mm long, door 300-1200 mm, longest free run 1650 mm",
+      "U-shape aisle between the side runs: 1780 mm (needs 1200+)",
+      "2 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": null,
+     "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
+     "why": "Window wall is 3000 mm free, so SINK-1050 is chosen for a standard single-bowl sink.",
+     "source": "qwen",
+     "details": [
+      "Unit: 1050 x 560 x 700 mm (W x D x H) - shutters, room for pipes; window wall 3000+ mm free",
+      "Window 1200 mm wide, centre at 1500 mm; sink centre at 1500 mm (centred)",
+      "Wall 2 free run 2900 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 1, chimney above",
+     "why": "Long hob wall on Wall 1, so HOB-900-3DRAWER is chosen for 3 drawers and a better reach.",
+     "source": "qwen",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 1 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Asked for the hob centre at 1700 mm; built at 1750 mm",
+      "Beside it: Spice pull-out 300 mm (Spice Pullout) / Base cabinet 900 mm (Double Drawer)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 2.4 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "qwen",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "None",
+     "why": "No gas supply stated, so LPG-600 is not needed.",
+     "source": "qwen",
+     "details": [
+      "Hob wall free run 4100 mm (a cylinder unit needs about 600 mm more)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 1",
+     "why": "Customer wants tall storage, so PANTRY-600 is chosen.",
+     "source": "qwen",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 1 at 50-650 mm - end of the run, clear of windows; 650 mm from the hob",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "Water purifier cabinet 600 mm (Aquaguard Single Shutter) on Wall 1",
+     "why": "Water purifier not stated, so AQUAGUARD-600 is chosen for a standard wall cabinet.",
+     "source": "qwen",
+     "details": [
+      "Unit: 600 x 330 x 600 mm (W x D x H) - one shutter",
+      "On Wall 1 at 2900-3500 mm, wall-cabinet height",
+      "1440 mm from the sink centre (water and power nearby)",
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [
+      "water purifier placed on Wall 1 beside the corner: no free wall space on the sink wall"
+     ],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "None",
+     "why": "Glass display not stated, so GLASS-600 is not needed.",
+     "source": "qwen",
+     "details": [],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer units: 8 of 8 storage cabinets have drawers",
+     "why": "Customer wants tall storage, so GRAIN-600 is chosen.",
+     "source": "qwen",
+     "details": [
+      "3 x Base cabinet - Drawer with Single Shutter",
+      "3 x Base cabinet - Double Drawer",
+      "1 x Grain trolley - Grain Trolley With 1 External Drawer",
+      "1 x Vegetable basket - Open Wicker Unit With 1 Bottom Drawer",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "3 of 4 requested units built",
+     "why": "Drawers are chosen for heavy daily cooking or 5+ people.",
+     "source": "qwen",
+     "details": [
+      "Base cabinet 800 mm (Four Drawer): asked for Wall 1 -> did not fit anywhere",
+      "Base cabinet 900 mm (Double Drawer): asked for Wall 1 -> built on Wall 1 at 2200-3100 mm - deep drawers for pans, kadai and plates - hob wall",
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> built on Wall 3 at 1700-2300 mm (moved from Wall 2: no room there) - vegetables, onions, potatoes - near the sink",
+      "Grain trolley 600 mm (Grain Trolley With 1 External Drawer): asked for Wall 3 -> built on Wall 3 at 1100-1700 mm - bins + an outside drawer"
+     ],
+     "rules": [
+      "requested feature unit(s) did not fit - no free base run left: Base Unit 800 (Four Drawer)"
+     ],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "5 wall cabinets",
+     "why": "Wide double-shutter units are preferred for a calm and aligned look.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 2 cabinets (600, 600 mm); sizes asked 900, 900; kept clear: chimney zone",
+      "Wall 2: 0 cabinets (- mm); sizes asked 800; kept clear: window 900-2100",
+      "Wall 3: 3 cabinets (600, 1000, 950 mm); sizes asked 600"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "2 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 1 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Left) on Wall 1; wall - Corner wall cabinet 650 mm (L Corner) on Wall 1",
+      "Wall 3 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 3; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1050560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1700.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU800560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "purifier_required": false,
+    "display_aid": null,
+    "base_storage": "drawers",
+    "reasons": {
+     "layout": "U-shape on Wall 2 with an aisle of 1780 mm, allowing for a compact layout with tall storage.",
+     "sink": "Window wall is 3000 mm free, so SINK-1050 is chosen for a standard single-bowl sink.",
+     "hob": "Long hob wall on Wall 1, so HOB-900-3DRAWER is chosen for 3 drawers and a better reach.",
+     "lpg": "No gas supply stated, so LPG-600 is not needed.",
+     "tall": "Customer wants tall storage, so PANTRY-600 is chosen.",
+     "purifier": "Water purifier not stated, so AQUAGUARD-600 is chosen for a standard wall cabinet.",
+     "display": "Glass display not stated, so GLASS-600 is not needed.",
+     "features": "Drawers are chosen for heavy daily cooking or 5+ people.",
+     "storage": "Customer wants tall storage, so GRAIN-600 is chosen.",
+     "wall_cabinets": "Wide double-shutter units are preferred for a calm and aligned look."
+    },
+    "notes": "Window wall: Wall 2, Door wall: Wall 4, Door near: Wall 3 corner, Long solid walls: Wall 1 and Wall 3 WET zone: sink centred at 1500 on Wall 2. COOKING zone: hob on Wall 1, far from the door. STORAGE zone: tall pantry at the free end of Wall 1 near the entrance.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "door_by_window_corner",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 92.9,
+   "passed": 13,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": false,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "tall_well_placed"
+   ],
+   "corrections": [],
+   "hob_shift_mm": 800,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 33.4,
+   "llm": {
+    "model": "qwen2.5-coder:7b",
+    "seconds": 32.6,
+    "prompt_tokens": 4813,
+    "prompt_seconds": 0.7,
+    "eval_count": 742,
+    "eval_seconds": 31.6,
+    "thinking_tokens": null,
+    "attempts": 1
+   },
+   "thoughts": "",
+   "reading": "Window wall: Wall 2, Door wall: Wall 1, Door near Wall 1 corner, Long solid walls: Wall 3 and Wall 4 WET zone: Sink on Wall 2, COOKING zone: Hob on Wall 3, STORAGE zone: Tall pantry on Wall 4. Work triangle: Sink -> Hob -> Tall pantry.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "U-shape on Wall 1, Wall 2, Wall 3",
+     "why": "U-shape on Wall 2 with an aisle of 2380 mm, allowing for a compact yet functional layout.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 3300 mm long, door 2200-3100 mm, longest free run 2050 mm",
+      "Wall 2: 3600 mm long, window 1200-2400 mm, longest free run 3500 mm",
+      "Wall 3: 3300 mm long, longest free run 3200 mm",
+      "Not used: Wall 4: 3600 mm long, longest free run 3500 mm",
+      "U-shape aisle between the side runs: 2380 mm (needs 1200+)",
+      "2 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": null,
+     "built": "Sink unit 900 mm (Sink Double Shutter) on Wall 2",
+     "why": "Centred under the window on Wall 2, free run of 3550 mm, and no need for a large or double bowl sink.",
+     "source": "qwen",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - shutters, room for pipes; standard single-bowl sink - right for most kitchens",
+      "Window 1200 mm wide, centre at 1800 mm; sink centre at 1800 mm (centred)",
+      "Wall 2 free run 3500 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 3, chimney above",
+     "why": "On Wall 3, farther from the door, and with a free run of 3250 mm.",
+     "source": "qwen",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 3 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Asked for the hob centre at 1200 mm; built at 2000 mm",
+      "Beside it: Spice pull-out 300 mm (Spice Pullout) / Base cabinet 800 mm (Four Drawer)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 2.2 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "qwen",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "None",
+     "why": "Not stated, and the hob wall is not long enough for an LPG unit.",
+     "source": "qwen",
+     "details": [
+      "Hob wall free run 3200 mm (a cylinder unit needs about 600 mm more)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 1",
+     "why": "Customer wants tall storage, and Wall 4 is the end of a run near the entrance.",
+     "source": "qwen",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 1 at 50-650 mm - end of the run, clear of windows",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "None",
+     "why": "Water purifier not stated, and the customer already has an under-sink RO purifier.",
+     "source": "qwen",
+     "details": [
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "None",
+     "why": "Glass display not stated, and the customer prefers a compact layout.",
+     "source": "qwen",
+     "details": [],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer units: 5 of 6 storage cabinets have drawers",
+     "why": "Customer wants tall storage, and Wall 4 is the end of a run near the entrance.",
+     "source": "qwen",
+     "details": [
+      "2 x Base cabinet - Double Drawer",
+      "1 x Spice pull-out - Spice Pullout",
+      "1 x Base cabinet - Four Drawer",
+      "1 x Base cabinet - Drawer with Single Shutter",
+      "1 x Vegetable basket - Open Wicker Unit With 1 Bottom Drawer",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "2 of 4 requested units built",
+     "why": "Drawers are best right beside the hob for heavy daily cooking.",
+     "source": "qwen",
+     "details": [
+      "Base cabinet 800 mm (Four Drawer): asked for Wall 3 -> built on Wall 3 at 2450-3250 mm - cutlery, ladles, small tools - best right beside the hob",
+      "Base cabinet 900 mm (Double Drawer): asked for Wall 3 -> did not fit anywhere",
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> built on Wall 1 at 650-1250 mm (moved from Wall 2: no room there) - vegetables, onions, potatoes - near the sink",
+      "Grain trolley 600 mm (Grain Trolley With 1 External Drawer): asked for Wall 4 -> did not fit anywhere"
+     ],
+     "rules": [
+      "requested feature unit(s) did not fit - no free base run left: Base Unit 900 (Double Drawer)"
+     ],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "5 wall cabinets",
+     "why": "Wide double-shutter units for a calm and aligned look.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 2 cabinets (600, 850 mm); sizes asked 600",
+      "Wall 2: 1 cabinets (500 mm); sizes asked 800; kept clear: window 1200-2400",
+      "Wall 3: 2 cabinets (800, 750 mm); sizes asked 900; kept clear: chimney zone"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "2 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 1 / Wall 2: kept open (a door or window leaves no room for a corner cabinet)",
+      "Wall 3 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 3; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_49fdugi4g7vj12pf",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1200.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_7sna3rldnsuwipgy",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABU800560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_7sna3rldnsuwipgy": [
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "purifier_required": false,
+    "display_aid": null,
+    "base_storage": "drawers",
+    "reasons": {
+     "layout": "U-shape on Wall 2 with an aisle of 2380 mm, allowing for a compact yet functional layout.",
+     "sink": "Centred under the window on Wall 2, free run of 3550 mm, and no need for a large or double bowl sink.",
+     "hob": "On Wall 3, farther from the door, and with a free run of 3250 mm.",
+     "lpg": "Not stated, and the hob wall is not long enough for an LPG unit.",
+     "tall": "Customer wants tall storage, and Wall 4 is the end of a run near the entrance.",
+     "purifier": "Water purifier not stated, and the customer already has an under-sink RO purifier.",
+     "display": "Glass display not stated, and the customer prefers a compact layout.",
+     "features": "Drawers are best right beside the hob for heavy daily cooking.",
+     "storage": "Customer wants tall storage, and Wall 4 is the end of a run near the entrance.",
+     "wall_cabinets": "Wide double-shutter units for a calm and aligned look."
+    },
+    "notes": "Window wall: Wall 2, Door wall: Wall 1, Door near Wall 1 corner, Long solid walls: Wall 3 and Wall 4 WET zone: Sink on Wall 2, COOKING zone: Hob on Wall 3, STORAGE zone: Tall pantry on Wall 4. Work triangle: Sink -> Hob -> Tall pantry.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "no_window",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 100.0,
+   "passed": 12,
+   "applicable": 12,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": null,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [],
+   "corrections": [],
+   "hob_shift_mm": 60,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 31.8,
+   "llm": {
+    "model": "qwen2.5-coder:7b",
+    "seconds": 30.2,
+    "prompt_tokens": 4773,
+    "prompt_seconds": 0.6,
+    "eval_count": 733,
+    "eval_seconds": 29.2,
+    "thinking_tokens": null,
+    "attempts": 1
+   },
+   "thoughts": "",
+   "reading": "Window wall: Wall 2, Door wall: Wall 4, Door near: Wall 4 corner, Long solid walls: Wall 1 and Wall 3 WET zone: Sink on Wall 2, COOKING zone: Hob on Wall 1, STORAGE zone: Tall pantry on Wall 3. Work triangle: Sink -> Hob -> Tall pantry.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "U-shape on Wall 1, Wall 2, Wall 3",
+     "why": "L-shape layout with hob on the longer Wall 1, far from the door, and tall pantry at the free end of Wall 3.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 3000 mm long, longest free run 2900 mm",
+      "Wall 2: 3600 mm long, longest free run 3500 mm",
+      "Wall 3: 3000 mm long, longest free run 2900 mm",
+      "Not used: Wall 4: 3600 mm long, door 1350-2250 mm, longest free run 1200 mm",
+      "U-shape aisle between the side runs: 2380 mm (needs 1200+)",
+      "2 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": null,
+     "built": "Sink unit 900 mm (Sink Double Shutter) on Wall 2",
+     "why": "Window wall is Wall 2, and the sink is centred under the window.",
+     "source": "qwen",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - shutters, room for pipes; standard single-bowl sink - right for most kitchens",
+      "Wall 2 free run 3500 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 1, chimney above",
+     "why": "Longest solid wall is Wall 1, and the hob is placed farther from the door.",
+     "source": "qwen",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 1 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Asked for the hob centre at 1700 mm; built at 1640 mm",
+      "Beside it: Base cabinet 300 mm (Drawer with Single Shutter) / Spice pull-out 300 mm (Spice Pullout)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 1.8 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "qwen",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "None",
+     "why": "Long enough hob wall, but not stated in the needs.",
+     "source": "qwen",
+     "details": [
+      "Hob wall free run 2900 mm (a cylinder unit needs about 600 mm more)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 3",
+     "why": "Customer wants tall storage, and it's at the free end of Wall 3.",
+     "source": "qwen",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 3 at 2310-2910 mm - end of the run, clear of windows",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "None",
+     "why": "Water purifier not stated, and the customer might use an under-sink RO purifier.",
+     "source": "qwen",
+     "details": [
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "Glass display cabinet 600 mm (Slab - Double Glass Shutter) on Wall 2",
+     "why": "Glass display not stated, and it's a long run.",
+     "source": "qwen",
+     "details": [
+      "Unit: 600 x 330 x 600 mm (W x D x H) - two glass shutters",
+      "On Wall 2 at 700-1300 mm, at the end of a wall-cabinet run"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer units: 5 of 7 storage cabinets have drawers",
+     "why": "Customer wants tall storage, and it's at the free end of Wall 3.",
+     "source": "qwen",
+     "details": [
+      "2 x Spice pull-out - Spice Pullout",
+      "1 x Base cabinet - Four Drawer",
+      "1 x Base cabinet - Drawer with Single Shutter",
+      "1 x Grain trolley - Grain Trolley With 1 External Drawer",
+      "1 x Vegetable basket - Open Wicker Unit With 1 Bottom Drawer",
+      "1 x Base cabinet - Double Drawer",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "3 of 4 requested units built",
+     "why": "Drawers are best right beside the hob for heavy daily cooking.",
+     "source": "qwen",
+     "details": [
+      "Base cabinet 800 mm (Four Drawer): asked for Wall 1 -> built on Wall 1 at 90-890 mm - cutlery, ladles, small tools - best right beside the hob",
+      "Base cabinet 900 mm (Double Drawer): asked for Wall 1 -> did not fit anywhere",
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> built on Wall 3 at 1210-1810 mm (moved from Wall 2: no room there) - vegetables, onions, potatoes - near the sink",
+      "Grain trolley 600 mm (Grain Trolley With 1 External Drawer): asked for Wall 3 -> built on Wall 3 at 610-1210 mm - bins + an outside drawer"
+     ],
+     "rules": [
+      "requested feature unit(s) did not fit - no free base run left: Base Unit 900 (Double Drawer)"
+     ],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "6 wall cabinets",
+     "why": "Wide double-shutter units for a calm and aligned look.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 2 cabinets (600, 450 mm); sizes asked 900, 900; kept clear: chimney zone",
+      "Wall 2: 2 cabinets (800, 800 mm); sizes asked 800",
+      "Wall 3: 2 cabinets (600, 1000 mm); sizes asked 600"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "2 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 2 / Wall 1: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 2; wall - Corner wall cabinet 650 mm (L Corner) on Wall 1",
+      "Wall 2 / Wall 3: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Left) on Wall 2; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1700.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU800560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "purifier_required": false,
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "base_storage": "drawers",
+    "reasons": {
+     "layout": "L-shape layout with hob on the longer Wall 1, far from the door, and tall pantry at the free end of Wall 3.",
+     "sink": "Window wall is Wall 2, and the sink is centred under the window.",
+     "hob": "Longest solid wall is Wall 1, and the hob is placed farther from the door.",
+     "lpg": "Long enough hob wall, but not stated in the needs.",
+     "tall": "Customer wants tall storage, and it's at the free end of Wall 3.",
+     "purifier": "Water purifier not stated, and the customer might use an under-sink RO purifier.",
+     "display": "Glass display not stated, and it's a long run.",
+     "features": "Drawers are best right beside the hob for heavy daily cooking.",
+     "storage": "Customer wants tall storage, and it's at the free end of Wall 3.",
+     "wall_cabinets": "Wide double-shutter units for a calm and aligned look."
+    },
+    "notes": "Window wall: Wall 2, Door wall: Wall 4, Door near: Wall 4 corner, Long solid walls: Wall 1 and Wall 3 WET zone: Sink on Wall 2, COOKING zone: Hob on Wall 1, STORAGE zone: Tall pantry on Wall 3. Work triangle: Sink -> Hob -> Tall pantry.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "big_U",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 100.0,
+   "passed": 14,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [],
+   "corrections": [],
+   "hob_shift_mm": 0,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 33.1,
+   "llm": {
+    "model": "qwen2.5-coder:7b",
+    "seconds": 31.8,
+    "prompt_tokens": 4830,
+    "prompt_seconds": 0.7,
+    "eval_count": 752,
+    "eval_seconds": 30.3,
+    "thinking_tokens": null,
+    "attempts": 1
+   },
+   "thoughts": "",
+   "reading": "Window wall: Wall 2, Door wall: Wall 4, Door near: Wall 4 corner, Long solid walls: Wall 1, Wall 3 WET zone: sink centred at 2250 on Wall 2. COOKING zone: hob on Wall 1, chimney above, spice pull-out beside hob. STORAGE zone: tall pantry at the free end of Wall 3 near the entrance.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "U-shape on Wall 1, Wall 2, Wall 3",
+     "why": "U-shape on Wall 2 with an aisle of 3280 mm, allowing for a compact yet functional layout.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 3600 mm long, longest free run 3500 mm",
+      "Wall 2: 4500 mm long, window 1500-3000 mm, longest free run 4400 mm",
+      "Wall 3: 3600 mm long, longest free run 3500 mm",
+      "Not used: Wall 4: 4500 mm long, door 3150-4050 mm, longest free run 3000 mm",
+      "U-shape aisle between the side runs: 3280 mm (needs 1200+)",
+      "2 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": null,
+     "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
+     "why": "Window wall is Wall 2, and the sink is centred at 2250.",
+     "source": "qwen",
+     "details": [
+      "Unit: 1050 x 560 x 700 mm (W x D x H) - shutters, room for pipes; window wall 3000+ mm free",
+      "Window 1500 mm wide, centre at 2250 mm; sink centre at 2250 mm (centred)",
+      "Wall 2 free run 4400 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 1, chimney above",
+     "why": "Solid wall, hob centre range 1100-2500, and no window nearby.",
+     "source": "qwen",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 1 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Asked for the hob centre at 1700 mm; built at 1700 mm",
+      "Beside it: Spice pull-out 300 mm (Spice Pullout) / Base cabinet 350 mm (Drawer with Single Shutter)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 2.5 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "qwen",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "None",
+     "why": "Not stated, and the hob wall is long enough.",
+     "source": "qwen",
+     "details": [
+      "Hob wall free run 3500 mm (a cylinder unit needs about 600 mm more)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 3",
+     "why": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "source": "qwen",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 3 at 2950-3550 mm - end of the run, clear of windows",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "None",
+     "why": "Water purifier not stated, and the customer already has an under-sink RO purifier.",
+     "source": "qwen",
+     "details": [
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "Glass display cabinet 600 mm (Slab - Double Glass Shutter) on Wall 3",
+     "why": "Glass display not stated, and it's a long run.",
+     "source": "qwen",
+     "details": [
+      "Unit: 600 x 330 x 600 mm (W x D x H) - two glass shutters",
+      "On Wall 3 at 2350-2950 mm, at the end of a wall-cabinet run"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer units: 8 of 8 storage cabinets have drawers",
+     "why": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "source": "qwen",
+     "details": [
+      "3 x Base cabinet - Drawer with Single Shutter",
+      "2 x Base cabinet - Double Drawer",
+      "1 x Vegetable basket - Open Wicker Unit With 1 Bottom Drawer",
+      "1 x Base cabinet - Four Drawer",
+      "1 x Grain trolley - Grain Trolley With 1 External Drawer",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "4 of 4 requested units built",
+     "why": "Drawers are best right beside the hob for heavy daily cooking.",
+     "source": "qwen",
+     "details": [
+      "Base cabinet 800 mm (Four Drawer): asked for Wall 1 -> built on Wall 2 at 2775-3575 mm (moved from Wall 1: no room there) - cutlery, ladles, small tools - best right beside the hob",
+      "Base cabinet 900 mm (Double Drawer): asked for Wall 1 -> built on Wall 3 at 1700-2600 mm (moved from Wall 1: no room there) - deep drawers for pans, kadai and plates - hob wall",
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> built on Wall 2 at 625-1225 mm - vegetables, onions, potatoes - near the sink",
+      "Grain trolley 600 mm (Grain Trolley With 1 External Drawer): asked for Wall 3 -> built on Wall 3 at 1100-1700 mm - bins + an outside drawer"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "6 wall cabinets",
+     "why": "Preferred sizes for a calm, aligned look.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 1 cabinets (700 mm); sizes asked 900, 900; kept clear: chimney zone",
+      "Wall 2: 2 cabinets (800, 800 mm); sizes asked 800; kept clear: window 1500-3000",
+      "Wall 3: 3 cabinets (600, 600, 450 mm); sizes asked 600"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "2 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 1 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Left) on Wall 1; wall - Corner wall cabinet 650 mm (L Corner) on Wall 1",
+      "Wall 3 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 3; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1050560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1700.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU800560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "purifier_required": false,
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "base_storage": "drawers",
+    "reasons": {
+     "layout": "U-shape on Wall 2 with an aisle of 3280 mm, allowing for a compact yet functional layout.",
+     "sink": "Window wall is Wall 2, and the sink is centred at 2250.",
+     "hob": "Solid wall, hob centre range 1100-2500, and no window nearby.",
+     "lpg": "Not stated, and the hob wall is long enough.",
+     "tall": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "purifier": "Water purifier not stated, and the customer already has an under-sink RO purifier.",
+     "display": "Glass display not stated, and it's a long run.",
+     "features": "Drawers are best right beside the hob for heavy daily cooking.",
+     "storage": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "wall_cabinets": "Preferred sizes for a calm, aligned look."
+    },
+    "notes": "Window wall: Wall 2, Door wall: Wall 4, Door near: Wall 4 corner, Long solid walls: Wall 1, Wall 3 WET zone: sink centred at 2250 on Wall 2. COOKING zone: hob on Wall 1, chimney above, spice pull-out beside hob. STORAGE zone: tall pantry at the free end of Wall 3 near the entrance.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "window_near_corner",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 100.0,
+   "passed": 14,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [],
+   "corrections": [],
+   "hob_shift_mm": 40,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Built-In Oven"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 33.1,
+   "llm": {
+    "model": "qwen2.5-coder:7b",
+    "seconds": 31.6,
+    "prompt_tokens": 4829,
+    "prompt_seconds": 0.8,
+    "eval_count": 748,
+    "eval_seconds": 30.4,
+    "thinking_tokens": null,
+    "attempts": 1
+   },
+   "thoughts": "",
+   "reading": "Window wall: Wall 2, Door wall: Wall 4, Door near: Wall 4 corner, Long solid walls: Wall 1 and Wall 3 WET zone: Sink on Wall 2, COOKING zone: Hob on Wall 1, STORAGE zone: Tall pantry on Wall 3. Work triangle: Sink -> Hob -> Tall pantry.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": "Walls Wall 1, Wall 2, Wall 3",
+     "built": "U-shape on Wall 1, Wall 2, Wall 4",
+     "why": "U-shape on Wall 2 with an aisle of 2380 mm, allowing for a compact yet functional layout.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 3300 mm long, longest free run 3200 mm",
+      "Wall 2: 3600 mm long, window 2400-3400 mm, longest free run 3500 mm",
+      "Wall 4: 3600 mm long, door 2250-3150 mm, longest free run 2100 mm",
+      "Not used: Wall 3: 3300 mm long, longest free run 3200 mm",
+      "U-shape aisle between the side runs: 2380 mm (needs 1200+)",
+      "2 inside corner(s) between cabinet runs"
+     ],
+     "rules": [
+      "cabinet walls changed to Wall 1, Wall 2, Wall 4: the window is at a corner, so the run on the other wall would push the sink off the window centre"
+     ],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": "Sink unit 1050 mm (Sink Double Shutter)",
+     "built": "Sink unit 800 mm (Sink Double Shutter) on Wall 2",
+     "why": "Centred under the window on Wall 2, free run of 3550 mm, and a standard single-bowl sink.",
+     "source": "qwen",
+     "details": [
+      "Unit: 800 x 560 x 700 mm (W x D x H) - shutters, room for pipes; small kitchens (window wall under 2400 mm free)",
+      "Window 1000 mm wide, centre at 2900 mm; sink centre at 2900 mm (centred)",
+      "Wall 2 free run 3500 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [
+      "Designer chose 1050 mm; the rules used 800 mm so it centres under the window."
+     ],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 1, chimney above",
+     "why": "On Wall 1, farther from the door, with a standard triple drawer hob unit.",
+     "source": "qwen",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 1 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Asked for the hob centre at 1700 mm; built at 1740 mm",
+      "Beside it: Spice pull-out 300 mm (Spice Pullout) / Base cabinet 500 mm (Double Drawer)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 2.8 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "qwen",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "None",
+     "why": "Not stated, and the hob wall is not long enough for an LPG unit.",
+     "source": "qwen",
+     "details": [
+      "Hob wall free run 3200 mm (a cylinder unit needs about 600 mm more)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Oven tower 600 mm (Built-In Oven With 1 Shutter & 2 Bottom Drawer With Open Box) on Wall 4",
+     "why": "End of a run on Wall 3, near the entrance, and a built-in oven for heavy cooking.",
+     "source": "qwen",
+     "details": [
+      "Oven tower 600 mm (Built-In Oven With 1 Shutter & 2 Bottom Drawer With Open Box): 600 x 560 x 1940 mm (W x D x H) - built-in oven at chest height",
+      "On Wall 4 at 50-650 mm - end of the run, clear of windows",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "None",
+     "why": "Not stated, and the customer already has an under-sink RO purifier.",
+     "source": "qwen",
+     "details": [
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "None",
+     "why": "Not stated, and the room is not long enough for a display unit.",
+     "source": "qwen",
+     "details": [],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer units: 5 of 6 storage cabinets have drawers",
+     "why": "End of a run on Wall 3, near the entrance, and a grain trolley for storage.",
+     "source": "qwen",
+     "details": [
+      "3 x Base cabinet - Double Drawer",
+      "1 x Vegetable basket - Open Wicker Unit With 1 Bottom Drawer",
+      "1 x Base cabinet - Four Drawer",
+      "1 x Spice pull-out - Spice Pullout",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "3 of 4 requested units built",
+     "why": "Drawers right beside the hob for easy access to cutlery and tools.",
+     "source": "qwen",
+     "details": [
+      "Base cabinet 800 mm (Four Drawer): asked for Wall 1 -> built on Wall 2 at 1700-2500 mm (moved from Wall 1: no room there) - cutlery, ladles, small tools - best right beside the hob",
+      "Base cabinet 900 mm (Double Drawer): asked for Wall 1 -> built on Wall 4 at 650-1550 mm (moved from Wall 1: no room there) - deep drawers for pans, kadai and plates - hob wall",
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> built on Wall 2 at 1100-1700 mm - vegetables, onions, potatoes - near the sink",
+      "Grain trolley 600 mm (Grain Trolley With 1 External Drawer): asked for Wall 3 -> did not fit anywhere"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "5 wall cabinets",
+     "why": "Wide units for a calm and aligned look.",
+     "source": "qwen",
+     "details": [
+      "Wall 1: 1 cabinets (300 mm); sizes asked 900, 900; kept clear: chimney zone",
+      "Wall 2: 2 cabinets (800, 900 mm); sizes asked 800; kept clear: window 2400-3400",
+      "Wall 4: 2 cabinets (900, 600 mm); sizes asked no preference"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "2 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 2 / Wall 1: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 2; wall - Corner wall cabinet 650 mm (L Corner) on Wall 1",
+      "Wall 1 / Wall 4: kept open (a door or window leaves no room for a corner cabinet)"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1050560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1700.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATBIO6005601940SODBOS2BDOSLLEH1S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU800560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "purifier_required": false,
+    "display_aid": null,
+    "base_storage": "drawers",
+    "reasons": {
+     "layout": "U-shape on Wall 2 with an aisle of 2380 mm, allowing for a compact yet functional layout.",
+     "sink": "Centred under the window on Wall 2, free run of 3550 mm, and a standard single-bowl sink.",
+     "hob": "On Wall 1, farther from the door, with a standard triple drawer hob unit.",
+     "lpg": "Not stated, and the hob wall is not long enough for an LPG unit.",
+     "tall": "End of a run on Wall 3, near the entrance, and a built-in oven for heavy cooking.",
+     "purifier": "Not stated, and the customer already has an under-sink RO purifier.",
+     "display": "Not stated, and the room is not long enough for a display unit.",
+     "features": "Drawers right beside the hob for easy access to cutlery and tools.",
+     "storage": "End of a run on Wall 3, near the entrance, and a grain trolley for storage.",
+     "wall_cabinets": "Wide units for a calm and aligned look."
+    },
+    "notes": "Window wall: Wall 2, Door wall: Wall 4, Door near: Wall 4 corner, Long solid walls: Wall 1 and Wall 3 WET zone: Sink on Wall 2, COOKING zone: Hob on Wall 1, STORAGE zone: Tall pantry on Wall 3. Work triangle: Sink -> Hob -> Tall pantry.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 4"
+   ]
+  },
+  {
+   "room": "narrow_galley",
+   "version": "v2",
+   "mode": "ollama",
+   "score": 91.7,
+   "passed": 11,
+   "applicable": 12,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": null,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": false,
+    "walls_connected": true,
+    "uses_the_room": null,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "tall_well_placed"
+   ],
+   "corrections": [
+    "hob moved to Wall 4 (clearances on proposed wall failed)"
+   ],
+   "hob_shift_mm": null,
+   "extras": {
+    "water_purifier": false,
+    "purifier_built": false,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 30.5,
+   "llm": {
+    "model": "qwen2.5-coder:7b",
+    "seconds": 29.4,
+    "prompt_tokens": 4817,
+    "prompt_seconds": 0.7,
+    "eval_count": 704,
+    "eval_seconds": 28.4,
+    "thinking_tokens": null,
+    "attempts": 1
+   },
+   "thoughts": "",
+   "reading": "Window wall: Wall 2, Door wall: Wall 1, Door near: Wall 2 corner, Long solid walls: Wall 2, Wall 3, Wall 4 WET zone: sink centred at 2400 on Wall 2. COOKING zone: hob on Wall 3, chimney above. STORAGE zone: tall pantry at the free end of Wall 3 near the entrance. Work triangle: sink -> hob -> tall storage.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "U-shape on Wall 2, Wall 3, Wall 4",
+     "why": "U-shape on Wall 2 with an aisle of 3580 mm, meeting the 1200+ requirement.",
+     "source": "qwen",
+     "details": [
+      "Wall 2: 4800 mm long, window 1800-3000 mm, longest free run 4700 mm",
+      "Wall 3: 2100 mm long, longest free run 2000 mm",
+      "Wall 4: 4800 mm long, longest free run 4700 mm",
+      "Not used: Wall 1: 2100 mm long, door 600-1500 mm, longest free run 450 mm",
+      "U-shape aisle between the side runs: 3580 mm (needs 1200+)",
+      "2 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": null,
+     "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
+     "why": "Window wall is Wall 2, free run is 4700 mm, and the sink is centred at 2400.",
+     "source": "qwen",
+     "details": [
+      "Unit: 1050 x 560 x 700 mm (W x D x H) - shutters, room for pipes; window wall 3000+ mm free",
+      "Window 1200 mm wide, centre at 2400 mm; sink centre at 2400 mm (centred)",
+      "Wall 2 free run 4700 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 4, chimney above",
+     "why": "Solid wall, hob centre range is 900-1200, and it's farther from the door.",
+     "source": "qwen",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 4 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Beside it: Base cabinet 900 mm (Double Drawer) / Spice pull-out 300 mm (Spice Pullout)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 1.4 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [
+      "hob moved to Wall 4 (clearances on proposed wall failed)"
+     ],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "qwen",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "None",
+     "why": "Not stated, but the hob wall is long enough.",
+     "source": "qwen",
+     "details": [
+      "Hob wall free run 4700 mm (a cylinder unit needs about 600 mm more)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 4",
+     "why": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "source": "qwen",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 4 at 3200-3800 mm - end of the run, clear of windows; 300 mm from the hob",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "None",
+     "why": "Water purifier not stated, and they already have an under-sink RO purifier.",
+     "source": "qwen",
+     "details": [
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "Glass display cabinet 600 mm (Slab - Double Glass Shutter) on Wall 2",
+     "why": "Glass display not stated, and it's a long run.",
+     "source": "qwen",
+     "details": [
+      "Unit: 600 x 330 x 600 mm (W x D x H) - two glass shutters",
+      "On Wall 2 at 975-1575 mm, at the end of a wall-cabinet run"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer units: 5 of 5 storage cabinets have drawers",
+     "why": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "source": "qwen",
+     "details": [
+      "3 x Base cabinet - Double Drawer",
+      "1 x Base cabinet - Drawer with Single Shutter",
+      "1 x Base cabinet - Four Drawer",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "2 of 2 requested units built",
+     "why": "Drawers are best right beside the hob for heavy daily cooking.",
+     "source": "qwen",
+     "details": [
+      "Base cabinet 800 mm (Four Drawer): asked for Wall 3 -> built on Wall 2 at 2925-3725 mm (moved from Wall 3: no room there) - cutlery, ladles, small tools - best right beside the hob",
+      "Base cabinet 900 mm (Double Drawer): asked for Wall 3 -> built on Wall 4 at 1100-2000 mm (moved from Wall 3: no room there) - deep drawers for pans, kadai and plates - hob wall"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "5 wall cabinets",
+     "why": "Wide units for a calm, aligned look.",
+     "source": "qwen",
+     "details": [
+      "Wall 2: 2 cabinets (600, 500 mm); sizes asked 900; kept clear: window 1800-3000",
+      "Wall 3: 1 cabinets (700 mm); sizes asked 900",
+      "Wall 4: 2 cabinets (700, 550 mm); sizes asked 900; kept clear: chimney zone"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "2 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 3 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 3; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2",
+      "Wall 4 / Wall 3: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 4; wall - Corner wall cabinet 650 mm (L Corner) on Wall 3"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf",
+     "wall_7sna3rldnsuwipgy"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1050560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_49fdugi4g7vj12pf",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1050.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABU800560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ],
+     "wall_7sna3rldnsuwipgy": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": null,
+    "purifier_required": false,
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "base_storage": "drawers",
+    "reasons": {
+     "layout": "U-shape on Wall 2 with an aisle of 3580 mm, meeting the 1200+ requirement.",
+     "sink": "Window wall is Wall 2, free run is 4700 mm, and the sink is centred at 2400.",
+     "hob": "Solid wall, hob centre range is 900-1200, and it's farther from the door.",
+     "lpg": "Not stated, but the hob wall is long enough.",
+     "tall": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "purifier": "Water purifier not stated, and they already have an under-sink RO purifier.",
+     "display": "Glass display not stated, and it's a long run.",
+     "features": "Drawers are best right beside the hob for heavy daily cooking.",
+     "storage": "Customer wants tall storage, and it's at the free end of Wall 3 near the entrance.",
+     "wall_cabinets": "Wide units for a calm, aligned look."
+    },
+    "notes": "Window wall: Wall 2, Door wall: Wall 1, Door near: Wall 2 corner, Long solid walls: Wall 2, Wall 3, Wall 4 WET zone: sink centred at 2400 on Wall 2. COOKING zone: hob on Wall 3, chimney above. STORAGE zone: tall pantry at the free end of Wall 3 near the entrance. Work triangle: sink -> hob -> tall storage.",
+    "source": "ollama"
+   },
+   "layout_walls": [
+    "Wall 2",
+    "Wall 3",
+    "Wall 4"
+   ]
+  }
+ ]
+}

@@ -510,6 +510,66 @@ def test_no_loft_when_wall_too_low():
     assert any("no loft" in d for d in report["layout"]["decisions"])
 
 
+def _level(out, level):
+    return [n for n in cabinets(out["scene"]["nodes"]) if n["placement"]["level"] == level]
+
+
+def test_heights_follow_the_ceiling():
+    """2.5 m room (no lofts possible): 900 wall + 2240 tall units with level tops.
+    2.7 m room: lofts by default (standard 600 / 1940 below them); lofts declined -> 900 / 2240."""
+    out, report = run(KitchenPreferences(ai_mode="fallback"), PRIMARY, "heights_low")
+    assert not verify_scene(out), verify_scene(out)
+    assert not report["validation_issues"], report["validation_issues"]
+    h = report["heights"]
+    assert (h["wall_mm"], h["tall_mm"], h["lofts"]) == (900, 2240, False)
+    walls, talls = _level(out, "wall"), _level(out, "tall")
+    assert walls and talls and not _level(out, "loft")
+    assert all(abs(n["asset"]["dimensions"][1] - 0.9) < 1e-6 for n in walls), "every wall-tier unit is 900 high"
+    tops = {round(n["position"][1] + n["asset"]["dimensions"][1], 3) for n in walls + talls}
+    assert tops == {2.34}, tops
+    ex = {e["item"]: e for e in report["explanation"]}
+    assert "900" in ex["Cabinet heights"]["built"] and ex["Lofts"]["built"] == "None"
+
+    out, report = run(KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2]), SECONDARY, "heights_loft")
+    assert not verify_scene(out), verify_scene(out)
+    assert report["heights"]["lofts"] and report["heights"]["wall_mm"] == 600
+    assert _level(out, "loft"), "lofts are the default when the ceiling allows"
+    assert report["proposal"]["lofts"] is True
+
+    out, report = run(KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2], include_loft=False), SECONDARY, "heights_noloft")
+    assert not verify_scene(out), verify_scene(out)
+    assert not _level(out, "loft") and report["heights"]["wall_mm"] == 900
+    assert next(e for e in report["explanation"] if e["item"] == "Lofts")["source"] == "customer"
+
+
+def test_lift_up_doors_open_shelf_and_crockery_unit():
+    """Stated needs for the new cabinet types are built and explained."""
+    prefs = KitchenPreferences(ai_mode="fallback", wall_style="lift_up", open_unit="yes", crockery_unit="yes")
+    out, report = run(prefs, PRIMARY, "upper_needs")
+    assert not verify_scene(out), verify_scene(out)
+    assert not report["validation_issues"], report["validation_issues"]
+    nodes = out["scene"]["nodes"]
+    assert by_category(nodes, "Wall Lift Up Unit"), "lift-up wall cabinets expected"
+    opens = by_category(nodes, "Wall Open Unit")
+    assert len(opens) == 1
+    assert by_category(nodes, "Tall Glass Unit"), "crockery unit expected"
+    chim = report["layout"]["chimney"]
+    if chim and chim["wall_id"] == opens[0]["wallId"]:
+        lo, hi = interval(opens[0])
+        assert min(abs(lo * 1000 - chim["center_mm"]), abs(hi * 1000 - chim["center_mm"])) > 450, "open shelf beside the hob"
+    ex = {e["item"]: e for e in report["explanation"]}
+    assert ex["Wall cabinet doors"]["source"] == "customer" and "Lift-up" in ex["Wall cabinet doors"]["built"]
+    assert ex["Open shelf unit"]["built"].startswith("Open shelf unit")
+    assert "Crockery unit" in ex["Tall units"]["built"]
+
+    # the same needs declined: none of them appear
+    prefs = KitchenPreferences(ai_mode="fallback", wall_style="shutters", open_unit="no", crockery_unit="no")
+    out, _ = run(prefs, PRIMARY, "upper_needs_no")
+    nodes = out["scene"]["nodes"]
+    assert not by_category(nodes, "Wall Lift Up Unit") and not by_category(nodes, "Wall Open Unit")
+    assert not by_category(nodes, "Tall Glass Unit")
+
+
 def test_rotated_and_translated_room():
     """Same room rotated 30 deg and moved: wall-local maths must be frame independent."""
     a = math.radians(30)
@@ -943,9 +1003,18 @@ def _v2_design(menu, **over):
         "water_purifier": first["purifier"],
         "display_why": "Long window wall can frame the window.",
         "display_unit": first["display"],
+        "storage_why": "Not stated; a cutlery drawer on top and shelves below suit most homes.",
+        "base_storage": "mixed",
         "features_why": "Drawers by the hob, basket by the sink.",
+        "wall_cabinets_why": "Wide 900 units over the hob wall for a calm, aligned look.",
         "base_feature_units": [{"wall": "Wall 3", "units": [codes["base"][0]]}, {"wall": "Wall 2", "units": [codes["base"][-2]]}],
         "wall_cabinet_sizes": [{"wall": "Wall 3", "units": [codes["wall"][3]]}],
+        "open_why": "Not asked for; open shelves gather grease.",
+        "open_unit": "NONE",
+        "wall_style_why": "Standard hinged doors.",
+        "wall_style": "shutters",
+        "loft_why": "The ceiling is too low for lofts.",
+        "lofts": "no",
     }
     d.update(over)
     return d
@@ -985,6 +1054,55 @@ def test_v2_prompt_teaches_and_places_new_units(monkeypatch):
     assert by_category(nodes, "Tall Built-In Microwave"), "Qwen's microwave tall unit must be built"
 
 
+def test_gemini_designs_without_the_knowledge_pack(monkeypatch):
+    """Default Gemini mode: no playbook, worked examples, cabinet notes, rule hints or schema
+    hint texts - only plain room facts, the cabinet list, the needs and the same enum-locked
+    schema. Qwen's prompt keeps the full knowledge pack."""
+    import config
+    import design_knowledge
+    import gemini_designer
+    from catalog_loader import load_filtered_catalog
+    from scene_parser import parse_scene
+
+    monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v2")
+    monkeypatch.setattr(config, "GEMINI_USE_KNOWLEDGE", False)
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    menu = _v2_menu()
+    sent = []
+
+    def fake_post(model, body, key):
+        sent.append(body)
+        parts = [{"text": "The window is on Wall 2.", "thought": True}, {"text": json.dumps(_v2_design(menu))}]
+        return {"candidates": [{"content": {"parts": parts}, "finishReason": "STOP"}],
+                "usageMetadata": {"promptTokenCount": 1, "candidatesTokenCount": 1}}
+
+    monkeypatch.setattr(gemini_designer, "_post", fake_post)
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="ollama", ai_provider="gemini"))
+    system = sent[0]["systemInstruction"]["parts"][0]["text"]
+    user = sent[0]["contents"][0]["parts"][0]["text"]
+    assert system == ai_designer.PLAIN_SYSTEM_PROMPT
+    assert "WORK TRIANGLE" not in system + user and "WORKED EXAMPLES" not in system + user
+    for hint in ("Wet zone", "Hob centre range", "Too short", "U-shape on", "centred under the window",
+                 "designer note", "beside the hob", "worked examples"):
+        assert hint not in user, hint
+    notes = {design_knowledge.note_for(it) for opts in menu.values() for _, it in opts} - {"", None}
+    assert notes and not [n for n in notes if n in user]
+    assert "SINK-900 |" in user and "WINDOW" in user and "CUSTOMER NEEDS" in user
+    schema = sent[0]["generationConfig"]["responseJsonSchema"]
+    assert '"description"' not in json.dumps(schema)
+    assert set(schema["properties"]["sink"]["enum"]) == {c for c, _ in menu["sink"]}
+    assert report["ai"]["mode"] == "gemini" and report["ai"]["knowledge"] is False
+    assert report["ai"]["thoughts"] == "The window is on Wall 2."
+    assert not verify_scene(out)
+
+    # Qwen (and Gemini with GEMINI_USE_KNOWLEDGE=1) get the knowledge; the answer schema is identical.
+    geo, groups, prefs = parse_scene(empty_plan()), ai_designer.build_shortlist_v2(load_filtered_catalog()), KitchenPreferences()
+    (msgs_k, Model_k, _), (msgs_p, Model_p, _) = (
+        ai_designer.build_messages(geo, groups, prefs, "v2", knowledge=k) for k in (True, False))
+    assert "WORK TRIANGLE" in msgs_k[0]["content"] and "Hob centre range" in msgs_k[1]["content"]
+    assert Model_k.model_json_schema() == Model_p.model_json_schema()
+
+
 def test_v2_schema_rejects_unknown_codes_and_walls():
     from pydantic import ValidationError
 
@@ -1020,7 +1138,19 @@ def test_stated_needs_narrow_the_schema():
     assert enum(KitchenPreferences(include_cylinder=False), "lpg_cylinder") == {"NONE"}
     assert enum(KitchenPreferences(display_unit="no"), "display_unit") == {"NONE"}
     talls = ai_designer.allowed_codes(menu, "tall", KitchenPreferences(built_in="none"))
-    assert talls and all(c.startswith(("PANTRY", "TALL-WICKER")) for c in talls)
+    assert talls and all(c.startswith(("PANTRY", "TALL-WICKER", "CROCKERY")) for c in talls)
+    talls = ai_designer.allowed_codes(menu, "tall", KitchenPreferences(built_in="none", crockery_unit="no"))
+    assert talls and not [c for c in talls if c.startswith("CROCKERY")]
+    # new needs: open shelves, wall doors, lofts (and the ceiling decides lofts too)
+    assert enum(KitchenPreferences(open_unit="no"), "open_unit") == {"NONE"}
+    assert "NONE" not in enum(KitchenPreferences(open_unit="yes"), "open_unit")
+    assert enum(KitchenPreferences(wall_style="lift_up"), "wall_style") == {"lift_up"}
+    assert enum(KitchenPreferences(), "wall_style") == {"shutters", "lift_up"}
+    assert enum(KitchenPreferences(include_loft=False), "lofts") == {"no"}
+    assert enum(KitchenPreferences(), "lofts") == {"yes", "no"}
+    low = ai_designer.build_design_model_v2(menu, walls, prefs=KitchenPreferences(include_loft=True), lofts_possible=False)
+    f = low.model_json_schema()["properties"]["lofts"]
+    assert set(f.get("enum") or [f.get("const")]) == {"no"}
 
 
 def test_qwen_cannot_skip_a_needed_tower_and_reasons_are_reported(monkeypatch):
@@ -1065,20 +1195,65 @@ def test_quick_rules_designer_follows_needs(needs, present, absent):
     assert all(e["why"] for e in report["explanation"]), report["explanation"]
 
 
+def test_left_to_qwen_the_base_cabinet_style_is_qwens_decision(monkeypatch):
+    """Base cabinets on "Let Qwen decide": Qwen picks the style (here drawers) with its own
+    reason, and the solver builds it. A stated style leaves Qwen only that one option."""
+    import config
+
+    monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v2")
+    menu = _v2_menu()
+    reason = "Heavy daily cooking: drawers keep pans and pressure cookers reachable."
+    fake = FakeOllama(_v2_design(menu, base_storage="drawers", storage_why=reason))
+    monkeypatch.setattr(ai_designer, "_client", lambda: fake)
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="ollama"))
+    assert not verify_scene(out), verify_scene(out)
+    props = fake.calls[0]["format"]["properties"]
+    assert set(props["base_storage"]["enum"]) == {"drawers", "mixed", "shutters"}
+    store = [n for n in cabinets(out["scene"]["nodes"]) if n["metadata"]["category"] == "Base Unit"]
+    assert store and all("drawer" in (n["metadata"].get("cabinetCombination") or "").lower() for n in store)
+    ex = {e["item"]: e for e in report["explanation"]}["Base cabinets"]
+    assert ex["source"] == "qwen" and ex["why"] == reason and ex["built"].startswith("Drawer units")
+    stated = ai_designer.build_design_model_v2(menu, ["Wall 1"], prefs=KitchenPreferences(base_storage="shutters"))
+    f = stated.model_json_schema()["properties"]["base_storage"]
+    assert set(f.get("enum") or [f.get("const")]) == {"shutters"}
+
+
+def test_every_decision_is_explained_with_facts(monkeypatch):
+    """Each of Qwen's decisions carries its own reason plus facts measured by the system."""
+    import config
+
+    monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v2")
+    fake = FakeOllama(_v2_design(_v2_menu()))
+    monkeypatch.setattr(ai_designer, "_client", lambda: fake)
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="ollama"))
+    ex = {e["item"]: e for e in report["explanation"]}
+    for item in ("Layout", "Sink", "Hob", "Spice pull-out", "LPG cylinder", "Tall units", "Water purifier",
+                 "Glass display", "Base cabinets", "Feature units", "Wall cabinets", "Corners"):
+        assert item in ex, item
+    facts = lambda item: " | ".join(ex[item]["details"])  # noqa: E731
+    assert "centred" in facts("Sink") and "Sizes on offer" in facts("Sink")
+    assert "Sink to hob" in facts("Hob") and "door" in facts("Hob").lower() and "Chimney" in facts("Hob")
+    assert "built on" in facts("Feature units") or "did not fit" in facts("Feature units")
+    assert ex["Wall cabinets"]["why"].startswith("Wide 900 units") and ex["Wall cabinets"]["source"] == "qwen"
+    assert all(ex[i]["why"] for i in ("Layout", "Sink", "Hob", "Tall units", "Water purifier", "Base cabinets"))
+
+
 def test_brief_asking_for_drawers_fills_runs_with_drawers():
     """'Lots of drawers' in the brief is a stated need: storage runs use drawer units."""
     plain, _ = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="fallback"))
     out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="fallback", style_notes="Lots of drawers"))
     assert not verify_scene(out), verify_scene(out)
 
-    def drawer_share(doc):
+    def full_drawer_share(doc):
+        """Full drawer units (no shutter) among the plain storage Base Units."""
         base = [n for n in cabinets(doc["scene"]["nodes"]) if n["placement"]["level"] == "base"
                 and n["metadata"]["category"] == "Base Unit"]
-        return sum("drawer" in (n["metadata"].get("cabinetCombination") or "").lower() for n in base), len(base)
+        combos = [(n["metadata"].get("cabinetCombination") or "").lower() for n in base]
+        return sum("drawer" in c and "shutter" not in c for c in combos), len(base)
 
-    d, n = drawer_share(out)
-    d0, _ = drawer_share(plain)
-    assert n and d == n and d > d0, (d, n, d0)
+    d, n = full_drawer_share(out)
+    d0, _ = full_drawer_share(plain)  # quick rules on its own picks the drawer + shutter mix
+    assert n and d > d0 and d >= n - 1, (d, n, d0)
     ex = {e["item"]: e for e in report["explanation"]}
     assert ex["Base cabinets"]["source"] == "customer" and "brief" in ex["Base cabinets"]["need"].lower()
 

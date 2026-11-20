@@ -1,0 +1,1455 @@
+{
+ "meta": {
+  "model": "gemini-flash-latest",
+  "designer": "gemini:gemini-flash-latest",
+  "ai_mode": "ollama",
+  "started": "2026-11-20 10:01"
+ },
+ "results": [
+  {
+   "room": "reference",
+   "version": "gemini:gemini-flash-latest",
+   "mode": "gemini",
+   "score": 100.0,
+   "passed": 14,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [],
+   "corrections": [],
+   "hob_shift_mm": 150,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": true,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 120.7,
+   "llm": {
+    "model": "gemini-3.8-flash",
+    "seconds": 117.8,
+    "prompt_tokens": 4823,
+    "prompt_seconds": null,
+    "eval_count": 1001,
+    "eval_seconds": null,
+    "thinking_tokens": 2338,
+    "attempts": 1
+   },
+   "thoughts": "**Kitchen Design Blueprint: A Modular Approach**\n\nOkay, here's the breakdown of my thinking. First, I need to understand the physical constraints of this space. I'm taking in the wall dimensions, the locations of the door and window, and the potential free runs on each wall. I see that Wall 1 is 4100mm with a door taking up space near the corner of wall 4. Wall 2, also 4100mm, has a window centered at 1991, creating a natural \"wet zone\". Walls 3 and 4 are solid and each 4100mm long, offering maximum flexibility. The U-shape layout is immediately appealing, with an ample 2880mm aisle between the runs. The wall height is 2500mm.\n\nNext, I need to interpret the customer's needs, starting with the basics: slab door style is requested, and the layout preference is \"auto\" which gives me some freedom. Tall storage is a must-have, which implies the need for a PANTRY-600 unit. While the water purifier isn't specified, a standard AQUAGUARD-600 in the \"wet zone\" is a safe assumption. Now, about gas: it's not explicitly requested, but given the spacious room and the 4000mm free run on Wall 3, an LPG-600 unit is a viable option. No built-in appliances are mentioned, which solidifies the use of a PANTRY-600. The absence of a glass display request opens up options, but I note that the room layout suggests a long run and GLASS-600 is a good way to give the impression of an airy, spacious room. Customer cooking style isn't mentioned, I'll assume standard mixed storage for the base cabinets.\n\nWith this information, I can now move on to the layout itself. I have two layouts, L-shape (Wall 2 + Wall 3) or U-shape (Wall 1 + Wall 2 + Wall 3). The U-shape is appealing because the customer wants tall storage. The door's location on Wall 1, coupled with the ample aisle space, makes a U-shape ideal for functionality. Wall 1 can seamlessly accommodate tall storage near the entrance, Wall 2 is for wet zone and Wall 3 is ideal for the hob. This creates a classic work triangle. The 2880mm aisle between Wall 1 and 3 gives us a comfortable U-shape.\n\nNow, let's select the exact unit sizes. I'm thinking SINK-1050 for the window wall, the customer did not explicitly request large sink and this is appropriate for the 4000mm free run. HOB-900-3DRAWER seems like the best choice for the hob. I'll center it on Wall 3 at 2000mm. SPICE-300 unit for the spices. We'll go with LPG-600 for the hob wall. PANTRY-600 for tall storage on Wall 1 at the end of the run. A standard AQUAGUARD-600 will be added for the water purifier. I also see that GLASS-600 would be the best choice for the room size and to fill a long run on Wall 1 or Wall 3.\n\nThe base feature units include GRAIN-600 on Wall 1 (storage near pantry), WICKER-600 on Wall 2 (near the sink), and DRAWERS4-600 and DRAWERS2-900 on Wall 3 (hob wall). The wall cabinet sizes will be WALL-600 on Wall 1, WALL-800 on Wall 2, and WALL-900 on Wall 3.\n\nFinally, I'll do a quick double-check: sink wall is Wall 2, hob wall is Wall 3, tall unit is PANTRY-600 on Wall 1, aisle is 2880mm and ample space (>1200mm). The kitchen unit walls are Wall 1, Wall 2, and Wall 3, and the hob center is at 2000mm, within the permissible range. Now, all that's left is to make sure the JSON adheres strictly to the schema!",
+   "reading": "Wall 2 has a large window (1241-2741 mm), Wall 1 has an entrance door near the Wall 4 corner (85-985 mm), and Wall 3 and Wall 4 are long, uninterrupted solid walls. A U-shaped layout establishes distinct functional zones: tall and dry storage along Wall 1 by the entrance, the wet zone centred under the window on Wall 2, and the cooking zone along solid Wall 3,",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "U-shape on Wall 1, Wall 2, Wall 3",
+     "why": "With 2880 mm of clear aisle space between Wall 1 and Wall 3, a U-shape across Walls 1, 2, and 3 optimizes counter run and work flow without crowding the room.",
+     "source": "gemini",
+     "details": [
+      "Wall 1: 4100 mm long, door 85-985 mm, longest free run 2965 mm",
+      "Wall 2: 4100 mm long, window 1241-2741 mm, longest free run 4000 mm",
+      "Wall 3: 4100 mm long, longest free run 4000 mm",
+      "Not used: Wall 4: 4100 mm long, longest free run 4000 mm",
+      "U-shape aisle between the side runs: 2880 mm (needs 1200+)",
+      "2 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": null,
+     "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
+     "why": "SINK-1050 is chosen because Wall 2 offers 4000 mm of free run, giving plenty of counter space while centring the sink under the window for natural light.",
+     "source": "gemini",
+     "details": [
+      "Unit: 1050 x 560 x 700 mm (W x D x H) - shutters, room for pipes; window wall 3000+ mm free",
+      "Window 1500 mm wide, centre at 1991 mm; sink centre at 1991 mm (centred)",
+      "Wall 2 free run 4000 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 3, chimney above",
+     "why": "HOB-900-3DRAWER on Wall 3 places cooking on a solid wall well away from the door draft, with deep drawers providing optimal storage for heavy pans.",
+     "source": "gemini",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 3 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Asked for the hob centre at 2000 mm; built at 2150 mm",
+      "Beside it: LPG cylinder unit 600 mm (Cylinder Single Shutter) / Spice pull-out 300 mm (Spice Pullout)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 2.5 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "gemini",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+     "why": "Because gas supply is not stated and Wall 3 has a generous 4000 mm free run, an LPG-600 cabinet is included beside the hob for cylinder storage.",
+     "source": "gemini",
+     "details": [
+      "Unit: 600 x 560 x 800 mm (W x D x H) - LPG cylinder, beside the hob (needs a long hob wall)",
+      "On Wall 3 at 1100-1700 mm, beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 1",
+     "why": "The customer requested tall storage without specifying built-in appliances, so a standalone PANTRY-600 is placed at the entrance end of Wall 1.",
+     "source": "gemini",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 1 at 1090-1690 mm - end of the run, clear of windows",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "Water purifier cabinet 600 mm (Aquaguard Single Shutter) on Wall 2",
+     "why": "Water purifier is not stated, so a standard AQUAGUARD-600 wall cabinet is mounted adjacent to the window on Wall 2 above the wet zone.",
+     "source": "gemini",
+     "details": [
+      "Unit: 600 x 330 x 600 mm (W x D x H) - one shutter",
+      "On Wall 2 at 2800-3400 mm, wall-cabinet height",
+      "1117 mm from the sink centre (water and power nearby)",
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "Glass display cabinet 600 mm (Slab - Double Glass Shutter) on Wall 3",
+     "why": "With an expansive 4000 mm run on Wall 3, a GLASS-600 unit provides an elegant visual accent to terminate the overhead cabinetry.",
+     "source": "gemini",
+     "details": [
+      "Unit: 600 x 330 x 600 mm (W x D x H) - two glass shutters",
+      "On Wall 3 at 3450-4050 mm, at the end of a wall-cabinet run"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer + shutter units: 8 of 8 storage cabinets have drawers",
+     "why": "Since family size and cooking preferences were not stated, mixed base storage provides the ideal balance of top cutlery drawers and shelf space below.",
+     "source": "gemini",
+     "details": [
+      "4 x Base cabinet - Drawer with Single Shutter",
+      "1 x Base cabinet - Four Drawer",
+      "1 x Vegetable basket - Open Wicker Unit With 1 Bottom Drawer",
+      "1 x Grain trolley - Grain Trolley With 1 External Drawer",
+      "1 x Base cabinet - Double Drawer",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "4 of 4 requested units built",
+     "why": "GRAIN-600 serves the storage zone on Wall 1, WICKER-600 handles fresh produce near the sink on Wall 2, and DRAWERS4-600 plus DRAWERS2-900 organize cookware right by the hob on",
+     "source": "gemini",
+     "details": [
+      "Grain trolley 600 mm (Grain Trolley With 1 External Drawer): asked for Wall 1 -> built on Wall 1 at 1690-2290 mm - bins + an outside drawer",
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> built on Wall 2 at 2516-3116 mm - vegetables, onions, potatoes - near the sink",
+      "Base cabinet 600 mm (Four Drawer): asked for Wall 3 -> built on Wall 3 at 2900-3500 mm - cutlery, ladles, small tools - best right beside the hob",
+      "Base cabinet 900 mm (Double Drawer): asked for Wall 3 -> built on Wall 1 at 2290-3190 mm (moved from Wall 3: no room there) - deep drawers for pans, kadai and plates - hob wall"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "6 wall cabinets",
+     "why": "Wide 800 mm and 900 mm double-shutter overhead cabinets create clean, symmetrical horizontal sightlines across the long wall runs.",
+     "source": "gemini",
+     "details": [
+      "Wall 1: 3 cabinets (600, 600, 500 mm); sizes asked 600",
+      "Wall 2: 1 cabinets (500 mm); sizes asked 800; kept clear: window 1241-2741",
+      "Wall 3: 2 cabinets (950, 800 mm); sizes asked 900; kept clear: chimney zone"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "2 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 2 / Wall 1: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 2; wall - Corner wall cabinet 650 mm (L Corner) on Wall 1",
+      "Wall 3 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 3; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1050560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_49fdugi4g7vj12pf",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 2000.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "purifier_required": false,
+    "display_aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "base_storage": "mixed",
+    "reasons": {
+     "layout": "With 2880 mm of clear aisle space between Wall 1 and Wall 3, a U-shape across Walls 1, 2, and 3 optimizes counter run and work flow without crowding the room.",
+     "sink": "SINK-1050 is chosen because Wall 2 offers 4000 mm of free run, giving plenty of counter space while centring the sink under the window for natural light.",
+     "hob": "HOB-900-3DRAWER on Wall 3 places cooking on a solid wall well away from the door draft, with deep drawers providing optimal storage for heavy pans.",
+     "lpg": "Because gas supply is not stated and Wall 3 has a generous 4000 mm free run, an LPG-600 cabinet is included beside the hob for cylinder storage.",
+     "tall": "The customer requested tall storage without specifying built-in appliances, so a standalone PANTRY-600 is placed at the entrance end of Wall 1.",
+     "purifier": "Water purifier is not stated, so a standard AQUAGUARD-600 wall cabinet is mounted adjacent to the window on Wall 2 above the wet zone.",
+     "display": "With an expansive 4000 mm run on Wall 3, a GLASS-600 unit provides an elegant visual accent to terminate the overhead cabinetry.",
+     "features": "GRAIN-600 serves the storage zone on Wall 1, WICKER-600 handles fresh produce near the sink on Wall 2, and DRAWERS4-600 plus DRAWERS2-900 organize cookware right by the hob on",
+     "storage": "Since family size and cooking preferences were not stated, mixed base storage provides the ideal balance of top cutlery drawers and shelf space below.",
+     "wall_cabinets": "Wide 800 mm and 900 mm double-shutter overhead cabinets create clean, symmetrical horizontal sightlines across the long wall runs."
+    },
+    "notes": "Wall 2 has a large window (1241-2741 mm), Wall 1 has an entrance door near the Wall 4 corner (85-985 mm), and Wall 3 and Wall 4 are long, uninterrupted solid walls. A U-shaped layout establishes distinct functional zones: tall and dry storage along Wall 1 by the entrance, the wet zone centred under the window on Wall 2, and the cooking zone along solid Wall 3,",
+    "source": "gemini"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "compact",
+   "version": "gemini:gemini-flash-latest",
+   "mode": "gemini",
+   "score": 100.0,
+   "passed": 12,
+   "applicable": 12,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": null,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": null,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [],
+   "corrections": [
+    "water purifier unit skipped: no free wall-cabinet space within reach of the sink (window, corner cabinets and chimney take the wall)"
+   ],
+   "hob_shift_mm": 275,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": false,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 168.6,
+   "llm": {
+    "model": "gemini-3.8-flash",
+    "seconds": 168.5,
+    "prompt_tokens": 4818,
+    "prompt_seconds": null,
+    "eval_count": 890,
+    "eval_seconds": null,
+    "thinking_tokens": 11365,
+    "attempts": 1
+   },
+   "thoughts": "**Kitchen Design Synthesis: L-Shape Optimization**\n\nAlright, let's break this down. We're looking at a kitchen layout with these dimensions, let me mentally map the room: Wall 1 is 2400 mm, Wall 2 is 2700 mm (with a window), Wall 3 is 2400 mm, and Wall 4 is 2700 mm with a door on it. The customer wants tall storage. Given the room's proportions, the door placement near Wall 1, and the need for tall storage, an **L-shape** configuration is the clear front-runner.\n\nSpecifically, I\u2019m leaning towards **Wall 2 (window) and Wall 3 (solid wall)**. This places the hob on the solid wall farthest from the traffic path of the door on Wall 4 (which is near the Wall 1 corner). This makes for a much safer and more efficient cooking zone. A U-shape is possible, as the aisle is 1480 mm, but given that the brief doesn\u2019t specify a large family or heavy cooking, an L-shape seems more appropriate for this compact to medium room, maximizing counter space.\n\nLet\u2019s think about the practicalities. The window on Wall 2 means the sink is going there. The free run is sufficient for SINK-900. I envision a PANTRY-600 unit at the end of Wall 2 near the entrance. I'm imagining it will go on the opposite side of the sink, away from the window, and near the entrance. This puts the tall storage at the most accessible point and keeps it out of the active work zones (neither directly in front of the window nor near the hob).\n\nFor the cooking zone on Wall 3, I'm thinking a HOB-750-3DRAWER. This makes the most of a more compact hob wall (2300 mm free run) and offers drawer storage. Beside the hob, a SPICE-300 unit. And a DRAWERS4-600 unit. Given that the gas supply is not stated, and the cook area is compact, I\u2019ll plan for an LPG-600 to be \"NONE\".\n\nWe also need a water purifier, and for the Indian homes, an AQUAGUARD-600 unit will be on the sink wall (Wall 2), adjacent to the window. No display unit is needed, and \u201cmixed\u201d storage (drawers on top, shelves below) for base cabinets should be the ideal fit. Finally, for wall cabinets, I'm thinking WALL-800 on Wall 2 and WALL-600 on Wall 3 will provide a clean and functional design. This L-shape delivers a comfortable, optimized work area, and the tall units will work with the natural light from the window.",
+   "reading": "Wall 2 has a window (850-1850 mm, centre 1350 mm). Wall 4 has the entrance door (1600-2500 mm, near the Wall 1 corner). Wall 1 and Wall 3 are solid walls of 2400 mm length. An L-shaped layout with the wet zone and tall pantry on Wall 2 and the cooking zone on Wall 3. The work triangle flows smoothly from tall pantry to sink to hob without crossing entrance traffic.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "L-shape on Wall 2, Wall 3",
+     "why": "The entrance door on Wall 4 is located near Wall 1, making Wall 3 the quietest wall farther from foot traffic for cooking. An L-shape on Wall 2 and Wall 3 leaves the entrance open",
+     "source": "gemini",
+     "details": [
+      "Wall 2: 2700 mm long, window 850-1850 mm, longest free run 2600 mm",
+      "Wall 3: 2400 mm long, longest free run 2300 mm",
+      "Not used: Wall 1: 2400 mm long, longest free run 2300 mm; Wall 4: 2700 mm long, door 1600-2500 mm, longest free run 1450 mm",
+      "1 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": "Sink unit 900 mm (Sink Double Shutter)",
+     "built": "Sink unit 800 mm (Sink Double Shutter) on Wall 2",
+     "why": "Wall 2 hosts the window, making it the natural place for the wet zone. SINK-900 is the standard double-shutter unit, centering directly under the window with ample pipe space.",
+     "source": "gemini",
+     "details": [
+      "Unit: 800 x 560 x 700 mm (W x D x H) - shutters, room for pipes; small kitchens (window wall under 2400 mm free)",
+      "Window 1000 mm wide, centre at 1350 mm; sink centre at 1350 mm (centred)",
+      "Wall 2 free run 2600 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [
+      "Designer chose 900 mm; the rules used 800 mm so it centres under the window."
+     ],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 750 mm (Triple Drawer - A) on Wall 3, chimney above",
+     "why": "Wall 3 is a solid wall sheltered from drafts and door traffic. HOB-750-3DRAWER provides dedicated drawers for heavy cookware and fits the compact wall run under 2400 mm.",
+     "source": "gemini",
+     "details": [
+      "Unit: 750 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; compact - hob wall under 2400 mm free",
+      "Wall 3 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Asked for the hob centre at 1200 mm; built at 1475 mm",
+      "Beside it: Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) / Spice pull-out 300 mm (Spice Pullout)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 1.5 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "gemini",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "None",
+     "why": "Gas supply was not stated, and Wall 3 has under 2400 mm free run, making it too compact to fit an LPG cylinder unit without sacrificing drawer storage.",
+     "source": "gemini",
+     "details": [
+      "Hob wall free run 2300 mm (a cylinder unit needs about 600 mm more)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 2",
+     "why": "The customer requested tall storage with no built-in appliances stated, making PANTRY-600 the ideal choice. It sits at the free end of Wall 2 near the entrance, well away from the",
+     "source": "gemini",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 2 at 50-650 mm - end of the run, clear of windows",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": "Water purifier cabinet 600 mm (Aquaguard Single Shutter)",
+     "built": "None",
+     "why": "A water purifier was not stated, so standard practice is to place an AQUAGUARD-600 wall unit on Wall 2 adjacent to the sink window.",
+     "source": "gemini",
+     "details": [
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [
+      "water purifier unit skipped: no free wall-cabinet space within reach of the sink (window, corner cabinets and chimney take the wall)"
+     ],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "None",
+     "why": "Glass display was not requested, and keeping wall cabinetry closed ensures a clean, cohesive appearance in a compact kitchen.",
+     "source": "gemini",
+     "details": [],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer + shutter units: 2 of 3 storage cabinets have drawers",
+     "why": "Base cabinet style was not specified, so mixed storage with top cutlery drawers and shelves below provides the most versatile configuration for everyday use.",
+     "source": "gemini",
+     "details": [
+      "2 x Base cabinet - Drawer with Single Shutter",
+      "1 x Spice pull-out - Spice Pullout",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "0 of 1 requested units built",
+     "why": "DRAWERS4-600 on Wall 3 provides four organized drawers for cutlery, ladles, and tools right beside the cooking zone.",
+     "source": "gemini",
+     "details": [
+      "Base cabinet 600 mm (Four Drawer): asked for Wall 3 -> did not fit anywhere"
+     ],
+     "rules": [
+      "requested feature unit(s) did not fit - no free base run left: Base Unit 600 (Four Drawer)"
+     ],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "1 wall cabinets",
+     "why": "Wide double-shutter units (WALL-800 on Wall 2 and WALL-600 on Wall 3) give a calm, balanced look across both wall runs.",
+     "source": "gemini",
+     "details": [
+      "Wall 2: 0 cabinets (- mm); sizes asked 800; kept clear: window 850-1850",
+      "Wall 3: 1 cabinets (300 mm); sizes asked 600; kept clear: chimney zone"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "1 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 3 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 3; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_49fdugi4g7vj12pf",
+     "aid": "MTBABHU750560700DTDASLPUEHNS",
+     "center_mm": 1200.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": null,
+    "tall_units": [
+     {
+      "wall_id": "wall_56i56ymve0xf69fm",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABU600560700DFDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "purifier_required": false,
+    "display_aid": null,
+    "base_storage": "mixed",
+    "reasons": {
+     "layout": "The entrance door on Wall 4 is located near Wall 1, making Wall 3 the quietest wall farther from foot traffic for cooking. An L-shape on Wall 2 and Wall 3 leaves the entrance open",
+     "sink": "Wall 2 hosts the window, making it the natural place for the wet zone. SINK-900 is the standard double-shutter unit, centering directly under the window with ample pipe space.",
+     "hob": "Wall 3 is a solid wall sheltered from drafts and door traffic. HOB-750-3DRAWER provides dedicated drawers for heavy cookware and fits the compact wall run under 2400 mm.",
+     "lpg": "Gas supply was not stated, and Wall 3 has under 2400 mm free run, making it too compact to fit an LPG cylinder unit without sacrificing drawer storage.",
+     "tall": "The customer requested tall storage with no built-in appliances stated, making PANTRY-600 the ideal choice. It sits at the free end of Wall 2 near the entrance, well away from the",
+     "purifier": "A water purifier was not stated, so standard practice is to place an AQUAGUARD-600 wall unit on Wall 2 adjacent to the sink window.",
+     "display": "Glass display was not requested, and keeping wall cabinetry closed ensures a clean, cohesive appearance in a compact kitchen.",
+     "features": "DRAWERS4-600 on Wall 3 provides four organized drawers for cutlery, ladles, and tools right beside the cooking zone.",
+     "storage": "Base cabinet style was not specified, so mixed storage with top cutlery drawers and shelves below provides the most versatile configuration for everyday use.",
+     "wall_cabinets": "Wide double-shutter units (WALL-800 on Wall 2 and WALL-600 on Wall 3) give a calm, balanced look across both wall runs."
+    },
+    "notes": "Wall 2 has a window (850-1850 mm, centre 1350 mm). Wall 4 has the entrance door (1600-2500 mm, near the Wall 1 corner). Wall 1 and Wall 3 are solid walls of 2400 mm length. An L-shaped layout with the wet zone and tall pantry on Wall 2 and the cooking zone on Wall 3. The work triangle flows smoothly from tall pantry to sink to hob without crossing entrance traffic.",
+    "source": "gemini"
+   },
+   "layout_walls": [
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "window_short_wall",
+   "version": "gemini:gemini-flash-latest",
+   "mode": "gemini",
+   "score": 100.0,
+   "passed": 14,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [],
+   "corrections": [],
+   "hob_shift_mm": 200,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 35.7,
+   "llm": {
+    "model": "gemini-3.8-flash",
+    "seconds": 35.5,
+    "prompt_tokens": 4819,
+    "prompt_seconds": null,
+    "eval_count": 982,
+    "eval_seconds": null,
+    "thinking_tokens": 3118,
+    "attempts": 1
+   },
+   "thoughts": "**Kitchen Design Synthesis: A U-Shaped Configuration**\n\nOkay, here's how I'm thinking through this kitchen design. First, I\u2019ve got to get a sense of the space and its limitations. We've got four walls, each with its own characteristics: wall lengths, solid versus with window/door, and available free runs. The key is to assess the free run, and think U or L shape. The 1780 mm aisle between Wall 1 and Wall 3 really opens up possibilities. A U-shape is looking promising because it provides a good separation of zones, but the location of the door on Wall 4 needs to be kept in mind.\n\nThe customer wants a simple door, an \"auto\" layout preference, and, crucially, tall storage. This gives me a direction. The U-shape is supported by the aisle dimensions (1780mm, which is well over the required 1200mm minimum per the playbook). I can immediately map cooking to Wall 1 (away from the door and traffic, and ample free run), the wet zone (sink) to Wall 2 (window), and storage to Wall 3, near the entrance.\n\nSpecifically, I'm thinking of the following:\n\n*   **Layout:** A U-shape (Wall 1, Wall 2, Wall 3) makes the most of the space and offers excellent functionality. This is because the window on Wall 2 and adjacent solid Wall 1 and Wall 3 offers a functional separation of cooking, prep, and tall storage zones.\n*   **Sink:** Centered on Wall 2 at 1500 mm. The sink will be a SINK-900, appropriate for the 2900 mm free run on the window wall.\n*   **Hob:** Wall 1 is the ideal location (the 1100 mm - 3100 mm range gives us flexibility) is optimal, chosen away from the door and HOB-900-3DRAWER offers great storage.\n*   **Spice Pullout:** A SPICE-300 unit beside the hob is a practical addition.\n*   **LPG Cylinder:** The Gas type is not specified but the Wall 1 is plenty long enough to accommodate an LPG-600 cylinder cabinet safely next to the hob.\n*   **Tall Units:** The \"wants tall storage\" request is the driver for the PANTRY-600 unit. Given that the client did not explicitly request built-in appliances, this can be efficiently placed on Wall 3 near the entrance of the room.\n*   **Water Purifier:** A standard AQUAGUARD-600 can be mounted on Wall 2 beside the window.\n*   **Display Unit:** With the customer not requesting a display, I will use NONE.\n*   **Base Storage:** Given the lack of constraints, \"mixed\" base storage provides versatility.\n*   **Base Feature Units:** I will include dedicated drawers (DRAWERS4-600, DRAWERS2-900) on Wall 1 for cooking tools. A WICKER-600 on Wall 2 for vegetables near the sink and a GRAIN-600 grain trolley on Wall 3 for dry goods.\n*   **Wall Cabinets:** Wide double-shutter wall cabinets (WALL-900 and WALL-600) on each wall, create a calm aesthetic.\n\nFinally, I will ensure everything maps to the schema and stays within the given constraints.",
+   "reading": "Wall 2 has a 1200 mm window centred at 1500 mm. Wall 4 has an entrance door near the Wall 3 corner (300-1200 mm). Wall 1 and Wall 3 are long solid walls of 4200 mm. A U-shaped layout zones cooking on Wall 1, wet prep and washing on Wall 2, and dry storage on Wall 3, creating an efficient work triangle with 1780 mm of clear central aisle space.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "U-shape on Wall 1, Wall 2, Wall 3",
+     "why": "With 1780 mm between Wall 1 and Wall 3, a U-shape across Walls 1, 2, and 3 optimizes the generous floor area and separates the cooking zone completely from the entrance path.",
+     "source": "gemini",
+     "details": [
+      "Wall 1: 4200 mm long, longest free run 4100 mm",
+      "Wall 2: 3000 mm long, window 900-2100 mm, longest free run 2900 mm",
+      "Wall 3: 4200 mm long, longest free run 4100 mm",
+      "Not used: Wall 4: 3000 mm long, door 300-1200 mm, longest free run 1650 mm",
+      "U-shape aisle between the side runs: 1780 mm (needs 1200+)",
+      "2 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": "Sink unit 900 mm (Sink Double Shutter)",
+     "built": "Sink unit 800 mm (Sink Double Shutter) on Wall 2",
+     "why": "Wall 2 has the room window, making it the natural wet zone location, and SINK-900 fits neatly under the 1200 mm window within the 2900 mm free run.",
+     "source": "gemini",
+     "details": [
+      "Unit: 800 x 560 x 700 mm (W x D x H) - shutters, room for pipes; small kitchens (window wall under 2400 mm free)",
+      "Window 1200 mm wide, centre at 1500 mm; sink centre at 1500 mm (centred)",
+      "Wall 2 free run 2900 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [
+      "Designer chose 900 mm; the rules used 800 mm so it centres under the window."
+     ],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 1, chimney above",
+     "why": "Wall 1 is a solid wall shielded from outdoor breeze and door traffic, with HOB-900-3DRAWER placed at 2100 mm to provide generous counter space on both sides.",
+     "source": "gemini",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 1 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Asked for the hob centre at 2100 mm; built at 2300 mm",
+      "Beside it: Spice pull-out 300 mm (Spice Pullout) / LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 1.9 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "gemini",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+     "why": "Gas supply is not specified, but Wall 1 has an expansive 4100 mm free run that comfortably fits an LPG-600 unit beside the hob.",
+     "source": "gemini",
+     "details": [
+      "Unit: 600 x 560 x 800 mm (W x D x H) - LPG cylinder, beside the hob (needs a long hob wall)",
+      "On Wall 1 at 2750-3350 mm, beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 3",
+     "why": "The customer requested tall storage without built-in appliances specified, so a PANTRY-600 is anchored at the entrance end of Wall 3.",
+     "source": "gemini",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 3 at 2610-3210 mm - end of the run, clear of windows",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "Water purifier cabinet 600 mm (Aquaguard Single Shutter) on Wall 1",
+     "why": "Water purifier is not stated, so standard provision of an AQUAGUARD-600 wall unit is placed on Wall 2 next to the window.",
+     "source": "gemini",
+     "details": [
+      "Unit: 600 x 330 x 600 mm (W x D x H) - one shutter",
+      "On Wall 1 at 2900-3500 mm, wall-cabinet height",
+      "1440 mm from the sink centre (water and power nearby)",
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [
+      "water purifier placed on Wall 1 beside the corner: no free wall space on the sink wall"
+     ],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "None",
+     "why": "Glass display was not requested, so closed cabinets are used throughout for a neat, cohesive aesthetic.",
+     "source": "gemini",
+     "details": [],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer + shutter units: 5 of 6 storage cabinets have drawers",
+     "why": "Cooking intensity is not stated, making mixed base storage with top cutlery drawers and lower shelving the most practical everyday choice.",
+     "source": "gemini",
+     "details": [
+      "1 x Base cabinet - Four Drawer",
+      "1 x Base cabinet - Double Drawer",
+      "1 x Spice pull-out - Spice Pullout",
+      "1 x Grain trolley - Grain Trolley With 1 External Drawer",
+      "1 x Vegetable basket - Open Wicker Unit With 1 Bottom Drawer",
+      "1 x Base cabinet - Drawer with Double Shutter",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "4 of 4 requested units built",
+     "why": "Drawers on Wall 1 organize cooking utensils and cookware by the hob, wicker baskets on Wall 2 hold fresh produce near the sink, and a grain trolley on Wall 3 supports dry bulk",
+     "source": "gemini",
+     "details": [
+      "Base cabinet 600 mm (Four Drawer): asked for Wall 1 -> built on Wall 1 at 50-650 mm - cutlery, ladles, small tools - best right beside the hob",
+      "Base cabinet 900 mm (Double Drawer): asked for Wall 1 -> built on Wall 1 at 650-1550 mm - deep drawers for pans, kadai and plates - hob wall",
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> built on Wall 3 at 1210-1810 mm (moved from Wall 2: no room there) - vegetables, onions, potatoes - near the sink",
+      "Grain trolley 600 mm (Grain Trolley With 1 External Drawer): asked for Wall 3 -> built on Wall 3 at 610-1210 mm - bins + an outside drawer"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "5 wall cabinets",
+     "why": "Standard double-shutter wall cabinets (WALL-900 and WALL-600) maintain wide, balanced sightlines across the long wall runs.",
+     "source": "gemini",
+     "details": [
+      "Wall 1: 2 cabinets (900, 850 mm); sizes asked 900, 600; kept clear: chimney zone",
+      "Wall 2: 0 cabinets (- mm); sizes asked 600; kept clear: window 900-2100",
+      "Wall 3: 3 cabinets (900, 600, 400 mm); sizes asked 900, 600"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "2 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 2 / Wall 1: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Right) on Wall 2; wall - Corner wall cabinet 650 mm (L Corner) on Wall 1",
+      "Wall 2 / Wall 3: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Left) on Wall 2; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "U",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 2100.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABU600560700DFDSLPUEHNS",
+      "MTBABU900560700DDDSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABGT600560700DGTEDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU600330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU900330600SDSSLBOEH1S",
+      "MTWAWU600330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "purifier_required": false,
+    "display_aid": null,
+    "base_storage": "mixed",
+    "reasons": {
+     "layout": "With 1780 mm between Wall 1 and Wall 3, a U-shape across Walls 1, 2, and 3 optimizes the generous floor area and separates the cooking zone completely from the entrance path.",
+     "sink": "Wall 2 has the room window, making it the natural wet zone location, and SINK-900 fits neatly under the 1200 mm window within the 2900 mm free run.",
+     "hob": "Wall 1 is a solid wall shielded from outdoor breeze and door traffic, with HOB-900-3DRAWER placed at 2100 mm to provide generous counter space on both sides.",
+     "lpg": "Gas supply is not specified, but Wall 1 has an expansive 4100 mm free run that comfortably fits an LPG-600 unit beside the hob.",
+     "tall": "The customer requested tall storage without built-in appliances specified, so a PANTRY-600 is anchored at the entrance end of Wall 3.",
+     "purifier": "Water purifier is not stated, so standard provision of an AQUAGUARD-600 wall unit is placed on Wall 2 next to the window.",
+     "display": "Glass display was not requested, so closed cabinets are used throughout for a neat, cohesive aesthetic.",
+     "features": "Drawers on Wall 1 organize cooking utensils and cookware by the hob, wicker baskets on Wall 2 hold fresh produce near the sink, and a grain trolley on Wall 3 supports dry bulk",
+     "storage": "Cooking intensity is not stated, making mixed base storage with top cutlery drawers and lower shelving the most practical everyday choice.",
+     "wall_cabinets": "Standard double-shutter wall cabinets (WALL-900 and WALL-600) maintain wide, balanced sightlines across the long wall runs."
+    },
+    "notes": "Wall 2 has a 1200 mm window centred at 1500 mm. Wall 4 has an entrance door near the Wall 3 corner (300-1200 mm). Wall 1 and Wall 3 are long solid walls of 4200 mm. A U-shaped layout zones cooking on Wall 1, wet prep and washing on Wall 2, and dry storage on Wall 3, creating an efficient work triangle with 1780 mm of clear central aisle space.",
+    "source": "gemini"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "door_by_window_corner",
+   "version": "gemini:gemini-flash-latest",
+   "mode": "gemini",
+   "score": 92.9,
+   "passed": 13,
+   "applicable": 14,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": true,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": false,
+    "walls_connected": true,
+    "uses_the_room": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [
+    "tall_well_placed"
+   ],
+   "corrections": [],
+   "hob_shift_mm": 10,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 39.9,
+   "llm": {
+    "model": "gemini-3.8-flash",
+    "seconds": 39.8,
+    "prompt_tokens": 4823,
+    "prompt_seconds": null,
+    "eval_count": 917,
+    "eval_seconds": null,
+    "thinking_tokens": 1731,
+    "attempts": 1
+   },
+   "thoughts": "**MagickHome Kitchen Design: My Analysis**\n\nAlright, let's get this MagickHome kitchen design flowing in JSON format. The client has given me a room description and some preferences, and it's my job to translate that into a functional and aesthetically pleasing kitchen.\n\nFirst, the room analysis: Walls 1, 2, 3, and 4. The door on Wall 1 is the tricky part, it's pretty much right next to Wall 2 at the corner. No U-shape for us, that door blocks the corner. An L-shape with Walls 2 and 3 seems like the most logical route. Wall 2 with the window, and Wall 3 is a solid wall, offering a good run for cabinets.\n\nBased on the measurements, an L-shape kitchen with Wall 2 and Wall 3 is the only option here. The door location on Wall 1 dictates this.\n\nNow, considering the customer's needs and my playbook: They want slab door style and tall storage. No specific built-in appliances are mentioned. With these constraints, I'm setting an auto layout plan.\n\nWater purifier: defaulting to AQUAGUARD-600 beside the window on Wall 2.\n\nGas: The playbook indicates we can include an LPG-600 unit if the hob wall is long enough. Wall 3 has plenty of room at 3200mm, we can definitely accommodate it.\n\nBuilt-in appliances: The customer's request for \"tall storage\" means the standard PANTRY-600 is a natural fit.\n\nGlass display: Not mentioned, so unless we need extra storage, I'll go with NONE, keep it simple and clean.\n\nCooking/household size: Not stated. I'll default to \"mixed\" base storage for most homes.\n\nAppliances: HOB-900-3DRAWER (best choice), and SINK-1050 (window wall provides more than enough room). Spice pull-out: SPICE-300.\n\nFor the tall units, the customer specifically wants storage. The PANTRY-600 will go at the end of Wall 3, near the corner with Wall 4.\n\nWater purifier goes on Wall 2, AQUAGUARD-600.\n\nBase feature units: WICKER-600 on Wall 2 (wet area), DRAWERS4-600, or DRAWERS2-900, maybe GRAIN-600 on Wall 3 (hob/cooking wall).\n\nWall cabinets: WALL-800 or WALL-900 on both Wall 2 and Wall 3.\n\nLet's nail down that hob placement. Wall 3 connects to Wall 2 at 0 mm. The corner from Wall 2 takes about 650 mm on Wall 3. The hob has a range of 1100-2200 mm. So, let's put the hob centre at 1650 or 1700 mm. Corner: 0-650. Space between the corner and hob: 650 to 1200 (550 mm). The 900 mm wide hob, centred at 1650, extends from 1200 to 2100 mm. I can put the SPICE-300 and LPG-600 (or drawers) to the side. At the end of Wall 3, near the corner (around 2650-3250), PANTRY-600. Hob placement works perfectly within the range.\n\nNow, all that's left is ensuring all the required fields are filled for the JSON, checking for any logical inconsistencies, and cleaning up the text. Let's make sure it's all airtight and meets the client's needs.",
+   "reading": "Wall 2 has the window at 1200-2400 mm; Wall 1 has the door near the Wall 2 corner (2200-3100 mm); Wall 3 and Wall 4 are long solid walls. The wet zone centres on Wall 2 under the window, cooking is placed on adjacent solid Wall 3, and tall storage anchors the end of Wall 3, creating an efficient, uncrossed work triangle.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "L-shape on Wall 2, Wall 3",
+     "why": "An L-shape across Wall 2 and Wall 3 is chosen because the door on Wall 1 interrupts its corner run with Wall 2, while Wall 3 offers an uninterrupted 3200 mm run for cooking and",
+     "source": "gemini",
+     "details": [
+      "Wall 2: 3600 mm long, window 1200-2400 mm, longest free run 3500 mm",
+      "Wall 3: 3300 mm long, longest free run 3200 mm",
+      "Not used: Wall 1: 3300 mm long, door 2200-3100 mm, longest free run 2050 mm; Wall 4: 3600 mm long, longest free run 3500 mm",
+      "1 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": null,
+     "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
+     "why": "SINK-1050 is selected and centred at 1800 mm on Wall 2 because the wall has 3500 mm of free run, providing ample space for an expanded double-shutter sink unit under the daylight.",
+     "source": "gemini",
+     "details": [
+      "Unit: 1050 x 560 x 700 mm (W x D x H) - shutters, room for pipes; window wall 3000+ mm free",
+      "Window 1200 mm wide, centre at 1800 mm; sink centre at 1800 mm (centred)",
+      "Wall 2 free run 3500 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 3, chimney above",
+     "why": "HOB-900-3DRAWER is positioned at 1650 mm on solid Wall 3, which falls safely within the 1100-2200 mm hob zone, away from window drafts and offering ergonomic drawer storage for",
+     "source": "gemini",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 3 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Asked for the hob centre at 1650 mm; built at 1660 mm",
+      "Beside it: LPG cylinder unit 600 mm (Cylinder Single Shutter) / Spice pull-out 300 mm (Spice Pullout)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 2.0 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "gemini",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+     "why": "LPG-600 is accommodated next to the hob because Wall 3 provides a generous 3200 mm run, ensuring gas bottle storage is safely secured.",
+     "source": "gemini",
+     "details": [
+      "Unit: 600 x 560 x 800 mm (W x D x H) - LPG cylinder, beside the hob (needs a long hob wall)",
+      "On Wall 3 at 610-1210 mm, beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 3",
+     "why": "The customer requested tall storage and appliances were not stated, so a PANTRY-600 is placed at the end of Wall 3 away from the cooking zone to maximise dry pantry capacity.",
+     "source": "gemini",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 3 at 2610-3210 mm - end of the run, clear of windows; 500 mm from the hob",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "Water purifier cabinet 450 mm (Aquaguard Single Shutter) on Wall 2",
+     "why": "A standard AQUAGUARD-600 is hung on Wall 2 beside the window as wall purifiers are standard for Indian homes when not explicitly stated otherwise.",
+     "source": "gemini",
+     "details": [
+      "Unit: 450 x 330 x 600 mm (W x D x H) - one shutter",
+      "On Wall 2 at 2450-2900 mm, wall-cabinet height",
+      "885 mm from the sink centre (water and power nearby)",
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "None",
+     "why": "Display units were not requested, so NONE is chosen to prioritise clean closed wall storage across the runs.",
+     "source": "gemini",
+     "details": [],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer + shutter units: 1 of 3 storage cabinets have drawers",
+     "why": "Base cabinet style is selected as mixed since cooking needs were not stated, providing a balanced combination of top cutlery drawers and lower shelving.",
+     "source": "gemini",
+     "details": [
+      "2 x Spice pull-out - Spice Pullout",
+      "1 x Base cabinet - Drawer with Single Shutter",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "0 of 2 requested units built",
+     "why": "A wicker basket unit is placed on Wall 2 near the sink for fresh vegetables, while a 4-drawer unit is placed on Wall 3 for tools and cutlery beside the hob.",
+     "source": "gemini",
+     "details": [
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> did not fit anywhere",
+      "Base cabinet 600 mm (Four Drawer): asked for Wall 3 -> did not fit anywhere"
+     ],
+     "rules": [
+      "requested feature unit(s) did not fit - no free base run left: Base Wicker Basket Unit 600 (Open Wicker Unit With 1 Bottom Drawer), Base Unit 600 (Four Drawer)"
+     ],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "2 wall cabinets",
+     "why": "Wide WALL-800 and WALL-900 double-shutter overhead cabinets are specified to maintain a balanced, calm visual alignment across both walls.",
+     "source": "gemini",
+     "details": [
+      "Wall 2: 0 cabinets (- mm); sizes asked 800; kept clear: window 1200-2400",
+      "Wall 3: 2 cabinets (450, 450 mm); sizes asked 900; kept clear: chimney zone"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "1 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 2 / Wall 3: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Left) on Wall 2; wall - Corner wall cabinet 650 mm (L Corner) on Wall 2"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_56i56ymve0xf69fm",
+     "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABSU1050560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_49fdugi4g7vj12pf",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1650.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTBABU600560700DFDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S"
+     ],
+     "wall_49fdugi4g7vj12pf": [
+      "MTWAWU900330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "purifier_required": false,
+    "display_aid": null,
+    "base_storage": "mixed",
+    "reasons": {
+     "layout": "An L-shape across Wall 2 and Wall 3 is chosen because the door on Wall 1 interrupts its corner run with Wall 2, while Wall 3 offers an uninterrupted 3200 mm run for cooking and",
+     "sink": "SINK-1050 is selected and centred at 1800 mm on Wall 2 because the wall has 3500 mm of free run, providing ample space for an expanded double-shutter sink unit under the daylight.",
+     "hob": "HOB-900-3DRAWER is positioned at 1650 mm on solid Wall 3, which falls safely within the 1100-2200 mm hob zone, away from window drafts and offering ergonomic drawer storage for",
+     "lpg": "LPG-600 is accommodated next to the hob because Wall 3 provides a generous 3200 mm run, ensuring gas bottle storage is safely secured.",
+     "tall": "The customer requested tall storage and appliances were not stated, so a PANTRY-600 is placed at the end of Wall 3 away from the cooking zone to maximise dry pantry capacity.",
+     "purifier": "A standard AQUAGUARD-600 is hung on Wall 2 beside the window as wall purifiers are standard for Indian homes when not explicitly stated otherwise.",
+     "display": "Display units were not requested, so NONE is chosen to prioritise clean closed wall storage across the runs.",
+     "features": "A wicker basket unit is placed on Wall 2 near the sink for fresh vegetables, while a 4-drawer unit is placed on Wall 3 for tools and cutlery beside the hob.",
+     "storage": "Base cabinet style is selected as mixed since cooking needs were not stated, providing a balanced combination of top cutlery drawers and lower shelving.",
+     "wall_cabinets": "Wide WALL-800 and WALL-900 double-shutter overhead cabinets are specified to maintain a balanced, calm visual alignment across both walls."
+    },
+    "notes": "Wall 2 has the window at 1200-2400 mm; Wall 1 has the door near the Wall 2 corner (2200-3100 mm); Wall 3 and Wall 4 are long solid walls. The wet zone centres on Wall 2 under the window, cooking is placed on adjacent solid Wall 3, and tall storage anchors the end of Wall 3, creating an efficient, uncrossed work triangle.",
+    "source": "gemini"
+   },
+   "layout_walls": [
+    "Wall 2",
+    "Wall 3"
+   ]
+  },
+  {
+   "room": "no_window",
+   "version": "gemini:gemini-flash-latest",
+   "mode": "gemini",
+   "score": 100.0,
+   "passed": 12,
+   "applicable": 12,
+   "checks": {
+    "reads_room": true,
+    "sink_on_window_wall": null,
+    "hob_on_solid_wall": true,
+    "sink_hob_apart": true,
+    "hob_clear_of_door": true,
+    "hob_position_sane": true,
+    "sink_size_suits_wall": true,
+    "hob_unit_has_drawers": true,
+    "spice_beside_hob": true,
+    "tall_well_placed": true,
+    "walls_connected": true,
+    "features_zoned": true,
+    "wall_cabinets_planned": true
+   },
+   "failed": [],
+   "corrections": [],
+   "hob_shift_mm": 60,
+   "extras": {
+    "water_purifier": true,
+    "purifier_built": true,
+    "display_unit": false,
+    "tall_types": [
+     "Tall Unit"
+    ]
+   },
+   "verify_errors": [],
+   "seconds": 132.8,
+   "llm": {
+    "model": "gemini-3.8-flash",
+    "seconds": 132.7,
+    "prompt_tokens": 4783,
+    "prompt_seconds": null,
+    "eval_count": 883,
+    "eval_seconds": null,
+    "thinking_tokens": 10443,
+    "attempts": 1
+   },
+   "thoughts": "**Kitchen Design Rationale**\n\nAlright, let's break this down. We need a modular kitchen design and the goal is to define an optimal L-shaped kitchen. After reviewing the room dimensions, and the customer wants tall storage, a slab door style and automatic layout. Because there is no window present we must decide where the sink goes. The absence of a window throws a bit of a curveball, since the playbook typically starts with the window wall. Let's make sure, no window. Let\u2019s double check: No window!\n\nWith no window, we have to look for alternatives and consider the work triangle. The customer's specifications suggest an automated layout which typically defaults to the L-shape, which is ideal in this space. Since there is no window to put the sink under, our attention turns to the door. We have to consider how the door location will affect the layout. Wall 4 has a door described as \"near the Wall 1 corner,\" it\u2019s important and will inform our cabinet layout.\n\nGiven the door's proximity to Wall 1 (and the fact that Wall 2 is 3600 mm long), the work triangle suggests that we\u2019ll put cabinets on Wall 1 and Wall 2.  This gives Wall 2 the hob and Wall 1 the sink, since the playbook advises the hob wall to be farther from the door. An L-shaped design using Wall 1 and Wall 2 ensures the hob is away from the doorway. We can place the tall unit (Pantry) at the end of Wall 1 near the door, a typical strategy for making the kitchen more user friendly. The sink would take SINK-900 (it's less than 3000 mm, so SINK-900 is standard) on Wall 1, and the hob would be a HOB-900-3DRAWER on Wall 2. The placement optimizes the work triangle between the hob and the sink. Additional features include a spice pull-out, and an LPG cylinder, if the hob wall is long enough. The playbook gives guidance on appliance, and base storage.\n\nFinal design: Wall 1 and Wall 2, an L shape, tall unit near entrance, sink on Wall 1, hob on Wall 2. This satisfies all requirements and prioritizes functionality and the work triangle.",
+   "reading": "Wall 4 is the door wall with the door located near the Wall 1 corner; Walls 1, 2, and 3 are solid walls with no windows, with Wall 2 offering the longest run at 3600 mm. An L-shaped layout across Wall 1 and Wall 2 establishes an efficient work triangle, locating tall storage and the sink along Wall 1 and the cooking zone along Wall 2 safely away from the doorway.",
+   "explanation": [
+    {
+     "item": "Layout",
+     "decision": null,
+     "built": "L-shape on Wall 1, Wall 2",
+     "why": "Wall 1 and Wall 2 form an unbroken L-shape that places the tall pantry conveniently near the entrance on Wall 1 while leaving Wall 2 free for the cooking zone away from entrance",
+     "source": "gemini",
+     "details": [
+      "Wall 1: 3000 mm long, longest free run 2900 mm",
+      "Wall 2: 3600 mm long, longest free run 3500 mm",
+      "Not used: Wall 3: 3000 mm long, longest free run 2900 mm; Wall 4: 3600 mm long, door 1350-2250 mm, longest free run 1200 mm",
+      "1 inside corner(s) between cabinet runs"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Sink",
+     "decision": null,
+     "built": "Sink unit 900 mm (Sink Double Shutter) on Wall 1",
+     "why": "Wall 1 provides ample space for the wet zone; standard SINK-900 provides generous washing capacity without overcrowding the run.",
+     "source": "gemini",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - shutters, room for pipes; standard single-bowl sink - right for most kitchens",
+      "Wall 1 free run 2900 mm",
+      "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Hob",
+     "decision": null,
+     "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 2, chimney above",
+     "why": "Wall 2 is a solid wall safely isolated from door traffic; HOB-900-3DRAWER positioned at 1800 mm provides ergonomic drawer storage for cookware with balanced counter space on",
+     "source": "gemini",
+     "details": [
+      "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+      "Wall 2 has no window - a solid wall for the chimney",
+      "No door on this wall",
+      "Asked for the hob centre at 1800 mm; built at 1860 mm",
+      "Beside it: Spice pull-out 300 mm (Spice Pullout) / LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+      "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+      "Sink to hob: 2.3 m (different walls; comfortable range 1.2-2.7 m)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Spice pull-out",
+     "decision": null,
+     "built": "Spice pull-out 300 mm (Spice Pullout)",
+     "why": "Masalas and oils within reach of the cook.",
+     "source": "gemini",
+     "details": [
+      "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+      "Right beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "LPG cylinder",
+     "decision": null,
+     "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+     "why": "Gas supply is not stated, and Wall 2 has a long 3500 mm free run with sufficient space to safely include LPG-600 beside the cooking zone.",
+     "source": "gemini",
+     "details": [
+      "Unit: 600 x 560 x 800 mm (W x D x H) - LPG cylinder, beside the hob (needs a long hob wall)",
+      "On Wall 2 at 2310-2910 mm, beside the hob"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Tall units",
+     "decision": null,
+     "built": "Tall pantry 600 mm (Single Shutter) on Wall 2",
+     "why": "Customer requested tall storage without specifying built-in appliances, so PANTRY-600 is placed at the entrance end of Wall 1 for convenient grocery access.",
+     "source": "gemini",
+     "details": [
+      "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+      "On Wall 2 at 2910-3510 mm - end of the run, clear of windows; 600 mm from the hob",
+      "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Water purifier",
+     "decision": null,
+     "built": "Water purifier cabinet 600 mm (Aquaguard Single Shutter) on Wall 1",
+     "why": "Water purifier is not stated, so a standard AQUAGUARD-600 wall unit is mounted above the counter on Wall 1 near the sink for water access.",
+     "source": "gemini",
+     "details": [
+      "Unit: 600 x 330 x 600 mm (W x D x H) - one shutter",
+      "On Wall 1 at 50-650 mm, wall-cabinet height",
+      "615 mm from the sink centre (water and power nearby)",
+      "Purifier sizes on offer: 600, 450, 750"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Glass display",
+     "decision": null,
+     "built": "None",
+     "why": "Glass display was not requested and the brief specifies plain slab doors, so display cabinets are omitted for a uniform look.",
+     "source": "gemini",
+     "details": [],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Base cabinets",
+     "decision": null,
+     "built": "Drawer + shutter units: 3 of 3 storage cabinets have drawers",
+     "why": "Base storage was not specified, so mixed storage combining a cutlery drawer on top and shelf space below is chosen for versatile daily organization.",
+     "source": "gemini",
+     "details": [
+      "3 x Base cabinet - Drawer with Single Shutter",
+      "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Feature units",
+     "decision": null,
+     "built": "0 of 2 requested units built",
+     "why": "WICKER-600 is placed on Wall 1 near the sink for fresh produce, and DRAWERS4-600 is positioned on Wall 2 next to the hob for immediate access to ladles and cooking tools.",
+     "source": "gemini",
+     "details": [
+      "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 1 -> did not fit anywhere",
+      "Base cabinet 600 mm (Four Drawer): asked for Wall 2 -> did not fit anywhere"
+     ],
+     "rules": [
+      "requested feature unit(s) did not fit - no free base run left: Base Wicker Basket Unit 600 (Open Wicker Unit With 1 Bottom Drawer), Base Unit 600 (Four Drawer)"
+     ],
+     "need": null
+    },
+    {
+     "item": "Wall cabinets",
+     "decision": null,
+     "built": "5 wall cabinets",
+     "why": "Broad wall units such as WALL-600 and WALL-800 maintain an uncluttered, symmetrical rhythm that complements the minimalist slab doors.",
+     "source": "gemini",
+     "details": [
+      "Wall 1: 3 cabinets (600, 600, 450 mm); sizes asked 600",
+      "Wall 2: 2 cabinets (600, 550 mm); sizes asked 800, 600; kept clear: chimney zone"
+     ],
+     "rules": [],
+     "need": null
+    },
+    {
+     "item": "Corners",
+     "decision": null,
+     "built": "1 corner(s)",
+     "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
+     "source": "rules",
+     "details": [
+      "Wall 1 / Wall 2: base - Blind corner cabinet 1050 mm (Blind Corner \u2013 Left) on Wall 1; wall - Corner wall cabinet 650 mm (L Corner) on Wall 1"
+     ],
+     "rules": [],
+     "need": null
+    }
+   ],
+   "proposal": {
+    "layout_type": "L",
+    "cabinet_walls": [
+     "wall_1oy5ecjq6k11pfoo",
+     "wall_56i56ymve0xf69fm"
+    ],
+    "sink": {
+     "wall_id": "wall_1oy5ecjq6k11pfoo",
+     "aid": "MTBABSU900560700SSDSSLBOEHNS",
+     "center_mm": null
+    },
+    "hob": {
+     "wall_id": "wall_56i56ymve0xf69fm",
+     "aid": "MTBABHU900560700DTDASLPUEHNS",
+     "center_mm": 1800.0
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+     {
+      "wall_id": "wall_1oy5ecjq6k11pfoo",
+      "aid": "MTTATU6005601940SSSSLLEH4S"
+     }
+    ],
+    "base_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTBABWB600560700ODWB1DSLPUEHNS"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTBABU600560700DFDSLPUEHNS"
+     ]
+    },
+    "wall_prefs": {
+     "wall_1oy5ecjq6k11pfoo": [
+      "MTWAWU600330600SDSSLBOEH1S"
+     ],
+     "wall_56i56ymve0xf69fm": [
+      "MTWAWU800330600SDSSLBOEH1S",
+      "MTWAWU600330600SDSSLBOEH1S"
+     ]
+    },
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "purifier_required": false,
+    "display_aid": null,
+    "base_storage": "mixed",
+    "reasons": {
+     "layout": "Wall 1 and Wall 2 form an unbroken L-shape that places the tall pantry conveniently near the entrance on Wall 1 while leaving Wall 2 free for the cooking zone away from entrance",
+     "sink": "Wall 1 provides ample space for the wet zone; standard SINK-900 provides generous washing capacity without overcrowding the run.",
+     "hob": "Wall 2 is a solid wall safely isolated from door traffic; HOB-900-3DRAWER positioned at 1800 mm provides ergonomic drawer storage for cookware with balanced counter space on",
+     "lpg": "Gas supply is not stated, and Wall 2 has a long 3500 mm free run with sufficient space to safely include LPG-600 beside the cooking zone.",
+     "tall": "Customer requested tall storage without specifying built-in appliances, so PANTRY-600 is placed at the entrance end of Wall 1 for convenient grocery access.",
+     "purifier": "Water purifier is not stated, so a standard AQUAGUARD-600 wall unit is mounted above the counter on Wall 1 near the sink for water access.",
+     "display": "Glass display was not requested and the brief specifies plain slab doors, so display cabinets are omitted for a uniform look.",
+     "features": "WICKER-600 is placed on Wall 1 near the sink for fresh produce, and DRAWERS4-600 is positioned on Wall 2 next to the hob for immediate access to ladles and cooking tools.",
+     "storage": "Base storage was not specified, so mixed storage combining a cutlery drawer on top and shelf space below is chosen for versatile daily organization.",
+     "wall_cabinets": "Broad wall units such as WALL-600 and WALL-800 maintain an uncluttered, symmetrical rhythm that complements the minimalist slab doors."
+    },
+    "notes": "Wall 4 is the door wall with the door located near the Wall 1 corner; Walls 1, 2, and 3 are solid walls with no windows, with Wall 2 offering the longest run at 3600 mm. An L-shaped layout across Wall 1 and Wall 2 establishes an efficient work triangle, locating tall storage and the sink along Wall 1 and the cooking zone along Wall 2 safely away from the doorway.",
+    "source": "gemini"
+   },
+   "layout_walls": [
+    "Wall 1",
+    "Wall 2"
+   ]
+  }
+ ]
+}

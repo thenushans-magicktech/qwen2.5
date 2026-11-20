@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import sys
 import threading
 import time
@@ -64,13 +65,24 @@ def generate_kitchen(
 
     if prefs.ai_mode == "fallback":
         step("Designing with the rule-based designer")
+    elif (prefs.ai_provider or config.AI_PROVIDER) == "gemini":
+        step(f"Gemini ({config.GEMINI_MODEL}) is designing the kitchen - usually 1-2 minutes")
     else:
-        step(f"Qwen ({config.OLLAMA_MODEL}) is designing the kitchen - about {config.AI_EXPECTED_TIME} on CPU")
+        t = config.AI_EXPECTED_TIME
+        step(f"Qwen ({config.OLLAMA_MODEL}) is designing the kitchen - {t if t.split()[0] in ('under', 'over', 'about') else 'about ' + t}")
     proposal, ai_info = design_kitchen(geometry, catalog, prefs)
+    if ai_info.get("mode") == "fallback" and prefs.ai_mode != "fallback":
+        step("The AI designer was not available - used the rule-based designer instead")
     if not prefs.include_tall:
         proposal.tall_units = []
     if prefs.include_cylinder is False:
         proposal.cylinder_aid = None
+    # Base cabinet style: the customer's stated style, else the designer's (Qwen's) choice.
+    stated_storage = base_storage_need(prefs)[0]
+    storage = stated_storage if stated_storage != "auto" else (proposal.base_storage or "auto")
+    # Lofts and wall-door style: the customer's answer, else the designer's decision.
+    lofts = prefs.include_loft if prefs.include_loft is not None else bool(proposal.lofts)
+    wall_style = prefs.wall_style if prefs.wall_style != "auto" else (proposal.wall_style or "shutters")
 
     step("Applying design rules: window, door, corner and chimney clearances")
     layout = solve_layout(
@@ -78,11 +90,12 @@ def generate_kitchen(
         catalog,
         proposal,
         SolverPrefs(
-            include_loft=prefs.include_loft,
+            include_loft=lofts,
             layout=prefs.layout,
             cabinet_walls=prefs.cabinet_walls,
             sink_under_window=prefs.sink_under_window,
-            base_storage=base_storage_need(prefs)[0],
+            base_storage=storage,
+            wall_style=wall_style,
         ),
     )
     step("Building the 3D scene: cabinets, appliances, countertops, panels")
@@ -95,6 +108,7 @@ def generate_kitchen(
         "explanation": explain_design(proposal, layout, prefs, geometry, catalog),
         "proposal": proposal.to_dict(),
         "layout": layout.summary(),
+        "heights": dict(layout.heights, wall_style=wall_style),
         "nodes_added": stats,
         "validation_issues": issues,
         "catalog": {"source": catalog.source, "filtered_skus": len(catalog), "door_style": prefs.door_style},
@@ -297,6 +311,16 @@ def ui() -> FileResponse:
     return FileResponse(STATIC_DIR / "index.html", media_type="text/html", headers={"Cache-Control": "no-cache"})
 
 
+# UI assets (vendored three.js for the 3D view). Windows can map .js to text/plain from the
+# registry, which browsers refuse for ES modules - force the right type.
+import mimetypes  # noqa: E402
+
+from fastapi.staticfiles import StaticFiles  # noqa: E402
+
+mimetypes.add_type("text/javascript", ".js")
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+
+
 @app.get("/health")
 def health() -> dict:
     status = "ready"
@@ -309,6 +333,9 @@ def health() -> dict:
         "ollama_model": config.OLLAMA_MODEL,
         "ai_expected_time": config.AI_EXPECTED_TIME,
         "ollama": status,
+        # Gemini is offered in the UI only when the server was started with GEMINI_API_KEY set
+        "gemini": {"available": bool(os.environ.get("GEMINI_API_KEY", "").strip()), "model": config.GEMINI_MODEL,
+                   "knowledge": config.GEMINI_USE_KNOWLEDGE},
         "catalog": catalog_status(),
     }
 
@@ -397,7 +424,8 @@ def _cli(argv=None) -> int:
     ap.add_argument("--handle-type", default=config.DEFAULT_HANDLE_TYPE)
     ap.add_argument("--layout", default="auto", choices=["auto", "single", "L", "U"])
     ap.add_argument("--walls", help="comma-separated wall ids that must carry cabinets")
-    ap.add_argument("--loft", action="store_true", help="add loft units when wall height allows")
+    ap.add_argument("--loft", action="store_true", help="customer wants lofts (when the wall height allows); "
+                                                         "without it the designer decides")
     ap.add_argument("--no-tall", action="store_true")
     ap.add_argument("--ai", default="auto", choices=["auto", "ollama", "fallback"])
     ap.add_argument("--notes", default="", help="design brief for the AI")
@@ -424,7 +452,7 @@ def _cli(argv=None) -> int:
         handle_type=args.handle_type,
         layout=args.layout,
         cabinet_walls=[w.strip() for w in args.walls.split(",")] if args.walls else None,
-        include_loft=args.loft,
+        include_loft=True if args.loft else None,  # not given: the designer decides
         include_tall=not args.no_tall,
         ai_mode=args.ai,
         style_notes=args.notes,

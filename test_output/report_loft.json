@@ -1,6 +1,6 @@
 {
   "ai": {
-    "shortlist_size": 36,
+    "shortlist_size": 40,
     "prompt_version": "v2",
     "mode": "fallback"
   },
@@ -11,22 +11,39 @@
     "- Built-in appliances: built-in appliances not stated.",
     "- Glass display: glass display not stated.",
     "- Cooking: cooking style not stated; household size not stated.",
-    "- Base cabinets: base cabinet style not stated."
+    "- Base cabinets: base cabinet style not stated - you choose drawers, mixed or shutters.",
+    "- Wall cabinets: door type not stated - you choose hinged shutters or lift-up; open shelf unit not stated.",
+    "- Crockery: crockery unit not stated.",
+    "- Lofts: WANTS lofts (when the ceiling allows)."
   ],
   "explanation": [
     {
       "item": "Layout",
+      "decision": null,
       "built": "L-shape on Wall 1, Wall 2",
       "why": "L-shape on the walls with the longest free runs.",
       "source": "customer",
+      "details": [
+        "Wall 1: 4100 mm long, door 85-985 mm, longest free run 2965 mm",
+        "Wall 2: 4100 mm long, window 1241-2741 mm, longest free run 4000 mm",
+        "Not used: Wall 3: 4100 mm long, longest free run 4000 mm; Wall 4: 4100 mm long, longest free run 4000 mm",
+        "1 inside corner(s) between cabinet runs"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "Sink",
+      "decision": "Sink unit 1200 mm (Sink Double Shutter)",
       "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
       "why": "1200 mm suits a 4000 mm window-wall run.",
       "source": "rules-designer",
+      "details": [
+        "Unit: 1050 x 560 x 700 mm (W x D x H) - shutters, room for pipes; window wall 3000+ mm free",
+        "Window 1500 mm wide, centre at 1991 mm; sink centre at 1991 mm (centred)",
+        "Wall 2 free run 4000 mm",
+        "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+      ],
       "rules": [
         "Designer chose 1200 mm; the rules used 1050 mm so it centres under the window."
       ],
@@ -34,65 +51,184 @@
     },
     {
       "item": "Hob",
+      "decision": null,
       "built": "Hob unit 900 mm (Triple Drawer - A) on Wall 1, chimney above",
       "why": "Drawer hob unit on Wall 1, a different wall from the sink.",
       "source": "rules-designer",
+      "details": [
+        "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
+        "Wall 1 has no window - a solid wall for the chimney",
+        "Nearest door on this wall is 705 mm from the hob (keep 600+)",
+        "Beside it: LPG cylinder unit 600 mm (Cylinder Single Shutter) / Spice pull-out 300 mm (Spice Pullout)",
+        "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+        "Sink to hob: 2.3 m (different walls; comfortable range 1.2-2.7 m)"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Spice pull-out",
+      "decision": null,
+      "built": "Spice pull-out 300 mm (Spice Pullout)",
+      "why": "Masalas and oils within reach of the cook.",
+      "source": "rules-designer",
+      "details": [
+        "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+        "Right beside the hob"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "LPG cylinder",
+      "decision": null,
       "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
       "why": "Hob wall is long enough for a cylinder unit.",
       "source": "rules-designer",
+      "details": [
+        "Unit: 600 x 560 x 800 mm (W x D x H) - LPG cylinder, beside the hob (needs a long hob wall)",
+        "On Wall 1 at 1090-1690 mm, beside the hob"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "Tall units",
+      "decision": null,
       "built": "Tall pantry 600 mm (Single Shutter) on Wall 2",
       "why": "Pantry at a run end.",
       "source": "rules-designer",
+      "details": [
+        "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+        "On Wall 2 at 3416-4016 mm - end of the run, clear of windows",
+        "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry, Crockery unit, Crockery unit"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "Water purifier",
+      "decision": null,
       "built": "Water purifier cabinet 600 mm (Aquaguard Single Shutter) on Wall 2",
       "why": "Standard beside the sink window.",
       "source": "rules-designer",
+      "details": [
+        "Unit: 600 x 330 x 600 mm (W x D x H) - one shutter",
+        "On Wall 2 at 2816-3416 mm, wall-cabinet height",
+        "1133 mm from the sink centre (water and power nearby)",
+        "Purifier sizes on offer: 600, 450, 750"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "Glass display",
+      "decision": null,
       "built": "None",
       "why": "Not requested.",
       "source": "rules-designer",
+      "details": [],
       "rules": [],
       "need": null
     },
     {
       "item": "Base cabinets",
-      "built": "2 of 4 storage cabinets have drawers",
-      "why": "Standard shutter storage; drawers only where the designer asked.",
+      "decision": null,
+      "built": "Drawer + shutter units: 4 of 4 storage cabinets have drawers",
+      "why": "Drawer + shutter units: a cutlery drawer on top, shelf space below.",
       "source": "rules-designer",
+      "details": [
+        "2 x Base cabinet - Drawer with Single Shutter",
+        "1 x Base cabinet - Four Drawer",
+        "1 x Grain trolley - Grain Trolley With 1 External Drawer",
+        "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "Feature units",
-      "built": "Wall 1: Base Unit 600 four drawer; Wall 2: Grain trolley 600 grain trolley with 1 external drawer",
+      "decision": null,
+      "built": "2 of 2 requested units built",
       "why": "Drawers by the hob, grain trolley on the sink wall.",
       "source": "rules-designer",
+      "details": [
+        "Base cabinet 600 mm (Four Drawer): asked for Wall 1 -> built on Wall 1 at 2890-3490 mm - cutlery, ladles, small tools - best right beside the hob",
+        "Grain trolley 600 mm (Grain Trolley With 1 External Drawer): asked for Wall 2 -> built on Wall 2 at 2516-3116 mm - bins + an outside drawer"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Wall cabinets",
+      "decision": null,
+      "built": "3 wall cabinets",
+      "why": "Wall cabinets above every base run, kept clear of windows and the chimney.",
+      "source": "rules-designer",
+      "details": [
+        "Wall 1: 2 cabinets (550, 750 mm); sizes asked no preference; kept clear: chimney zone",
+        "Wall 2: 1 cabinets (500 mm); sizes asked no preference; kept clear: window 1241-2741"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Wall cabinet doors",
+      "decision": null,
+      "built": "Hinged shutter doors",
+      "why": "Hinged shutters: the standard, lowest-cost door.",
+      "source": "rules-designer",
+      "details": [
+        "Options: hinged shutters (standard, lowest cost) or lift-up / bi-fold doors (no door at head height)"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Open shelf unit",
+      "decision": null,
+      "built": "None",
+      "why": "Not requested.",
+      "source": "rules-designer",
+      "details": [],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Lofts",
+      "decision": null,
+      "built": "6 loft cabinets",
+      "why": "Customer wants lofts.",
+      "source": "customer",
+      "details": [
+        "Ceiling (lowest wall) 2700 mm; a loft needs 2658 mm",
+        "6 loft cabinets on Wall 1, Wall 2, 600 mm high above the wall cabinets"
+      ],
+      "rules": [],
+      "need": "Wants lofts"
+    },
+    {
+      "item": "Cabinet heights",
+      "decision": null,
+      "built": "Wall cabinets 600 mm, tall units 1940 mm",
+      "why": "Lofts fill the space above: 600 mm wall and 1940 mm tall units with lofts on top up to 2658 mm (ceiling 2700 mm).",
+      "source": "rules",
+      "details": [
+        "Wall cabinets hang from 1440 mm up to 2040 mm; tall units stand on the 100 mm plinth and end at the same line",
+        "Height pairs in the catalogue: 600 / 1940, 700 / 2040, 900 / 2240 mm (wall / tall)"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "Corners",
-      "built": "Wall 2 / Wall 1: 3 corner cabinets",
+      "decision": null,
+      "built": "1 corner(s)",
       "why": "Corners take only corner cabinets, facing the room; a corner stays open when a door or window leaves no room for one.",
       "source": "rules",
+      "details": [
+        "Wall 2 / Wall 1: base - Blind corner cabinet 1050 mm (Blind Corner – Right) on Wall 2; wall - Corner wall cabinet 650 mm (L Corner) on Wall 1; loft - Loft cabinet 650 mm (L Corner Loft – Modular) on Wall 1"
+      ],
       "rules": [],
       "need": null
     }
@@ -133,6 +269,10 @@
     "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
     "purifier_required": false,
     "display_aid": null,
+    "open_unit_aid": null,
+    "base_storage": "mixed",
+    "lofts": true,
+    "wall_style": "shutters",
     "reasons": {
       "layout": "L-shape on the walls with the longest free runs.",
       "sink": "1200 mm suits a 4000 mm window-wall run.",
@@ -141,7 +281,11 @@
       "tall": "Pantry at a run end.",
       "purifier": "Standard beside the sink window.",
       "display": "Not requested.",
-      "features": "Drawers by the hob, grain trolley on the sink wall."
+      "features": "Drawers by the hob, grain trolley on the sink wall.",
+      "open": "Not requested.",
+      "wall_style": "Hinged shutters: the standard, lowest-cost door.",
+      "lofts": "Customer wants lofts.",
+      "storage": "Drawer + shutter units: a cutlery drawer on top, shelf space below."
     },
     "notes": "L-shaped kitchen: sink on Wall 2 under the window, hob on Wall 1, tall storage on Wall 2.",
     "source": "fallback"
@@ -266,7 +410,7 @@
           "opening": "Right"
         },
         {
-          "aid": "MTBABU350560700SSSSLLEH1S",
+          "aid": "MTBABU350560700DSDSSSLLEH1S",
           "category": "Base Unit",
           "tier": "base",
           "role": "storage",
@@ -296,7 +440,7 @@
           "opening": "Pull Out"
         },
         {
-          "aid": "MTBABU300560700SSSSLREH1S",
+          "aid": "MTBABU300560700DSDSSSLREH1S",
           "category": "Base Unit",
           "tier": "base",
           "role": "storage",
@@ -387,15 +531,33 @@
       "wall_1oy5ecjq6k11pfoo",
       "wall_56i56ymve0xf69fm"
     ],
+    "heights": {
+      "wall_mm": 600,
+      "tall_mm": 1940,
+      "lofts": true,
+      "ceiling_mm": 2700,
+      "top_mm": 2040,
+      "why": "Lofts fill the space above: 600 mm wall and 1940 mm tall units with lofts on top up to 2658 mm (ceiling 2700 mm)."
+    },
     "score": 62.66,
     "decisions": [
+      "heights: Lofts fill the space above: 600 mm wall and 1940 mm tall units with lofts on top up to 2658 mm (ceiling 2700 mm).",
       "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2816-3416 mm",
       "Wall 1: Base Cylinder Unit 600 hinged Left (towards door) -> MTBABCU600560800SCSSSLLEHNS",
-      "Wall 2: Base Unit 300 hinged Right (towards tall) -> MTBABU300560700SSSSLREH1S",
+      "Wall 2: Base Unit 300 hinged Right (towards tall) -> MTBABU300560700DSDSSSLREH1S",
       "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005601940SSSSLREH4S",
       "Wall 2: Wall Aquaguard Unit 600 hinged Right (towards tall) -> MTWAWAU600330600SASSSLREHNS"
     ],
     "warnings": []
+  },
+  "heights": {
+    "wall_mm": 600,
+    "tall_mm": 1940,
+    "lofts": true,
+    "ceiling_mm": 2700,
+    "top_mm": 2040,
+    "why": "Lofts fill the space above: 600 mm wall and 1940 mm tall units with lofts on top up to 2658 mm (ceiling 2700 mm).",
+    "wall_style": "shutters"
   },
   "nodes_added": {
     "kitchen": 21,
@@ -410,8 +572,8 @@
   "validation_issues": [],
   "catalog": {
     "source": "api",
-    "filtered_skus": 484,
+    "filtered_skus": 495,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.17
+  "seconds": 0.28
 }

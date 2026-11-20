@@ -4,194 +4,230 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MagickHome Kitchen Designer</title>
+<meta name="color-scheme" content="light dark">
+<script type="importmap">{ "imports": { "three": "/static/vendor/three.module.min.js", "three/addons/": "/static/vendor/" } }</script>
 <style>
 :root {
-  --bg: #f3f4f7; --panel: #ffffff; --panel-2: #f7f8fa; --text: #14161b; --muted: #5c636f; --line: #e2e5eb;
-  --accent: #2b55d0; --accent-soft: #e9eefc; --accent-ink: #ffffff;
-  --ok: #1b7a45; --ok-soft: #e5f4eb; --warn: #8f5600; --warn-soft: #fdf2df; --err: #b92525; --err-soft: #fbe9e9;
+  --bg: #f3f4f7; --panel: #ffffff; --panel-2: #f6f7fa; --stage: #eceff4; --text: #121620; --muted: #5a6272; --line: #e3e6ec; --line-2: #d3d8e1;
+  --accent: #3b57d6; --accent-2: #2e46b4; --accent-soft: #e9edfd; --accent-ink: #ffffff;
+  --ok: #1a7a45; --ok-soft: #e4f4ea; --warn: #8d5600; --warn-soft: #fcf1dc; --err: #b42424; --err-soft: #fbe8e8;
   --base: #4a78d6; --tall: #2b9a67; --wallu: #de8c22; --loft: #9466cf; --corner: #c2457a; --feature: #0e9aa7;
-  --wall-line: #262a31; --door: #d24646; --window: #2399cf; --floor: #eceff4; --counter: #6b7280;
-  --shadow: 0 1px 2px rgba(16,24,40,.05), 0 2px 6px rgba(16,24,40,.06);
-  --radius: 14px;
+  --wall-line: #262a31; --door: #d24646; --window: #2399cf; --floor: #e8ebf0; --counter: #6b7280;
+  --shadow: 0 1px 2px rgba(16,24,40,.04), 0 6px 20px rgba(16,24,40,.06);
+  --radius: 16px; --radius-sm: 11px;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0e1014; --panel: #161920; --panel-2: #1c2028; --text: #e8eaef; --muted: #9ba2ae; --line: #2a2f39;
-    --accent: #7393f4; --accent-soft: #1f2a46; --accent-ink: #0e1014;
-    --ok: #4cc283; --ok-soft: #14291f; --warn: #e3a64a; --warn-soft: #2d2313; --err: #f07272; --err-soft: #331919;
-    --wall-line: #d8dce3; --floor: #1d2129; --counter: #a3a9b4; --feature: #34c3cf;
-    --shadow: none; color-scheme: dark;
+    --bg: #0c0e12; --panel: #14171e; --panel-2: #1a1e26; --stage: #10131a; --text: #e8ebf1; --muted: #99a1b0; --line: #262b35; --line-2: #333a46;
+    --accent: #8299fb; --accent-2: #a5b5ff; --accent-soft: #1c2546; --accent-ink: #0c0e12;
+    --ok: #4cc283; --ok-soft: #13291e; --warn: #e3a64a; --warn-soft: #2c2213; --err: #f07272; --err-soft: #321818;
+    --wall-line: #d8dce3; --floor: #1c2029; --counter: #a3a9b4; --feature: #34c3cf;
+    --shadow: 0 1px 2px rgba(0,0,0,.3); color-scheme: dark;
   }
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); color: var(--text); }
-body { font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+body { font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
 button, input, select, textarea { font: inherit; color: inherit; }
-h1 { font-size: 17px; margin: 0; font-weight: 700; letter-spacing: -.01em; }
-h2 { font-size: 15px; margin: 0; font-weight: 650; }
-h3 { font-size: 12px; margin: 0 0 8px; font-weight: 650; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+h1 { font-size: 16.5px; margin: 0; font-weight: 700; letter-spacing: -.01em; }
+h2 { font-size: 15.5px; margin: 0; font-weight: 680; letter-spacing: -.005em; }
+h3 { font-size: 15px; margin: 0; font-weight: 680; }
 p { margin: 0; }
 .sub { color: var(--muted); font-size: 12.5px; }
 .hidden { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* ---------- header ---------- */
-header { display: flex; align-items: center; gap: 12px; padding: 12px 24px; background: var(--panel); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
-.logo { width: 32px; height: 32px; border-radius: 9px; background: var(--accent); display: grid; place-items: center; color: var(--accent-ink); flex: none; }
+/* ---------- top bar ---------- */
+.topbar { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px; padding: 11px 24px; background: color-mix(in srgb, var(--panel) 88%, transparent); backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--line); }
+.logo { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); display: grid; place-items: center; color: var(--accent-ink); flex: none; }
+.brand .sub { font-size: 12px; }
 .status { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
-.pill { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--line); font-size: 12.5px; color: var(--muted); background: var(--panel-2); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.pill { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--line); font-size: 12.5px; color: var(--muted); background: var(--panel); white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
 .dot.ok { background: var(--ok); } .dot.err { background: var(--err); } .dot.warn { background: var(--warn); }
 
 /* ---------- layout ---------- */
-main { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 20px; padding: 20px 24px 48px; max-width: 1500px; margin: 0 auto; align-items: start; }
-@media (max-width: 960px) {
-  main { grid-template-columns: minmax(0, 1fr); padding: 14px 16px 32px; }
-  header { padding: 10px 16px; flex-wrap: wrap; }
+.app { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 22px; padding: 22px 24px 56px; max-width: 1580px; margin: 0 auto; align-items: start; }
+.sidebar { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 2px 4px 4px 2px; scrollbar-width: thin; }
+.workspace { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+@media (max-width: 1040px) {
+  .app { grid-template-columns: minmax(0, 1fr); padding: 14px 16px 40px; gap: 16px; }
+  .sidebar { position: static; max-height: none; overflow: visible; padding: 0; }
+  .topbar { padding: 10px 16px; flex-wrap: wrap; position: static; }
   .status { margin-left: 0; width: 100%; justify-content: flex-start; }
 }
-@media (max-width: 520px) {
-  header .sub { display: none; }
-  .card { padding: 15px; }
-  .canvas { min-height: 300px; }
-}
-.stack { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+@media (max-width: 560px) { .brand .sub { display: none; } }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); min-width: 0; }
+@media (max-width: 520px) { .card { padding: 15px; border-radius: 14px; } }
 .card-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 12.5px; font-weight: 700; flex: none; }
-.num.done { background: var(--ok); color: #fff; }
 .card-head .sub { margin-left: auto; }
+.num { width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 12.5px; font-weight: 750; flex: none; }
+.num.done { background: var(--ok); color: #fff; }
+.section-title { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.section-title .sub { margin-left: auto; }
 
-/* ---------- step 1: floor plan ---------- */
-.drop { border: 1.5px dashed var(--line); border-radius: 12px; padding: 22px 14px; text-align: center; cursor: pointer; background: var(--panel-2); transition: border-color .15s, background .15s; }
+/* ---------- step 1 ---------- */
+.drop { border: 1.5px dashed var(--line-2); border-radius: 13px; padding: 24px 14px; text-align: center; cursor: pointer; background: var(--panel-2); transition: border-color .15s, background .15s; }
 .drop:hover, .drop:focus-visible, .drop.over { border-color: var(--accent); background: var(--accent-soft); outline: none; }
 .drop svg { color: var(--accent); margin-bottom: 6px; }
 .drop strong { display: block; font-size: 14.5px; margin-bottom: 2px; }
 .or { text-align: center; margin-top: 10px; font-size: 13px; color: var(--muted); }
-.linkbtn { background: none; border: 0; color: var(--accent); padding: 0; cursor: pointer; font-weight: 600; }
+.linkbtn { background: none; border: 0; color: var(--accent); padding: 0; cursor: pointer; font-weight: 650; }
 .linkbtn:hover { text-decoration: underline; }
-.linkbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
-.file { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-2); }
-.file-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; flex: none; }
-.file-name { font-weight: 600; word-break: break-all; line-height: 1.3; }
+.file { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-2); }
+.file-icon { width: 34px; height: 34px; border-radius: 9px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; flex: none; }
+.file-name { font-weight: 650; word-break: break-all; line-height: 1.3; }
 .file .linkbtn { margin-left: auto; font-size: 13px; }
 .facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-top: 10px; }
-.fact { background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px; padding: 7px 8px; text-align: center; }
-.fact b { display: block; font-size: 16px; font-variant-numeric: tabular-nums; }
+.fact { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 7px 6px; text-align: center; }
+.fact b { display: block; font-size: 15.5px; font-variant-numeric: tabular-nums; }
 .fact span { font-size: 11.5px; color: var(--muted); }
 
-/* ---------- step 2: preferences ---------- */
+/* ---------- step 2 ---------- */
 .field { margin-bottom: 16px; }
-.label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.label { display: block; font-size: 13px; font-weight: 650; margin-bottom: 7px; }
 .label .sub { font-weight: 400; }
-select, textarea { width: 100%; padding: 9px 11px; border-radius: 9px; border: 1px solid var(--line); background: var(--panel); }
-textarea { min-height: 70px; resize: vertical; }
-select:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+select, textarea { width: 100%; padding: 9px 11px; border-radius: 10px; border: 1px solid var(--line-2); background-color: var(--panel); transition: border-color .12s; }
+select { appearance: none; -webkit-appearance: none; padding-right: 30px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a93a3' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; cursor: pointer; }
+select:hover, textarea:hover { border-color: var(--accent); }
+textarea { min-height: 72px; resize: vertical; }
 .choice { display: grid; gap: 8px; }
-.choice.two { grid-template-columns: 1fr 1fr; }
+.choice.three { grid-template-columns: repeat(3, 1fr); }
 .choice.four { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 400px) { .choice.four { grid-template-columns: repeat(2, 1fr); } }
 .choice input { position: absolute; opacity: 0; pointer-events: none; }
-.choice label { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; padding: 10px 6px; border: 1.5px solid var(--line); border-radius: 10px; cursor: pointer; background: var(--panel); user-select: none; transition: border-color .12s, background .12s; min-height: 58px; }
+.choice label { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; padding: 10px 6px; border: 1.5px solid var(--line); border-radius: 12px; cursor: pointer; background: var(--panel); user-select: none; transition: border-color .12s, background .12s, box-shadow .12s; min-height: 60px; }
 .choice label:hover { border-color: var(--accent); }
-.choice label b { font-size: 13.5px; font-weight: 650; }
+.choice label b { font-size: 13.5px; font-weight: 680; }
 .choice label small { font-size: 11.5px; color: var(--muted); line-height: 1.25; }
-.choice input:checked + label { border-color: var(--accent); background: var(--accent-soft); }
+.choice input:checked + label { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent) inset; }
 .choice input:checked + label b { color: var(--accent); }
 .choice input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+.choice input:disabled + label { opacity: .45; cursor: not-allowed; }
 .choice svg { color: var(--muted); }
 .choice input:checked + label svg { color: var(--accent); }
-.toggles { border: 1px solid var(--line); border-radius: 10px; padding: 2px 12px; }
-.toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); }
-.toggle:first-child { border-top: 0; }
+.toggle { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; }
 .toggle small { display: block; color: var(--muted); font-size: 12px; }
 .switch { position: relative; width: 40px; height: 23px; flex: none; }
 .switch input { opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; position: absolute; z-index: 1; }
-.switch span { position: absolute; inset: 0; background: var(--line); border-radius: 999px; transition: background .15s; }
-.switch span::after { content: ""; position: absolute; width: 17px; height: 17px; left: 3px; top: 3px; border-radius: 50%; background: #fff; transition: transform .15s; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.switch span { position: absolute; inset: 0; background: var(--line-2); border-radius: 999px; transition: background .15s; }
+.switch span::after { content: ""; position: absolute; width: 17px; height: 17px; left: 3px; top: 3px; border-radius: 50%; background: #fff; transition: transform .15s; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
 .switch input:checked + span { background: var(--accent); }
 .switch input:checked + span::after { transform: translateX(17px); }
 .switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
-.mini-select { width: auto; padding: 5px 8px; font-size: 13px; }
+.needs-group { border: 1px solid var(--line); border-radius: 13px; padding: 12px; margin-bottom: 10px; }
+.needs-group > .gtitle { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 9px; display: flex; align-items: center; gap: 7px; }
+.needs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.needs label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 4px; }
+.needs select { padding: 7px 28px 7px 9px; font-size: 13px; }
+.needs .wide { grid-column: 1 / -1; }
+@media (max-width: 420px) { .needs { grid-template-columns: 1fr; } }
 .ideas { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .idea { border: 1px solid var(--line); background: var(--panel-2); border-radius: 999px; padding: 3px 10px; font-size: 12px; cursor: pointer; color: var(--muted); }
 .idea:hover { border-color: var(--accent); color: var(--accent); }
-.idea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 details.more { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 4px; }
-details.more summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--muted); list-style: none; display: flex; align-items: center; gap: 6px; }
+details.more summary { cursor: pointer; font-size: 13px; font-weight: 650; color: var(--muted); list-style: none; display: flex; align-items: center; gap: 6px; }
 details.more summary::before { content: "▸"; font-size: 11px; transition: transform .15s; }
 details.more[open] summary::before { transform: rotate(90deg); }
 details.more summary::-webkit-details-marker { display: none; }
-.needs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
-.needs label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 4px; }
-.needs select { padding: 7px 9px; font-size: 13px; }
-@media (max-width: 420px) { .needs { grid-template-columns: 1fr; } }
-ul.explain { list-style: none; margin: 14px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); column-gap: 28px; }
-ul.explain > li { padding: 10px 0; border-top: 1px solid var(--line); }
-.ex-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.ex-head b { font-size: 13.5px; }
-.ex-built { font-size: 13.5px; margin-top: 2px; }
-.ex-why { font-size: 13px; color: var(--muted); margin-top: 3px; }
-.ex-why i { font-style: normal; font-weight: 600; color: var(--text); }
-.ex-rule { font-size: 12.5px; color: var(--warn); background: var(--warn-soft); border-radius: 7px; padding: 4px 8px; margin-top: 5px; }
-.src { font-size: 11px; font-weight: 650; padding: 1px 8px; border-radius: 999px; }
-.src.qwen { background: var(--accent-soft); color: var(--accent); }
-.src.customer { background: var(--ok-soft); color: var(--ok); }
-.src.rules-designer { background: var(--warn-soft); color: var(--warn); }
-.src.rules { background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
 .walls-pick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .walls-pick label { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 12.5px; cursor: pointer; }
 .walls-pick input { accent-color: var(--accent); margin: 0; }
 
 /* ---------- buttons ---------- */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); cursor: pointer; font-weight: 600; text-decoration: none; color: var(--text); white-space: nowrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 15px; border-radius: 11px; border: 1px solid var(--line-2); background: var(--panel); cursor: pointer; font-weight: 650; text-decoration: none; color: var(--text); white-space: nowrap; transition: border-color .12s, filter .12s, background .12s; }
 .btn:hover { border-color: var(--accent); }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
-.btn.primary:hover { filter: brightness(1.07); }
-.btn.big { width: 100%; font-size: 15.5px; padding: 13px; }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.big { width: 100%; font-size: 15.5px; padding: 13px; border-radius: 13px; }
+.btn.sm { padding: 6px 11px; font-size: 12.5px; border-radius: 9px; }
 .btn:disabled { opacity: .5; cursor: not-allowed; filter: none; }
-.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .hint { color: var(--muted); font-size: 12.5px; margin-top: 8px; text-align: center; }
-.alert { padding: 10px 12px; border-radius: 9px; background: var(--err-soft); color: var(--err); margin-top: 12px; display: none; font-size: 13px; }
+.alert { padding: 10px 12px; border-radius: 10px; background: var(--err-soft); color: var(--err); margin-top: 12px; display: none; font-size: 13px; }
 .alert.show { display: block; }
 
 /* ---------- result banner ---------- */
 .banner { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-.banner-icon { width: 42px; height: 42px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); display: grid; place-items: center; flex: none; }
+.banner-icon { width: 44px; height: 44px; border-radius: 50%; background: var(--ok-soft); color: var(--ok); display: grid; place-items: center; flex: none; }
 .banner-text { flex: 1; min-width: 220px; }
-.banner-text h2 { font-size: 17px; }
+.banner-text h2 { font-size: 17.5px; }
 .banner-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
 @media (max-width: 640px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
-.kpi { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; }
-.kpi b { display: block; font-size: 17px; font-variant-numeric: tabular-nums; line-height: 1.25; }
+.kpi { background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 9px 12px; }
+.kpi b { display: block; font-size: 16.5px; font-variant-numeric: tabular-nums; line-height: 1.25; }
 .kpi span { font-size: 12px; color: var(--muted); }
+.jump { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.jump a { font-size: 12.5px; color: var(--accent); text-decoration: none; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); font-weight: 600; }
+.jump a:hover { text-decoration: underline; }
 
-/* ---------- preview ---------- */
-.viewer-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+/* ---------- view card ---------- */
+.viewbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
 .tabs:empty { display: none; }
-.tabs { display: flex; gap: 4px; flex-wrap: wrap; background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
-.tab { padding: 5px 12px; border-radius: 7px; border: 0; background: none; cursor: pointer; color: var(--muted); font-weight: 600; font-size: 13px; }
+.tabs { display: inline-flex; gap: 3px; flex-wrap: wrap; background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 3px; }
+.tab { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 9px; border: 0; background: none; cursor: pointer; color: var(--muted); font-weight: 650; font-size: 13px; }
+.tab svg { flex: none; }
 .tab:hover { color: var(--text); }
-.tab.active { background: var(--panel); color: var(--accent); box-shadow: var(--shadow); }
-.tab:focus-visible { outline: 2px solid var(--accent); }
+.tab.active { background: var(--panel); color: var(--accent); box-shadow: 0 1px 2px rgba(16,24,40,.08), 0 0 0 1px var(--line); }
 .view-caption { margin-left: auto; }
-.canvas { position: relative; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-2); min-height: 440px; display: grid; place-items: center; overflow: hidden; }
-.canvas svg { width: 100%; height: auto; max-height: 66vh; display: block; }
-.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-size: 12px; color: var(--muted); }
+@media (max-width: 700px) { .view-caption { margin-left: 0; width: 100%; } }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin: -2px 0 12px; }
+.chip { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; padding: 4px 12px; font-size: 12.5px; cursor: pointer; color: var(--muted); font-weight: 600; }
+.chip:hover { border-color: var(--accent); color: var(--text); }
+.chip.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.stage { position: relative; border: 1px solid var(--line); border-radius: 14px; background: var(--stage); min-height: 440px; display: grid; place-items: center; overflow: hidden; }
+.stage.is-3d { height: clamp(380px, 64vh, 800px); min-height: 0; display: block; }
+@media (max-width: 520px) { .stage { min-height: 320px; } .stage.is-3d { height: clamp(340px, 62vh, 560px); } }
+#svg-host { width: 100%; padding: 8px; }
+#svg-host svg { width: 100%; height: auto; max-height: 68vh; display: block; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 11px; font-size: 12px; color: var(--muted); }
 .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -2px; }
 
-.welcome { max-width: 560px; padding: 28px 20px; text-align: center; }
-.welcome h2 { font-size: 18px; margin-bottom: 6px; }
+/* 3D */
+#panel-3d { position: absolute; inset: 0; }
+#three-host { position: absolute; inset: 0; }
+#three-host canvas { display: block; width: 100% !important; height: 100% !important; touch-action: none; outline: none; }
+.float { background: color-mix(in srgb, var(--panel) 88%, transparent); backdrop-filter: blur(8px); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+.v3d-bar { position: absolute; top: 10px; left: 10px; right: 10px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; pointer-events: none; z-index: 3; }
+.v3d-bar > * { pointer-events: auto; }
+.v3d-group { display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px; font-size: 12.5px; }
+.v3d-group > span.l { color: var(--muted); padding: 0 2px 0 4px; }
+.seg { display: inline-flex; gap: 2px; }
+.seg button { border: 0; background: none; padding: 4px 9px; border-radius: 8px; cursor: pointer; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+.seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
+.mini-switch { display: inline-flex; align-items: center; gap: 7px; padding: 4px 8px; cursor: pointer; font-size: 12.5px; }
+.mini-switch input { accent-color: var(--accent); margin: 0; width: 15px; height: 15px; cursor: pointer; }
+.v3d-hint { position: absolute; left: 10px; bottom: 10px; font-size: 12px; color: var(--muted); padding: 5px 10px; z-index: 3; }
+@media (max-width: 640px) {
+  .v3d-hint, .v3d-group > span.l, #v3d-reset .lbl { display: none; }
+  .v3d-bar { gap: 6px; top: 8px; left: 8px; right: 8px; }
+  .seg button, .mini-switch { font-size: 12px; }
+  .seg button { padding: 4px 7px; }
+}
+.v3d-tip { position: absolute; left: 0; top: 0; pointer-events: none; padding: 6px 10px; font-size: 12.5px; max-width: 260px; z-index: 4; line-height: 1.35; }
+.v3d-tip span { color: var(--muted); }
+.v3d-info { position: absolute; right: 10px; bottom: 10px; width: min(300px, calc(100% - 20px)); padding: 12px 14px; z-index: 4; font-size: 13px; }
+.v3d-info-head { display: flex; align-items: flex-start; gap: 8px; }
+.v3d-info-head b { font-size: 14px; }
+.v3d-info ul { margin: 7px 0 0; padding-left: 16px; color: var(--muted); font-size: 12.5px; }
+.icon-btn { margin-left: auto; border: 0; background: none; cursor: pointer; font-size: 18px; line-height: 1; color: var(--muted); padding: 0 2px; }
+.icon-btn:hover { color: var(--text); }
+.v3d-msg { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; color: var(--muted); z-index: 2; }
+
+.welcome { max-width: 580px; padding: 30px 20px; text-align: center; }
+.welcome h2 { font-size: 19px; margin-bottom: 6px; }
 .how { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; text-align: left; }
 @media (max-width: 640px) { .how { grid-template-columns: 1fr; } }
-.how div { background: var(--panel); border: 1px solid var(--line); border-radius: 11px; padding: 12px; }
-.how b { display: block; font-size: 13.5px; margin: 6px 0 2px; }
-.how .num { width: 22px; height: 22px; font-size: 12px; }
+.how div { background: var(--panel); border: 1px solid var(--line); border-radius: 13px; padding: 12px; }
+.how b { display: block; font-size: 13.5px; margin: 7px 0 2px; }
+.how .num { width: 23px; height: 23px; font-size: 12px; }
 
-.progress { position: absolute; inset: 0; background: color-mix(in srgb, var(--panel) 94%, transparent); display: none; place-items: center; z-index: 2; }
+.progress { position: absolute; inset: 0; background: color-mix(in srgb, var(--panel) 94%, transparent); display: none; place-items: center; z-index: 6; }
 .progress.show { display: grid; }
-.progress-box { width: min(460px, 90%); }
-.progress-title { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 16px; }
+.progress-box { width: min(470px, 90%); }
+.progress-title { display: flex; align-items: center; gap: 10px; font-weight: 680; font-size: 16px; }
 .spinner { width: 20px; height: 20px; border: 3px solid var(--accent-soft); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; flex: none; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } }
@@ -206,17 +242,40 @@ ul.explain > li { padding: 10px 0; border-top: 1px solid var(--line); }
 .steps li.current .mk { color: var(--accent); }
 .steps .t { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--muted); font-weight: 400; }
 
-/* ---------- results ---------- */
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 1150px) { .grid2 { grid-template-columns: 1fr; } }
-.badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+/* ---------- why these choices ---------- */
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 650; }
 .badge.ai { background: var(--accent-soft); color: var(--accent); }
 .badge.rules { background: var(--warn-soft); color: var(--warn); }
-.quote { background: var(--panel-2); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 9px 13px; margin: 10px 0; font-size: 13.5px; }
-.quote small { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 650; margin-bottom: 3px; }
-dl.choices { display: grid; grid-template-columns: 120px 1fr; gap: 7px 12px; margin: 14px 0 0; font-size: 13.5px; }
-dl.choices dt { color: var(--muted); }
-dl.choices dd { margin: 0; }
+.quote { background: var(--panel-2); border-left: 3px solid var(--accent); border-radius: 0 11px 11px 0; padding: 9px 13px; margin: 10px 0; font-size: 13.5px; }
+.quote small { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; margin-bottom: 3px; }
+ul.explain { list-style: none; margin: 14px 0 0; padding: 0; }
+ul.explain > li { padding: 13px 0; border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 6px 28px; }
+@media (max-width: 900px) { ul.explain > li { grid-template-columns: 1fr; } }
+.ex-facts-title { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 700; margin-bottom: 3px; }
+ul.ex-facts { margin: 0; padding-left: 16px; font-size: 12.5px; color: var(--muted); }
+ul.ex-facts li { margin-bottom: 2px; }
+.ex-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ex-head b { font-size: 14px; }
+.ex-built { font-size: 13.5px; margin-top: 2px; }
+.ex-why { font-size: 13px; color: var(--muted); margin-top: 3px; }
+.ex-why i { font-style: normal; font-weight: 650; color: var(--text); }
+.ex-rule { font-size: 12.5px; color: var(--warn); background: var(--warn-soft); border-radius: 8px; padding: 4px 8px; margin-top: 5px; }
+.src { font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 999px; }
+.src.qwen { background: var(--accent-soft); color: var(--accent); }
+.src.gemini { background: color-mix(in srgb, #8e44ad 14%, transparent); color: #9b59b6; }
+.src.customer { background: var(--ok-soft); color: var(--ok); }
+.src.rules-designer { background: var(--warn-soft); color: var(--warn); }
+.src.rules { background: var(--panel-2); color: var(--muted); border: 1px solid var(--line); }
+details.tech { margin-top: 12px; }
+details.tech summary { cursor: pointer; font-size: 12.5px; color: var(--muted); font-weight: 650; }
+details.tech ul { margin: 8px 0 0; padding-left: 18px; font-size: 12px; color: var(--muted); }
+details.tech li { margin-bottom: 3px; }
+
+/* ---------- details ---------- */
+.dgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 1150px) { .dgrid { grid-template-columns: 1fr; } }
+.box { border: 1px solid var(--line); border-radius: 13px; padding: 13px 14px; min-width: 0; }
+.box h4 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 700; }
 ul.checks { margin: 0; padding: 0; list-style: none; }
 ul.checks li { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-top: 1px solid var(--line); font-size: 13.5px; }
 ul.checks li:first-child { border-top: 0; }
@@ -225,30 +284,31 @@ ul.checks li:first-child { border-top: 0; }
 .ic.warn { background: var(--warn-soft); color: var(--warn); }
 .ic.err { background: var(--err-soft); color: var(--err); }
 .ic.info { background: var(--accent-soft); color: var(--accent); }
-.subhead { margin: 16px 0 6px; }
-details.tech { margin-top: 12px; }
-details.tech summary { cursor: pointer; font-size: 12.5px; color: var(--muted); font-weight: 600; }
-details.tech ul { margin: 8px 0 0; padding-left: 18px; font-size: 12px; color: var(--muted); }
-details.tech li { margin-bottom: 3px; }
+dl.kv { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 0; font-size: 13.5px; }
+dl.kv dt { color: var(--muted); }
+dl.kv dd { margin: 0; }
+ul.plain { margin: 0; padding-left: 18px; font-size: 13px; }
+ul.plain li { margin-bottom: 3px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
-th { color: var(--muted); font-weight: 600; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; }
+th { color: var(--muted); font-weight: 650; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; }
 td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
-tr.group td { background: var(--panel-2); font-weight: 650; font-size: 12.5px; color: var(--text); border-bottom: 1px solid var(--line); }
+tr.group td { background: var(--panel-2); font-weight: 680; font-size: 12.5px; color: var(--text); }
 tr.group td .sub { font-weight: 400; margin-left: 6px; }
 .code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; color: var(--muted); }
-.tier { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; color: #fff; }
+.tier { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 650; color: #fff; }
 .scroll-x { overflow-x: auto; }
+.dl-row { display: flex; gap: 8px; flex-wrap: wrap; }
 </style>
 </head>
 <body>
-<header>
+<header class="topbar">
   <div class="logo" aria-hidden="true">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V10l9-6 9 6v11"/><path d="M9 21v-6h6v6"/></svg>
   </div>
-  <div>
+  <div class="brand">
     <h1>MagickHome Kitchen Designer</h1>
-    <div class="sub">Upload a floor plan, and Qwen designs a modular kitchen that follows the design rules.</div>
+    <div class="sub">Upload a floor plan and an AI designer plans a modular kitchen that follows the design rules.</div>
   </div>
   <div class="status">
     <span class="pill" id="chip-ai"><span class="dot"></span><span>Checking the AI designer…</span></span>
@@ -256,9 +316,9 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
   </div>
 </header>
 
-<main>
-  <!-- ===================== left: steps ===================== -->
-  <div class="stack">
+<main class="app">
+  <!-- ===================== sidebar: the three steps ===================== -->
+  <aside class="sidebar" aria-label="Design steps">
     <section class="card" aria-labelledby="h-upload">
       <div class="card-head"><span class="num" id="n1">1</span><h2 id="h-upload">Floor plan</h2></div>
       <div id="upload-box">
@@ -267,13 +327,13 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
           <strong>Drop your floor-plan file here</strong>
           <span class="sub" id="drop-sub">or click to choose it · MagickHome scene JSON</span>
         </div>
-        <div class="or">No file to hand? <button class="linkbtn" id="sample">Try the sample room</button></div>
+        <div class="or">No file to hand? <button class="linkbtn" id="sample" type="button">Try the sample room</button></div>
       </div>
       <div id="file-box" class="hidden">
         <div class="file">
           <div class="file-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5"/></svg></div>
           <div><div class="file-name" id="file-name"></div><div class="sub" id="file-note"></div></div>
-          <button class="linkbtn" id="change-file">Change</button>
+          <button class="linkbtn" id="change-file" type="button">Change</button>
         </div>
         <div class="facts">
           <div class="fact"><b id="f-size">–</b><span>room (m)</span></div>
@@ -291,11 +351,13 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
 
       <div class="field">
         <span class="label" id="lbl-designer">Who designs it?</span>
-        <div class="choice two" role="radiogroup" aria-labelledby="lbl-designer">
+        <div class="choice three" role="radiogroup" aria-labelledby="lbl-designer">
           <input type="radio" name="ai" id="ai-qwen" value="auto" checked>
-          <label for="ai-qwen"><b>Qwen AI designer</b><small id="ai-time">thinks like a designer · a few minutes</small></label>
+          <label for="ai-qwen"><b>Qwen</b><small id="ai-time">AI designer · a few minutes</small></label>
+          <input type="radio" name="ai" id="ai-gemini" value="gemini" disabled>
+          <label for="ai-gemini" id="lbl-gemini" title="Start the server with GEMINI_API_KEY set to enable Gemini"><b>Gemini</b><small id="gemini-time">Google AI · not set up</small></label>
           <input type="radio" name="ai" id="ai-rules" value="fallback">
-          <label for="ai-rules"><b>Quick rules</b><small>standard design · seconds</small></label>
+          <label for="ai-rules"><b>Quick rules</b><small>standard · seconds</small></label>
         </div>
       </div>
 
@@ -319,30 +381,47 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       </div>
 
       <div class="field">
-        <span class="label">Include</span>
-        <div class="toggles">
-          <div class="toggle"><div>Tall storage<small>Pantry, oven or microwave tower</small></div><label class="switch"><input type="checkbox" id="tall" checked aria-label="Tall storage"><span></span></label></div>
-          <div class="toggle"><div>Loft cabinets<small>Above the wall cabinets, if the ceiling is high enough</small></div><label class="switch"><input type="checkbox" id="loft" aria-label="Loft cabinets"><span></span></label></div>
-        </div>
-      </div>
+        <span class="label">Household needs <span class="sub">· a stated need is always followed</span></span>
 
-      <div class="field">
-        <span class="label">Household needs <span class="sub">(a stated need is always followed)</span></span>
-        <div class="needs">
-          <div><label for="need-pur">Water purifier (Aquaguard)</label>
-            <select id="need-pur"><option value="auto">Let the designer decide</option><option value="yes">Needed, on the wall</option><option value="no">Not needed</option></select></div>
-          <div><label for="cyl">Gas supply</label>
-            <select id="cyl"><option value="">Let the designer decide</option><option value="true">LPG cylinder</option><option value="false">Piped gas</option></select></div>
-          <div><label for="need-tower">Built-in oven / microwave</label>
-            <select id="need-tower"><option value="auto">Let the designer decide</option><option value="none">None</option><option value="microwave">Microwave</option><option value="oven">Oven</option><option value="oven_microwave">Oven + microwave</option></select></div>
-          <div><label for="need-disp">Glass display cabinet</label>
-            <select id="need-disp"><option value="auto">Let the designer decide</option><option value="yes">Yes, one</option><option value="no">No</option></select></div>
-          <div><label for="need-base">Base cabinets</label>
-            <select id="need-base"><option value="auto">Let the designer decide</option><option value="drawers">More drawers</option><option value="shutters">Mostly shutters</option></select></div>
-          <div><label for="need-cook">Cooking</label>
-            <select id="need-cook"><option value="auto">Not stated</option><option value="heavy">Heavy, every day</option><option value="light">Light</option></select></div>
-          <div><label for="need-size">People at home</label>
-            <select id="need-size"><option value="">Not stated</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option value="8">7 or more</option></select></div>
+        <div class="needs-group" role="group" aria-labelledby="g-util">
+          <div class="gtitle" id="g-util">Appliances &amp; services</div>
+          <div class="needs">
+            <div><label for="need-pur">Water purifier (Aquaguard)</label>
+              <select id="need-pur"><option value="auto">Let the designer decide</option><option value="yes">Needed, on the wall</option><option value="no">Not needed</option></select></div>
+            <div><label for="cyl">Gas supply</label>
+              <select id="cyl"><option value="">Let the designer decide</option><option value="true">LPG cylinder</option><option value="false">Piped gas</option></select></div>
+            <div class="wide"><label for="need-tower">Built-in oven / microwave</label>
+              <select id="need-tower"><option value="auto">Let the designer decide</option><option value="none">None</option><option value="microwave">Microwave</option><option value="oven">Oven</option><option value="oven_microwave">Oven + microwave</option></select></div>
+          </div>
+        </div>
+
+        <div class="needs-group" role="group" aria-labelledby="g-store">
+          <div class="gtitle" id="g-store">Storage</div>
+          <div class="toggle" style="margin-bottom:10px"><div>Tall storage<small>Pantry, oven or microwave tower</small></div><label class="switch"><input type="checkbox" id="tall" checked aria-label="Tall storage"><span></span></label></div>
+          <div class="needs">
+            <div><label for="need-base">Base cabinets</label>
+              <select id="need-base"><option value="auto">Let the designer decide</option><option value="drawers">More drawers</option><option value="mixed">Drawer + shutter mix</option><option value="shutters">Mostly shutters</option></select></div>
+            <div data-pref="wall_style" class="hidden"><label for="need-wallstyle">Wall cabinet doors</label>
+              <select id="need-wallstyle"><option value="auto">Let the designer decide</option><option value="shutters">Hinged shutters</option><option value="lift_up">Lift-up (flap-up)</option></select></div>
+            <div><label for="need-loft">Loft storage (above wall cabinets)</label>
+              <select id="need-loft"><option value="">Let the designer decide</option><option value="true">Yes</option><option value="false">No</option></select></div>
+            <div><label for="need-disp">Glass display cabinet</label>
+              <select id="need-disp"><option value="auto">Let the designer decide</option><option value="yes">Yes, one</option><option value="no">No</option></select></div>
+            <div data-pref="open_unit" class="hidden"><label for="need-open">Open shelf unit (wall)</label>
+              <select id="need-open"><option value="auto">Let the designer decide</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+            <div data-pref="crockery_unit" class="hidden"><label for="need-crock">Crockery unit (tall glass)</label>
+              <select id="need-crock"><option value="auto">Let the designer decide</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+          </div>
+        </div>
+
+        <div class="needs-group" role="group" aria-labelledby="g-home">
+          <div class="gtitle" id="g-home">Household</div>
+          <div class="needs">
+            <div><label for="need-cook">Cooking</label>
+              <select id="need-cook"><option value="auto">Not stated</option><option value="heavy">Heavy, every day</option><option value="light">Light</option></select></div>
+            <div><label for="need-size">People at home</label>
+              <select id="need-size"><option value="">Not stated</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option value="8">7 or more</option></select></div>
+          </div>
         </div>
       </div>
 
@@ -367,14 +446,14 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
 
     <section class="card" aria-labelledby="h-go">
       <div class="card-head"><span class="num">3</span><h2 id="h-go">Design</h2></div>
-      <button class="btn primary big" id="go" disabled>Design my kitchen</button>
+      <button class="btn primary big" id="go" type="button" disabled>Design my kitchen</button>
       <div class="hint" id="go-hint">Add a floor plan to start.</div>
       <div class="alert" id="run-err" role="alert"></div>
     </section>
-  </div>
+  </aside>
 
-  <!-- ===================== right: preview & results ===================== -->
-  <div class="stack">
+  <!-- ===================== workspace: views & results ===================== -->
+  <div class="workspace">
     <section class="card hidden" id="banner" aria-live="polite">
       <div class="banner">
         <div class="banner-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></div>
@@ -385,31 +464,51 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
         </div>
       </div>
       <div class="kpis" id="kpis"></div>
+      <nav class="jump" aria-label="Jump to">
+        <a href="#view-card" data-jump="3d">3D view</a>
+        <a href="#why-card">Why these choices</a>
+        <a href="#details-card">Rules check &amp; cabinet list</a>
+      </nav>
     </section>
 
-    <section class="card hidden" id="design-card" aria-labelledby="h-design">
-        <h3 id="h-design">Why these choices</h3>
-        <div id="ai-badge"></div>
-        <div id="ai-notes"></div>
-        <ul class="explain" id="explain"></ul>
-      </section>
-    <section class="card" aria-labelledby="h-view">
-      <div class="viewer-head">
-        <h2 id="h-view" class="hidden">Preview</h2>
+    <section class="card" id="view-card" aria-label="Kitchen views">
+      <div class="viewbar">
         <div class="tabs" id="tabs" role="tablist" aria-label="Views"></div>
         <span class="sub view-caption" id="view-caption"></span>
       </div>
-      <div class="canvas" id="canvas">
+      <div class="chips hidden" id="wall-tabs" aria-label="Choose a wall"></div>
+      <div class="stage" id="stage" role="tabpanel" aria-live="off">
         <div class="welcome" id="empty">
           <h2>Design a kitchen in three steps</h2>
-          <p class="sub">Your floor plan stays on this computer. Nothing is sent to the internet.</p>
+          <p class="sub">Your floor plan and files stay on this computer. Only the design question (room facts, cabinet codes, your brief) goes to the AI designer you pick.</p>
           <div class="how">
             <div><span class="num">1</span><b>Add the floor plan</b><span class="sub">The MagickHome scene file with walls, doors and windows.</span></div>
-            <div><span class="num">2</span><b>Pick your options</b><span class="sub">Layout, door style, tall units and a short brief.</span></div>
-            <div><span class="num">3</span><b>Get the design</b><span class="sub">Preview it here and download the 3D kitchen file.</span></div>
+            <div><span class="num">2</span><b>Pick your options</b><span class="sub">Layout, door style, household needs and a short brief.</span></div>
+            <div><span class="num">3</span><b>Get the design</b><span class="sub">Walk around it in 3D, read why each choice was made, and download the kitchen file.</span></div>
           </div>
         </div>
-        <div id="svg-host" class="hidden" style="width:100%"></div>
+        <div id="svg-host" class="hidden"></div>
+        <div id="panel-3d" class="hidden">
+          <div id="three-host"></div>
+          <div class="v3d-bar">
+            <button class="btn sm float" id="v3d-reset" type="button" title="Back to the starting view" aria-label="Reset view">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="lbl">Reset view</span></button>
+            <div class="float v3d-group" role="group" aria-label="Walls">
+              <span class="l">Walls</span>
+              <div class="seg" id="v3d-walls">
+                <button type="button" data-walls="auto" aria-pressed="true" title="Hide the walls between you and the kitchen">Cut away</button>
+                <button type="button" data-walls="show" aria-pressed="false">Show</button>
+                <button type="button" data-walls="hide" aria-pressed="false">Hide</button>
+              </div>
+            </div>
+            <label class="float mini-switch"><input type="checkbox" id="v3d-upper" checked> Upper cabinets</label>
+            <label class="float mini-switch"><input type="checkbox" id="v3d-type" checked> Colour by type</label>
+          </div>
+          <div class="v3d-hint float">Drag to rotate · right-drag to pan · scroll to zoom · click a cabinet for details</div>
+          <div class="v3d-tip float hidden" id="v3d-tip" role="tooltip"></div>
+          <div class="v3d-info float hidden" id="v3d-info" aria-live="polite"></div>
+          <div class="v3d-msg hidden" id="v3d-msg"></div>
+        </div>
         <div class="progress" id="progress" aria-live="polite">
           <div class="progress-box">
             <div class="progress-title"><span class="spinner" aria-hidden="true"></span><span id="p-stage">Starting…</span></div>
@@ -422,38 +521,611 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       <div class="legend" id="legend">
         <span><i style="background:var(--base)"></i>Base cabinet</span>
         <span><i style="background:var(--tall)"></i>Tall unit</span>
-        <span><i style="border:2px solid var(--wallu)"></i>Wall cabinet</span>
-        <span><i style="border:2px dotted var(--loft)"></i>Loft</span>
+        <span><i style="background:var(--wallu)"></i>Wall cabinet</span>
+        <span><i style="background:var(--loft)"></i>Loft</span>
         <span><i style="background:var(--corner)"></i>Corner cabinet</span>
-        <span><i style="background:var(--feature)"></i>Purifier / display</span>
+        <span><i style="background:var(--feature)"></i>Purifier / glass / open unit</span>
         <span><i style="background:var(--door)"></i>Door</span>
         <span><i style="background:var(--window)"></i>Window</span>
       </div>
     </section>
 
-    <div class="stack hidden" id="results">
-      <section class="card" aria-labelledby="h-rules">
-        <h3 id="h-rules">Design rules check</h3>
-        <ul class="checks" id="checks"></ul>
-        <div id="adjust-box" class="hidden">
-          <h3 class="subhead">Adjustments made</h3>
-          <ul class="checks" id="adjust"></ul>
+    <section class="card hidden" id="why-card" aria-labelledby="h-why">
+      <div class="section-title"><h3 id="h-why">Why these choices</h3><span id="ai-badge"></span></div>
+      <div id="ai-notes"></div>
+      <ul class="explain" id="explain"></ul>
+    </section>
+
+    <section class="card hidden" id="details-card" aria-labelledby="h-details">
+      <div class="section-title"><h3 id="h-details">Details &amp; downloads</h3>
+        <div class="dl-row" style="margin-left:auto"><a class="btn sm" id="dl-scene2" href="#" download>Kitchen file</a><a class="btn sm" id="dl-report2" href="#" download>Design report</a></div>
+      </div>
+      <div class="dgrid">
+        <div class="box">
+          <h4>Design rules check</h4>
+          <ul class="checks" id="checks"></ul>
+          <div id="adjust-box" class="hidden">
+            <h4 style="margin-top:14px">Adjustments made</h4>
+            <ul class="checks" id="adjust"></ul>
+          </div>
+          <details class="tech" id="tech-box"><summary>Technical log</summary><ul id="tech"></ul></details>
         </div>
-        <details class="tech" id="tech-box"><summary>Technical log</summary><ul id="tech"></ul></details>
-      </section>
-      <section class="card" aria-labelledby="h-sched">
-        <h3 id="h-sched">Cabinet list</h3>
+        <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+          <div class="box hidden" id="heights-box"><h4>Cabinet heights</h4><dl class="kv" id="heights"></dl></div>
+          <div class="box hidden" id="needs-box"><h4>What the designer was told</h4><ul class="plain" id="needs-list"></ul></div>
+        </div>
+      </div>
+      <div class="box" style="margin-top:14px">
+        <h4>Cabinet list</h4>
         <div class="scroll-x"><table id="schedule"></table></div>
-      </section>
-    </div>
+      </div>
+    </section>
   </div>
 </main>
+
+<!-- 3D viewer (three.js, vendored in /static/vendor so it works offline) -->
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/OrbitControls.js";
+
+const cssVar = (n, fb) => getComputedStyle(document.documentElement).getPropertyValue(n).trim() || fb;
+const escH = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const FINISH = { base: "#5f6b7a", tall: "#5f6b7a", wall: "#ece7dd", loft: "#e1dbcf" };
+const isCorner = (c) => /corner/i.test(c);
+const isFeature = (c) => /aquaguard|glass|\bopen\b|shelf/i.test(c);
+const finite = (...v) => v.every(Number.isFinite);
+
+function inPoly(pt, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [x1, z1] = poly[i], [x2, z2] = poly[j];
+    if ((z1 > pt[1]) !== (z2 > pt[1]) && pt[0] < ((x2 - x1) * (pt[1] - z1)) / (z2 - z1) + x1) inside = !inside;
+  }
+  return inside;
+}
+
+// Same wall frame as the 2D views: origin = wall start, local x along the wall,
+// local +z = the wall's front (-dz, dx); s = +1 when the room is on the front side.
+function readRoom(doc) {
+  const nodes = doc.scene.nodes, all = Object.values(nodes);
+  const walls = all.filter((n) => n.type === "wall" && Array.isArray(n.start) && Array.isArray(n.end));
+  const ceiling = all.find((n) => n.type === "ceiling"), slab = all.find((n) => n.type === "slab");
+  const outline = [ceiling, slab].map((n) => n && n.polygon).find((p) => Array.isArray(p) && p.length >= 3 && Array.isArray(p[0]));
+  const H0 = Number(ceiling && ceiling.height) || 2.5;
+  const ps = walls.flatMap((w) => [w.start, w.end]);
+  const c = ps.length ? [ps.reduce((a, p) => a + p[0], 0) / ps.length, ps.reduce((a, p) => a + p[1], 0) / ps.length] : [0, 0];
+  const F = {};
+  for (const w of walls) {
+    const dx = w.end[0] - w.start[0], dz = w.end[1] - w.start[1], L = Math.hypot(dx, dz);
+    if (!(L > 1e-6)) continue;
+    const d = [dx / L, dz / L], n = [-d[1], d[0]], m = [(w.start[0] + w.end[0]) / 2, (w.start[1] + w.end[1]) / 2];
+    const fs = String(w.frontSide || "").toLowerCase(), bs = String(w.backSide || "").toLowerCase();
+    let s;
+    if (fs === "interior" || bs === "exterior") s = 1;
+    else if (bs === "interior" || fs === "exterior") s = -1;
+    else if (outline) s = inPoly([m[0] + n[0] * 0.25, m[1] + n[1] * 0.25], outline) ? 1 : -1;
+    else s = (c[0] - m[0]) * n[0] + (c[1] - m[1]) * n[1] >= 0 ? 1 : -1;
+    F[w.id] = { w, L, d, n, s, m, o: w.start, t: Number(w.thickness) || 0.1, h: Number(w.height) || H0 };
+  }
+  return { nodes, all, walls: walls.filter((w) => F[w.id]), F, outline, H0 };
+}
+const toWorld = (f, x, z) => [f.o[0] + f.d[0] * x + f.n[0] * z, f.o[1] + f.d[1] * x + f.n[1] * z];
+const shown = (o) => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
+
+class KitchenViewer {
+  constructor(host, opts = {}) {
+    this.host = host;
+    this.opts = opts;
+    this.options = Object.assign({ walls: "auto", upper: true, byType: true }, opts.options || {});
+    const r = (this.renderer = new THREE.WebGLRenderer({ antialias: true }));
+    r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    r.shadowMap.enabled = true;
+    r.shadowMap.type = THREE.PCFSoftShadowMap;
+    r.domElement.setAttribute("role", "img");
+    r.domElement.setAttribute("aria-label", "3D view of the kitchen. Drag to rotate, scroll to zoom, click a cabinet for its details.");
+    host.appendChild(r.domElement);
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.PerspectiveCamera(45, 1, 0.05, 200);
+    const c = (this.controls = new OrbitControls(this.camera, r.domElement));
+    c.enableDamping = true;
+    c.dampingFactor = 0.09;
+    c.screenSpacePanning = true;
+    c.maxPolarAngle = Math.PI / 2 - 0.03;
+    c.minDistance = 0.6;
+    c.addEventListener("change", () => { this.dirty = true; });
+    this.scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8274, 1.5));
+    this.sun = new THREE.DirectionalLight(0xffffff, 1.9);
+    this.sun.castShadow = true;
+    this.sun.shadow.mapSize.set(2048, 2048);
+    this.sun.shadow.bias = -0.0004;
+    this.sun.shadow.normalBias = 0.02;
+    this.scene.add(this.sun, this.sun.target);
+    this.root = new THREE.Group();
+    this.scene.add(this.root);
+    this.ray = new THREE.Raycaster();
+    this.ndc = new THREE.Vector2();
+    this.active = false;
+    this.dirty = true;
+    this.raf = 0;
+    this._reset();
+    this._loop = this._loop.bind(this);
+    this.ro = new ResizeObserver(() => this.resize());
+    this.ro.observe(host);
+    const el = r.domElement;
+    el.addEventListener("pointermove", (e) => this._onMove(e));
+    el.addEventListener("pointerleave", () => this._hover(null));
+    el.addEventListener("pointerdown", (e) => { this.down = [e.clientX, e.clientY]; });
+    el.addEventListener("pointerup", (e) => {
+      if (this.down && Math.hypot(e.clientX - this.down[0], e.clientY - this.down[1]) < 6) this._select(this._pick(e));
+      this.down = null;
+    });
+    this.resize();
+  }
+
+  _reset() {
+    this.pickables = []; this.wallMeshes = []; this.wallInfo = {}; this.upper = []; this.groups = {}; this.kitchenPts = [];
+    this.hovered = null; this.selected = null;
+  }
+
+  resize() {
+    const w = this.host.clientWidth, h = this.host.clientHeight;
+    if (!w || !h) return;
+    this.renderer.setSize(w, h, false);
+    this.camera.aspect = w / h;
+    this.camera.updateProjectionMatrix();
+    this.dirty = true;
+  }
+
+  setActive(on) {
+    this.active = !!on;
+    if (this.active) {
+      this.resize();
+      this.dirty = true;
+      if (!this.raf) this.raf = requestAnimationFrame(this._loop);
+    } else {
+      this._hover(null);
+    }
+  }
+
+  _loop() {
+    if (!this.active) { this.raf = 0; return; }
+    this.raf = requestAnimationFrame(this._loop);
+    this.controls.update();
+    this._updateWalls();
+    if (this.dirty) {
+      this.dirty = false;
+      this.renderer.render(this.scene, this.camera);
+    }
+  }
+
+  show(doc, keepCamera = false) {
+    this.doc = doc;
+    this._clear();
+    this.scene.background = new THREE.Color(cssVar("--stage", "#eceff4"));
+    this._build(readRoom(doc));
+    if (!keepCamera || !this.fitted) this.resetView();
+    this.fitted = true;
+    this.dirty = true;
+  }
+
+  refreshTheme() { if (this.doc) this.show(this.doc, true); }
+
+  setOption(key, value) {
+    this.options[key] = value;
+    if (key === "byType") { if (this.doc) this.show(this.doc, true); return; }
+    if (key === "upper") this.upper.forEach((o) => { o.visible = !!value; });
+    this.dirty = true;
+  }
+
+  _clear() {
+    this._hover(null);
+    this._select(null);
+    this.root.traverse((o) => {
+      if (o.geometry) o.geometry.dispose();
+      const m = o.material;
+      if (m) (Array.isArray(m) ? m : [m]).forEach((x) => x.dispose());
+    });
+    this.root.clear();
+    this._reset();
+  }
+
+  _mat(color, extra = {}) {
+    return new THREE.MeshStandardMaterial(Object.assign({ color: new THREE.Color(color), roughness: 0.75, metalness: 0 }, extra));
+  }
+
+  _box(w, h, d, mat, x, y, z, parent) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(Math.max(w, 0.001), Math.max(h, 0.001), Math.max(d, 0.001)), mat);
+    m.position.set(x, y, z);
+    parent.add(m);
+    return m;
+  }
+
+  _typeColor(level, cat) {
+    if (isCorner(cat)) return cssVar("--corner", "#c2457a");
+    if (isFeature(cat)) return cssVar("--feature", "#0e9aa7");
+    return cssVar({ base: "--base", tall: "--tall", wall: "--wallu", loft: "--loft" }[level] || "--base", "#4a78d6");
+  }
+
+  _build(R) {
+    this.R = R;
+    // floor
+    const floorMat = this._mat(this.options.byType ? cssVar("--floor", "#e8ebf0") : "#d6cdbd", { roughness: 0.9, side: THREE.DoubleSide });
+    if (R.outline) {
+      const shape = new THREE.Shape(R.outline.map(([x, z]) => new THREE.Vector2(x, -z)));
+      const floor = new THREE.Mesh(new THREE.ShapeGeometry(shape), floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      this.root.add(floor);
+    }
+    // walls with door / window openings cut out
+    const wallMat = this._mat(this.options.byType ? "#f4f3f0" : "#f1eee7", { roughness: 0.95 });
+    const stripMat = this._mat("#4b515c", { roughness: 0.9 });
+    for (const w of R.walls) {
+      const f = R.F[w.id];
+      const g = new THREE.Group();
+      g.position.set(w.start[0], 0, w.start[1]);
+      g.rotation.y = Math.atan2(-f.d[1], f.d[0]);  // local x -> wall direction, local z -> (-dz, dx)
+      this.root.add(g);
+      this.groups[w.id] = g;
+      const info = (this.wallInfo[w.id] = { parts: [], mid: f.m, inward: [f.s * f.n[0], f.s * f.n[1]], shown: true });
+      const L = f.L, H = f.h, t = f.t, E = t / 2;
+      const ops = R.all
+        .filter((n) => (n.type === "door" || n.type === "window") && n.wallId === w.id && Array.isArray(n.position))
+        .map((o) => ({ o, x0: Math.max(0, o.position[0] - o.width / 2), x1: Math.min(L, o.position[0] + o.width / 2),
+                       y0: Math.max(0, o.position[1] - o.height / 2), y1: Math.min(H, o.position[1] + o.height / 2) }))
+        .filter((p) => finite(p.x0, p.x1, p.y0, p.y1) && p.x1 - p.x0 > 0.01 && p.y1 > p.y0)
+        .sort((a, b) => a.x0 - b.x0);
+      const piece = (x0, x1, y0, y1, full) => {
+        if (full) { if (x0 <= 1e-6) x0 = -E; if (x1 >= L - 1e-6) x1 = L + E; }  // close the outer corners
+        if (x1 - x0 < 0.002 || y1 - y0 < 0.002) return;
+        const m = this._box(x1 - x0, y1 - y0, t, wallMat, (x0 + x1) / 2, (y0 + y1) / 2, 0, g);
+        m.receiveShadow = true;
+        info.parts.push(m);
+        this.wallMeshes.push(m);
+      };
+      let x = 0;
+      for (const p of ops) {
+        if (p.x0 > x) piece(x, p.x0, 0, H, true);
+        const a = Math.max(x, p.x0);
+        piece(a, p.x1, 0, p.y0, false);
+        piece(a, p.x1, p.y1, H, false);
+        x = Math.max(x, p.x1);
+      }
+      piece(x, L, 0, H, true);
+      // footprint strip stays visible when the wall is cut away
+      this._box(L + t, 0.012, t, stripMat, L / 2, 0.006, 0, g);
+      for (const p of ops) info.parts.push(...this._opening(p, f, g));
+    }
+    // items
+    for (const n of R.all) {
+      if (n.type !== "item") continue;
+      try { this._item(n, R); } catch (e) { console.warn("3D view: skipped", n.id, e); }
+    }
+    if (!this.options.upper) this.upper.forEach((o) => { o.visible = false; });
+    // bounds + light
+    const xs = R.walls.flatMap((w) => [w.start[0], w.end[0]]), zs = R.walls.flatMap((w) => [w.start[1], w.end[1]]);
+    const H = Math.max(R.H0, ...R.walls.map((w) => R.F[w.id].h));
+    this.bounds = xs.length ? { minX: Math.min(...xs), maxX: Math.max(...xs), minZ: Math.min(...zs), maxZ: Math.max(...zs), H }
+                            : { minX: -2, maxX: 2, minZ: -2, maxZ: 2, H };
+    const b = this.bounds, cx = (b.minX + b.maxX) / 2, cz = (b.minZ + b.maxZ) / 2, size = Math.max(b.maxX - b.minX, b.maxZ - b.minZ, 2);
+    this.sun.position.set(cx + size * 0.35, H + size * 1.2, cz + size * 0.55);
+    this.sun.target.position.set(cx, 0, cz);
+    const sc = this.sun.shadow.camera;
+    sc.left = -size; sc.right = size; sc.top = size; sc.bottom = -size; sc.near = 0.1; sc.far = H + size * 4;
+    sc.updateProjectionMatrix();
+  }
+
+  _opening(p, f, g) {
+    const o = p.o, door = o.type === "door", fw = 0.05, fd = f.t + 0.02, parts = [];
+    const fm = this._mat(door ? "#9c7b5b" : "#e8edf2", { roughness: 0.6 });
+    const midY = (p.y0 + p.y1) / 2, hgt = p.y1 - p.y0, wid = p.x1 - p.x0, midX = (p.x0 + p.x1) / 2;
+    parts.push(this._box(fw, hgt, fd, fm, p.x0 + fw / 2, midY, 0, g));
+    parts.push(this._box(fw, hgt, fd, fm, p.x1 - fw / 2, midY, 0, g));
+    parts.push(this._box(wid, fw, fd, fm, midX, p.y1 - fw / 2, 0, g));
+    if (!door) {
+      parts.push(this._box(wid, fw, fd + 0.05, fm, midX, p.y0 + fw / 2, f.s * 0.025, g));
+      const glass = this._mat("#a9d6ef", { transparent: true, opacity: 0.28, roughness: 0.08, depthWrite: false });
+      parts.push(this._box(wid - 2 * fw, hgt - 2 * fw, 0.01, glass, midX, midY, 0, g));
+      if (wid > 0.8) parts.push(this._box(0.03, hgt - 2 * fw, 0.03, fm, midX, midY, 0, g));
+    } else {
+      // leaf drawn open at 90 degrees into the room, as in the top view
+      const left = (o.hingesSide || "left") === "left", hx = left ? p.x0 + fw : p.x1 - fw, lw = wid - 2 * fw, lh = hgt - fw;
+      const leaf = this._box(0.04, lh, lw, this._mat("#c9a27c", { roughness: 0.55 }), hx + (left ? 0.02 : -0.02), p.y0 + lh / 2, f.s * (f.t / 2 + lw / 2), g);
+      leaf.castShadow = true;
+      parts.push(leaf);
+    }
+    return parts;
+  }
+
+  _item(n, R) {
+    const a = n.asset || {}, m = n.metadata || {};
+    if (a.category === "kitchen") return this._cabinet(n, R);
+    if (a.category === "fixture") return m.fixtureKind === "floor" ? null : this._fixture(n, R);
+    if (a.category === "appliance") return this._appliance(n, R);
+    // anything else hanging on a wall: a neutral box so nothing silently disappears
+    const f = R.F[n.parentId], g = this.groups[n.parentId];
+    const [w, h, d] = (a.dimensions || []).map(Number), [x, y, z] = (n.position || []).map(Number);
+    if (!f || !g || !finite(w, h, d, x, y, z)) return null;
+    const box = this._box(w, h, d, this._mat("#b8bec8"), x, y + Number((a.offset || [])[1] || 0), z, g);
+    box.userData.node = n;
+    this.pickables.push(box);
+    return box;
+  }
+
+  _cabinet(n, R) {
+    const f = R.F[n.parentId], g = this.groups[n.parentId];
+    if (!f || !g) return;
+    const [w, h, d] = (n.asset.dimensions || []).map(Number), [x, y, z] = (n.position || []).map(Number);
+    if (!finite(w, h, d, x, y, z) || w <= 0 || h <= 0 || d <= 0) return;
+    const m = n.metadata || {}, cat = String(m.category || ""), combo = String(m.cabinetCombination || "");
+    const text = `${cat} ${combo}`.toLowerCase();
+    const level = String((n.placement && n.placement.level) || m.level || "base").toLowerCase();
+    const s = Math.sign(Number(n.placement && n.placement.side) || f.s) || 1;  // +1: front faces local +z
+    const color = this.options.byType ? this._typeColor(level, cat) : FINISH[level] || FINISH.base;
+    const mat = this._mat(color, { roughness: 0.6 });
+    const grp = new THREE.Group();
+    grp.position.set(x, y + h / 2, z);  // node position = bottom centre (asset offset = h/2)
+    grp.userData.node = n;
+    g.add(grp);
+    const kind = /glass/.test(text) ? "glass" : /\bopen\b/.test(text) && !/shelf/.test(text) ? "open" : "solid";
+    const meshes = [];
+    if (kind === "solid") meshes.push(this._box(w, h, d, mat, 0, 0, 0, grp));
+    else {
+      const pt = Math.min(0.018, w / 6, h / 6), inner = this._mat(this.options.byType ? color : "#efebe4", { roughness: 0.7 });
+      meshes.push(this._box(w, h, pt, inner, 0, 0, -s * (d / 2 - pt / 2), grp));       // back
+      meshes.push(this._box(w, pt, d, mat, 0, h / 2 - pt / 2, 0, grp));                 // top
+      meshes.push(this._box(w, pt, d, mat, 0, -h / 2 + pt / 2, 0, grp));                // bottom
+      meshes.push(this._box(pt, h, d, mat, -w / 2 + pt / 2, 0, 0, grp));                // sides
+      meshes.push(this._box(pt, h, d, mat, w / 2 - pt / 2, 0, 0, grp));
+      if (h > 0.45) meshes.push(this._box(w - 2 * pt, pt, d - pt, inner, 0, 0, s * pt / 2, grp));  // shelf
+      if (kind === "glass") {
+        const glass = this._mat("#bfe3f5", { transparent: true, opacity: 0.3, roughness: 0.05, depthWrite: false });
+        meshes.push(this._box(w - 2 * pt, h - 2 * pt, 0.006, glass, 0, 0, s * (d / 2 - 0.004), grp));
+      }
+    }
+    for (const o of meshes) { o.castShadow = true; o.receiveShadow = true; this.pickables.push(o); }
+    this._frontLines(grp, w, h, d, s, text, level, kind);
+    if (level === "wall" || level === "loft") this.upper.push(grp);
+    this.kitchenPts.push(toWorld(f, x, z));
+  }
+
+  _frontLines(grp, w, h, d, s, text, level, kind) {
+    const pts = [], fz = s * (d / 2 + 0.002), ix = w / 2 - 0.004, iy = h / 2 - 0.004;
+    const seg = (x0, y0, x1, y1) => pts.push(x0, y0, fz, x1, y1, fz);
+    seg(-ix, -iy, ix, -iy); seg(ix, -iy, ix, iy); seg(ix, iy, -ix, iy); seg(-ix, iy, -ix, -iy);
+    const handles = [];
+    if (kind !== "open") {
+      const rows = /four drawer/.test(text) ? 4 : /triple/.test(text) ? 3 : /double drawer|2 drawer/.test(text) ? 2 : 0;
+      for (let i = 1; i < rows; i++) { const yy = -h / 2 + (h * i) / rows; seg(-ix, yy, ix, yy); }
+      for (let i = 0; i < rows; i++) handles.push(-h / 2 + (h * (i + 1)) / rows - 0.045);
+      let top = iy;
+      if (!rows && /drawer/.test(text) && level === "base") {
+        top = h / 2 - Math.min(0.2, h * 0.26);
+        seg(-ix, top, ix, top);
+        handles.push(h / 2 - 0.045, top - 0.045);
+      }
+      if (!rows && /double|dual/.test(text) && !/drawer/.test(text) && w >= 0.5) seg(0, -iy, 0, top);
+      if (/bi-?fold/.test(text)) seg(-ix, 0, ix, 0);
+      if (!handles.length && kind === "solid") handles.push(level === "wall" || level === "loft" ? -h / 2 + 0.045 : h / 2 - 0.045);
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+    const lm = new THREE.LineBasicMaterial({ color: 0x1c2026, transparent: true, opacity: 0.42 });
+    grp.add(new THREE.LineSegments(geo, lm));
+    if (kind === "solid") {
+      const bg = new THREE.BoxGeometry(w, h, d);
+      grp.add(new THREE.LineSegments(new THREE.EdgesGeometry(bg), lm));
+      bg.dispose();
+    }
+    const hm = this._mat("#2a2e35", { roughness: 0.35, metalness: 0.6 });
+    const hl = Math.min(0.16, w * 0.35);
+    for (const hy of handles) {
+      const hb = this._box(hl, 0.012, 0.014, hm, 0, hy, s * (d / 2 + 0.009), grp);
+      hb.userData.noTint = true;
+    }
+  }
+
+  _fixture(n, R) {
+    const f = R.F[n.parentId], g = this.groups[n.parentId];
+    if (!f || !g) return;
+    const m = n.metadata || {}, kind = String(m.fixtureKind || ""), level = String(m.level || "");
+    const [w, h, d] = (n.asset.dimensions || []).map(Number), [x, y, z] = (n.position || []).map(Number);
+    if (!finite(w, h, d, x, y, z)) return;
+    const byType = this.options.byType;
+    const color = kind === "countertop" ? (byType ? cssVar("--counter", "#6b7280") : "#3f444c")
+      : kind === "toe-kick" ? "#2b2e34"
+      : kind === "backsplash" ? "#e4ded3"
+      : kind === "slab" || kind === "filler" ? (byType ? "#dfe3ea" : FINISH[level] || "#e8e4dc")
+      : "#c9ced6";
+    const mesh = this._box(w, h, d, this._mat(color, kind === "countertop" ? { roughness: 0.32, metalness: 0.05 } : {}), x, y, z, g);
+    mesh.receiveShadow = true;
+    mesh.castShadow = kind === "countertop";
+    if (level === "wall" || level === "loft") this.upper.push(mesh);
+  }
+
+  _appliance(n, R) {
+    const m = n.metadata || {}, kind = String(m.applianceKind || n.name || m.category || "").toLowerCase();
+    const steel = (extra) => this._mat("#b9c0c8", Object.assign({ roughness: 0.32, metalness: 0.65 }, extra || {}));
+    if (/chimney/.test(kind)) {
+      const f = R.F[n.parentId], g = this.groups[n.parentId];
+      const [w, h, d] = (n.asset.dimensions || []).map(Number), [x, y, z] = (n.position || []).map(Number);
+      if (!f || !g || !finite(w, h, d, x, y, z)) return;
+      const s = Math.sign(z) || f.s;
+      const grp = new THREE.Group();
+      grp.userData.node = n;
+      g.add(grp);
+      const canopy = this._box(w, 0.1, d, steel(), x, y + 0.05, z, grp);
+      const duct = f.h - (y + 0.1);
+      const dd = Math.min(0.3, d * 0.5);
+      const parts = [canopy];
+      if (duct > 0.05) parts.push(this._box(Math.min(0.32, w * 0.36), duct, dd, steel(), x, y + 0.1 + duct / 2, s * (f.t / 2 + dd / 2), grp));
+      parts.forEach((p) => { p.castShadow = true; this.pickables.push(p); });
+      this.upper.push(grp);
+      return;
+    }
+    const host = R.nodes[n.parentId];
+    if (!host || !host.asset) return;
+    const f = R.F[host.parentId], g = this.groups[host.parentId];
+    const [hw, hh, hd] = (host.asset.dimensions || []).map(Number), [hx, hy, hz] = (host.position || []).map(Number);
+    if (!f || !g || !finite(hw, hh, hd, hx, hy, hz)) return;
+    const s = Math.sign(Number(host.placement && host.placement.side) || f.s) || 1;
+    const top = hy + hh + 0.04;  // base top + 40 mm worktop
+    const grp = new THREE.Group();
+    grp.userData.node = n;
+    g.add(grp);
+    const [aw, , ad] = (n.asset.dimensions || [0.78, 0.45, 0.45]).map(Number);
+    if (/sink/.test(kind)) {
+      const sw = Math.min(aw || 0.78, hw - 0.06), sd = Math.min(ad || 0.45, hd - 0.1);
+      const rim = this._box(sw, 0.012, sd, steel(), hx, top + 0.006, hz, grp);
+      const bowl = this._box(sw - 0.08, 0.013, sd - 0.08, this._mat("#7b858f", { roughness: 0.3, metalness: 0.5 }), hx, top + 0.0068, hz, grp);
+      const tz = hz - s * (sd / 2 + 0.045);
+      const tap = this._box(0.03, 0.28, 0.03, steel(), hx, top + 0.14, tz, grp);
+      const spout = this._box(0.025, 0.025, 0.17, steel(), hx, top + 0.27, tz + s * 0.085, grp);
+      [rim, bowl, tap, spout].forEach((p) => { p.castShadow = true; this.pickables.push(p); });
+    } else if (/hob/.test(kind)) {
+      const w2 = Math.min(aw || 0.75, hw - 0.06), d2 = Math.min(ad || 0.52, hd - 0.04);
+      const plate = this._box(w2, 0.012, d2, this._mat("#15171a", { roughness: 0.18, metalness: 0.2 }), hx, top + 0.006, hz, grp);
+      this.pickables.push(plate);
+      const ringMat = this._mat("#9aa0a8", { roughness: 0.4, metalness: 0.6 });
+      for (const [bx, bz] of [[-0.2, -0.12], [0.2, -0.12], [-0.2, 0.12], [0.2, 0.12], [0, 0]]) {
+        if (Math.abs(bx) > w2 / 2 - 0.07) continue;
+        const ring = new THREE.Mesh(new THREE.TorusGeometry(0.055, 0.008, 8, 28), ringMat);
+        ring.rotation.x = Math.PI / 2;
+        ring.position.set(hx + bx, top + 0.016, hz + bz);
+        grp.add(ring);
+      }
+    }
+  }
+
+  _updateWalls() {
+    const mode = this.options.walls, cam = this.camera.position;
+    for (const info of Object.values(this.wallInfo)) {
+      let vis = mode !== "hide";
+      if (mode === "auto") vis = (cam.x - info.mid[0]) * info.inward[0] + (cam.z - info.mid[1]) * info.inward[1] > 0;
+      if (vis !== info.shown) {
+        info.shown = vis;
+        info.parts.forEach((p) => { p.visible = vis; });
+        this.dirty = true;
+      }
+    }
+  }
+
+  resetView() {
+    const b = this.bounds;
+    if (!b) return;
+    const cx = (b.minX + b.maxX) / 2, cz = (b.minZ + b.maxZ) / 2, size = Math.max(b.maxX - b.minX, b.maxZ - b.minZ, 2);
+    let dx = 0.6, dz = 0.8;
+    if (this.kitchenPts.length) {
+      const kx = this.kitchenPts.reduce((a, p) => a + p[0], 0) / this.kitchenPts.length;
+      const kz = this.kitchenPts.reduce((a, p) => a + p[1], 0) / this.kitchenPts.length;
+      const vx = cx - kx, vz = cz - kz, l = Math.hypot(vx, vz);
+      if (l > 0.25) { dx = vx / l; dz = vz / l; }
+    }
+    // look from the open side of the room, turned a little so two runs read in perspective
+    const a = 0.38, rx = dx * Math.cos(a) - dz * Math.sin(a), rz = dx * Math.sin(a) + dz * Math.cos(a);
+    let dist = size * 1.1 + 1.6;
+    if (this.camera.aspect < 1.2) dist /= Math.pow(this.camera.aspect / 1.2, 0.9);  // portrait / phone: step back
+    this.camera.position.set(cx + rx * dist, b.H * 0.5 + dist * 0.62, cz + rz * dist);
+    this.controls.target.set(cx, Math.min(0.95, b.H * 0.38), cz);
+    this.camera.far = dist * 14;
+    this.camera.updateProjectionMatrix();
+    this.controls.maxDistance = dist * 3.2;
+    this.controls.update();
+    this.dirty = true;
+  }
+
+  _pick(e) {
+    const rect = this.renderer.domElement.getBoundingClientRect();
+    if (!rect.width || !rect.height) return null;
+    this.ndc.set(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
+    this.ray.setFromCamera(this.ndc, this.camera);
+    for (const hit of this.ray.intersectObjects(this.pickables.concat(this.wallMeshes), false)) {
+      if (!shown(hit.object)) continue;
+      let o = hit.object;
+      while (o && !o.userData.node) o = o.parent;
+      return o || null;  // a visible wall in front blocks the pick
+    }
+    return null;
+  }
+
+  _onMove(e) {
+    this.lastMove = e;
+    if (this.moveQueued) return;
+    this.moveQueued = true;
+    requestAnimationFrame(() => {
+      this.moveQueued = false;
+      const ev = this.lastMove;
+      if (!this.active || ev.buttons) { this._hover(null); return; }
+      this._hover(this._pick(ev), ev);
+    });
+  }
+
+  _tint(obj, level) {
+    const color = level === 2 ? 0x2b55d0 : level === 1 ? 0x3a4a7a : 0x000000;
+    obj.traverse((o) => {
+      if (o.isMesh && !o.userData.noTint && o.material && o.material.emissive) {
+        o.material.emissive.setHex(color);
+        o.material.emissiveIntensity = level === 2 ? 0.5 : level === 1 ? 0.3 : 1;
+      }
+    });
+  }
+
+  _describe(n) {
+    try { return this.opts.describe ? this.opts.describe(n) : { title: n.name, sub: "", lines: [] }; }
+    catch (e) { return { title: (n && n.name) || "Item", sub: "", lines: [] }; }
+  }
+
+  _hover(obj, e) {
+    if (obj !== this.hovered) {
+      if (this.hovered && this.hovered !== this.selected) this._tint(this.hovered, 0);
+      this.hovered = obj;
+      if (obj && obj !== this.selected) this._tint(obj, 1);
+      this.dirty = true;
+    }
+    const tip = this.opts.tooltip;
+    if (!tip) return;
+    if (!obj || !e) { tip.classList.add("hidden"); this.renderer.domElement.style.cursor = ""; return; }
+    const d = this._describe(obj.userData.node);
+    tip.innerHTML = `<b>${escH(d.title)}</b>${d.lines && d.lines[0] ? `<br><span>${escH(d.lines[0])}</span>` : ""}`;
+    tip.classList.remove("hidden");
+    const rect = this.host.getBoundingClientRect();
+    const x = Math.max(8, Math.min(e.clientX - rect.left + 14, rect.width - tip.offsetWidth - 8));
+    const y = Math.max(8, Math.min(e.clientY - rect.top + 14, rect.height - tip.offsetHeight - 8));
+    tip.style.transform = `translate(${x}px, ${y}px)`;
+    this.renderer.domElement.style.cursor = "pointer";
+  }
+
+  _select(obj) {
+    if (this.selected && this.selected !== obj) this._tint(this.selected, this.selected === this.hovered ? 1 : 0);
+    this.selected = obj;
+    this.dirty = true;
+    const info = this.opts.info;
+    if (obj) this._tint(obj, 2);
+    if (!info) return;
+    if (!obj) { info.classList.add("hidden"); return; }
+    const d = this._describe(obj.userData.node);
+    info.innerHTML = `<div class="v3d-info-head"><b>${escH(d.title)}</b><button type="button" class="icon-btn" aria-label="Close details">×</button></div>`
+      + (d.sub ? `<div class="sub">${escH(d.sub)}</div>` : "")
+      + `<ul>${(d.lines || []).map((l) => `<li>${escH(l)}</li>`).join("")}</ul>`;
+    info.querySelector("button").addEventListener("click", () => this._select(null));
+    info.classList.remove("hidden");
+  }
+}
+
+window.KitchenViewer3D = { create: (host, opts) => new KitchenViewer(host, opts) };
+window.dispatchEvent(new Event("kv3d-ready"));
+</script>
 
 <script>
 (() => {
   "use strict";
   const $ = (s) => document.querySelector(s);
-  const state = { input: null, filename: null, jobId: null, output: null, report: null, tab: "plan", tick: null, started: 0, aiTime: null, model: null, strict: false };
+  const $$ = (s) => [...document.querySelectorAll(s)];
+  const state = {
+    input: null, filename: null, jobId: null, output: null, report: null, tab: "plan", wall: null, tick: null, started: 0,
+    aiTime: null, model: null, strict: false, sup: { loftNull: false }, viewer: null, viewerDoc: null, viewerFailed: false,
+    v3d: { walls: "auto", upper: true, byType: true },
+  };
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
@@ -472,9 +1144,15 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
   const NAMES = [
     [/^Base Sink Unit/i, "Sink unit", "Sink"], [/^Base Hob Unit/i, "Hob unit", "Hob"], [/^Base Spice/i, "Spice pull-out", "Spice"],
     [/^Base Cylinder/i, "LPG cylinder cabinet", "LPG"], [/^Base Grain/i, "Grain trolley", "Grain"], [/^Base Wicker/i, "Vegetable basket unit", "Basket"],
-    [/^Blind corner unit.*L$/i, "Corner cabinet (blind, left)", "Corner"], [/^Blind corner unit.*R$/i, "Corner cabinet (blind, right)", "Corner"],
-    [/^Wall L Corner/i, "Corner wall cabinet", "Corner"], [/^Loft.*L Corner/i, "Corner loft", "Corner"],
-    [/^Wall Aquaguard/i, "Water purifier cabinet", "Purifier"], [/Glass Unit/i, "Glass display cabinet", "Glass"],
+    [/^Base Low Height/i, "Low-height drawer unit", "Low"],
+    [/^Blind corner.*L$/i, "Corner cabinet (blind, left)", "Corner"], [/^Blind corner.*R$/i, "Corner cabinet (blind, right)", "Corner"],
+    [/^L corner unit/i, "Corner cabinet (L)", "Corner"], [/^Base L corner/i, "Corner cabinet (L)", "Corner"],
+    [/^Wall L Corner/i, "Corner wall cabinet", "Corner"], [/^Wall Open L Corner/i, "Open corner wall unit", "Corner"], [/^Loft.*L Corner/i, "Corner loft", "Corner"],
+    [/^Wall Aquaguard/i, "Water purifier cabinet", "Purifier"], [/^Tall Glass/i, "Crockery unit (tall glass)", "Crockery"],
+    [/Glass Unit/i, "Glass display cabinet", "Glass"], [/^Wall Lift Up/i, "Lift-up wall cabinet", "Lift-up"],
+    [/^Wall Microwave Open/i, "Microwave wall unit", "Micro"], [/^Wall Spice Rack/i, "Spice rack", "Spice"],
+    [/^Wall Chamfered Open/i, "Open end unit (chamfered)", "Open"], [/^Wall Open/i, "Open wall unit", "Open"],
+    [/^Open Horizontal Shelf/i, "Open shelf", "Shelf"], [/^Tall Open/i, "Open tall unit", "Open"], [/^Wall Tambour/i, "Tambour unit", "Tambour"],
     [/^Tall Built-In Oven & Micro/i, "Oven + microwave tower", "Oven+Micro"], [/^Tall Built-In Oven/i, "Oven tower", "Oven"],
     [/^Tall Built-In Microwave/i, "Microwave tower", "Microwave"], [/^Tall Built-In Wicker/i, "Basket pantry", "Pantry"],
     [/^Tall Unit/i, "Tall pantry", "Pantry"], [/^Wall Unit/i, "Wall cabinet", "Wall"], [/^Loft/i, "Loft cabinet", "Loft"],
@@ -483,7 +1161,7 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
   const nameOf = (cat) => (NAMES.find(([r]) => r.test(cat || "")) || [null, cat || "Cabinet"])[1];
   const shortOf = (cat) => (NAMES.find(([r]) => r.test(cat || "")) || [null, null, cat || ""])[2];
   const isCorner = (cat) => /corner/i.test(cat || "");
-  const isFeature = (cat) => /aquaguard|glass/i.test(cat || "");
+  const isFeature = (cat) => /aquaguard|glass|\bopen\b|shelf/i.test(cat || "");
   const LEVEL = { base: "Base", tall: "Tall", wall: "Wall", loft: "Loft" };
   function tierColor(level, cat) {
     if (isCorner(cat)) return cssVar("--corner");
@@ -504,7 +1182,14 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       const h = await api("/health");
       state.aiTime = h.ai_expected_time || state.aiTime;
       state.model = h.ollama_model;
-      if (state.aiTime) $("#ai-time").textContent = `thinks like a designer · about ${state.aiTime}`;
+      if (state.aiTime) $("#ai-time").textContent = `AI designer · ${/^(under|over|about)/.test(state.aiTime) ? state.aiTime : "about " + state.aiTime}`;
+      const gem = h.gemini || {};
+      state.geminiModel = gem.model;
+      $("#ai-gemini").disabled = !gem.available;
+      $("#gemini-time").textContent = gem.available ? `Google AI · ${gem.knowledge ? "with your knowledge" : "own judgement"} · 1-2 min` : "Google AI · not set up";
+      $("#lbl-gemini").title = gem.available
+        ? `Google ${gem.model} - ${gem.knowledge ? "given the MagickHome playbook and examples" : "designs from its own judgement (no MagickHome playbook, examples or cabinet notes)"}`
+        : "Start the server with GEMINI_API_KEY set to enable Gemini";
       const ok = h.ollama === "ready";
       setPill("#chip-ai", ok ? "ok" : "warn", ok ? `AI designer ready · ${prettyModel(h.ollama_model)}` : "AI designer offline · quick rules will be used", h.ollama);
       const c = h.catalog || {};
@@ -520,6 +1205,24 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       const styles = await api("/api/door-styles");
       $("#style").innerHTML = styles.map((s) => `<option${s === "Slab (Plain)" ? " selected" : ""}>${esc(s)}</option>`).join("");
     } catch (e) { /* keep default */ }
+  }
+  // New household needs are sent only when this server's API knows them, so the page works
+  // with both older and newer servers.
+  async function loadPrefSupport() {
+    try {
+      const spec = await api("/openapi.json");
+      const props = (((spec.components || {}).schemas || {}).KitchenPreferences || {}).properties || {};
+      const lo = props.include_loft || {};
+      const types = [lo.type, ...(lo.anyOf || []).map((s) => s.type)].flat();
+      state.sup = { loftNull: types.includes("null"), wall_style: "wall_style" in props, open_unit: "open_unit" in props, crockery_unit: "crockery_unit" in props };
+    } catch (e) { state.sup = { loftNull: false }; }
+    $$("[data-pref]").forEach((el) => el.classList.toggle("hidden", !state.sup[el.dataset.pref]));
+    if (!state.sup.loftNull) {
+      const auto = $('#need-loft option[value=""]');
+      if (auto) auto.remove();
+      $("#need-loft").value = "false";
+    }
+    updateDecideLabels();
   }
 
   // ---------- geometry ----------
@@ -585,7 +1288,7 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       else out.push(`<polygon points="${pts(p)}" fill="none" stroke="${col}" stroke-width="1.8" ${lvl === "loft" ? 'stroke-dasharray="2 3"' : 'stroke-dasharray="6 3"'} vector-effect="non-scaling-stroke">${tip}</polygon>`);
       for (const cid of n.children || []) {
         const a = g.nodes[cid];
-        if (!a) continue;
+        if (!a || !a.asset) continue;
         const [aw, , ad] = a.asset.dimensions;
         const q = [W(f, x - aw / 2, z - ad / 2), W(f, x + aw / 2, z - ad / 2), W(f, x + aw / 2, z + ad / 2), W(f, x - aw / 2, z + ad / 2)];
         if (/sink/i.test(a.name)) out.push(`<polygon points="${pts(q)}" fill="#cfe9f6" stroke="#2a7fa8" stroke-width="1" vector-effect="non-scaling-stroke"><title>Sink</title></polygon>`);
@@ -676,29 +1379,135 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
     return `<svg viewBox="${-padX} ${-padY} ${L + 2 * padX} ${H + padY + 0.15}" role="img" aria-label="Front view of ${esc(f.w.name || wallId)}">${out.join("")}</svg>`;
   }
 
-  // ---------- preview ----------
+  // ---------- views: 3D / top view / wall elevations ----------
+  const ICON = {
+    "3d": '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg>',
+    plan: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><path d="M4 11h7v9M14 4v7h6"/></svg>',
+    elev: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1.5"/><path d="M3 12h18M9 12v7M15 12v7"/></svg>',
+  };
+  const VIEWS = [["3d", "3D view"], ["plan", "Top view"], ["elev", "Wall elevations"]];
+  function cabinetWalls(g) {
+    if (!state.output) return [];
+    return g.walls.filter((w) => g.all.some((n) => n.type === "item" && n.wallId === w.id && n.asset?.category === "kitchen"));
+  }
+  function showPanel(which) {
+    $("#empty").classList.toggle("hidden", which !== "empty");
+    $("#panel-3d").classList.toggle("hidden", which !== "3d");
+    $("#svg-host").classList.toggle("hidden", which !== "svg");
+    $("#stage").classList.toggle("is-3d", which === "3d");
+  }
   function render() {
     const doc = state.output || state.input;
-    const tabs = $("#tabs");
-    if (!doc) { tabs.innerHTML = ""; $("#view-caption").textContent = ""; return; }
+    const tabs = $("#tabs"), chips = $("#wall-tabs");
+    if (!doc) {
+      tabs.innerHTML = ""; chips.classList.add("hidden"); $("#view-caption").textContent = "";
+      showPanel("empty"); stop3D(); return;
+    }
     const g = geom(doc);
-    const walls = g.walls.filter((w) => state.output && g.all.some((n) => n.type === "item" && n.wallId === w.id && n.asset?.category === "kitchen"));
-    const list = [["plan", "Top view"], ...walls.map((w) => [w.id, w.name || w.id])];
-    if (!list.some(([k]) => k === state.tab)) state.tab = "plan";
-    tabs.innerHTML = list.map(([k, label]) => `<button class="tab${k === state.tab ? " active" : ""}" role="tab" aria-selected="${k === state.tab}" data-tab="${esc(k)}">${esc(label)}</button>`).join("");
-    const f = g.frames[state.tab];
-    $("#view-caption").textContent = state.tab === "plan"
-      ? (state.output ? "Seen from above · dashed outlines are wall cabinets" : "Your room · design it to see the cabinets")
-      : `Front view of ${f.w.name || state.tab}, seen from inside the room · ${(f.L * 1000).toFixed(0)} mm wide`;
-    $("#svg-host").innerHTML = state.tab === "plan" ? planSVG(doc) : elevationSVG(doc, state.tab);
-    $("#svg-host").classList.remove("hidden");
-    $("#empty").classList.add("hidden");
+    const elevWalls = cabinetWalls(g);
+    const views = VIEWS.filter(([k]) => k !== "elev" || elevWalls.length);
+    if (!views.some(([k]) => k === state.tab)) state.tab = "plan";
+    tabs.innerHTML = views.map(([k, label]) => `<button type="button" class="tab${k === state.tab ? " active" : ""}" role="tab" id="tab-${k}" aria-selected="${k === state.tab}" aria-controls="stage" tabindex="${k === state.tab ? 0 : -1}" data-tab="${k}">${ICON[k]}${esc(label)}</button>`).join("");
+    if (state.tab === "elev") {
+      if (!elevWalls.some((w) => w.id === state.wall)) state.wall = elevWalls[0].id;
+      chips.innerHTML = elevWalls.map((w) => `<button type="button" class="chip${w.id === state.wall ? " active" : ""}" aria-pressed="${w.id === state.wall}" data-wall="${esc(w.id)}">${esc(w.name || w.id)}</button>`).join("");
+      chips.classList.remove("hidden");
+    } else chips.classList.add("hidden");
+    const f = g.frames[state.wall];
+    $("#view-caption").textContent = state.tab === "3d"
+      ? (state.output ? "Your kitchen in 3D · the near walls are cut away so you can see in" : "Your room in 3D · design it to see the cabinets")
+      : state.tab === "plan"
+        ? (state.output ? "Seen from above · dashed outlines are wall cabinets" : "Your room · design it to see the cabinets")
+        : `${f.w.name || state.wall}, seen from inside the room · ${(f.L * 1000).toFixed(0)} mm wide`;
+    $("#legend").classList.toggle("hidden", state.tab === "3d" && !state.v3d.byType);
+    if (state.tab === "3d") { showPanel("3d"); show3D(doc); }
+    else {
+      stop3D();
+      $("#svg-host").innerHTML = state.tab === "plan" ? planSVG(doc) : elevationSVG(doc, state.wall);
+      showPanel("svg");
+    }
   }
-  $("#tabs").addEventListener("click", (e) => {
-    const b = e.target.closest("[data-tab]");
-    if (b) { state.tab = b.dataset.tab; render(); }
+  function selectTab(tab, focus) {
+    state.tab = tab;
+    render();
+    if (focus) { const b = $(`#tab-${tab}`); if (b) b.focus(); }
+  }
+  $("#tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-tab]"); if (b) selectTab(b.dataset.tab); });
+  $("#tabs").addEventListener("keydown", (e) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+    const bs = $$("#tabs .tab");
+    let i = bs.findIndex((b) => b.classList.contains("active"));
+    i = e.key === "Home" ? 0 : e.key === "End" ? bs.length - 1 : (i + (e.key === "ArrowRight" ? 1 : -1) + bs.length) % bs.length;
+    e.preventDefault();
+    selectTab(bs[i].dataset.tab, true);
   });
-  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", render);
+  $("#wall-tabs").addEventListener("click", (e) => { const b = e.target.closest("[data-wall]"); if (b) { state.wall = b.dataset.wall; render(); } });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    state.viewerDoc = null;  // rebuild the 3D scene with the new theme colours
+    render();
+  });
+
+  // ---------- 3D viewer glue ----------
+  function whenViewer() {
+    return new Promise((resolve, reject) => {
+      if (window.KitchenViewer3D) return resolve(window.KitchenViewer3D);
+      const t = setTimeout(() => reject(new Error("the 3D library did not load")), 12000);
+      window.addEventListener("kv3d-ready", () => { clearTimeout(t); resolve(window.KitchenViewer3D); }, { once: true });
+    });
+  }
+  function describe(n) {
+    const m = n.metadata || {}, a = n.asset || {};
+    if (a.category === "kitchen") {
+      const lvl = (n.placement && n.placement.level) || "";
+      return {
+        title: nameOf(m.category),
+        sub: [m.cabinetCombination, m.category].filter(Boolean).join(" · "),
+        lines: [`${m.width ?? "?"} × ${m.height ?? "?"} × ${m.depth ?? "?"} mm (W × H × D)`, `${LEVEL[lvl] || lvl || "Cabinet"} · on ${wallName(n.wallId)}`, `Catalogue code ${n.name}`],
+      };
+    }
+    if (a.category === "appliance") return { title: m.category || n.name, sub: m.description || "", lines: [`${m.width ?? "?"} × ${m.height ?? "?"} × ${m.depth ?? "?"} mm`, "Placed by the design rules"] };
+    return { title: n.name || "Item", sub: "", lines: [] };
+  }
+  async function show3D(doc) {
+    const msg = $("#v3d-msg");
+    if (!state.viewer) {
+      if (state.viewerFailed) return;
+      msg.textContent = "Loading the 3D view…";
+      msg.classList.remove("hidden");
+      try {
+        const V = await whenViewer();
+        if (!state.viewer) state.viewer = V.create($("#three-host"), { tooltip: $("#v3d-tip"), info: $("#v3d-info"), describe, options: state.v3d });
+      } catch (e) {
+        state.viewerFailed = true;
+        msg.innerHTML = `<div><b>The 3D view could not start</b><br>${esc(e.message || e)}.<br>The top view and wall elevations still work.</div>`;
+        return;
+      }
+      msg.classList.add("hidden");
+    }
+    if (state.tab !== "3d") return;  // switched away while loading
+    const cur = state.output || state.input;
+    if (state.viewerDoc !== cur) {
+      // same document again (theme change) keeps the camera; a new design gets a fresh view
+      state.viewer.show(cur, cur === state.viewerShown);
+      state.viewerDoc = state.viewerShown = cur;
+    }
+    state.viewer.setActive(true);
+  }
+  function stop3D() { if (state.viewer) state.viewer.setActive(false); }
+  $("#v3d-reset").addEventListener("click", () => { if (state.viewer) state.viewer.resetView(); });
+  $("#v3d-walls").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-walls]");
+    if (!b) return;
+    state.v3d.walls = b.dataset.walls;
+    $$("#v3d-walls [data-walls]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    if (state.viewer) state.viewer.setOption("walls", state.v3d.walls);
+  });
+  $("#v3d-upper").addEventListener("change", (e) => { state.v3d.upper = e.target.checked; if (state.viewer) state.viewer.setOption("upper", e.target.checked); });
+  $("#v3d-type").addEventListener("change", (e) => {
+    state.v3d.byType = e.target.checked;
+    if (state.viewer) state.viewer.setOption("byType", e.target.checked);
+    $("#legend").classList.toggle("hidden", !e.target.checked);
+  });
 
   // ---------- step 1: floor plan ----------
   function showFileError(msg) { const el = $("#file-err"); el.textContent = msg; el.classList.toggle("show", !!msg); }
@@ -730,12 +1539,24 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
     updateHint();
     render();
   }
+  const designerChoice = () => document.querySelector('input[name="ai"]:checked').value;  // auto | gemini | fallback
   function updateHint() {
     if (!state.input) { $("#go-hint").textContent = "Add a floor plan to start."; return; }
-    const ai = document.querySelector('input[name="ai"]:checked').value !== "fallback";
-    $("#go-hint").textContent = ai ? `Qwen takes ${state.aiTime ? "about " + state.aiTime : "a few minutes"} on this computer.` : "Ready in a few seconds.";
+    const d = designerChoice();
+    $("#go-hint").textContent = d === "gemini" ? "Gemini (Google AI) takes about 1-2 minutes; the room facts and brief are sent to Google."
+      : d === "auto" ? `Qwen takes ${state.aiTime ? (/^(under|over|about)/.test(state.aiTime) ? "" : "about ") + state.aiTime : "a few minutes"}.` : "Ready in a few seconds.";
   }
-  document.querySelectorAll('input[name="ai"]').forEach((el) => el.addEventListener("change", updateHint));
+  // "Let the designer decide" names the designer: Qwen / Gemini decides (and explains why), or the quick rules do.
+  const DECIDE = ["#need-pur", "#cyl", "#need-tower", "#need-disp", "#need-base", "#need-loft", "#need-wallstyle", "#need-open", "#need-crock"];
+  function updateDecideLabels() {
+    const d = designerChoice();
+    const text = d === "gemini" ? "Let Gemini decide" : d === "auto" ? "Let Qwen decide" : "Standard choice";
+    DECIDE.forEach((sel) => {
+      const opt = $(sel) && $(sel).querySelector('option[value="auto"], option[value=""]');
+      if (opt) opt.textContent = text;
+    });
+  }
+  $$('input[name="ai"]').forEach((el) => el.addEventListener("change", () => { updateHint(); updateDecideLabels(); }));
   function readFile(file) {
     if (!file) return;
     if (file.size > 50 * 1024 * 1024) return showFileError("That file is larger than 50 MB.");
@@ -773,14 +1594,15 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
   // ---------- step 3: design ----------
   function prefs() {
     const walls = [...document.querySelectorAll("#walls-pick input:checked")].map((i) => i.value);
-    const cyl = $("#cyl").value;
-    const ai = document.querySelector('input[name="ai"]:checked').value;
-    return {
-      ai_mode: ai === "auto" && state.strict ? "ollama" : ai,
+    const cyl = $("#cyl").value, loft = $("#need-loft").value;
+    const ai = designerChoice();
+    const p = {
+      ai_mode: ai === "fallback" ? "fallback" : state.strict ? "ollama" : "auto",
+      ai_provider: ai === "gemini" ? "gemini" : "qwen",
       layout: document.querySelector('input[name="layout"]:checked').value,
       door_style: $("#style").value,
       include_tall: $("#tall").checked,
-      include_loft: $("#loft").checked,
+      include_loft: loft === "" ? (state.sup.loftNull ? null : false) : loft === "true",
       include_cylinder: cyl === "" ? null : cyl === "true",
       water_purifier: $("#need-pur").value,
       built_in: $("#need-tower").value,
@@ -791,6 +1613,10 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       cabinet_walls: walls.length ? walls : null,
       style_notes: $("#notes").value.trim(),
     };
+    if (state.sup.wall_style) p.wall_style = $("#need-wallstyle").value;
+    if (state.sup.open_unit) p.open_unit = $("#need-open").value;
+    if (state.sup.crockery_unit) p.crockery_unit = $("#need-crock").value;
+    return p;
   }
   function showRunError(msg) { const el = $("#run-err"); el.textContent = msg; el.classList.toggle("show", !!msg); }
   const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
@@ -800,19 +1626,18 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
     return m ? Number(m[2]) * 60 : 300;
   };
   function hideResults() {
-    $("#results").classList.add("hidden");
-    $("#banner").classList.add("hidden");
-    $("#design-card").classList.add("hidden");
+    ["#banner", "#why-card", "#details-card"].forEach((s) => $(s).classList.add("hidden"));
   }
   function startProgress(isAI) {
     $("#progress").classList.add("show");
     $("#p-stage").textContent = "Starting…";
     $("#p-steps").innerHTML = "";
     $("#p-bar").style.width = "0%";
-    $("#p-eta").textContent = isAI ? `usually ${state.aiTime ? "about " + state.aiTime : "a few minutes"}` : "a few seconds";
+    const gemini = isAI === "gemini";
+    $("#p-eta").textContent = gemini ? "usually about 1-2 minutes" : isAI ? `usually ${state.aiTime ? (/^(under|over|about)/.test(state.aiTime) ? "" : "about ") + state.aiTime : "a few minutes"}` : "a few seconds";
     state.started = Date.now();
     clearInterval(state.tick);
-    const total = isAI ? expectedSeconds() : 15;
+    const total = gemini ? 120 : isAI ? expectedSeconds() : 15;
     state.tick = setInterval(() => {
       const s = (Date.now() - state.started) / 1000;
       $("#p-timer").textContent = `${fmt(s)} elapsed`;
@@ -826,7 +1651,8 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
     $("#go").disabled = true;
     $("#go").textContent = "Designing…";
     hideResults();
-    startProgress(p.ai_mode !== "fallback");
+    startProgress(p.ai_mode === "fallback" ? false : p.ai_provider === "gemini" ? "gemini" : true);
+    document.getElementById("view-card").scrollIntoView({ behavior: "smooth", block: "start" });
     try {
       const job = await api("/api/jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ scene: state.input, preferences: p, filename: state.filename }) });
       state.jobId = job.id;
@@ -857,11 +1683,14 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       $("#p-bar").style.width = "100%";
       state.output = await api(`/api/jobs/${job.id}/scene`);
       state.report = job.report;
-      $("#dl-scene").href = `/api/jobs/${job.id}/scene?download=1`;
-      $("#dl-report").href = `/api/jobs/${job.id}/report?download=1`;
+      const sceneUrl = `/api/jobs/${job.id}/scene?download=1`, reportUrl = `/api/jobs/${job.id}/report?download=1`;
+      ["#dl-scene", "#dl-scene2"].forEach((s) => { $(s).href = sceneUrl; });
+      ["#dl-report", "#dl-report2"].forEach((s) => { $(s).href = reportUrl; });
       showReport(job);
-      const wantTab = new URLSearchParams(location.search).get("tab");
-      if (wantTab) state.tab = wantTab;
+      const want = new URLSearchParams(location.search).get("tab");
+      if (want && ["3d", "plan", "elev"].includes(want)) state.tab = want;
+      else if (want && state.output.scene.nodes[want]) { state.tab = "elev"; state.wall = want; }
+      else state.tab = "3d";
       history.replaceState(null, "", `?job=${encodeURIComponent(job.id)}`);
       render();
     } catch (e) { showRunError(e.message); }
@@ -881,19 +1710,25 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
   const TECH = /hinged|-> MT|\bAID\b|score|reserve \[/i;
   const LAYOUT_NAME = { 1: "one-wall kitchen", 2: "L-shaped kitchen", 3: "U-shaped kitchen" };
   const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+  const HEIGHT_LABEL = { wall_mm: "Wall cabinets", tall_mm: "Tall units", base_mm: "Base cabinets", loft: "Lofts", loft_mm: "Lofts", ceiling_mm: "Ceiling", wall_height_mm: "Room height" };
+  const showVal = (k, v) => typeof v === "number" ? `${v}${/_mm$/.test(k) ? " mm" : ""}` : typeof v === "boolean" ? (v ? "Yes" : "No")
+    : Array.isArray(v) ? v.join(", ") : v && typeof v === "object" ? Object.entries(v).map(([a, b]) => `${a}: ${b}`).join(", ") : String(v ?? "");
 
   function showReport(job) {
     const r = job.report, ai = r.ai || {}, lay = r.layout || {}, prop = r.proposal || {};
     const placements = Object.entries(lay.placements || {}).flatMap(([wid, ps]) => ps.map((p) => ({ ...p, wall: wid })));
     const byRole = (role) => placements.filter((p) => p.role === role);
-    const isAI = ai.mode === "ollama";
+    const isAI = ai.mode === "ollama" || ai.mode === "gemini";
+    const who = ai.mode === "gemini" ? "Gemini" : "Qwen";
+    const modelName = ai.mode === "gemini" ? ai.model : prettyModel(ai.model);
     const walls = lay.cabinet_walls || [];
     const counts = r.nodes_added || {};
 
     // banner
     const layoutName = LAYOUT_NAME[walls.length] || "kitchen";
     $("#banner-title").textContent = `Your ${layoutName} is ready`;
-    $("#banner-sub").textContent = `${isAI ? `Designed by Qwen (${prettyModel(ai.model)})` : "Designed with the quick rules"} and checked against the design rules. Download the file and open it in MagickHome.`;
+    const ownJudgement = ai.mode === "gemini" && ai.knowledge === false ? ", own judgement" : "";
+    $("#banner-sub").textContent = `${isAI ? `Designed by ${who} (${modelName}${ownJudgement})` : "Designed with the quick rules"} and checked against the design rules. Download the file and open it in MagickHome.`;
     const allOk = !(r.validation_issues || []).length;
     $("#kpis").innerHTML = [
       [cap(layoutName.replace(" kitchen", "")), walls.map(wallName).join(" + ")],
@@ -903,31 +1738,41 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
     ].map(([v, l]) => `<div class="kpi"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
     $("#banner").classList.remove("hidden");
 
-    // the design
+    // why these choices
     $("#ai-badge").innerHTML = isAI
-      ? `<span class="badge ai">Qwen AI designer · ${esc(prettyModel(ai.model))}</span>`
+      ? `<span class="badge ai">${who} AI designer · ${esc(modelName)}${esc(ownJudgement)}</span>`
       : `<span class="badge rules">Quick rules designer</span> <span class="sub">${esc(ai.fallback_reason ? "The AI designer was not available, so the quick rules were used." : "")}</span>`;
     const raw = ai.raw || {};
     let notes = "";
-    if (isAI && raw.room_reading) notes += `<div class="quote"><small>How Qwen read the room</small>${esc(raw.room_reading)}</div>`;
-    if (isAI && raw.design_plan) notes += `<div class="quote"><small>Qwen's plan</small>${esc(raw.design_plan)}</div>`;
+    if (isAI && raw.room_reading) notes += `<div class="quote"><small>How ${who} read the room</small>${esc(raw.room_reading)}</div>`;
+    if (isAI && raw.design_plan) notes += `<div class="quote"><small>${who}'s plan</small>${esc(raw.design_plan)}</div>`;
+    if (ai.thoughts) notes += `<details class="tech"><summary>How ${who} thought (summary of its reasoning)</summary><div class="quote" style="white-space:pre-wrap">${esc(ai.thoughts)}</div></details>`;
     if (!isAI && prop.notes) notes += `<div class="quote"><small>Design idea</small>${esc(prop.notes)}</div>`;
     $("#ai-notes").innerHTML = notes;
 
     const src = state.output || state.input;
-    const SRC = { qwen: "Qwen", customer: "Your requirement", "rules-designer": "Quick rules", rules: "Design rules" };
+    const SRC = { qwen: "Qwen", gemini: "Gemini", customer: "Your requirement", "rules-designer": "Quick rules", rules: "Design rules" };
+    const WHY = { qwen: "Why (Qwen's reasoning)", gemini: "Why (Gemini's reasoning)", customer: "Why",
+                  "rules-designer": "Why (quick rules)", rules: "Why (design rule)" };
     const exp = r.explanation || [];
     $("#explain").innerHTML = exp.map((e) => `<li>
-        <div class="ex-head"><b>${esc(e.item)}</b><span class="src ${esc(e.source)}">${esc(SRC[e.source] || e.source)}</span></div>
-        <div class="ex-built">${esc(e.built)}</div>
-        ${e.need ? `<div class="ex-why"><i>Customer:</i> ${esc(e.need)}</div>` : ""}
-        ${e.why ? `<div class="ex-why"><i>Why:</i> ${esc(e.why)}</div>` : ""}
-        ${(e.rules || []).map((m) => `<div class="ex-rule">Rules: ${esc(m)}</div>`).join("")}
+        <div class="ex-main">
+          <div class="ex-head"><b>${esc(e.item)}</b><span class="src ${esc(e.source)}">${esc(SRC[e.source] || e.source)}</span></div>
+          <div class="ex-built">${esc(e.built)}</div>
+          ${e.decision ? `<div class="ex-why"><i>Designer first chose:</i> ${esc(e.decision)}</div>` : ""}
+          ${e.need ? `<div class="ex-why"><i>Customer:</i> ${esc(e.need)}</div>` : ""}
+          ${e.why ? `<div class="ex-why"><i>${esc(WHY[e.source] || "Why")}:</i> ${esc(e.why)}</div>` : ""}
+        </div>
+        <div class="ex-side">
+          ${(e.details || []).length ? `<div class="ex-facts-title">Facts checked by the system</div><ul class="ex-facts">${e.details.map((d) => `<li>${esc(d)}</li>`).join("")}</ul>` : ""}
+          ${(e.rules || []).map((m) => `<div class="ex-rule">Rules: ${esc(m)}</div>`).join("")}
+        </div>
       </li>`).join("") || "<li class=\"sub\">No explanation available for this design.</li>";
+    $("#why-card").classList.remove("hidden");
+
+    // rules check
     const window_ = !!(src && Object.values(src.scene.nodes).some((n) => n.type === "window"));
     const sink = byRole("sink")[0], hob = byRole("hob")[0];
-
-    // rule checks
     const issues = r.validation_issues || [];
     const checks = [];
     const tick = (cls, sym, text) => `<li><span class="ic ${cls}" aria-hidden="true">${sym}</span><span>${text}</span></li>`;
@@ -950,11 +1795,26 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
     $("#adjust-box").classList.toggle("hidden", !adjust.length);
     $("#tech").innerHTML = tech.map((t) => t.startsWith("<li><span") ? t.replace(/<span class="ic[^>]*>.*?<\/span>/, "") : t).join("") || "<li>Nothing to show.</li>";
 
+    // cabinet heights (when the server reports them)
+    const hts = r.heights || lay.heights;
+    if (hts && typeof hts === "object") {
+      const rows = Object.entries(hts).filter(([k, v]) => k !== "why" && v !== null && v !== undefined)
+        .map(([k, v]) => `<dt>${esc(HEIGHT_LABEL[k] || cap(k.replace(/_/g, " ")))}</dt><dd>${esc(showVal(k, v))}</dd>`);
+      if (hts.why) rows.push(`<dt>Why</dt><dd>${esc(showVal("why", hts.why))}</dd>`);
+      $("#heights").innerHTML = rows.join("");
+      $("#heights-box").classList.toggle("hidden", !rows.length);
+    } else $("#heights-box").classList.add("hidden");
+
+    // what the designer was told
+    const needs = (r.customer_needs || []).map((s) => String(s).replace(/^-\s*/, "")).filter(Boolean);
+    $("#needs-list").innerHTML = needs.map((s) => `<li>${esc(s)}</li>`).join("");
+    $("#needs-box").classList.toggle("hidden", !needs.length);
+
     // cabinet list grouped by wall
     const tierOrder = { base: 0, tall: 1, wall: 2, loft: 3 };
     const body = [];
     for (const wid of Object.keys(lay.placements || {})) {
-      const items = [...lay.placements[wid]].sort((a, b) => (tierOrder[a.tier] - tierOrder[b.tier]) || a.start_mm - b.start_mm);
+      const items = [...lay.placements[wid]].sort((a, b) => ((tierOrder[a.tier] ?? 9) - (tierOrder[b.tier] ?? 9)) || a.start_mm - b.start_mm);
       body.push(`<tr class="group"><td colspan="5">${esc(wallName(wid))}<span class="sub">${items.length} cabinets</span></td></tr>`);
       for (const it of items) {
         const combo = nodeMeta(it.aid).cabinetCombination;
@@ -965,22 +1825,25 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       }
     }
     $("#schedule").innerHTML = `<thead><tr><th>Level</th><th>Cabinet</th><th class="n">Width</th><th class="n">From–to (mm)</th><th>Catalogue code</th></tr></thead><tbody>${body.join("")}</tbody>`;
-    $("#results").classList.remove("hidden");
-    $("#design-card").classList.remove("hidden");
+    $("#details-card").classList.remove("hidden");
   }
 
   $("#go").addEventListener("click", generate);
+  $(".jump").addEventListener("click", (e) => { const a = e.target.closest("[data-jump]"); if (a) selectTab(a.dataset.jump); });
 
   // ---------- boot ----------
   refreshHealth();
+  setInterval(refreshHealth, 30000);  // pick up server restarts / Colab or Gemini becoming available
   loadStyles();
+  loadPrefSupport();
   const qs = new URLSearchParams(location.search);
   const aiParam = qs.get("ai");
   if (aiParam === "fallback") $("#ai-rules").checked = true;
   if (aiParam === "ollama") state.strict = true;
+  updateDecideLabels();
   if (qs.get("layout")) { const el = document.querySelector(`input[name="layout"][value="${CSS.escape(qs.get("layout"))}"]`); if (el) el.checked = true; }
   if (qs.get("job")) {
-    // Re-open an existing design (kept while the server is running).
+    // Re-open an existing design (saved designs survive a server restart).
     state.jobId = qs.get("job");
     startProgress(true);
     $("#go").disabled = true;

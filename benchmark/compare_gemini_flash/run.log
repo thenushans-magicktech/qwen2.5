@@ -1,0 +1,9 @@
+Gemini HTTP 503 (busy) - retrying in 4s
+[v2] reference                 121s  score 100% (14/14), fixes 0, failed []
+[v2] compact                   169s  score 100% (12/12), fixes 1, failed []
+[v2] window_short_wall          36s  score 100% (14/14), fixes 0, failed []
+[v2] door_by_window_corner      40s  score 93% (13/14), fixes 0, failed ['tall_well_placed']
+[v2] no_window                 133s  score 100% (12/12), fixes 0, failed []
+Gemini HTTP 503 (busy) - retrying in 4s
+Gemini HTTP 503 (busy) - retrying in 10s
+Gemini HTTP 503 (busy) - retrying in 20s

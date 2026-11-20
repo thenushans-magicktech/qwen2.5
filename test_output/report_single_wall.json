@@ -1,6 +1,6 @@
 {
   "ai": {
-    "shortlist_size": 36,
+    "shortlist_size": 40,
     "prompt_version": "v2",
     "mode": "fallback"
   },
@@ -11,22 +11,38 @@
     "- Built-in appliances: built-in appliances not stated.",
     "- Glass display: glass display not stated.",
     "- Cooking: cooking style not stated; household size not stated.",
-    "- Base cabinets: base cabinet style not stated."
+    "- Base cabinets: base cabinet style not stated - you choose drawers, mixed or shutters.",
+    "- Wall cabinets: door type not stated - you choose hinged shutters or lift-up; open shelf unit not stated.",
+    "- Crockery: crockery unit not stated.",
+    "- Lofts: lofts not stated."
   ],
   "explanation": [
     {
       "item": "Layout",
+      "decision": null,
       "built": "One wall on Wall 2",
       "why": "single-shape on the walls with the longest free runs.",
       "source": "customer",
+      "details": [
+        "Wall 2: 4100 mm long, window 1241-2741 mm, longest free run 4000 mm",
+        "Not used: Wall 1: 4100 mm long, door 85-985 mm, longest free run 2965 mm; Wall 3: 4100 mm long, longest free run 4000 mm; Wall 4: 4100 mm long, longest free run 4000 mm",
+        "0 inside corner(s) between cabinet runs"
+      ],
       "rules": [],
       "need": "Customer asked for single layout"
     },
     {
       "item": "Sink",
+      "decision": "Sink unit 1200 mm (Sink Double Shutter)",
       "built": "Sink unit 750 mm (Sink Double Shutter) on Wall 2",
       "why": "1200 mm suits a 4000 mm window-wall run.",
       "source": "rules-designer",
+      "details": [
+        "Unit: 750 x 560 x 700 mm (W x D x H) - shutters, room for pipes",
+        "Window 1500 mm wide, centre at 1991 mm; sink centre at 1991 mm (centred)",
+        "Wall 2 free run 4000 mm",
+        "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+      ],
       "rules": [
         "Designer chose 1200 mm; the rules used 750 mm so it centres under the window."
       ],
@@ -34,60 +50,172 @@
     },
     {
       "item": "Hob",
+      "decision": "Hob unit 900 mm (Triple Drawer - A)",
       "built": "Hob unit 750 mm (Triple Drawer - A) on Wall 2, chimney above",
       "why": "Drawer hob unit on Wall 2, a different wall from the sink.",
       "source": "rules-designer",
+      "details": [
+        "Unit: 750 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; compact - hob wall under 2400 mm free",
+        "Wall 2 has a window",
+        "No door on this wall",
+        "Beside it: Spice pull-out 200 mm (Spice Pullout) / LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+        "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+        "Sink to hob: 1.4 m (same wall; comfortable range 1.2-2.7 m)"
+      ],
       "rules": [
-        "hob unit narrowed 900 -> 750 mm to fit the room",
+        "hob unit narrowed 900 -> 750 mm to fit the room"
+      ],
+      "need": null
+    },
+    {
+      "item": "Spice pull-out",
+      "decision": null,
+      "built": "Spice pull-out 200 mm (Spice Pullout)",
+      "why": "Masalas and oils within reach of the cook.",
+      "source": "rules-designer",
+      "details": [
+        "Unit: 200 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob",
+        "Right beside the hob"
+      ],
+      "rules": [
         "spice unit narrowed 300 -> 200 mm to fit the room"
       ],
       "need": null
     },
     {
       "item": "LPG cylinder",
+      "decision": null,
       "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
       "why": "Hob wall is long enough for a cylinder unit.",
       "source": "rules-designer",
+      "details": [
+        "Unit: 600 x 560 x 800 mm (W x D x H) - LPG cylinder, beside the hob (needs a long hob wall)",
+        "On Wall 2 at 1016-1616 mm, beside the hob"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "Tall units",
+      "decision": null,
       "built": "Tall pantry 600 mm (Single Shutter) on Wall 2",
       "why": "Pantry at a run end.",
       "source": "rules-designer",
+      "details": [
+        "Tall pantry 600 mm (Single Shutter): 600 x 560 x 2240 mm (W x D x H) - single door pantry",
+        "On Wall 2 at 3416-4016 mm - end of the run, clear of windows; 2400 mm from the hob",
+        "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry, Crockery unit, Crockery unit"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "Water purifier",
+      "decision": null,
       "built": "Water purifier cabinet 600 mm (Aquaguard Single Shutter) on Wall 2",
       "why": "Standard beside the sink window.",
       "source": "rules-designer",
+      "details": [
+        "Unit: 600 x 330 x 900 mm (W x D x H) - one shutter",
+        "On Wall 2 at 2816-3416 mm, wall-cabinet height",
+        "1133 mm from the sink centre (water and power nearby)",
+        "Purifier sizes on offer: 600, 450, 750"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "Glass display",
+      "decision": null,
       "built": "None",
       "why": "Not requested.",
       "source": "rules-designer",
+      "details": [],
       "rules": [],
       "need": null
     },
     {
       "item": "Base cabinets",
-      "built": "1 of 2 storage cabinets have drawers",
-      "why": "Standard shutter storage; drawers only where the designer asked.",
+      "decision": null,
+      "built": "Drawer + shutter units: 2 of 2 storage cabinets have drawers",
+      "why": "Drawer + shutter units: a cutlery drawer on top, shelf space below.",
       "source": "rules-designer",
+      "details": [
+        "1 x Base cabinet - Four Drawer",
+        "1 x Base cabinet - Drawer with Single Shutter",
+        "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+      ],
       "rules": [],
       "need": null
     },
     {
       "item": "Feature units",
-      "built": "Wall 2: Base Unit 600 four drawer",
+      "decision": null,
+      "built": "1 of 1 requested units built",
       "why": "Drawers by the hob, grain trolley on the sink wall.",
       "source": "rules-designer",
+      "details": [
+        "Base cabinet 600 mm (Four Drawer): asked for Wall 2 -> built on Wall 2 at 2366-2966 mm - cutlery, ladles, small tools - best right beside the hob"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Wall cabinets",
+      "decision": null,
+      "built": "0 wall cabinets",
+      "why": "Wall cabinets above every base run, kept clear of windows and the chimney.",
+      "source": "rules-designer",
+      "details": [
+        "Wall 2: 0 cabinets (- mm); sizes asked no preference; kept clear: window 1241-2741, chimney zone"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Wall cabinet doors",
+      "decision": null,
+      "built": "Hinged shutter doors",
+      "why": "Hinged shutters: the standard, lowest-cost door.",
+      "source": "rules-designer",
+      "details": [
+        "Options: hinged shutters (standard, lowest cost) or lift-up / bi-fold doors (no door at head height)"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Open shelf unit",
+      "decision": null,
+      "built": "None",
+      "why": "Not requested.",
+      "source": "rules-designer",
+      "details": [],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Lofts",
+      "decision": null,
+      "built": "None",
+      "why": "Ceiling too low for lofts.",
+      "source": "rules-designer",
+      "details": [
+        "Ceiling (lowest wall) 2500 mm; a loft needs 2658 mm"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Cabinet heights",
+      "decision": null,
+      "built": "Wall cabinets 900 mm, tall units 2240 mm",
+      "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
+      "source": "rules",
+      "details": [
+        "Wall cabinets hang from 1440 mm up to 2340 mm; tall units stand on the 100 mm plinth and end at the same line",
+        "Height pairs in the catalogue: 600 / 1940, 700 / 2040, 900 / 2240 mm (wall / tall)"
+      ],
       "rules": [],
       "need": null
     }
@@ -124,6 +252,10 @@
     "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
     "purifier_required": false,
     "display_aid": null,
+    "open_unit_aid": null,
+    "base_storage": "mixed",
+    "lofts": false,
+    "wall_style": "shutters",
     "reasons": {
       "layout": "single-shape on the walls with the longest free runs.",
       "sink": "1200 mm suits a 4000 mm window-wall run.",
@@ -132,7 +264,11 @@
       "tall": "Pantry at a run end.",
       "purifier": "Standard beside the sink window.",
       "display": "Not requested.",
-      "features": "Drawers by the hob, grain trolley on the sink wall."
+      "features": "Drawers by the hob, grain trolley on the sink wall.",
+      "open": "Not requested.",
+      "wall_style": "Hinged shutters: the standard, lowest-cost door.",
+      "lofts": "Ceiling too low for lofts.",
+      "storage": "Drawer + shutter units: a cutlery drawer on top, shelf space below."
     },
     "notes": "single-shaped kitchen: sink on Wall 2 under the window, hob on Wall 2, tall storage on Wall 2.",
     "source": "fallback"
@@ -194,7 +330,7 @@
           "opening": "Pull Out"
         },
         {
-          "aid": "MTBABU450560700SSSSLREH1S",
+          "aid": "MTBABU450560700DSDSSSLREH1S",
           "category": "Base Unit",
           "tier": "base",
           "role": "storage",
@@ -204,7 +340,7 @@
           "opening": "Right"
         },
         {
-          "aid": "MTTATU6005601940SSSSLREH4S",
+          "aid": "MTTATU6005602240SSSSLREH5S",
           "category": "Tall Unit",
           "tier": "tall",
           "role": "tall",
@@ -214,7 +350,7 @@
           "opening": "Right"
         },
         {
-          "aid": "MTWAWAU600330600SASSSLREHNS",
+          "aid": "MTWAWAU600330900SASSSLREHNS",
           "category": "Wall Aquaguard Unit",
           "tier": "wall",
           "role": "purifier",
@@ -231,17 +367,35 @@
     },
     "corners": [],
     "loft_walls": [],
+    "heights": {
+      "wall_mm": 900,
+      "tall_mm": 2240,
+      "lofts": false,
+      "ceiling_mm": 2500,
+      "top_mm": 2340,
+      "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling."
+    },
     "score": 171.15,
     "decisions": [
+      "heights: No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
       "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2816-3416 mm",
-      "Wall 2: Base Unit 450 hinged Right (towards tall) -> MTBABU450560700SSSSLREH1S",
-      "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005601940SSSSLREH4S",
-      "Wall 2: Wall Aquaguard Unit 600 hinged Right (towards tall) -> MTWAWAU600330600SASSSLREHNS"
+      "Wall 2: Base Unit 450 hinged Right (towards tall) -> MTBABU450560700DSDSSSLREH1S",
+      "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005602240SSSSLREH5S",
+      "Wall 2: Wall Aquaguard Unit 600 hinged Right (towards tall) -> MTWAWAU600330900SASSSLREHNS"
     ],
     "warnings": [
       "hob unit narrowed 900 -> 750 mm to fit the room",
       "spice unit narrowed 300 -> 200 mm to fit the room"
     ]
+  },
+  "heights": {
+    "wall_mm": 900,
+    "tall_mm": 2240,
+    "lofts": false,
+    "ceiling_mm": 2500,
+    "top_mm": 2340,
+    "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
+    "wall_style": "shutters"
   },
   "nodes_added": {
     "kitchen": 8,
@@ -256,8 +410,8 @@
   "validation_issues": [],
   "catalog": {
     "source": "api",
-    "filtered_skus": 484,
+    "filtered_skus": 495,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.14
+  "seconds": 0.27
 }
