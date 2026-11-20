@@ -507,9 +507,9 @@
   },
   "validation_issues": [],
   "catalog": {
-    "source": "api",
+    "source": "xlsx",
     "filtered_skus": 495,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.3
+  "seconds": 0.53
 }

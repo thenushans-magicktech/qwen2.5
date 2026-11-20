@@ -352,9 +352,12 @@ def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, c
     if lofts:
         det.append(f"{len(lofts)} loft cabinets on {', '.join(wname(w) for w in layout.loft_walls)}, "
                    f"{lofts[0].item.height} mm high above the wall cabinets")
+    # Under a low ceiling there is no loft decision to make: the rule is the reason, not the designer.
+    too_low = bool(h) and h.get("ceiling_mm", 0) + 1 < loft_top
     add("Lofts", f"{len(lofts)} loft cabinets" if lofts else "None",
+        f"The ceiling ({h.get('ceiling_mm')} mm) is lower than the {loft_top} mm a loft needs." if too_low else
         reasons.get("lofts") or ("Customer's choice." if prefs.include_loft is not None else ""),
-        "customer" if prefs.include_loft is not None else designer, det,
+        "rules" if too_low and prefs.include_loft is None else "customer" if prefs.include_loft is not None else designer, det,
         [h["why"]] if wanted and not lofts and h.get("why") else [],
         need={True: "Wants lofts", False: "No lofts wanted"}.get(prefs.include_loft),
         decision="Lofts" if wanted and not lofts else None)

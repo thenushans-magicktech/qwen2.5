@@ -44,6 +44,9 @@ AI_PROMPT_VERSION = os.getenv("MAGICKHOME_PROMPT_VERSION", "v2")
 AI_PROVIDER = os.getenv("MAGICKHOME_AI_PROVIDER", "qwen")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 GEMINI_TIMEOUT_S = float(os.getenv("GEMINI_TIMEOUT_S", "240"))
+# Backup models tried in order when the main one is busy (503), out of its free daily quota (429)
+# or times out - each model has its own quota. Comma-separated; "" = no backups.
+GEMINI_FALLBACK_MODELS = [m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.7-flash,gemini-2.5-flash").split(",")]
 # Off (default): Gemini designs from its own judgement - it gets the plain room facts, the cabinet
 # list, the customer's needs and the answer format, but NOT the MagickHome knowledge pack (playbook,
 # worked examples, cabinet notes, rule hints). Set GEMINI_USE_KNOWLEDGE=1 to give it the same prompt as Qwen.

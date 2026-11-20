@@ -1103,6 +1103,53 @@ def test_gemini_designs_without_the_knowledge_pack(monkeypatch):
     assert Model_k.model_json_schema() == Model_p.model_json_schema()
 
 
+def test_gemini_survives_dropped_connections_busy_models_and_quota(monkeypatch):
+    """A dropped connection is retried; a model that stays busy (503) or has used its daily quota
+    (429 PerDay) is skipped for the next model - the design still comes from Gemini, not the rules."""
+    import requests
+
+    import config
+    import gemini_designer
+
+    monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v2")
+    monkeypatch.setattr(config, "GEMINI_MODEL", "main-model")
+    monkeypatch.setattr(config, "GEMINI_FALLBACK_MODELS", ["busy-model", "quota-model", "good-model"])
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(gemini_designer.time, "sleep", lambda s: None)
+    menu = _v2_menu()
+    calls = []
+
+    class Resp:
+        def __init__(self, code, payload=None, text=""):
+            self.status_code, self._payload, self.text = code, payload, text
+
+        def json(self):
+            return self._payload
+
+    def fake_post(url, **kw):
+        model = url.split("/models/")[1].split(":")[0]
+        calls.append(model)
+        if model == "main-model":
+            raise requests.exceptions.SSLError("EOF occurred in violation of protocol")
+        if model == "busy-model":
+            return Resp(503, text='{"error": {"message": "high demand"}}')
+        if model == "quota-model":
+            return Resp(429, text='{"error": {"details": [{"quotaId": "GenerateRequestsPerDayPerProjectPerModel-FreeTier"}]}}')
+        parts = [{"text": json.dumps(_v2_design(menu))}]
+        return Resp(200, {"candidates": [{"content": {"parts": parts}, "finishReason": "STOP"}],
+                          "usageMetadata": {}, "modelVersion": model})
+
+    monkeypatch.setattr(gemini_designer.requests, "post", fake_post)
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="auto", ai_provider="gemini", layout="U"))
+    assert report["ai"]["mode"] == "gemini", report["ai"].get("fallback_reason")
+    assert report["ai"]["model"] == "good-model"
+    assert calls.count("main-model") == 4, "dropped connections are retried before moving on"
+    assert calls.count("quota-model") == 1, "a used-up daily quota is not retried"
+    notes = " ".join(report["ai"]["model_notes"])
+    assert "connection dropped" in notes and "busy" in notes and "daily quota" in notes
+    assert not verify_scene(out)
+
+
 def test_v2_schema_rejects_unknown_codes_and_walls():
     from pydantic import ValidationError
 

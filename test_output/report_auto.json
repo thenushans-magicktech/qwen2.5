@@ -200,8 +200,8 @@
       "item": "Lofts",
       "decision": null,
       "built": "None",
-      "why": "Ceiling too low for lofts.",
-      "source": "rules-designer",
+      "why": "The ceiling (2500 mm) is lower than the 2658 mm a loft needs.",
+      "source": "rules",
       "details": [
         "Ceiling (lowest wall) 2500 mm; a loft needs 2658 mm"
       ],
@@ -590,9 +590,9 @@
   },
   "validation_issues": [],
   "catalog": {
-    "source": "api",
+    "source": "xlsx",
     "filtered_skus": 495,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 2.29
+  "seconds": 1.69
 }
