@@ -24,6 +24,7 @@ from functools import lru_cache
 from typing import Optional
 
 import config
+import finishes
 from rule_engine import EPS, KitchenLayout, Placement
 from scene_parser import Wall
 
@@ -99,7 +100,10 @@ class SceneHydrator:
         w_m, h_m, d_m = it.width / 1000.0, it.height / 1000.0, it.depth / 1000.0
         meta = it.metadata()
         if not meta.get("textures"):
-            meta["textures"] = copy.deepcopy(self.presets.get("shutterTextures", {}).get(p.tier, []))
+            # the run's finish first (MagickHome applies textures[0]): base + tall share the base finish,
+            # wall units + lofts the wall finish (finish rules)
+            meta["textures"] = finishes.texture_list(self.presets.get("shutterTextures", {}).get(p.tier, []),
+                                                     self._finish(p.tier))
         nid = self.ids.item()
         # Rooms on a wall's back side (frontSide == "exterior"): mirror depth and rotation.
         placement = {"level": p.tier, "side": wall.side_sign, "designSource": config.DESIGN_SOURCE}
@@ -139,11 +143,14 @@ class SceneHydrator:
         }
 
     # -- appliances ------------------------------------------------------------------
-    def _appliance_node(self, kind: str, parent_id: str, wall_id: str, wall_t: float, position, rotation, host_id: str) -> dict:
-        cfg = config.APPLIANCES[kind]
+    def _appliance_node(self, kind: str, parent_id: str, wall_id: str, wall_t: float, position, rotation, host_id: str,
+                        host_width_mm: float = 900) -> dict:
+        cfg = config.appliance_for(kind, host_width_mm)  # the model that fits the host cabinet
         preset = self.presets.get("appliances", {}).get(kind, {})
         w, h, d = cfg["dims_mm"]
         meta = copy.deepcopy(preset.get("metadata") or {})
+        if meta.get("aid") not in (None, cfg["aid"]):  # preset belongs to another size: keep only its textures
+            meta = {"textures": meta.get("textures", [])}
         meta.update(
             {
                 "aid": cfg["aid"],
@@ -198,13 +205,15 @@ class SceneHydrator:
         if lay.sink is not None and id(lay.sink) in self.cab_ids:
             host = self.nodes[self.cab_ids[id(lay.sink)]]
             node = self._appliance_node(
-                "sink", host["id"], host["wallId"], host["wallT"], config.APPLIANCES["sink"]["local_position"], [0, 0, 0], host["id"]
+                "sink", host["id"], host["wallId"], host["wallT"], config.APPLIANCES["sink"]["local_position"], [0, 0, 0], host["id"],
+                host_width_mm=lay.sink.item.width,
             )
             self._attach(node, host["id"])
         if lay.hob is not None and id(lay.hob) in self.cab_ids:
             host = self.nodes[self.cab_ids[id(lay.hob)]]
             node = self._appliance_node(
-                "hob", host["id"], host["wallId"], host["wallT"], config.APPLIANCES["hob"]["local_position"], [0, 0, 0], host["id"]
+                "hob", host["id"], host["wallId"], host["wallT"], config.APPLIANCES["hob"]["local_position"], [0, 0, 0], host["id"],
+                host_width_mm=lay.hob.item.width,
             )
             self._attach(node, host["id"])
             wall = self.g.walls[host["wallId"]]
@@ -217,8 +226,13 @@ class SceneHydrator:
                 [host["position"][0], y, _r(wall.side_sign * (z + self._zshift(wall)))],
                 _facing(wall),
                 host["id"],
+                host_width_mm=lay.hob.item.width,
             )
             self._attach(chim, wall.id)
+
+    def _finish(self, tier: Optional[str]) -> Optional[str]:
+        """The finish aid chosen for the run this tier belongs to (None = scene default)."""
+        return (getattr(self.layout, "finishes", None) or {}).get(finishes.RUN_OF_TIER.get(tier or "", ""))
 
     # -- fixtures ---------------------------------------------------------------------
     def _wall_zone(self, spec: dict) -> dict:
@@ -241,6 +255,8 @@ class SceneHydrator:
         slot = {"toe-kick": "toeKick", "countertop": "counterTop", "backsplash": "backsplash"}.get(kind, "door")
         tex_key = f"{kind}:{level}" if level and kind in ("slab", "filler") else kind
         textures = copy.deepcopy(self.presets.get("fixtureTextures", {}).get(tex_key, []))
+        if kind in ("slab", "filler") and level:  # panels and fillers match the run they close
+            textures = finishes.texture_list(textures, self._finish(level), drop_sku=True)
         meta = {
             "fixtureKind": kind,
             "fixtureId": fixture_id,
@@ -470,8 +486,14 @@ class SceneHydrator:
         # ---- lofts -----------------------------------------------------------------
         loft_ps = lay.on(wall.id, "loft")
         if loft_ps:
-            top_gap = max(0.0, wall.height_m - config.LOFT_TOP_M)
-            lb, ls = config.LOFT_BOTTOM, config.LOFT_SIDE
+            # loft zone from the height plan (R48): bottom panel on the wall run, carcass, then the reveal
+            hp = lay.heights or {}
+            y0 = hp.get("loft_y_mm", round(config.POS_Y_M["loft"] * 1000)) / 1000.0
+            lh = hp.get("loft_mm", 600) / 1000.0
+            loft_top = y0 + lh
+            top_gap = max(0.0, wall.height_m - loft_top)
+            lb = dict(config.LOFT_BOTTOM, y=round(y0 - config.LOFT_BOTTOM["thickness"] / 2, 4))
+            ls = dict(config.LOFT_SIDE, y=round(y0 + lh / 2, 4), thickness=lh)
             for i, run in enumerate(self._runs(loft_ps)):
                 # bottom / top panels per contiguous same-depth segment
                 segs: list[list[Placement]] = []
@@ -486,7 +508,7 @@ class SceneHydrator:
                     self._fixture(wall, "slab", f"loft_bottom_run{i}_{k}", a, b, lb["y"], face + (d + 0.018) / 2,
                                   lb["thickness"], d + config.PANEL_T_M, level="loft")
                     if top_gap > 0.001:
-                        self._fixture(wall, "filler", f"loft_top_run{i}_{k}", a, b, config.LOFT_TOP_M + top_gap / 2,
+                        self._fixture(wall, "filler", f"loft_top_run{i}_{k}", a, b, loft_top + top_gap / 2,
                                       face + d + 0.009, top_gap, config.PANEL_T_M, level="loft")
                     # shallow/deep junction ("bank side")
                     if k > 0:
@@ -516,7 +538,7 @@ class SceneHydrator:
                                       dd, level="loft")
                         if top_gap > 0.001:
                             self._fixture(wall, "filler", f"loft_side_top_{side}_run{i}", a, a + P,
-                                          config.LOFT_TOP_M + top_gap / 2, face + dd / 2, top_gap, dd, level="loft")
+                                          loft_top + top_gap / 2, face + dd / 2, top_gap, dd, level="loft")
 
     def _counter_edge(self, wall: Wall, end, side: str, P: float) -> float:
         kind, target, x = end
@@ -539,7 +561,7 @@ class SceneHydrator:
             kind = {"sink": "sink", "hob": "hob"}.get(p.role)
             if kind is None:
                 continue
-            cfg = config.APPLIANCES[kind]
+            cfg = config.appliance_for(kind, p.item.width)
             w, _, d = cfg["dims_mm"]
             inset = cfg["cutout_inset_mm"]
             hw, hd = (w - 2 * inset) / 2000.0, (d - 2 * inset) / 2000.0

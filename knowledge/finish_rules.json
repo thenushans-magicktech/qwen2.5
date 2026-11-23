@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "about": "Shutter finishes by budget tier. PROPOSED by the generator and approved for use (2026-11-23): the MagickHome rule workbook says finish tiers are derived from the budget tier but defines no finish rows. Edit this file to MagickHome's real rules - the generator, the AI designer's choices and the UI follow it. 'base' = base + tall units, 'wall' = wall units + lofts.",
+  "tiers": {
+    "essential": {
+      "base": ["Laminate"],
+      "wall": ["Laminate"],
+      "max_pu_runs": 0,
+      "note": "Laminate (suede) fronts on every run - durable and lowest cost."
+    },
+    "premium": {
+      "base": ["Laminate", "PU"],
+      "wall": ["Laminate", "PU"],
+      "max_pu_runs": 1,
+      "note": "Laminate fronts with one PU accent run (the base run or the wall run)."
+    },
+    "luxury": {
+      "base": ["PU"],
+      "wall": ["PU"],
+      "max_pu_runs": 2,
+      "note": "PU matte fronts on every run."
+    }
+  },
+  "defaults": {
+    "auto": {"base": "MHS224", "wall": "MHS212", "why": "MagickHome sample palette: Cadet Blue PU base, Stromma White PU wall run."},
+    "essential": {"base": "MHS135", "wall": "MHS052", "why": "Warm oak laminate below, calm Dove grey laminate above."},
+    "premium": {"base": "MHS135", "wall": "MHS212", "why": "Oak laminate base with a bright Stromma White PU accent on the wall run."},
+    "luxury": {"base": "MHS224", "wall": "MHS212", "why": "Two-tone PU: Cadet Blue base, Stromma White wall run."}
+  },
+  "match": [
+    "Tall units take the base-run finish and lofts take the wall-run finish (finish continuity).",
+    "Fillers, slabs, end panels and cover panels take the finish of the run they close (workbook: Filler Panel / Cover End Panel finish must match the cabinets)."
+  ]
+}

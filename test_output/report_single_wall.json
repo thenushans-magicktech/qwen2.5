@@ -7,16 +7,33 @@
   "customer_needs": [
     "- Door style Slab (Plain); layout preference single; wants tall storage.",
     "- Water purifier: water purifier not stated.",
-    "- Gas: gas supply not stated.",
+    "- Gas: not stated - LPG is assumed, so the cylinder unit is included (rule R11).",
     "- Built-in appliances: built-in appliances not stated.",
     "- Glass display: glass display not stated.",
     "- Cooking: cooking style not stated; household size not stated.",
     "- Base cabinets: base cabinet style not stated - you choose drawers, mixed or shutters.",
     "- Wall cabinets: door type not stated - you choose hinged shutters or lift-up; open shelf unit not stated.",
     "- Crockery: crockery unit not stated.",
-    "- Lofts: lofts not stated."
+    "- Lofts: lofts not stated.",
+    "- Budget: not stated.",
+    "- Finishes: base run not stated - you choose; wall run not stated - you choose (the codes allowed are the ones the budget tier permits)."
   ],
   "explanation": [
+    {
+      "item": "Rule book",
+      "decision": null,
+      "built": "Large Straight kitchen (172 sqft)",
+      "why": "Module sizes, landings, gas and lofts follow the MagickHome rule workbook for this kitchen size and shape.",
+      "source": "rules",
+      "details": [
+        "Floor area 172 sqft -> Large band (Small 60-80, Medium 81-120, Large 121-180 sqft)",
+        "Kitchen type from the cabinet walls: Straight",
+        "Rules from the MagickHome Kitchen Rule Engine (workbook Kitchen_Rule_Engine_V1.xlsx)",
+        "R67: hob -> 900 mm Triple Drawer - A"
+      ],
+      "rules": [],
+      "need": null
+    },
     {
       "item": "Layout",
       "decision": null,
@@ -34,36 +51,39 @@
     {
       "item": "Sink",
       "decision": "Sink unit 1200 mm (Sink Double Shutter)",
-      "built": "Sink unit 750 mm (Sink Double Shutter) on Wall 2",
+      "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
       "why": "1200 mm suits a 4000 mm window-wall run.",
       "source": "rules-designer",
       "details": [
-        "Unit: 750 x 560 x 700 mm (W x D x H) - shutters, room for pipes",
+        "Unit: 1050 x 560 x 700 mm (W x D x H) - shutters, room for pipes; window wall 3000+ mm free",
         "Window 1500 mm wide, centre at 1991 mm; sink centre at 1991 mm (centred)",
         "Wall 2 free run 4000 mm",
         "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
       ],
       "rules": [
-        "Designer chose 1200 mm; the rules used 750 mm so it centres under the window."
+        "Designer chose 1200 mm; the rules used 1050 mm so it centres under the window."
       ],
       "need": null
     },
     {
       "item": "Hob",
       "decision": "Hob unit 900 mm (Triple Drawer - A)",
-      "built": "Hob unit 750 mm (Triple Drawer - A) on Wall 2, chimney above",
+      "built": "Hob unit 600 mm (Triple Drawer - A) on Wall 2, chimney above",
       "why": "Drawer hob unit on Wall 2, a different wall from the sink.",
       "source": "rules-designer",
       "details": [
-        "Unit: 750 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; compact - hob wall under 2400 mm free",
+        "Unit: 600 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice",
         "Wall 2 has a window",
         "No door on this wall",
         "Beside it: Spice pull-out 200 mm (Spice Pullout) / LPG cylinder unit 600 mm (Cylinder Single Shutter)",
-        "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+        "Appliances: Hob60 hob (550 mm) and a Chimney60 hood (600 mm wide) at 1.44 m; no wall cabinets in that zone",
         "Sink to hob: 1.4 m (same wall; comfortable range 1.2-2.7 m)"
       ],
       "rules": [
-        "hob unit narrowed 900 -> 750 mm to fit the room"
+        "R67: In a Large Straight kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm.",
+        "spice on the hob's left instead of its right (R28/R29): only that side fits",
+        "hob unit narrowed 900 -> 600 mm to fit the room",
+        "hob landing under 450 mm (R26): start side 200 mm"
       ],
       "need": null
     },
@@ -78,7 +98,8 @@
         "Right beside the hob"
       ],
       "rules": [
-        "spice unit narrowed 300 -> 200 mm to fit the room"
+        "spice unit narrowed 300 -> 200 mm to fit the room",
+        "R44: only one spice pull-out per kitchen"
       ],
       "need": null
     },
@@ -86,11 +107,11 @@
       "item": "LPG cylinder",
       "decision": null,
       "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
-      "why": "Hob wall is long enough for a cylinder unit.",
+      "why": "Fuel not stated: LPG is assumed, so the cylinder unit is included (rule R11).",
       "source": "rules-designer",
       "details": [
         "Unit: 600 x 560 x 800 mm (W x D x H) - LPG cylinder, beside the hob (needs a long hob wall)",
-        "On Wall 2 at 1016-1616 mm, beside the hob"
+        "On Wall 2 at 866-1466 mm, beside the hob"
       ],
       "rules": [],
       "need": null
@@ -103,7 +124,7 @@
       "source": "rules-designer",
       "details": [
         "Tall pantry 600 mm (Single Shutter): 600 x 560 x 2240 mm (W x D x H) - single door pantry",
-        "On Wall 2 at 3416-4016 mm - end of the run, clear of windows; 2400 mm from the hob",
+        "On Wall 2 at 3416-4016 mm - end of the run, clear of windows; 2550 mm from the hob",
         "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry, Crockery unit, Crockery unit"
       ],
       "rules": [],
@@ -155,7 +176,7 @@
       "why": "Drawers by the hob, grain trolley on the sink wall.",
       "source": "rules-designer",
       "details": [
-        "Base cabinet 600 mm (Four Drawer): asked for Wall 2 -> built on Wall 2 at 2366-2966 mm - cutlery, ladles, small tools - best right beside the hob"
+        "Base cabinet 600 mm (Four Drawer): asked for Wall 2 -> built on Wall 2 at 2516-3116 mm - cutlery, ladles, small tools - best right beside the hob"
       ],
       "rules": [],
       "need": null
@@ -163,11 +184,11 @@
     {
       "item": "Wall cabinets",
       "decision": null,
-      "built": "0 wall cabinets",
+      "built": "1 wall cabinets",
       "why": "Wall cabinets above every base run, kept clear of windows and the chimney.",
       "source": "rules-designer",
       "details": [
-        "Wall 2: 0 cabinets (- mm); sizes asked no preference; kept clear: window 1241-2741, chimney zone"
+        "Wall 2: 1 cabinets (300 mm); sizes asked no preference; kept clear: window 1241-2741, chimney zone"
       ],
       "rules": [],
       "need": null
@@ -218,6 +239,23 @@
       ],
       "rules": [],
       "need": null
+    },
+    {
+      "item": "Finishes",
+      "decision": null,
+      "built": "Base + tall: Cadet Blue (PU matte, Magickhome); Wall + loft: Stromma White (PU matte, Magickhome)",
+      "why": "MagickHome sample palette: Cadet Blue PU base, Stromma White PU wall run.",
+      "source": "rules",
+      "details": [
+        "Base run (base + tall units): Cadet Blue (PU matte, Magickhome) - chosen by the rules (tier default)",
+        "Wall run (wall units + lofts): Stromma White (PU matte, Magickhome) - chosen by the rules (tier default)",
+        "Tall units take the base-run finish and lofts take the wall-run finish (finish continuity).",
+        "Fillers, slabs, end panels and cover panels take the finish of the run they close (workbook: Filler Panel / Cover End Panel finish must match the cabinets)."
+      ],
+      "rules": [
+        "No budget stated: any finish allowed"
+      ],
+      "need": null
     }
   ],
   "proposal": {
@@ -256,11 +294,12 @@
     "base_storage": "mixed",
     "lofts": false,
     "wall_style": "shutters",
+    "finishes": {},
     "reasons": {
       "layout": "single-shape on the walls with the longest free runs.",
       "sink": "1200 mm suits a 4000 mm window-wall run.",
       "hob": "Drawer hob unit on Wall 2, a different wall from the sink.",
-      "lpg": "Hob wall is long enough for a cylinder unit.",
+      "lpg": "Fuel not stated: LPG is assumed, so the cylinder unit is included (rule R11).",
       "tall": "Pantry at a run end.",
       "purifier": "Standard beside the sink window.",
       "display": "Not requested.",
@@ -268,6 +307,7 @@
       "open": "Not requested.",
       "wall_style": "Hinged shutters: the standard, lowest-cost door.",
       "lofts": "Ceiling too low for lofts.",
+      "finish": "MagickHome sample palette: Cadet Blue PU base, Stromma White PU wall run.",
       "storage": "Drawer + shutter units: a cutlery drawer on top, shelf space below."
     },
     "notes": "single-shaped kitchen: sink on Wall 2 under the window, hob on Wall 2, tall storage on Wall 2.",
@@ -290,13 +330,13 @@
           "opening": "Pull Out"
         },
         {
-          "aid": "MTBABHU750560700DTDASLPUEHNS",
+          "aid": "MTBABHU600560700DTDASLPUEHNS",
           "category": "Base Hob Unit",
           "tier": "base",
           "role": "hob",
-          "width": 750,
+          "width": 600,
           "start_mm": 266.2,
-          "end_mm": 1016.2,
+          "end_mm": 866.2,
           "opening": "Pull Out"
         },
         {
@@ -305,18 +345,18 @@
           "tier": "base",
           "role": "cylinder",
           "width": 600,
-          "start_mm": 1016.2,
-          "end_mm": 1616.2,
+          "start_mm": 866.2,
+          "end_mm": 1466.2,
           "opening": "Right"
         },
         {
-          "aid": "MTBABSU750560700SSDSSLBOEHNS",
+          "aid": "MTBABSU1050560700SSDSSLBOEHNS",
           "category": "Base Sink Unit",
           "tier": "base",
           "role": "sink",
-          "width": 750,
-          "start_mm": 1616.2,
-          "end_mm": 2366.2,
+          "width": 1050,
+          "start_mm": 1466.2,
+          "end_mm": 2516.2,
           "opening": "Both"
         },
         {
@@ -325,17 +365,17 @@
           "tier": "base",
           "role": "storage",
           "width": 600,
-          "start_mm": 2366.2,
-          "end_mm": 2966.2,
+          "start_mm": 2516.2,
+          "end_mm": 3116.2,
           "opening": "Pull Out"
         },
         {
-          "aid": "MTBABU450560700DSDSSSLREH1S",
+          "aid": "MTBABU300560700DSDSSSLREH1S",
           "category": "Base Unit",
           "tier": "base",
           "role": "storage",
-          "width": 450,
-          "start_mm": 2966.2,
+          "width": 300,
+          "start_mm": 3116.2,
           "end_mm": 3416.2,
           "opening": "Right"
         },
@@ -348,6 +388,16 @@
           "start_mm": 3416.2,
           "end_mm": 4016.2,
           "opening": "Right"
+        },
+        {
+          "aid": "MTWAWU300330900SSSSLLEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 300,
+          "start_mm": 916.2,
+          "end_mm": 1216.2,
+          "opening": "Left"
         },
         {
           "aid": "MTWAWAU600330900SASSSLREHNS",
@@ -363,7 +413,8 @@
     },
     "chimney": {
       "wall_id": "wall_56i56ymve0xf69fm",
-      "center_mm": 641.1700000000001
+      "center_mm": 566.1700000000001,
+      "width_mm": 600
     },
     "corners": [],
     "loft_walls": [],
@@ -375,17 +426,19 @@
       "top_mm": 2340,
       "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling."
     },
-    "score": 171.15,
+    "score": 941.15,
     "decisions": [
       "heights: No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
+      "spice on the hob's left instead of its right (R28/R29): only that side fits",
       "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2816-3416 mm",
-      "Wall 2: Base Unit 450 hinged Right (towards tall) -> MTBABU450560700DSDSSSLREH1S",
+      "Wall 2: Base Unit 300 hinged Right (towards tall) -> MTBABU300560700DSDSSSLREH1S",
       "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005602240SSSSLREH5S",
       "Wall 2: Wall Aquaguard Unit 600 hinged Right (towards tall) -> MTWAWAU600330900SASSSLREHNS"
     ],
     "warnings": [
-      "hob unit narrowed 900 -> 750 mm to fit the room",
-      "spice unit narrowed 300 -> 200 mm to fit the room"
+      "hob unit narrowed 900 -> 600 mm to fit the room",
+      "spice unit narrowed 300 -> 200 mm to fit the room",
+      "hob landing under 450 mm (R26): start side 200 mm"
     ]
   },
   "heights": {
@@ -397,21 +450,70 @@
     "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
     "wall_style": "shutters"
   },
+  "rulebook": {
+    "floor_area_sqft": 172.1,
+    "size_band": "Large",
+    "size_note": "",
+    "kitchen_type": "Straight",
+    "source": "workbook Kitchen_Rule_Engine_V1.xlsx",
+    "applied": [
+      {
+        "role": "hob",
+        "rule": 67,
+        "text": "In a Large Straight kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm.",
+        "width": 900,
+        "combination": "Triple Drawer - A",
+        "changed": false,
+        "designer": null
+      }
+    ]
+  },
+  "finishes": {
+    "base": {
+      "aid": "MHS224",
+      "code": "CADET-BLUE-PU",
+      "name": "Cadet Blue",
+      "category": "PU",
+      "family": "Solids",
+      "shutter": "Matte",
+      "brand": "Magickhome",
+      "color": "#3B5A6E",
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
+      "texture": false,
+      "source": "rules"
+    },
+    "wall": {
+      "aid": "MHS212",
+      "code": "STROMMA-WHITE-PU",
+      "name": "Stromma White",
+      "category": "PU",
+      "family": "Solids",
+      "shutter": "Matte",
+      "brand": "Magickhome",
+      "color": "#F2F2F2",
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+      "texture": false,
+      "source": "rules"
+    },
+    "budget": null,
+    "tier_rule": "",
+    "notes": []
+  },
   "nodes_added": {
-    "kitchen": 8,
+    "kitchen": 9,
     "appliance": 3,
     "fixture:toe-kick": 1,
     "fixture:filler": 2,
     "fixture:countertop": 1,
     "fixture:backsplash": 4,
-    "fixture:slab": 3,
+    "fixture:slab": 5,
     "fixture:floor": 1
   },
   "validation_issues": [],
   "catalog": {
     "source": "xlsx",
-    "filtered_skus": 495,
+    "filtered_skus": 1065,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.48
+  "seconds": 0.17
 }

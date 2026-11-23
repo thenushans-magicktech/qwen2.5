@@ -41,6 +41,8 @@ from catalog_loader import (
     CAT_HOB,
     CAT_LOFT,
     CAT_LOFT_CORNER,
+    CAT_LOFT_CORNER_FRAME,
+    CAT_LOFT_FRAME,
     CAT_SINK,
     CAT_SPICE,
     CAT_WALL,
@@ -114,6 +116,7 @@ class Proposal:
     base_storage: Optional[str] = None  # designer's base cabinet style: drawers | mixed | shutters
     lofts: Optional[bool] = None  # designer's loft decision (used when the customer did not say)
     wall_style: Optional[str] = None  # designer's wall-door style: shutters | lift_up
+    finishes: dict = field(default_factory=dict)  # designer's shutter finishes {"base": aid, "wall": aid}
     reasons: dict[str, str] = field(default_factory=dict)  # designer's one-line reason per decision
     notes: str = ""
     source: str = "fallback"
@@ -136,6 +139,7 @@ class Proposal:
             "base_storage": self.base_storage,
             "lofts": self.lofts,
             "wall_style": self.wall_style,
+            "finishes": self.finishes,
             "reasons": self.reasons,
             "notes": self.notes,
             "source": self.source,
@@ -150,9 +154,13 @@ class SolverPrefs:
     sink_under_window: bool = True
     base_storage: str = "auto"  # auto | drawers | mixed | shutters - what the plain base runs are filled with
     wall_style: str = "shutters"  # shutters | lift_up - doors of the plain wall cabinets
+    budget: Optional[str] = None  # essential | premium | luxury (rule workbook) - None = not stated
+    primary_wall: Optional[str] = None  # customer's hob wall (R24): the hob never moves off it
+    secondary_wall: Optional[str] = None  # customer's sink wall (R25)
     # Set by solve_layout() from the ceiling height (see height_plan); 600 / 1940 = standard.
     wall_height_mm: int = 600
     tall_height_mm: int = 1940
+    loft_height_mm: int = 600  # R48: the largest loft that leaves an 18-100 mm reveal to the ceiling
 
 
 @dataclass
@@ -164,6 +172,7 @@ class Placement:
     role: str  # sink hob spice cylinder corner storage tall wall wall_corner loft loft_deep
     corner_end: Optional[str] = None
     note: str = ""
+    y_m: Optional[float] = None  # bottom height when it is not the tier default (lofts follow the ceiling)
 
     @property
     def width_mm(self) -> int:
@@ -182,6 +191,8 @@ class Placement:
         return TIER_ZONES[self.tier]
 
     def pos_y(self) -> float:
+        if self.y_m is not None:
+            return self.y_m
         if self.tier == "base":
             return config.POS_Y_M["base_floor"] if self.item.floor_standing else config.POS_Y_M["base"]
         return config.POS_Y_M[self.tier]
@@ -263,6 +274,7 @@ class KitchenLayout:
     warnings: list[str] = field(default_factory=list)
     score: float = 0.0
     heights: dict = field(default_factory=dict)  # height plan: wall_mm, tall_mm, lofts, ceiling_mm, why
+    finishes: dict = field(default_factory=dict)  # shutter finish per run: {"base": aid, "wall": aid}
 
     def on(self, wall_id: str, *zones: str) -> list[Placement]:
         zs = set(zones) if zones else {"base", "wall", "loft"}
@@ -396,7 +408,8 @@ def placement_box(p: Placement, wall: Wall):
 # ---------------------------------------------------------------------------
 
 def _unit_cost(width: int, narrow: bool = False) -> float:
-    c = 1.0 + abs(width - 600) / 5000.0
+    # the tiny squared term breaks ties towards equal widths (R34: a 1000 mm gap as 2 x 500, not 550 + 450)
+    c = 1.0 + abs(width - 600) / 5000.0 + ((width - 600) / 1000.0) ** 2 * 0.01
     if width < 450:
         c += 0.35
     if width > 900:
@@ -432,8 +445,9 @@ class Pool:
     """Default SKU per width for one fill context (e.g. base storage)."""
 
     def __init__(self, items_by_width: dict[int, CatalogItem], narrow: Optional[dict[int, CatalogItem]] = None,
-                 extra_cost: Optional[dict[int, float]] = None):
+                 extra_cost: Optional[dict[int, float]] = None, filler_mm: int = 0):
         self.by_width = dict(items_by_width)
+        self.filler_mm = filler_mm  # leftover strip accepted when it saves a unit (base runs: R60)
         self.narrow = {w: it for w, it in (narrow or {}).items() if w not in self.by_width}
         extra = extra_cost or {}
         costs = [(w, _unit_cost(w) + extra.get(w, 0.0)) for w in self.by_width] + [(w, _unit_cost(w, True)) for w in self.narrow]
@@ -451,7 +465,15 @@ class Pool:
 
     def _dp(self, r: float) -> list[CatalogItem]:
         n = int(math.floor((r + EPS) / config.GRID_MM))
-        return [self.item(w) for w in _dp_fill(n, self.widths_costs)] if n >= 1 else []
+        if n < 1:
+            return []
+        best = _dp_fill(n, self.widths_costs)
+        if self.filler_mm >= config.GRID_MM and n > 1:
+            # R60: fewer units with a small filler beat an exact split (650 = 600 + 50, not 350 + 300)
+            alt = _dp_fill(n - self.filler_mm // config.GRID_MM, self.widths_costs)
+            if alt and len(alt) < len(best) and n * config.GRID_MM - sum(alt) <= self.filler_mm + EPS:
+                best = alt
+        return [self.item(w) for w in best]
 
     def choose(self, target: float, prefs: list[CatalogItem]) -> tuple[list[CatalogItem], list[CatalogItem]]:
         """Units for ``target`` mm: designer-requested SKUs when they fit, else pure DP.
@@ -576,11 +598,17 @@ class LayoutSolver:
         # Wall / tall heights from the height plan; the wall zone grows with the wall cabinets.
         self.wall_h, self.tall_h = prefs.wall_height_mm, prefs.tall_height_mm
         wall_y0 = ZONE_Y["wall"][0]
-        self.zone_y = dict(ZONE_Y, wall=(wall_y0, wall_y0 + self.wall_h / 1000.0))
+        # Lofts sit on an 18 mm bottom panel above the wall run; their height follows the ceiling (R48).
+        self.loft_h = prefs.loft_height_mm
+        self.loft_y = round(wall_y0 + (self.wall_h + config.LOFT_BOTTOM_MM) / 1000.0, 4)
+        self.zone_y = dict(ZONE_Y, wall=(wall_y0, wall_y0 + self.wall_h / 1000.0),
+                           loft=(self.loft_y, self.loft_y + self.loft_h / 1000.0))
 
-        self.base_pool = self._pool(
-            (CAT_BASE,), "base", height=700, narrow_cats=(CAT_SPICE,), prefer=BASE_FILL_STYLES.get(prefs.base_storage)
-        )
+        # R44: one spice pull-out per kitchen - narrow pull-outs are no longer used as gap fillers.
+        self.base_pool = self._pool((CAT_BASE,), "base", height=700, prefer=BASE_FILL_STYLES.get(prefs.base_storage))
+        self.base_pool.filler_mm = 50  # R60
+        # Budget tier (R6-R10, R31-R33, R38-R43): plain base units by width, per wall (R31/R32 read the aisle).
+        self.base_pools: dict[str, Pool] = {}
         lift = prefs.wall_style == "lift_up"
         self.wall_pool = self._pool((CAT_WALL, CAT_WALL_LIFTUP) if lift else (CAT_WALL,), "wall", height=self.wall_h,
                                     depth=330, prefer=LIFT_UP_COMBOS if lift else None)
@@ -589,8 +617,10 @@ class LayoutSolver:
         elif lift:  # pack runs with widths that have a lift-up version whenever the run still fills
             by_w = self.wall_pool.by_width
             self.wall_pool = Pool(by_w, extra_cost={w: 0.4 for w, it in by_w.items() if it.cat != CAT_WALL_LIFTUP})
-        self.loft_pool = self._pool((CAT_LOFT,), "loft", height=600, depth=330)
-        self.loft_deep_pool = self._pool((CAT_LOFT,), "loft", height=600, depth=560)
+        # R47 trigger: "Loft - Frame with Shutter" is the generation default; R51 / R52: 330 mm deep over
+        # the wall run, 560 mm over tall units.
+        self.loft_pool = self._loft_pool(330)
+        self.loft_deep_pool = self._loft_pool(560)
         if not self.base_pool.by_width:
             raise SolverError("catalogue has no 700 mm 'Base Unit' SKUs for this door style")
 
@@ -612,6 +642,41 @@ class LayoutSolver:
         for it in self.cat.find(narrow_cats, tier=tier, height=height) if narrow_cats else []:
             narrow.setdefault(it.width, it)
         return Pool(by_w, narrow)
+
+    def _loft_pool(self, depth: int) -> Pool:
+        """Loft units of this kitchen's loft height: Single Shutter up to 600 mm wide (R49),
+        Double Shutter above (R50). Frame-with-shutter lofts first, modular ones as a fallback."""
+        for cat in (CAT_LOFT_FRAME, CAT_LOFT):
+            by_w: dict[int, CatalogItem] = {}
+            for it in self.cat.find((cat,), tier="loft", height=self.loft_h, depth=depth):
+                want = "single shutter" if it.width <= 600 else "double shutter"
+                if canon_eq_key(it.cabinet_combination) == want:
+                    by_w.setdefault(it.width, it)
+            if by_w:
+                return Pool(by_w)
+        return Pool({})
+
+    def _base_pool(self, wid: str) -> Pool:
+        """Plain base units for ``wid``. With a budget tier the rule workbook decides the unit per
+        width (R6-R10, R31-R33, R38-R43): units up to 900 mm (R7), wider gaps tiled (R34, R42)."""
+        budget = self.prefs.budget
+        if not budget:
+            return self.base_pool
+        key = (wid, tuple(self.walls))
+        if key not in self.base_pools:
+            import rulebook
+
+            aisle = rulebook.working_aisle_mm(self.g, wid, list(self.walls))
+            by_w: dict[int, CatalogItem] = {}
+            for w in sorted({it.width for it in self.cat.find((CAT_BASE,), tier="base", height=700)}):
+                if w > rulebook.BASE_FILL_MAX_MM or w % config.GRID_MM:
+                    continue
+                combo, _ = rulebook.base_fill_combination(budget, w, aisle)
+                found = self.cat.find((CAT_BASE,), width=w, combination=combo, height=700, tier="base")
+                if found:
+                    by_w[w] = found[0]
+            self.base_pools[key] = Pool(by_w, filler_mm=50) if by_w else self.base_pool  # R60 fillers
+        return self.base_pools[key]
 
     def _resolve(self, aid: Optional[str], cats: Iterable[str], what: str, tier: Optional[str] = None) -> Optional[CatalogItem]:
         if not aid:
@@ -797,10 +862,11 @@ class LayoutSolver:
             return len(seen) == len(ws)
 
         n, cands = len(full), []
+        keep = {w for w in (self.prefs.primary_wall, self.prefs.secondary_wall) if w}  # R24 / R25: customer's walls
         for r in (1, 2, 3):
             for ws in itertools.combinations(usable, r):
                 ws = list(ws)
-                if set(ws) == set(full) or (anchor and anchor not in ws) or not connected(ws):
+                if set(ws) == set(full) or (anchor and anchor not in ws) or not connected(ws) or not keep <= set(ws):
                     continue
                 cands.append(ws)
         rank = lambda ws: (0 if len(ws) == n else 1 if len(ws) == n + 1 else 2, -len(set(ws) & set(full)))  # noqa: E731
@@ -870,7 +936,7 @@ class LayoutSolver:
             layout.features[(wid, "base")].extend(fl)
         if best.chimney:
             c = best.chimney["center_mm"]
-            half = config.CHIMNEY_WIDTH_MM / 2 + config.CHIMNEY_SIDE_CLEARANCE_MM
+            half = best.chimney["width_mm"] / 2 + config.CHIMNEY_SIDE_CLEARANCE_MM
             layout.features[(best.chimney["wall_id"], "wall")].append(Feature(c - half, c + half, "chimney", "chimney"))
         for p in layout.placements:
             if p.tier == "tall":
@@ -886,6 +952,10 @@ class LayoutSolver:
     # -- sink ---------------------------------------------------------------
     def _sink_target(self) -> tuple[Optional[str], Optional[Opening]]:
         prop_wall = self.proposal.sink_wall_id
+        secondary = self.prefs.secondary_wall
+        if secondary in self.walls:  # R25: the customer chose the sink wall - centred under its window if it has one
+            wins = [w for w in self.g.windows if w.wall_id == secondary] if self.prefs.sink_under_window else []
+            return secondary, (max(wins, key=lambda o: o.width_mm) if wins else None)
         if self.prefs.sink_under_window:
             windows = [w for w in self.g.windows if w.wall_id in self.walls]
             if windows:
@@ -1039,9 +1109,11 @@ class LayoutSolver:
                 if want is not None and got is not None and got.width != want.width:
                     warnings.append(f"{role} unit narrowed {want.width} -> {got.width} mm to fit the room")
                     score += 0.2 * (want.width - got.width)
-        if best_hob is not None and drop_cyl:
-            warnings.append("cylinder unit dropped: no room beside the hob with chimney/sink clearances")
-            score += 80
+        # R58 / R59: a cylinder unit with no room beside the hob is not dropped - it moves to the
+        # secondary (sink) wall, or another cabinet wall, and the move is flagged.
+        relocate_cyl = cyl_item if (best_hob is not None and drop_cyl) else None
+        if relocate_cyl is not None:
+            score += 40
         if best_hob is not None and drop_talls:
             warnings.append("tall unit(s) dropped: they left no legal hob position")
             score += 80 * len(talls)
@@ -1055,7 +1127,7 @@ class LayoutSolver:
             wid = best_hob[2]
             anchors[wid].extend(best_hob[1])
             hob = next(p for p in best_hob[1] if p.role == "hob")
-            chimney = {"wall_id": wid, "center_mm": hob.center_mm}
+            chimney = {"wall_id": wid, "center_mm": hob.center_mm, "width_mm": config.chimney_width_mm(hob.item.width)}
             if self.proposal.hob_wall_id and wid != self.proposal.hob_wall_id:
                 decisions.append(f"hob moved to {self.g.walls[wid].name} (clearances on proposed wall failed)")
 
@@ -1065,11 +1137,16 @@ class LayoutSolver:
         placements: list[Placement] = [a for wl in anchors.values() for a in wl]
         hob_wid = hob.wall_id if hob is not None else None
         order = sorted(self.walls, key=lambda w: (w != hob_wid, not (hob_wid and self.g.corner_between(w, hob_wid))))
+        cyl_wall = None
+        if relocate_cyl is not None:
+            cyl_wall = next((w for w in ([sink_wall] if sink_wall else []) + order if w != hob_wid), None)
+            if cyl_wall is not None:  # start the walk at the secondary wall so the unit lands there first
+                order = order[order.index(cyl_wall):] + order[:order.index(cyl_wall)]
         carry: list[CatalogItem] = []
         for wid in order:
-            prefs = self._base_prefs(wid) + carry
+            prefs = ([relocate_cyl] if wid == cyl_wall else []) + self._base_prefs(wid) + carry
             for gap in self._gaps(wid, base_feats(wid), anchors[wid], caps):
-                res = fill_gap(gap, self.base_pool, prefs)
+                res = fill_gap(gap, self._base_pool(wid), prefs)
                 if res is None:
                     score += 500
                     continue
@@ -1079,6 +1156,17 @@ class LayoutSolver:
                     tier = "tall" if it.tier == "tall" else "base"
                     placements.append(Placement(it, wid, tier, st, role))
             carry = prefs
+        if relocate_cyl is not None:
+            moved = next((p for p in placements if p.item is relocate_cyl), None)
+            if moved is not None:
+                moved.role = "cylinder"
+                warnings.append(
+                    f"cylinder unit moved to {self.g.walls[moved.wall_id].name} (R58/R59): no room beside the hob "
+                    f"on {self.g.walls[hob_wid].name} - check the gas pipe route")
+            else:
+                warnings.append("cylinder unit dropped: no room beside the hob or on another cabinet wall")
+                score += 80
+            carry = [it for it in carry if it is not relocate_cyl]
         if carry:
             names = ", ".join(f"{it.category} {it.width} ({it.cabinet_combination})" for it in carry)
             warnings.append(f"requested feature unit(s) did not fit - no free base run left: {names}")
@@ -1086,7 +1174,49 @@ class LayoutSolver:
         # Ergonomics penalties
         if hob is not None and not self._has_landing(hob, placements):
             score += 300
+        # R26 / R27: 450 mm of counter between the hob / sink and the end of its run
+        for unit, rule in ((hob, "R26"), (sink, "R27")):
+            if unit is None:
+                continue
+            short = [f"{side} {d:.0f} mm" for side, d in self._landings(unit, placements, reserves.get(unit.wall_id, []))
+                     if d < config.MIN_END_LANDING_MM - EPS]
+            if short:
+                warnings.append(f"{unit.role} landing under {config.MIN_END_LANDING_MM} mm ({rule}): " + ", ".join(short))
+                score += 150
+        # R28 / R29: report when the spice pull-out could not go on the hob's right
+        if hob is not None:
+            right_hi = self.g.walls[hob.wall_id].side_of("end") == "right"
+            for p in placements:
+                if p.wall_id == hob.wall_id and p.role in ("spice", "cylinder"):
+                    on_hi = p.start_mm >= hob.end_mm - EPS
+                    want_right = p.role == "spice"
+                    if on_hi != (right_hi == want_right):
+                        decisions.append(f"{p.role} on the hob's {'left' if want_right else 'right'} instead of its "
+                                         f"{'right' if want_right else 'left'} (R28/R29): only that side fits")
+                        break
         return _BasePlan(score, placements, cplans, reserves, sink, hob, chimney, decisions, warnings)
+
+    def _landings(self, unit: Placement, placements: list[Placement], reserves: list[Feature]) -> list[tuple[str, float]]:
+        """Counter length from ``unit`` to each end of its base run (towards the wall start / end).
+        Corner reserves count as counter: the perpendicular run's worktop continues the landing."""
+        wid = unit.wall_id
+        base = sorted((p for p in placements if p.wall_id == wid and p.tier == "base"), key=lambda p: p.start_mm)
+        lo, hi = unit.start_mm, unit.end_mm
+        for p in reversed([p for p in base if p.end_mm <= unit.start_mm + EPS]):
+            if p.end_mm >= lo - config.MAX_FILLER_MM - EPS:
+                lo = p.start_mm
+        for p in [p for p in base if p.start_mm >= unit.end_mm - EPS]:
+            if p.start_mm <= hi + config.MAX_FILLER_MM + EPS:
+                hi = p.end_mm
+        wall = self.g.walls[wid]
+        ulo, uhi = wall.usable
+        for f in reserves:
+            if f.kind == "corner":
+                if abs(f.hi - lo) <= config.MAX_FILLER_MM + EPS:
+                    lo = min(lo, ulo)
+                if abs(f.lo - hi) <= config.MAX_FILLER_MM + EPS:
+                    hi = max(hi, uhi)
+        return [("start side", unit.start_mm - lo), ("end side", hi - unit.end_mm)]
 
     def _corner_strip(self, wid: str, end: str, depth_mm: float) -> tuple[float, float]:
         """Span of ``wid`` from its ``end`` that lies in front of the perpendicular wall's cabinets."""
@@ -1113,28 +1243,33 @@ class LayoutSolver:
         """Best (score, placements, wall) for the hob block over all cabinet walls."""
         hob_block = [(hob_item, "hob"), (spice_item, "spice")] if spice_item else [(hob_item, "hob")]
         best = None
-        for wid in self.walls:
+        # R24: the hob stays on the wall the customer chose as the primary (cooking) wall.
+        primary = self.prefs.primary_wall
+        for wid in ([primary] if primary in self.walls else self.walls):
             gaps = self._gaps(wid, base_feats(wid), anchors[wid], caps)
             target = self.proposal.hob_center_mm if wid == self.proposal.hob_wall_id else None
             bonus = 0.0 if wid == self.proposal.hob_wall_id else 40.0
             if wid == sink_wall and len(self.walls) > 1:
                 bonus += 30.0
             prefs = self._base_prefs(wid)
+            # R28 / R29: spice pull-out on the hob's right, cylinder unit on its left (seen from the room)
+            right = "hi" if self.g.walls[wid].side_of("end") == "right" else "lo"
             for spice_side in ("hi", "lo"):
                 elements = list(hob_block) if spice_side == "hi" else list(reversed(hob_block))
                 if cyl_item is not None:
                     elements = elements + [(cyl_item, "cylinder")] if spice_side == "lo" else [(cyl_item, "cylinder")] + elements
                 res = self._search_block(wid, gaps, elements, target, prefs, hob_rules=True, sink=sink)
-                if res and (best is None or res[0] + bonus < best[0]):
-                    best = (res[0] + bonus, res[1], wid)
+                side_pen = 0.0 if spice_side == right or not (spice_item or cyl_item) else 150.0
+                if res and (best is None or res[0] + bonus + side_pen < best[0]):
+                    best = (res[0] + bonus + side_pen, res[1], wid)
         return best
 
     def _hob_variants(self, hob_item, spice_item):
         """(hob, spice) pairs: as proposed, then narrower units of the same type.
 
-        Hob units never go below the hob appliance width (Hob90 is 750 mm wide).
+        Hob units never go below 600 mm (R57; the Hob60 appliance fits a 600 unit).
         """
-        min_hob = config.APPLIANCES["hob"]["dims_mm"][0]
+        min_hob = config.MIN_HOB_UNIT_MM
         hobs = [hob_item] + sorted(
             (
                 h for h in self.cat.find((CAT_HOB,), height=hob_item.height)
@@ -1253,9 +1388,9 @@ class LayoutSolver:
                         best = (s, (wid, round(gap.lo if at_lo else gap.hi, 3)), at_lo)
         return None if best is None else (best[1], best[2])
 
-    def _chimney_ok(self, wid: str, center: float) -> bool:
+    def _chimney_ok(self, wid: str, center: float, width_mm: float = config.CHIMNEY_WIDTH_MM) -> bool:
         wall = self.g.walls[wid]
-        half = config.CHIMNEY_WIDTH_MM / 2 + config.CHIMNEY_SIDE_CLEARANCE_MM
+        half = width_mm / 2 + config.CHIMNEY_SIDE_CLEARANCE_MM
         lo, hi = center - half, center + half
         ulo, uhi = wall.usable
         if lo < ulo - EPS or hi > uhi + EPS:
@@ -1299,9 +1434,10 @@ class LayoutSolver:
                     x += it.width
                 main = pls[0] if not hob_rules else next(p for p in pls if p.role == "hob")
                 if hob_rules:
-                    if not self._chimney_ok(wid, main.center_mm):
+                    chim_w = config.chimney_width_mm(main.item.width)  # 600 hood over a 600 hob unit
+                    if not self._chimney_ok(wid, main.center_mm, chim_w):
                         continue
-                    half = config.CHIMNEY_WIDTH_MM / 2 + config.CHIMNEY_SIDE_CLEARANCE_MM
+                    half = chim_w / 2 + config.CHIMNEY_SIDE_CLEARANCE_MM
                     c_lo, c_hi = main.center_mm - half, main.center_mm + half
                     # tall end-caps may float by < 1 module; keep the hood clear of them
                     if cap_lo and c_lo < gap.lo + cap_lo + g:
@@ -1322,7 +1458,7 @@ class LayoutSolver:
                     if sub.length < -EPS:
                         ok = False
                         break
-                    r = fill_gap(sub, self.base_pool, pcopy)
+                    r = fill_gap(sub, self._base_pool(wid), pcopy)
                     if r is None:
                         ok = False
                         break
@@ -1332,6 +1468,13 @@ class LayoutSolver:
                 if not ok:
                     continue
                 if hob_rules:
+                    # R26: 450 mm of counter from the hob to a run end (wall, door, open end or tall unit);
+                    # towards another cabinet or a corner run the counter carries on.
+                    ends = ((main.start_mm - (gap.lo + cap_lo), gap.kind_lo, cap_lo),
+                            ((gap.hi - cap_hi) - main.end_mm, gap.kind_hi, cap_hi))
+                    for land, kind, cap in ends:
+                        if (cap or kind not in ("anchor", "corner")) and land < config.MIN_END_LANDING_MM - EPS:
+                            pen += 500
                     # landing: hob side without spice/cylinder needs a storage unit
                     hob_idx = next(i for i, p in enumerate(pls) if p.role == "hob")
                     open_side = "lo" if hob_idx == 0 else ("hi" if hob_idx == len(pls) - 1 else None)
@@ -1387,14 +1530,17 @@ class LayoutSolver:
         order = [(a, a_end, b, b_end), (b, b_end, a, a_end)]
         if zone == "wall":
             lc = self._default((CAT_WALL_CORNER,), tier="wall", height=self.wall_h)
-            if lc is not None:
-                candidates.append(("L", lc))
-            candidates += [("blind", 730), ("blind", 830)]
+            l_corner = [("L", lc)] if lc is not None else []
+            blind = [("blind", 730), ("blind", 830)]
+            # R75: Essential kitchens take a blind wall corner (the loft corner stays an open void);
+            # R71: Premium / Luxury (and no stated budget) an L corner with a loft corner above.
+            candidates += blind + l_corner if self.prefs.budget == "essential" else l_corner + blind
         elif cp.wall_unit is not None and cp.wall_unit.item.cat == CAT_WALL_CORNER:
             w = cp.wall_unit
-            lc = self._default((CAT_LOFT_CORNER,), tier="loft", height=600, width=w.item.width) or self._default(
-                (CAT_LOFT_CORNER,), tier="loft", height=600
-            )
+            # R71 / R72: a Loft Corner (frame with shutter) at the loft height, 650 x 650 over a 330 mm loft
+            lc = next((it for cat in (CAT_LOFT_CORNER_FRAME, CAT_LOFT_CORNER)
+                       for it in (self._default((cat,), tier="loft", height=self.loft_h, width=w.item.width),
+                                  self._default((cat,), tier="loft", height=self.loft_h)) if it is not None), None)
             if lc is not None:
                 candidates.append(("L", lc))
             order = [o for o in order if o[0] == w.wall_id]  # stack above the wall L corner
@@ -1416,7 +1562,7 @@ class LayoutSolver:
                 if blocked(x, (st, st + item.width)) or blocked(y, r):
                     continue
                 role = "wall_corner" if zone == "wall" else "loft_corner"
-                pl = Placement(item, x, zone, st, role, corner_end=x_end)
+                pl = Placement(item, x, zone, st, role, corner_end=x_end, y_m=self.loft_y if zone == "loft" else None)
                 layout.placements.append(pl)
                 layout.features[(y, zone)].append(Feature(r[0], r[1], "corner", tag))
                 if zone == "wall":
@@ -1424,7 +1570,9 @@ class LayoutSolver:
                 else:
                     cp.loft_unit = pl
                 if kind == "blind":
-                    layout.decisions.append(f"corner {tag}: Wall L Corner blocked; wall blind corner {item.aid} used")
+                    why = ("Essential budget (R75)" if self.prefs.budget == "essential"
+                           else "Wall L Corner blocked")
+                    layout.decisions.append(f"corner {tag}: {why}; wall blind corner {item.aid} used")
                 return
         leave_open("no corner cabinet fits")
 
@@ -1549,7 +1697,7 @@ class LayoutSolver:
                                 continue
                             pen = 0.05 * dist + 20.0 * rank
                             if avoid_chimney and chimney and chimney["wall_id"] == wid:
-                                if abs(centre - chimney["center_mm"]) < config.CHIMNEY_WIDTH_MM / 2 + it.width / 2 + 600:
+                                if abs(centre - chimney["center_mm"]) < chimney["width_mm"] / 2 + it.width / 2 + 600:
                                     pen += 200.0
                             ok = True
                             for sub in (Gap(wid, lo, st, k_lo, "anchor"), Gap(wid, st + it.width, hi, "anchor", k_hi)):
@@ -1594,7 +1742,7 @@ class LayoutSolver:
                     continue
                 _consume(prefs, res.used)
                 for it, st, r in res.items:
-                    layout.placements.append(Placement(it, wid, tier, st, r))
+                    layout.placements.append(Placement(it, wid, tier, st, r, y_m=self.loft_y if tier == "loft" else None))
                 if res.leftover > EPS and res.leftover_at != "none":
                     kinds = k_lo if res.leftover_at == "lo" else k_hi
                     if kinds not in SOFT_KINDS and res.leftover > config.MAX_FILLER_MM:
@@ -1602,11 +1750,12 @@ class LayoutSolver:
 
     # -- loft tier ------------------------------------------------------------------
     def _plan_loft(self, layout: KitchenLayout) -> None:
+        loft_top_m = self.loft_y + self.loft_h / 1000.0
         for wid in self.walls:
             wall = self.g.walls[wid]
-            if wall.height_m + 1e-6 < config.LOFT_TOP_M:
+            if wall.height_m + 1e-6 < max(config.LOFT_TOP_M, loft_top_m):
                 layout.decisions.append(
-                    f"{wall.name}: no loft (wall height {wall.height_m:.3f} m < {config.LOFT_TOP_M:.3f} m)"
+                    f"{wall.name}: no loft (wall height {wall.height_m:.3f} m < {max(config.LOFT_TOP_M, loft_top_m):.3f} m)"
                 )
             else:
                 layout.loft_walls.append(wid)
@@ -1620,15 +1769,32 @@ class LayoutSolver:
                 layout.features[(wid, "loft")].append(Feature(r[0], r[1], "corner_open", "loft-corner"))
                 cp.open_tiers.add("loft")
         for wid in layout.loft_walls:
-            # Deep lofts above tall units (same width, 560 deep).
-            for t in [p for p in layout.placements if p.wall_id == wid and p.tier == "tall"]:
-                deep = self.loft_deep_pool.by_width.get(t.item.width)
-                if deep and not any(overlaps(t.start_mm, t.end_mm, f.lo, f.hi) for f in layout.features[(wid, "loft")]):
-                    layout.placements.append(Placement(deep, wid, "loft", t.start_mm, "loft_deep"))
+            feats = layout.features[(wid, "loft")]
+            taken = [(p.start_mm, p.end_mm) for p in layout.placements if p.wall_id == wid and "loft" in p.zones]
+
+            def free(lo, hi):
+                return not any(overlaps(lo, hi, f.lo, f.hi) for f in feats) and not any(overlaps(lo, hi, a, b) for a, b in taken)
+
+            # R53: one loft above each wall and tall unit, inheriting its width (no separate tiling);
+            # R52: 560 mm deep over a tall unit so it sits flush, 330 mm over the wall run (R51).
+            below = sorted((p for p in layout.placements if p.wall_id == wid and p.tier in ("wall", "tall")
+                            and p.role != "wall_corner"), key=lambda p: p.start_mm)
+            for p in below:
+                deep = p.tier == "tall"
+                it = (self.loft_deep_pool if deep else self.loft_pool).by_width.get(p.item.width)
+                if it is not None and free(p.start_mm, p.end_mm):
+                    layout.placements.append(Placement(it, wid, "loft", p.start_mm, "loft_deep" if deep else "loft",
+                                                       y_m=self.loft_y))
+                    taken.append((p.start_mm, p.end_mm))
+            # R54: the loft never breaks with the wall run - it carries on across the chimney, windows and
+            # any other gap between the first and the last unit of the run.
+            # (corner units count for the run's extent: beside an Essential blind corner the loft leaves
+            # only the 330 x 330 open void of R75 and continues over the rest of the unit)
             iv = [(p.start_mm, p.end_mm) for p in layout.placements if p.wall_id == wid and p.tier in ("wall", "tall")]
             iv += [(f.lo, f.hi) for f in layout.features[(wid, "wall")] if f.kind == "chimney"]
-            cover = merge_intervals(iv, join=config.MAX_FILLER_MM + 10)
-            self._fill_tier(layout, wid, "loft", cover, self.loft_pool, [], "loft")
+            if iv:
+                cover = [(min(a for a, _ in iv), max(b for _, b in iv))]
+                self._fill_tier(layout, wid, "loft", cover, self.loft_pool, [], "loft")
 
     # -- door swing direction -----------------------------------------------------
     def _apply_hinges(self, layout: KitchenLayout) -> None:
@@ -1786,7 +1952,7 @@ def validate_layout(layout: KitchenLayout) -> list[tuple[str, Optional[Placement
     if layout.chimney:
         wall = g.walls[layout.chimney["wall_id"]]
         c = layout.chimney["center_mm"]
-        half = config.CHIMNEY_WIDTH_MM / 2
+        half = layout.chimney.get("width_mm", config.CHIMNEY_WIDTH_MM) / 2
         for p in layout.on(wall.id, "wall"):
             if overlaps(p.start_mm, p.end_mm, c - half, c + half):
                 issues.append((f"{p.label()} obstructs chimney", p))
@@ -1843,9 +2009,26 @@ def height_plan(geometry: RoomGeometry, lofts: bool) -> dict:
     loft_top = round(config.LOFT_TOP_M * 1000)
     std_w, std_t = config.STANDARD_WALL_TALL_MM
     if lofts and ceiling + 1 >= loft_top:
-        return {"wall_mm": std_w, "tall_mm": std_t, "lofts": True, "ceiling_mm": ceiling, "top_mm": bottom + std_w,
-                "why": f"Lofts fill the space above: {std_w} mm wall and {std_t} mm tall units with lofts on top "
-                       f"up to {loft_top} mm (ceiling {ceiling} mm)."}
+        import rulebook
+
+        # R48: the loft height is coupled to the wall / tall heights - standard 600 / 1940 first, then
+        # taller units - taking the largest loft (600-850) that leaves an 18-100 mm reveal to the ceiling.
+        pairs = sorted(config.WALL_TALL_HEIGHTS_MM)
+        choice = next(((w, t, s) for w, t in pairs if (s := rulebook.loft_size(ceiling, bottom + w))), None)
+        note = ""
+        if choice is None:  # no standard loft leaves 18-100 mm: tallest units and loft, a top filler closes the rest
+            w, t = (std_w, std_t) if ceiling < bottom + std_w + config.LOFT_BOTTOM_MM + 850 + 100 else pairs[-1]
+            h = max((x for x in rulebook.LOFT_HEIGHTS_MM if bottom + w + config.LOFT_BOTTOM_MM + x <= ceiling),
+                    default=600)
+            choice = (w, t, (h, ceiling - bottom - w - config.LOFT_BOTTOM_MM - h))
+            note = f" No standard loft leaves the 18-100 mm reveal R48 asks for; a {choice[2][1]} mm top filler closes it."
+        w, t, (h, reveal) = choice
+        loft_y = bottom + w + config.LOFT_BOTTOM_MM
+        return {"wall_mm": w, "tall_mm": t, "lofts": True, "loft_mm": h, "loft_y_mm": loft_y, "reveal_mm": reveal,
+                "ceiling_mm": ceiling, "top_mm": bottom + w,
+                "why": f"Lofts above the wall run: {w} mm wall and {t} mm tall units, {h} mm lofts from {loft_y} mm, "
+                       f"leaving a {reveal} mm reveal under the {ceiling} mm ceiling (R48: largest loft with an "
+                       f"18-100 mm reveal).{note}"}
     w, t = next(((w, t) for w, t in config.WALL_TALL_HEIGHTS_MM if bottom + w <= ceiling - config.CEILING_GAP_MM),
                 (std_w, std_t))
     if ceiling + 1 < loft_top:
@@ -1901,7 +2084,8 @@ def solve_layout(geometry: RoomGeometry, catalog: Catalog, proposal: Proposal, p
             plan.update(wall_mm=w, tall_mm=t, top_mm=round(config.POS_Y_M["wall"] * 1000) + w,
                         why=f"{w} mm wall and {t} mm tall units (only these heights are loaded).")
     wanted_lofts = prefs.include_loft
-    prefs = replace(prefs, include_loft=plan["lofts"], wall_height_mm=plan["wall_mm"], tall_height_mm=plan["tall_mm"])
+    prefs = replace(prefs, include_loft=plan["lofts"], wall_height_mm=plan["wall_mm"], tall_height_mm=plan["tall_mm"],
+                    loft_height_mm=plan.get("loft_mm", prefs.loft_height_mm))
     layout = LayoutSolver(geometry, catalog, proposal, prefs).solve()
     layout.heights = plan
     layout.decisions.insert(0, f"heights: {plan['why']}")

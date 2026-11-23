@@ -27,8 +27,8 @@
       "hob": "HOB-900-3DRAWER",
       "hob_center_mm": 2000,
       "spice": "SPICE-300",
-      "lpg_why": "Gas supply not stated and the hob wall is busy.",
-      "lpg_cylinder": "NONE",
+      "lpg_why": "Gas supply not stated, so LPG is assumed (R11).",
+      "lpg_cylinder": "LPG-600",
       "tall_why": "Reheats daily, microwave tower at the run end.",
       "tall_units": [
         {
@@ -70,6 +70,9 @@
       ],
       "wall_style_why": "Standard hinged doors.",
       "wall_style": "shutters",
+      "finish_why": "Warm oak below, a light PU wall run to keep the room bright.",
+      "base_finish": "PURE-LEGNO-OAK-LAMINATE",
+      "wall_finish": "STROMMA-WHITE-PU",
       "loft_why": "The ceiling is too low for lofts.",
       "lofts": "no"
     }
@@ -77,16 +80,36 @@
   "customer_needs": [
     "- Door style Slab (Plain); layout preference auto; wants tall storage.",
     "- Water purifier: water purifier not stated.",
-    "- Gas: gas supply not stated.",
+    "- Gas: not stated - LPG is assumed, so the cylinder unit is included (rule R11).",
     "- Built-in appliances: built-in appliances not stated.",
     "- Glass display: glass display not stated.",
     "- Cooking: cooking style not stated; household size not stated.",
     "- Base cabinets: base cabinet style not stated - you choose drawers, mixed or shutters.",
     "- Wall cabinets: door type not stated - you choose hinged shutters or lift-up; open shelf unit not stated.",
     "- Crockery: crockery unit not stated.",
-    "- Lofts: lofts not stated."
+    "- Lofts: lofts not stated.",
+    "- Budget: not stated.",
+    "- Finishes: base run not stated - you choose; wall run not stated - you choose (the codes allowed are the ones the budget tier permits)."
   ],
   "explanation": [
+    {
+      "item": "Rule book",
+      "decision": null,
+      "built": "Large L-Shape kitchen (172 sqft)",
+      "why": "Module sizes, landings, gas and lofts follow the MagickHome rule workbook for this kitchen size and shape.",
+      "source": "rules",
+      "details": [
+        "Floor area 172 sqft -> Large band (Small 60-80, Medium 81-120, Large 121-180 sqft)",
+        "Kitchen type from the cabinet walls: L-Shape",
+        "Rules from the MagickHome Kitchen Rule Engine (workbook Kitchen_Rule_Engine_V1.xlsx)",
+        "R17: hob -> 900 mm Triple Drawer - A",
+        "R18: sink -> 1200 mm Sink Double Shutter (designer: 900 mm Sink Double Shutter)",
+        "R19: spice -> 300 mm Spice Pullout",
+        "R20: cylinder -> 600 mm Cylinder Single Shutter"
+      ],
+      "rules": [],
+      "need": null
+    },
     {
       "item": "Layout",
       "decision": null,
@@ -104,17 +127,20 @@
     },
     {
       "item": "Sink",
-      "decision": null,
-      "built": "Sink unit 900 mm (Sink Double Shutter) on Wall 2",
+      "decision": "Sink unit 1200 mm (Sink Double Shutter)",
+      "built": "Sink unit 1050 mm (Sink Double Shutter) on Wall 2",
       "why": "Window on Wall 2, standard 900 sink.",
       "source": "qwen",
       "details": [
-        "Unit: 900 x 560 x 700 mm (W x D x H) - shutters, room for pipes; standard single-bowl sink - right for most kitchens",
+        "Unit: 1050 x 560 x 700 mm (W x D x H) - shutters, room for pipes; window wall 3000+ mm free",
         "Window 1500 mm wide, centre at 1991 mm; sink centre at 1991 mm (centred)",
         "Wall 2 free run 4000 mm",
         "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
       ],
-      "rules": [],
+      "rules": [
+        "R18: In a Large L-Shape kitchen (121–180 sqft), set the Base Sink Unit width to 1200 mm. (the designer chose 900 mm Sink Double Shutter)",
+        "Designer chose 1200 mm; the rules used 1050 mm so it centres under the window."
+      ],
       "need": null
     },
     {
@@ -127,12 +153,14 @@
         "Unit: 900 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice; standard",
         "Wall 3 has no window - a solid wall for the chimney",
         "No door on this wall",
-        "Asked for the hob centre at 2000 mm; built at 2100 mm",
-        "Beside it: Base cabinet 550 mm (Drawer with Single Shutter) / Spice pull-out 300 mm (Spice Pullout)",
-        "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+        "Asked for the hob centre at 2000 mm; built at 2150 mm",
+        "Beside it: LPG cylinder unit 600 mm (Cylinder Single Shutter) / Spice pull-out 300 mm (Spice Pullout)",
+        "Appliances: Hob90 hob (750 mm) and a Chimney90 hood (900 mm wide) at 1.44 m; no wall cabinets in that zone",
         "Sink to hob: 2.5 m (different walls; comfortable range 1.2-2.7 m)"
       ],
-      "rules": [],
+      "rules": [
+        "R17: In a Large L-Shape kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm."
+      ],
       "need": null
     },
     {
@@ -145,19 +173,25 @@
         "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
         "Right beside the hob"
       ],
-      "rules": [],
+      "rules": [
+        "R19: In a Large L-Shape kitchen (121–180 sqft), set the Base Spice Pullout width to 300 mm.",
+        "R44: only one spice pull-out per kitchen"
+      ],
       "need": null
     },
     {
       "item": "LPG cylinder",
       "decision": null,
-      "built": "None",
-      "why": "Gas supply not stated and the hob wall is busy.",
+      "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+      "why": "Gas supply not stated, so LPG is assumed (R11).",
       "source": "qwen",
       "details": [
-        "Hob wall free run 4000 mm (a cylinder unit needs about 600 mm more)"
+        "Unit: 600 x 560 x 800 mm (W x D x H) - LPG cylinder, beside the hob (needs a long hob wall)",
+        "On Wall 3 at 1100-1700 mm, beside the hob"
       ],
-      "rules": [],
+      "rules": [
+        "R20: In a Large L-Shape kitchen (121–180 sqft), set the Base Cylinder Unit width to 600 mm."
+      ],
       "need": null
     },
     {
@@ -168,7 +202,7 @@
       "source": "qwen",
       "details": [
         "Microwave tower 600 mm (Built-In Microwave With 1 Shutter And 3 Drawer): 600 x 560 x 2240 mm (W x D x H) - built-in microwave at chest height, frees the counter",
-        "On Wall 3 at 3450-4050 mm - end of the run, clear of windows; 900 mm from the hob",
+        "On Wall 3 at 3450-4050 mm - end of the run, clear of windows; 850 mm from the hob",
         "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry, Crockery unit, Crockery unit"
       ],
       "rules": [],
@@ -209,10 +243,10 @@
       "why": "Not stated; a cutlery drawer on top and shelves below suit most homes.",
       "source": "qwen",
       "details": [
-        "2 x Base cabinet - Drawer with Double Shutter",
-        "1 x Base cabinet - Drawer with Single Shutter",
-        "1 x Base cabinet - Four Drawer",
+        "2 x Base cabinet - Drawer with Single Shutter",
         "1 x Vegetable basket - Open Wicker Unit With 1 Bottom Drawer",
+        "1 x Base cabinet - Drawer with Double Shutter",
+        "1 x Base cabinet - Four Drawer",
         "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
       ],
       "rules": [],
@@ -225,8 +259,8 @@
       "why": "Drawers by the hob, basket by the sink.",
       "source": "qwen",
       "details": [
-        "Base cabinet 600 mm (Four Drawer): asked for Wall 3 -> built on Wall 3 at 2850-3450 mm - cutlery, ladles, small tools - best right beside the hob",
-        "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> built on Wall 2 at 91-691 mm - vegetables, onions, potatoes - near the sink"
+        "Base cabinet 600 mm (Four Drawer): asked for Wall 3 -> built on Wall 2 at 2516-3116 mm (moved from Wall 3: no room there) - cutlery, ladles, small tools - best right beside the hob",
+        "Vegetable basket 600 mm (Open Wicker Unit With 1 Bottom Drawer): asked for Wall 2 -> built on Wall 2 at 66-666 mm - vegetables, onions, potatoes - near the sink"
       ],
       "rules": [],
       "need": null
@@ -239,7 +273,7 @@
       "source": "qwen",
       "details": [
         "Wall 2: 1 cabinets (550 mm); sizes asked no preference; kept clear: window 1241-2741",
-        "Wall 3: 2 cabinets (900, 850 mm); sizes asked 900; kept clear: chimney zone"
+        "Wall 3: 2 cabinets (950, 800 mm); sizes asked 900; kept clear: chimney zone"
       ],
       "rules": [],
       "need": null
@@ -292,6 +326,23 @@
       "need": null
     },
     {
+      "item": "Finishes",
+      "decision": null,
+      "built": "Base + tall: Pure Legno Oak (Laminate suede, wood texture, Merino); Wall + loft: Stromma White (PU matte, Magickhome)",
+      "why": "Warm oak below, a light PU wall run to keep the room bright.",
+      "source": "qwen",
+      "details": [
+        "Base run (base + tall units): Pure Legno Oak (Laminate suede, wood texture, Merino) - chosen by the designer",
+        "Wall run (wall units + lofts): Stromma White (PU matte, Magickhome) - chosen by the designer",
+        "Tall units take the base-run finish and lofts take the wall-run finish (finish continuity).",
+        "Fillers, slabs, end panels and cover panels take the finish of the run they close (workbook: Filler Panel / Cover End Panel finish must match the cabinets)."
+      ],
+      "rules": [
+        "No budget stated: any finish allowed"
+      ],
+      "need": null
+    },
+    {
       "item": "Corners",
       "decision": null,
       "built": "1 corner(s)",
@@ -312,7 +363,7 @@
     ],
     "sink": {
       "wall_id": "wall_56i56ymve0xf69fm",
-      "aid": "MTBABSU900560700SSDSSLBOEHNS",
+      "aid": "MTBABSU1200560700SSDSSLBOEHNS",
       "center_mm": null
     },
     "hob": {
@@ -321,7 +372,7 @@
       "center_mm": 2000.0
     },
     "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
-    "cylinder_aid": null,
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
     "tall_units": [
       {
         "wall_id": "wall_49fdugi4g7vj12pf",
@@ -348,11 +399,15 @@
     "base_storage": "mixed",
     "lofts": false,
     "wall_style": "shutters",
+    "finishes": {
+      "base": "MHS135",
+      "wall": "MHS212"
+    },
     "reasons": {
       "layout": "L-shape: window wall plus the solid wall away from the door.",
       "sink": "Window on Wall 2, standard 900 sink.",
       "hob": "Wall 3 is solid and far from the door.",
-      "lpg": "Gas supply not stated and the hob wall is busy.",
+      "lpg": "Gas supply not stated, so LPG is assumed (R11).",
       "tall": "Reheats daily, microwave tower at the run end.",
       "purifier": "Not stated; most homes use a wall purifier.",
       "display": "Long window wall can frame the window.",
@@ -361,7 +416,8 @@
       "wall_cabinets": "Wide 900 units over the hob wall for a calm, aligned look.",
       "open": "Not asked for; open shelves gather grease.",
       "wall_style": "Standard hinged doors.",
-      "lofts": "The ceiling is too low for lofts."
+      "lofts": "The ceiling is too low for lofts.",
+      "finish": "Warm oak below, a light PU wall run to keep the room bright."
     },
     "notes": "Wall 2 has the window, Wall 1 the door near the Wall 4 corner, Wall 3 and Wall 4 are solid. Sink under the window on Wall 2, hob on solid Wall 3, tall storage at the end of Wall 3.",
     "source": "ollama"
@@ -379,39 +435,49 @@
           "tier": "base",
           "role": "storage",
           "width": 600,
-          "start_mm": 91.2,
-          "end_mm": 691.2,
+          "start_mm": 66.2,
+          "end_mm": 666.2,
           "opening": "Pull Out"
         },
         {
-          "aid": "MTBABU850560700DSDDSSLBOEH1S",
+          "aid": "MTBABU800560700DSDDSSLBOEH1S",
           "category": "Base Unit",
           "tier": "base",
           "role": "storage",
-          "width": 850,
-          "start_mm": 691.2,
-          "end_mm": 1541.2,
+          "width": 800,
+          "start_mm": 666.2,
+          "end_mm": 1466.2,
           "opening": "Both"
         },
         {
-          "aid": "MTBABSU900560700SSDSSLBOEHNS",
+          "aid": "MTBABSU1050560700SSDSSLBOEHNS",
           "category": "Base Sink Unit",
           "tier": "base",
           "role": "sink",
-          "width": 900,
-          "start_mm": 1541.2,
-          "end_mm": 2441.2,
+          "width": 1050,
+          "start_mm": 1466.2,
+          "end_mm": 2516.2,
           "opening": "Both"
         },
         {
-          "aid": "MTBABU1000560700DSDDSSLBOEH1S",
+          "aid": "MTBABU600560700DFDSLPUEHNS",
           "category": "Base Unit",
           "tier": "base",
           "role": "storage",
-          "width": 1000,
-          "start_mm": 2441.2,
-          "end_mm": 3441.2,
-          "opening": "Both"
+          "width": 600,
+          "start_mm": 2516.2,
+          "end_mm": 3116.2,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTBABU350560700DSDSSSLREH1S",
+          "category": "Base Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 350,
+          "start_mm": 3116.2,
+          "end_mm": 3466.2,
+          "opening": "Right"
         },
         {
           "aid": "MTWAWU550330900SSSSLLEH1S",
@@ -466,14 +532,14 @@
           "opening": "Right"
         },
         {
-          "aid": "MTBABU550560700DSDSSSLLEH1S",
-          "category": "Base Unit",
+          "aid": "MTBABCU600560800SCSSSLREHNS",
+          "category": "Base Cylinder Unit",
           "tier": "base",
-          "role": "storage",
-          "width": 550,
+          "role": "cylinder",
+          "width": 600,
           "start_mm": 1100.0,
-          "end_mm": 1650.0,
-          "opening": "Left"
+          "end_mm": 1700.0,
+          "opening": "Right"
         },
         {
           "aid": "MTBABHU900560700DTDASLPUEHNS",
@@ -481,8 +547,8 @@
           "tier": "base",
           "role": "hob",
           "width": 900,
-          "start_mm": 1650.0,
-          "end_mm": 2550.0,
+          "start_mm": 1700.0,
+          "end_mm": 2600.0,
           "opening": "Pull Out"
         },
         {
@@ -491,19 +557,19 @@
           "tier": "base",
           "role": "spice",
           "width": 300,
-          "start_mm": 2550.0,
-          "end_mm": 2850.0,
+          "start_mm": 2600.0,
+          "end_mm": 2900.0,
           "opening": "Pull Out"
         },
         {
-          "aid": "MTBABU600560700DFDSLPUEHNS",
+          "aid": "MTBABU550560700DSDSSSLREH1S",
           "category": "Base Unit",
           "tier": "base",
           "role": "storage",
-          "width": 600,
-          "start_mm": 2850.0,
+          "width": 550,
+          "start_mm": 2900.0,
           "end_mm": 3450.0,
-          "opening": "Pull Out"
+          "opening": "Right"
         },
         {
           "aid": "MTTATBIM6005602240SODBMS3DSLREH2S",
@@ -516,22 +582,22 @@
           "opening": "Right"
         },
         {
-          "aid": "MTWAWU900330900SDSSLBOEH1S",
+          "aid": "MTWAWU950330900SDSSLBOEH1S",
           "category": "Wall Unit",
           "tier": "wall",
           "role": "wall",
-          "width": 900,
+          "width": 950,
           "start_mm": 700.0,
-          "end_mm": 1600.0,
+          "end_mm": 1650.0,
           "opening": "Both"
         },
         {
-          "aid": "MTWAWU850330900SDSSLBOEH1S",
+          "aid": "MTWAWU800330900SDSSLBOEH1S",
           "category": "Wall Unit",
           "tier": "wall",
           "role": "wall",
-          "width": 850,
-          "start_mm": 2600.0,
+          "width": 800,
+          "start_mm": 2650.0,
           "end_mm": 3450.0,
           "opening": "Both"
         }
@@ -539,7 +605,8 @@
     },
     "chimney": {
       "wall_id": "wall_49fdugi4g7vj12pf",
-      "center_mm": 2100.0
+      "center_mm": 2150.0,
+      "width_mm": 900
     },
     "corners": [
       {
@@ -562,12 +629,14 @@
       "top_mm": 2340,
       "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling."
     },
-    "score": 34.0,
+    "score": 55.5,
     "decisions": [
       "heights: No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
       "Wall 2: purifier unit Wall Aquaguard Unit 600 at 641-1241 mm",
       "Wall 2: display unit Wall Glass Unit 600 at 2800-3400 mm",
-      "Wall 3: Tall Built-In Microwave 600 hinged Right (towards wall) -> MTTATBIM6005602240SODBMS3DSLREH2S"
+      "Wall 3: Base Unit 550 hinged Right (towards tall) -> MTBABU550560700DSDSSSLREH1S",
+      "Wall 3: Tall Built-In Microwave 600 hinged Right (towards wall) -> MTTATBIM6005602240SODBMS3DSLREH2S",
+      "Wall 2: Base Unit 350 hinged Right (towards corner) -> MTBABU350560700DSDSSSLREH1S"
     ],
     "warnings": []
   },
@@ -580,8 +649,84 @@
     "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
     "wall_style": "shutters"
   },
+  "rulebook": {
+    "floor_area_sqft": 172.1,
+    "size_band": "Large",
+    "size_note": "",
+    "kitchen_type": "L-Shape",
+    "source": "workbook Kitchen_Rule_Engine_V1.xlsx",
+    "applied": [
+      {
+        "role": "hob",
+        "rule": 17,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm.",
+        "width": 900,
+        "combination": "Triple Drawer - A",
+        "changed": false,
+        "designer": null
+      },
+      {
+        "role": "sink",
+        "rule": 18,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Sink Unit width to 1200 mm.",
+        "width": 1200,
+        "combination": "Sink Double Shutter",
+        "changed": true,
+        "designer": "900 mm Sink Double Shutter"
+      },
+      {
+        "role": "spice",
+        "rule": 19,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Spice Pullout width to 300 mm.",
+        "width": 300,
+        "combination": "Spice Pullout",
+        "changed": false,
+        "designer": null
+      },
+      {
+        "role": "cylinder",
+        "rule": 20,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Cylinder Unit width to 600 mm.",
+        "width": 600,
+        "combination": "Cylinder Single Shutter",
+        "changed": false,
+        "designer": null
+      }
+    ]
+  },
+  "finishes": {
+    "base": {
+      "aid": "MHS135",
+      "code": "PURE-LEGNO-OAK-LAMINATE",
+      "name": "Pure Legno Oak",
+      "category": "Laminate",
+      "family": "Wooden",
+      "shutter": "Suede",
+      "brand": "Merino",
+      "color": null,
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+      "texture": true,
+      "source": "designer"
+    },
+    "wall": {
+      "aid": "MHS212",
+      "code": "STROMMA-WHITE-PU",
+      "name": "Stromma White",
+      "category": "PU",
+      "family": "Solids",
+      "shutter": "Matte",
+      "brand": "Magickhome",
+      "color": "#F2F2F2",
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+      "texture": false,
+      "source": "designer"
+    },
+    "budget": null,
+    "tier_rule": "",
+    "notes": []
+  },
   "nodes_added": {
-    "kitchen": 16,
+    "kitchen": 17,
     "appliance": 3,
     "fixture:toe-kick": 2,
     "fixture:filler": 4,
@@ -593,8 +738,8 @@
   "validation_issues": [],
   "catalog": {
     "source": "xlsx",
-    "filtered_skus": 495,
+    "filtered_skus": 1065,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.23
+  "seconds": 0.27
 }

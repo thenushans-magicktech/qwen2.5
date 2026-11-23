@@ -54,13 +54,14 @@ CAT_WALL_SHAKER_GLASS = "wall shaker glass unit"
 CAT_LOFT = "loft - modular"
 CAT_LOFT_FRAME = "loft - frame with shutter"
 CAT_LOFT_CORNER = "loft - l corner - modular"
+CAT_LOFT_CORNER_FRAME = "loft - l corner - frame with shutter"  # rule workbook default loft corner (R71)
 CAT_WALL_LIFTUP = "wall lift up unit"   # flap-up / bi-fold wall cabinets (a wall-door style)
 CAT_WALL_OPEN = "wall open unit"        # open shelf unit for daily-use jars at a run end
 CAT_TALL_GLASS = "tall glass unit"      # crockery unit
 # Categories made in one neutral finish ("Common", no handle): kept for every door style.
 STYLE_FREE_CATS = (CAT_WALL_OPEN,)
 # Corner-only categories: the only cabinets allowed where two runs meet.
-CORNER_CATS = (CAT_BCU_L, CAT_BCU_R, CAT_WALL_CORNER, CAT_LOFT_CORNER)
+CORNER_CATS = (CAT_BCU_L, CAT_BCU_R, CAT_WALL_CORNER, CAT_LOFT_CORNER, CAT_LOFT_CORNER_FRAME)
 
 def corner_side_for(item) -> Optional[str]:
     """Side of the cabinet ("left"/"right", seen from inside the room) where the corner

@@ -52,6 +52,9 @@ GEMINI_FALLBACK_MODELS = [m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS",
 # worked examples, cabinet notes, rule hints). Set GEMINI_USE_KNOWLEDGE=1 to give it the same prompt as Qwen.
 GEMINI_USE_KNOWLEDGE = os.getenv("GEMINI_USE_KNOWLEDGE", "0").strip().lower() not in ("", "0", "false", "no", "off")
 KNOWLEDGE_DIR = Path(os.getenv("MAGICKHOME_KNOWLEDGE_DIR", str(BASE_DIR / "knowledge")))
+# MagickHome Kitchen Rule Engine workbook (module widths by kitchen type / size band, budget
+# rules, lofts ...); read by rulebook.py. Rules are cited by their row number (R1, R12, ...).
+RULEBOOK_PATH = Path(os.getenv("MAGICKHOME_RULEBOOK_PATH", str(KNOWLEDGE_DIR / "Kitchen_Rule_Engine_V1.xlsx")))
 # Finished web-UI designs are saved here so ?job=<id> links survive a server restart.
 JOBS_DIR = Path(os.getenv("MAGICKHOME_JOBS_DIR", str(BASE_DIR / "designs")))
 
@@ -126,6 +129,35 @@ APPLIANCES = {
     },
 }
 
+# Appliance sizes available as MagickHome models (dimensions measured from the GLBs). The largest
+# model that fits is used: sink / hob by the host cabinet's width, chimney by the hob cabinet's
+# width. The rule workbook's small modules (600 mm hob and sink units, R1 / R2 / R61 / R63)
+# need the 60-series models. Names of the new models are ours (MagickHome lists only *90).
+# (min host cabinet width mm, aid, name, (width, height, depth) mm)
+APPLIANCE_VARIANTS = {
+    "sink": [(1050, "APS03", "Sink120", (950, 450, 450)), (800, "APS02", "Sink90", (780, 450, 450)),
+             (0, "APS01", "Sink60", (450, 390, 420))],
+    "hob": [(750, "APH02", "Hob90", (750, 70, 520)), (0, "APH01", "Hob60", (550, 68, 520))],
+    "chimney": [(750, "APC02", "Chimney90", (900, 460, 540)), (0, "APC01", "Chimney60", (600, 463, 540))],
+}
+MIN_HOB_UNIT_MM = 600  # narrowest hob cabinet (Hob60 appliance); R57: no hob below 600 mm
+
+
+def appliance_for(kind: str, host_width_mm: float) -> dict:
+    """APPLIANCES[kind] with the model that fits a host cabinet ``host_width_mm`` wide
+    (for the chimney: the hob cabinet's width)."""
+    base = APPLIANCES[kind]
+    for min_w, aid, name, dims in APPLIANCE_VARIANTS[kind]:
+        if host_width_mm + 1e-6 >= min_w:
+            return dict(base, aid=aid, name=name, dims_mm=dims,
+                        src=f"{S3_BASE}/appliance-models/{aid}.glb", thumbnail=f"{S3_BASE}/appliance-thumbnail/{aid}.jpg")
+    return dict(base)
+
+
+def chimney_width_mm(hob_unit_width_mm: float) -> int:
+    """Width of the chimney hood above a hob cabinet of this width (600 or 900 mm)."""
+    return appliance_for("chimney", hob_unit_width_mm)["dims_mm"][0]
+
 # ---------------------------------------------------------------------------
 # Elevations / depths (metres, wall-local frame: x along wall, y up, z into room)
 # ---------------------------------------------------------------------------
@@ -136,11 +168,13 @@ POS_Y_M = {"base": 0.1, "base_floor": 0.0, "tall": 0.1, "wall": 1.44, "loft": 2.
 POS_Z_M = {"base": 0.33, "tall": 0.33, "wall": 0.215, "wall_corner": 0.375, "loft": 0.215, "loft_deep": 0.33}
 
 # Accepted catalogue heights per tier (mm). Base 800 = floor-standing cylinder units.
-TIER_HEIGHTS_MM = {"base": (700, 800), "wall": (600,), "tall": (1940,), "loft": (600,)}
+# Loft heights 600-850: the loft height follows the ceiling (rule R48, see rule_engine.height_plan).
+TIER_HEIGHTS_MM = {"base": (700, 800), "wall": (600,), "tall": (1940,), "loft": (600, 650, 700, 750, 800, 850)}
 TIER_DEPTHS_MM = {"base": (560,), "wall": (330, 650), "tall": (560,), "loft": (330, 560, 650)}
 FLOOR_STANDING_HEIGHT_MM = 800  # base units this tall sit at y=0 (no plinth)
 
 LOFT_TOP_M = POS_Y_M["loft"] + 0.6  # 2.658
+LOFT_BOTTOM_MM = 18  # bottom panel between the wall-cabinet top and the loft carcass
 # Height by ceiling: wall cabinets hang from 1440 mm and their top lines up with the tall
 # units' top (tall units stand on the 100 mm plinth). With lofts the standard 600 / 1940 pair
 # is kept (lofts sit on top). Without lofts the tallest pair whose top stays at least
@@ -163,6 +197,7 @@ WALL_UNIT_DEPTH_MM = 330
 CHIMNEY_WIDTH_MM = 900
 CHIMNEY_SIDE_CLEARANCE_MM = 50   # free wall either side of the chimney hood
 MIN_LANDING_MM = 300             # counter beside hob / sink
+MIN_END_LANDING_MM = 450         # R26 / R27: counter from the hob / sink to the end of its run
 MIN_SINK_HOB_GAP_MM = 600        # edge-to-edge when sink and hob share a wall
 MIN_UNIT_WIDTH_MM = 300          # narrowest storage cabinet used for filling
 MAX_FILLER_MM = 150              # widest acceptable filler strip before a hard failure

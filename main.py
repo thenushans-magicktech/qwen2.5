@@ -38,6 +38,8 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import BaseModel, ConfigDict, Field
 
 import config
+import finishes
+import rulebook
 from ai_designer import AIUnavailable, KitchenPreferences, base_storage_need, customer_needs, design_kitchen, ensure_model
 from explain import explain_design
 from catalog_loader import available_door_styles, catalog_status, load_catalog, load_filtered_catalog, refresh_catalog
@@ -77,6 +79,15 @@ def generate_kitchen(
         proposal.tall_units = []
     if prefs.include_cylinder is False:
         proposal.cylinder_aid = None
+    # R24 / R25: the customer's primary (hob) and secondary (sink) walls are fixed.
+    for wid, attr in ((prefs.primary_wall, "hob_wall_id"), (prefs.secondary_wall, "sink_wall_id")):
+        if wid and wid in geometry.walls:
+            setattr(proposal, attr, wid)
+            if wid not in proposal.cabinet_walls:
+                proposal.cabinet_walls.append(wid)
+    # Rule workbook: module widths by kitchen type / size band, LPG assumed (R11), ...
+    step("Applying the MagickHome rule book: module sizes for this kitchen size and shape")
+    facts = rulebook.apply_module_rules(proposal, geometry, catalog, prefs)
     # Base cabinet style: the customer's stated style, else the designer's (Qwen's) choice.
     stated_storage = base_storage_need(prefs)[0]
     storage = stated_storage if stated_storage != "auto" else (proposal.base_storage or "auto")
@@ -96,8 +107,19 @@ def generate_kitchen(
             sink_under_window=prefs.sink_under_window,
             base_storage=storage,
             wall_style=wall_style,
+            budget=None if prefs.budget == "auto" else prefs.budget,
+            primary_wall=prefs.primary_wall if prefs.primary_wall in geometry.walls else None,
+            secondary_wall=prefs.secondary_wall if prefs.secondary_wall in geometry.walls else None,
         ),
     )
+    # Shutter finishes: the customer's > the designer's (within the budget tier's finish rules) > tier default
+    budget = None if prefs.budget == "auto" else prefs.budget
+    palette, fin_src, fin_notes = finishes.resolve({"base": prefs.base_finish, "wall": prefs.wall_finish},
+                                                   proposal.finishes, budget)
+    layout.finishes = palette
+    finish_info = {"palette": palette, "source": fin_src, "notes": fin_notes, "budget": budget,
+                   "tier": finishes.rules().get("tiers", {}).get(budget or "", {}).get("note", ""),
+                   "default_why": finishes.default(budget)[1]}
     step("Building the 3D scene: cabinets, appliances, countertops, panels")
     seed = prefs.seed if prefs.seed is not None else scene_seed(doc, prefs.model_dump_json())
     out, stats = hydrate_scene(doc, layout, seed=seed, include_floor=prefs.include_floor)
@@ -105,10 +127,13 @@ def generate_kitchen(
     report = {
         "ai": ai_info,
         "customer_needs": customer_needs(prefs),
-        "explanation": explain_design(proposal, layout, prefs, geometry, catalog),
+        "explanation": explain_design(proposal, layout, prefs, geometry, catalog, facts, finish_info),
         "proposal": proposal.to_dict(),
         "layout": layout.summary(),
         "heights": dict(layout.heights, wall_style=wall_style),
+        "rulebook": facts.to_dict(),
+        "finishes": {**{run: dict(finishes.summary(aid), source=fin_src.get(run)) for run, aid in palette.items()},
+                     "budget": budget, "tier_rule": finish_info["tier"], "notes": fin_notes},
         "nodes_added": stats,
         "validation_issues": issues,
         "catalog": {"source": catalog.source, "filtered_skus": len(catalog), "door_style": prefs.door_style},
@@ -354,6 +379,39 @@ def sample_floorplan() -> dict:
     if not SAMPLE_SCENE.exists():
         raise HTTPException(status_code=404, detail="sample scene not found")
     return strip_items(json.loads(SAMPLE_SCENE.read_text(encoding="utf-8")))
+
+
+@app.get("/api/rulebook")
+def rulebook_options() -> dict:
+    """The rule workbook's filters (budget, fuel, size band, kitchen type, walls) with the rules each
+    one switches on, and the module-width table - the UI builds its rule-book filters from this."""
+    return rulebook.options()
+
+
+@app.get("/api/finishes")
+def finish_options() -> dict:
+    """Shutter finishes with the budget-tier finish rules: which finishes each tier allows per run
+    (base = base + tall units, wall = wall units + lofts), the tier defaults and the match rules."""
+    r = finishes.rules()
+    budgets = [None, "essential", "premium", "luxury"]
+    return {
+        "finishes": [finishes.summary(a) for a in finishes.catalogue()],
+        "tiers": r.get("tiers", {}),
+        "allowed": {b or "auto": {run: finishes.allowed(run, b) for run in finishes.RUNS} for b in budgets},
+        "defaults": {b or "auto": dict(zip(("palette", "why"), finishes.default(b))) for b in budgets},
+        "match": r.get("match", []),
+        "about": r.get("about", ""),
+    }
+
+
+@app.post("/api/plan-facts")
+def plan_facts(req: GenerateRequest) -> dict:
+    """Rule-book facts of an uploaded floor plan: floor area and size band, ceiling, lofts, walls, aisles."""
+    try:
+        geometry = parse_scene(_request_doc(req))
+    except SceneError as exc:
+        raise HTTPException(status_code=400, detail=f"invalid scene: {exc}")
+    return rulebook.plan_facts(geometry, req.preferences.cabinet_walls)
 
 
 @app.post("/api/catalog/refresh")

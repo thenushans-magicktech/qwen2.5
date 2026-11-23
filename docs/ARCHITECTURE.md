@@ -392,6 +392,48 @@ Facts are computed, never written by the model, so they stay correct even when Q
 
 ## 5. Design rules enforced
 
+### 5.1 MagickHome Kitchen Rule Engine workbook (`knowledge/Kitchen_Rule_Engine_V1.xlsx`, `rulebook.py`)
+
+The workbook's 81 active rules are applied and cited by row number (`R12` = row S.No 12) in the
+report (`report.rulebook`) and in every explanation entry they decide.
+
+| Rules | What the generator does | Where |
+|---|---|---|
+| Size bands, kitchen type | Floor area from the room outline: Small 60-80, Medium 81-120, Large 121-180 sqft; type from the cabinet walls (Straight / L / U / Parallel) | `rulebook.floor_area_sqft`, `size_band`, `kitchen_type` |
+| R1-R5, R12-R21, R61-R69 | Hob, sink, spice pull-out and cylinder unit widths and combinations by type and band, read from the workbook at runtime (built-in copy if it is missing). They override the designer's sizes; the designer's choice is kept in the explanation | `rulebook.apply_module_rules` (called in `main.generate_kitchen`) |
+| R55-R57 | Hob steps down to 600 mm when the hob wall is short; never below 600 mm | `_hob_variants`, `config.MIN_HOB_UNIT_MM` |
+| R11, R58, R59 | LPG assumed when the fuel is not stated (cylinder unit included); piped gas / induction drops it; a cylinder with no room beside the hob moves to the secondary wall with a flag | `apply_module_rules`, `_plan_base` |
+| R24, R25 | Customer's primary wall carries the hob (never moved), secondary wall the sink | `preferences.primary_wall / secondary_wall`, `_place_hob`, `_sink_target` |
+| R26, R27 | 450 mm counter from the hob / sink to the end of its run: steers the hob search, reported when not met | `_search_block`, `_landings` |
+| R28, R29 | Cylinder unit on the hob's left, spice pull-out on its right (seen from the room); swapped only when necessary, and reported | `_place_hob`, `_plan_base` |
+| R44-R46 | One hob, one sink, one spice pull-out (narrow pull-outs are no longer gap fillers) | base pool |
+| R6-R10, R31-R43 | Budget tier (`preferences.budget`): plain base units by width - Essential shutters (600 mm by the aisle, R31 / R32), Premium / Luxury double drawers from 600 mm; units up to 900 mm, wider gaps tiled with equal widths (R34 / R42), a 50 mm filler when it saves a unit (R60) | `rulebook.base_fill_combination`, `LayoutSolver._base_pool`, `Pool._dp` |
+| R71, R75 | Essential: blind wall corner, loft corner left as a 330 x 330 void; Premium / Luxury: Wall L Corner with a Loft Corner above | `_place_corner_tier`, `_plan_loft` |
+| R47-R54, R72 | Lofts only from a 2658 mm ceiling; "Loft - Frame with Shutter"; height 600-850 coupled to the wall / tall heights with an 18-100 mm reveal; single shutter up to 600 mm, double above; one loft per wall / tall unit at its width, 560 deep over tall units; continuous across gaps; 650 loft corner | `height_plan`, `_loft_pool`, `_plan_loft` |
+| Appliances | 600 mm hob / sink units get the Hob60 / Sink60 models (APH01 / APS01) and a 600 hood (APC01); 1050+ sinks the Sink120 (APS03) | `config.APPLIANCE_VARIANTS`, `appliance_for` |
+
+Known differences from the workbook (interpretations): R60's "1150 = 1100 + 50 filler" conflicts with
+R7's 900 mm unit limit, so 1150 is packed 600 + 550; R10 ("Luxury: every gap double drawer") conflicts
+with R41 ("Luxury: under 600 mm single shutter") - R41 is applied; the workbook's Parallel and G-shape
+kitchens are not generated (cabinet walls must connect); hardware, vastu, dishwasher and other rules the
+lookup sheets mention but the Rules sheet does not contain are not applied.
+
+### 5.2 Finishes by budget tier (`knowledge/finish_rules.json`, `finishes.py`)
+
+The workbook says finish tiers derive from the budget but defines no finish rows, so the tiers are
+a **proposed, approved** table that MagickHome can edit: Essential = laminate fronts; Premium =
+laminate with at most one PU run; Luxury = PU fronts. Two runs carry a finish: the base run (base +
+tall units) and the wall run (wall units + lofts); fillers, slabs and panels take their run's
+finish (workbook finish-match rules). The finish list is the MagickHome finish records in
+`data/material_presets.json` (7 today: 2 PU, 5 Merino laminates) - the cabinets API has no finish
+data. Order of precedence: the customer's swatch > the AI designer's choice (`base_finish` /
+`wall_finish`, enum-locked to the tier) > the tier default; then the PU limit is enforced
+(a customer's choice is kept and flagged). The scene puts the chosen finish first in each node's
+`metadata.textures` (MagickHome applies `textures[0]`). UI: `GET /api/finishes`, swatches in the
+rule-book filters.
+
+### 5.3 Engine rules
+
 | Rule | Where |
 |---|---|
 | Sink centred under the (widest) window, on the window wall | `_sink_target`, `_plan_base`, retry |
@@ -449,6 +491,8 @@ Facts are computed, never written by the model, so they stay correct even when Q
 | `GEMINI_MODEL` | `gemini-flash-latest` | Gemini model used by `gemini_designer.py` |
 | `GEMINI_USE_KNOWLEDGE` | `0` | `0` = Gemini designs from its own judgement (plain room facts, cabinet list, needs, answer format; no playbook, examples, cabinet notes or rule hints). `1` = same prompt as Qwen |
 | `MAGICKHOME_KNOWLEDGE_DIR` | `knowledge/` | Knowledge pack location |
+| `MAGICKHOME_RULEBOOK_PATH` | `knowledge/Kitchen_Rule_Engine_V1.xlsx` | MagickHome rule workbook read by `rulebook.py` (replace the file to update the module-width rules) |
+| `GEMINI_FALLBACK_MODELS` | `gemini-3.7-flash,gemini-2.5-flash` | Backup Gemini models tried when the main one is busy, out of quota or slow |
 | `MAGICKHOME_JOBS_DIR` | `designs/` | Saved designs |
 | `MAGICKHOME_ASSETS_API_URL` | Assets API cabinets endpoint | `""` disables the API (cache / xlsx only) |
 | `MAGICKHOME_ASSETS_API_PAGE_SIZE` | 1000 | Page size for the read-only catalogue fetch |

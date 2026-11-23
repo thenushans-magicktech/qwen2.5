@@ -168,6 +168,13 @@ def interval(n):
     return x - w / 2, x + w / 2
 
 
+def appliance_cfg(kind, host_node):
+    """The appliance model expected on / above a host cabinet node (by its width)."""
+    import config
+
+    return config.appliance_for(kind, round(host_node["asset"]["dimensions"][0] * 1000))
+
+
 # ---------------------------------------------------------------------------
 # The verification suite (returns a list of failures so it can run anywhere)
 # ---------------------------------------------------------------------------
@@ -285,32 +292,34 @@ def verify_scene(doc: dict, expect_window: str | None = WINDOW_ID, expect_door: 
             if abs(s["position"][0] - win["position"][0]) > 0.001:
                 E(f"sink centre {s['position'][0]:.4f} not under window {win['position'][0]:.4f}")
         kids = [nodes[c] for c in s["children"]]
-        if len(kids) != 1 or kids[0]["name"] != "Sink90" or not kids[0]["asset"]["src"].endswith("/appliance-models/APS02.glb"):
-            E(f"sink children wrong: {[k['name'] for k in kids]}")
+        want = appliance_cfg("sink", s)  # the sink model that fits this cabinet (Sink60 / 90 / 120)
+        if len(kids) != 1 or kids[0]["name"] != want["name"] or kids[0]["asset"]["src"] != want["src"]:
+            E(f"sink children wrong: {[k['name'] for k in kids]} (expected {want['name']})")
         else:
             k = kids[0]
             if k["parentId"] != s["id"] or k["position"] != [0, 0.55, 0] or k["rotation"] != [0, 0, 0]:
-                E("Sink90 not a correctly placed child of the sink unit")
+                E("sink appliance not a correctly placed child of the sink unit")
             if k["wallId"] != s["wallId"] or abs(k["wallT"] - s["wallT"]) > 1e-12:
-                E("Sink90 wallId/wallT differ from host")
+                E("sink appliance wallId/wallT differ from host")
 
     # -- hob, spice, chimney ------------------------------------------------------------
     hobs = by_category(nodes, "Base Hob Unit")
-    chims = [n for n in nodes.values() if n["type"] == "item" and n["name"] == "Chimney90"]
+    chims = [n for n in nodes.values() if n["type"] == "item" and n["name"].startswith("Chimney")]
     if len(hobs) != 1:
         E(f"expected 1 Base Hob Unit, got {len(hobs)}")
     else:
         hb = hobs[0]
         kids = [nodes[c] for c in hb["children"]]
-        if len(kids) != 1 or kids[0]["name"] != "Hob90" or not kids[0]["asset"]["src"].endswith("/appliance-models/APH02.glb"):
-            E(f"hob children wrong: {[k['name'] for k in kids]}")
+        want = appliance_cfg("hob", hb)
+        if len(kids) != 1 or kids[0]["name"] != want["name"] or kids[0]["asset"]["src"] != want["src"]:
+            E(f"hob children wrong: {[k['name'] for k in kids]} (expected {want['name']})")
         elif kids[0]["position"] != [0, 0.74, 0] or kids[0]["parentId"] != hb["id"]:
-            E("Hob90 not a correctly placed child of the hob unit")
+            E("hob appliance not a correctly placed child of the hob unit")
         if len(chims) != 1:
-            E(f"expected 1 Chimney90, got {len(chims)}")
+            E(f"expected 1 chimney, got {len(chims)}")
         else:
             c = chims[0]
-            if not c["asset"]["src"].endswith("/appliance-models/APC02.glb"):
+            if c["asset"]["src"] != appliance_cfg("chimney", hb)["src"]:
                 E("chimney src wrong")
             if c["parentId"] != hb["wallId"] or c["wallId"] != hb["wallId"] or c["id"] not in walls[hb["wallId"]]["children"]:
                 E("chimney not a child of the hob's wall")
@@ -320,11 +329,11 @@ def verify_scene(doc: dict, expect_window: str | None = WINDOW_ID, expect_door: 
             if c["rotation"] != [0, PI, 0] or abs(c["wallT"] - hb["wallT"]) > 1e-12:
                 E("chimney rotation/wallT wrong")
             # chimney zone must be free of wall-tier cabinets
-            cx = c["position"][0]
+            cx, half = c["position"][0], c["asset"]["dimensions"][0] / 2  # hood width: 600 or 900
             for n in cabs:
                 if n["wallId"] == hb["wallId"] and n["placement"]["level"] in ("wall", "tall"):
                     lo, hi = interval(n)
-                    if lo < cx + 0.45 - TOL and hi > cx - 0.45 + TOL:
+                    if lo < cx + half - TOL and hi > cx - half + TOL:
                         E(f"{n['metadata']['category']} {n['id']} obstructs the chimney")
         spice = [n for n in by_category(nodes, "Base Spice Pull Out") if n["wallId"] == hb["wallId"]]
         h_lo, h_hi = interval(hb)
@@ -570,6 +579,184 @@ def test_lift_up_doors_open_shelf_and_crockery_unit():
     assert not by_category(nodes, "Tall Glass Unit")
 
 
+def test_rulebook_reads_the_workbook():
+    """The MagickHome rule workbook drives module widths; the logic rules match its rows."""
+    import rulebook
+
+    rb = rulebook.load()
+    assert rb.source.startswith("workbook") and len(rb.texts) >= 81
+    want = {("hob", "L-Shape", "Small"): (600, 1), ("sink", "L-Shape", "Medium"): (900, 13),
+            ("spice", "L-Shape", "Large"): (300, 19), ("cylinder", "L-Shape", "Small"): (450, 4),
+            ("hob", "Parallel", "Large"): (1050, 68), ("hob", "U-Shape", "Medium"): (800, 66)}
+    for key, (width, rule) in want.items():
+        r = rb.module_width(*key)
+        assert (r.width, r.rule) == (width, rule), key
+    assert [rulebook.size_band(a)[0] for a in (70, 80, 81, 120, 121, 175)] == ["Small"] * 2 + ["Medium"] * 2 + ["Large"] * 2
+    assert rulebook.loft_size(2700, 2040) == (600, 42) and rulebook.loft_size(3000, 2040) == (850, 92)  # R48
+    fill = rulebook.base_fill_combination
+    assert fill("essential", 450, 2000) == ("Single Shutter", 6) and fill("essential", 800, 2000)[0] == "Double Shutter"
+    assert fill("essential", 600, 900) == ("Double Shutter", 31) and fill("essential", 600, 1500) == ("Single Shutter", 32)
+    assert fill("premium", 600, None) == ("Double Drawer", 33) and fill("luxury", 500, None)[0] == "Single Shutter"
+
+
+def test_rulebook_module_widths_lpg_and_one_spice(monkeypatch):
+    """Medium L-Shape: R12-R15 set hob 800 / sink 900 / spice 200 / cylinder 500 over the designer's
+    choice; R11 adds the cylinder when the fuel is not stated; piped gas drops it; one spice only."""
+    import rulebook
+    from catalog_loader import load_filtered_catalog
+    from scene_parser import parse_scene
+
+    geo = parse_scene(empty_plan())
+    cat = load_filtered_catalog()
+    monkeypatch.setattr(rulebook, "floor_area_sqft", lambda g: 100.0)  # a Medium kitchen
+    groups = ai_designer.build_shortlist_v2(cat)
+    prefs = KitchenPreferences(cabinet_walls=[W1, W2])
+    prop = ai_designer.fallback_proposal(geo, groups, prefs)
+    prop.cylinder_aid = None
+    facts = rulebook.apply_module_rules(prop, geo, cat, prefs)
+    assert (facts.band, facts.kitchen_type) == ("Medium", "L-Shape")
+    got = {role: cat.get(getattr(prop, attr)) for role, attr in (("hob", "hob_aid"), ("sink", "sink_aid"),
+                                                                  ("spice", "spice_aid"), ("cylinder", "cylinder_aid"))}
+    assert {r: it.width for r, it in got.items()} == {"hob": 800, "sink": 900, "spice": 200, "cylinder": 500}
+    assert got["hob"].cabinet_combination == "Triple Drawer - A"
+    assert {a["rule"] for a in facts.applied} >= {11, 12, 13, 14, 15}
+
+    monkeypatch.undo()  # the real sample room: 172 sqft, a Large L-Shape (R17-R20)
+    out, report = run(KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2]), name="rulebook_L")
+    assert not verify_scene(out), verify_scene(out)
+    nodes = out["scene"]["nodes"]
+    assert len(by_category(nodes, "Base Spice Pull Out")) == 1, "R44: one spice pull-out"
+    assert by_category(nodes, "Base Cylinder Unit"), "R11: LPG assumed"
+    assert report["rulebook"]["kitchen_type"] == "L-Shape" and report["explanation"][0]["item"] == "Rule book"
+    hob = next(e for e in report["explanation"] if e["item"] == "Hob")
+    assert any(r.startswith("R17:") for r in hob["rules"]), hob["rules"]
+    out, _ = run(KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2], include_cylinder=False), name="rulebook_png")
+    assert not by_category(out["scene"]["nodes"], "Base Cylinder Unit")
+
+
+def test_budget_tiers_fill_base_runs_and_pick_corners():
+    """Essential: shutter base units, blind wall corner (R75). Premium: double-drawer units from
+    600 mm, L wall corner (R71). Plain units are never wider than 900 mm (R7 / R34)."""
+    for budget, corner in (("essential", "Blind corner unit"), ("premium", "Wall L Corner")):
+        out, report = run(KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2], budget=budget), name=f"budget_{budget}")
+        assert not verify_scene(out), verify_scene(out)
+        assert not report["validation_issues"], report["validation_issues"]
+        nodes = out["scene"]["nodes"]
+        feature = {a for aids in report["proposal"]["base_prefs"].values() for a in aids}
+        plain = [n for n in by_category(nodes, "Base Unit") if n["metadata"]["aid"] not in feature]
+        assert plain and all(n["asset"]["dimensions"][0] <= 0.9 + 1e-6 for n in plain)
+        for n in plain:
+            w, combo = round(n["asset"]["dimensions"][0] * 1000), n["metadata"]["cabinetCombination"]
+            if w < 600:
+                assert combo == "Single Shutter", (budget, w, combo)
+            elif budget == "essential":
+                assert "Drawer" not in combo, (budget, w, combo)
+            else:
+                assert combo == "Double Drawer", (budget, w, combo)
+        wall_corners = [n["metadata"]["category"] for n in cabinets(nodes)
+                        if n["placement"]["level"] == "wall" and "orner" in n["metadata"]["category"]]
+        assert wall_corners and all(c.startswith(corner) for c in wall_corners), (budget, wall_corners)
+        base = next(e for e in report["explanation"] if e["item"] == "Base cabinets")
+        assert base["source"] == "customer" and base["rules"]
+
+
+def test_rulebook_filters_endpoints_and_overrides():
+    """The UI's rule-book filters: options with their rules, plan facts, a size-band override
+    (Small L-Shape -> hob 600 / sink 600, R1 / R2) and the fuel choice (PNG drops the cylinder)."""
+    from fastapi.testclient import TestClient
+
+    import main
+
+    c = TestClient(main.app)
+    o = c.get("/api/rulebook").json()
+    assert [b["value"] for b in o["budget"]] == ["auto", "essential", "premium", "luxury"]
+    assert [f["value"] for f in o["fuel"]] == ["auto", "lpg", "png", "induction"]
+    assert o["module_widths"]["L-Shape"]["Small"]["hob"] == {"width": 600, "combination": "Triple Drawer - A", "rule": 1}
+    assert any(r.startswith("R75:") for r in o["budget"][1]["rules"])
+    f = c.post("/api/plan-facts", json={"scene": empty_plan()}).json()
+    assert f["size_band"] == "Large" and f["ceiling_mm"] == 2500 and not f["lofts_possible"] and len(f["walls"]) == 4
+
+    out, report = run(KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2], size_band="small", fuel="png"),
+                      name="small_png")
+    assert not verify_scene(out), verify_scene(out)
+    assert report["rulebook"]["size_band"] == "Small" and "set to Small" in report["rulebook"]["size_note"]
+    nodes = out["scene"]["nodes"]
+    hob, sink = by_category(nodes, "Base Hob Unit")[0], by_category(nodes, "Base Sink Unit")[0]
+    assert round(hob["asset"]["dimensions"][0] * 1000) == 600 and round(sink["asset"]["dimensions"][0] * 1000) == 600
+    assert [nodes[k]["name"] for k in hob["children"]] == ["Hob60"] and [nodes[k]["name"] for k in sink["children"]] == ["Sink60"]
+    assert not by_category(nodes, "Base Cylinder Unit"), "piped gas: no cylinder unit"
+
+
+def test_finishes_follow_the_budget_tier():
+    """Essential = laminate only, Premium = at most one PU run, Luxury = PU; the customer's finish
+    wins; the scene applies the run's finish first on cabinets and on their panels and fillers."""
+    import finishes
+
+    lam = {a for a, r in finishes.catalogue().items() if r["category"] == "Laminate"}
+    assert set(finishes.allowed("base", "essential")) == lam and set(finishes.allowed("wall", "luxury")) == {"MHS224", "MHS212"}
+    codes = ai_designer.finish_codes("base", KitchenPreferences(budget="essential"))
+    assert codes and all(c.endswith("-LAMINATE") for c in codes)
+    assert ai_designer.finish_codes("wall", KitchenPreferences(wall_finish="MHS064")) == ["PRAIRIE-GREEN-LAMINATE"]
+
+    pal, src, notes = finishes.resolve({}, {"base": "MHS224", "wall": "MHS212"}, "premium")  # two PU runs
+    assert sum(finishes.catalogue()[a]["category"] == "PU" for a in pal.values()) == 1 and notes
+    pal, src, notes = finishes.resolve({}, {"base": "MHS224"}, "essential")  # PU not allowed in Essential
+    assert finishes.catalogue()[pal["base"]]["category"] == "Laminate" and src["base"] == "rules" and notes
+    pal, src, _ = finishes.resolve({"base": "MHS224"}, {}, "essential")  # the customer's choice wins
+    assert pal["base"] == "MHS224" and src["base"] == "customer"
+
+    out, report = run(KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2], budget="essential"), name="finish_essential")
+    assert not verify_scene(out), verify_scene(out)
+    want = finishes.rules()["defaults"]["essential"]
+    assert (report["finishes"]["base"]["aid"], report["finishes"]["wall"]["aid"]) == (want["base"], want["wall"])
+    nodes = out["scene"]["nodes"].values()
+    for n in nodes:
+        if n["type"] != "item" or not (n["metadata"].get("textures")):
+            continue
+        level = n["placement"]["level"] if n["asset"]["category"] == "kitchen" else n["metadata"].get("level")
+        run_ = finishes.RUN_OF_TIER.get(level or "")
+        if run_ and (n["asset"]["category"] == "kitchen" or n["metadata"].get("fixtureKind") in ("slab", "filler")):
+            assert n["metadata"]["textures"][0]["aid"] == want[run_], (level, n["metadata"].get("fixtureKind"))
+    fin = next(e for e in report["explanation"] if e["item"] == "Finishes")
+    assert "Laminate" in fin["built"] and fin["rules"][0].startswith("Essential tier")
+
+
+def test_customer_primary_and_secondary_walls():
+    """R24 / R25: the hob goes on the customer's primary wall, the sink on the secondary wall."""
+    W3 = "wall_49fdugi4g7vj12pf"
+    out, report = run(KitchenPreferences(ai_mode="fallback", primary_wall=W3, secondary_wall=W2), name="primary_wall")
+    assert not verify_scene(out), verify_scene(out)
+    nodes = out["scene"]["nodes"]
+    assert by_category(nodes, "Base Hob Unit")[0]["wallId"] == W3
+    assert by_category(nodes, "Base Sink Unit")[0]["wallId"] == W2
+    assert W3 in report["layout"]["cabinet_walls"]
+
+
+def test_lofts_follow_the_ceiling_one_per_unit():
+    """R48: 850 mm lofts under a 3.0 m ceiling (92 mm reveal); R53: a same-width loft above every
+    wall unit; R47: frame-with-shutter lofts; R52: 560 mm deep over tall units."""
+    doc = empty_plan(SECONDARY)
+    for n in doc["scene"]["nodes"].values():
+        if n.get("type") in ("wall", "ceiling"):
+            n["height"] = 3.0
+    out, report = generate_kitchen(doc, KitchenPreferences(ai_mode="fallback", cabinet_walls=[W1, W2]))
+    assert not verify_scene(out), verify_scene(out)
+    h = report["heights"]
+    assert (h["loft_mm"], h["reveal_mm"], h["lofts"]) == (850, 92, True)
+    nodes = out["scene"]["nodes"]
+    lofts = _level(out, "loft")
+    assert lofts and all(n["metadata"]["category"].startswith(("Loft - Frame", "Loft – L Corner - Frame")) for n in lofts)
+    assert all(abs(n["asset"]["dimensions"][1] - 0.85) < 1e-6 for n in lofts)
+    for n in _level(out, "wall"):
+        if "orner" in n["metadata"]["category"]:
+            continue
+        assert any(l["wallId"] == n["wallId"] and abs(l["position"][0] - n["position"][0]) < 1e-3
+                   and abs(l["asset"]["dimensions"][0] - n["asset"]["dimensions"][0]) < 1e-3 for l in lofts), n["metadata"]["category"]
+    for t in _level(out, "tall"):
+        assert any(abs(l["position"][0] - t["position"][0]) < 1e-3 and abs(l["asset"]["dimensions"][2] - 0.56) < 1e-6
+                   for l in lofts if l["wallId"] == t["wallId"]), "560 mm deep loft over the tall unit"
+
+
 def test_rotated_and_translated_room():
     """Same room rotated 30 deg and moved: wall-local maths must be frame independent."""
     a = math.radians(30)
@@ -721,7 +908,7 @@ def test_verifier_catches_violations():
         bcu["metadata"]["category"] = "Base Unit"
 
     def drop_chimney(nodes):
-        cid = next(k for k, n in nodes.items() if n.get("name") == "Chimney90")
+        cid = next(k for k, n in nodes.items() if (n.get("name") or "").startswith("Chimney"))
         wall = nodes[nodes[cid]["parentId"]]
         wall["children"].remove(cid)
         del nodes[cid]
@@ -738,7 +925,7 @@ def test_verifier_catches_violations():
     assert any(DOOR_ID in e for e in mutated(into_door))
     assert any("3D collision" in e for e in mutated(collide))
     assert any("not in Finalised_Asset_Catalogue_Sheet" in e for e in mutated(fake_aid))
-    assert any("Chimney90" in e for e in mutated(drop_chimney))
+    assert any("expected 1 chimney" in e for e in mutated(drop_chimney))
     assert any("corner" in e and "regular Base Unit" in e for e in mutated(regular_in_corner))
 
 
@@ -995,8 +1182,8 @@ def _v2_design(menu, **over):
         "hob": first["hob"],
         "hob_center_mm": 2000,
         "spice": first["spice"],
-        "lpg_why": "Gas supply not stated and the hob wall is busy.",
-        "lpg_cylinder": "NONE",
+        "lpg_why": "Gas supply not stated, so LPG is assumed (R11).",
+        "lpg_cylinder": first["cylinder"],
         "tall_why": "Reheats daily, microwave tower at the run end.",
         "tall_units": [{"wall": "Wall 3", "unit": next(c for c in codes["tall"] if c.startswith("MICROWAVE"))}],
         "purifier_why": "Not stated; most homes use a wall purifier.",
@@ -1015,6 +1202,9 @@ def _v2_design(menu, **over):
         "wall_style": "shutters",
         "loft_why": "The ceiling is too low for lofts.",
         "lofts": "no",
+        "finish_why": "Warm oak below, a light PU wall run to keep the room bright.",
+        "base_finish": "PURE-LEGNO-OAK-LAMINATE",
+        "wall_finish": "STROMMA-WHITE-PU",
     }
     d.update(over)
     return d
@@ -1208,7 +1398,7 @@ def test_qwen_cannot_skip_a_needed_tower_and_reasons_are_reported(monkeypatch):
     monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v2")
     menu = _v2_menu()
     pantry = next(c for c, _ in menu["tall"] if c.startswith("PANTRY"))
-    fake = FakeOllama(_v2_design(menu, tall_units=[{"wall": "Wall 3", "unit": pantry}]))
+    fake = FakeOllama(_v2_design(menu, tall_units=[{"wall": "Wall 3", "unit": pantry}], lpg_cylinder="NONE"))
     monkeypatch.setattr(ai_designer, "_client", lambda: fake)
     prefs = KitchenPreferences(ai_mode="ollama", built_in="microwave", water_purifier="yes", include_cylinder=False)
     out, report = generate_kitchen(empty_plan(), prefs)

@@ -51,7 +51,8 @@ def _size(it) -> str:
     return f"{it.width} x {it.depth} x {it.height} mm (W x D x H)"
 
 
-def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, catalog) -> list[dict]:
+def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, catalog, facts=None,
+                   finish_info=None) -> list[dict]:
     from ai_designer import _free_segments, base_storage_need, build_menu, build_shortlist_v2
     from design_knowledge import note_for
 
@@ -116,6 +117,32 @@ def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, c
     sink = (roles.get("sink") or [None])[0]
     hob = (roles.get("hob") or [None])[0]
 
+    def book(role: str) -> list[str]:
+        """Rule-workbook citation for a sized item (and what the designer had chosen)."""
+        a = facts.for_role(role) if facts else None
+        if not a:
+            return []
+        if a.get("missing"):
+            return [f"R{a['rule']}: {a['missing']}"]
+        txt = f"R{a['rule']}: {a.get('text') or ''}".strip()
+        return [txt + (f" (the designer chose {a['designer']})" if a.get("designer") else "")]
+
+    # -- the rule book: kitchen size band and type ---------------------------------------
+    if facts:
+        det = [f"Floor area {facts.area_sqft:.0f} sqft -> {facts.band} band (Small 60-80, Medium 81-120, Large 121-180 sqft)"
+               + (f"; {facts.band_note}" if facts.band_note else ""),
+               f"Kitchen type from the cabinet walls: {facts.kitchen_type}",
+               f"Rules from the MagickHome Kitchen Rule Engine ({facts.source})"]
+        det += [f"R{a['rule']}: {a['role'].replace('_', ' ')} -> "
+                + (a.get("missing") or a.get("built") or f"{a.get('width')} mm {a.get('combination') or ''}".strip())
+                + (f" (designer: {a['designer']})" if a.get("designer") else "") for a in facts.applied]
+        if prefs.budget != "auto":
+            det.append(f"Budget {prefs.budget.title()}: plain base units by width (R6-R10, R31-R33, R38-R43), "
+                       f"{'blind' if prefs.budget == 'essential' else 'L'} wall corners (R71 / R75)")
+        add("Rule book", f"{facts.band} {facts.kitchen_type} kitchen ({facts.area_sqft:.0f} sqft)",
+            "Module sizes, landings, gas and lofts follow the MagickHome rule workbook for this kitchen size and shape.",
+            "rules", det)
+
     # -- layout -------------------------------------------------------------------------
     shape = {1: "One wall", 2: "L-shape", 3: "U-shape"}.get(len(layout.cabinet_walls), "Kitchen")
     walls = ", ".join(wname(w) for w in layout.cabinet_walls)
@@ -150,6 +177,7 @@ def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, c
             det.append("Sizes on offer: " + offered("sink"))
         if prop and prop.width != sink.item.width:
             sink_rules.append(f"Designer chose {prop.width} mm; the rules used {sink.item.width} mm so it centres under the window.")
+    sink_rules = book("sink") + sink_rules + rules("sink landing")
     add("Sink", f"{_desc(sink)} on {wname(sink.wall_id)}" if sink else "None", reasons.get("sink"), designer, det, sink_rules,
         decision=_item(prop) if prop and sink and prop.aid != sink.item.aid else None)
 
@@ -169,15 +197,17 @@ def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, c
             det.append(f"Asked for the hob centre at {proposal.hob_center_mm:.0f} mm; built at {hob.center_mm:.0f} mm")
         left, right = neighbours(hob)
         det.append(f"Beside it: {(_desc(left) if left else 'free end')} / {(_desc(right) if right else 'free end')}")
-        det.append(f"Chimney {config.CHIMNEY_WIDTH_MM} mm wide above it at {config.POS_Y_M['wall']:.2f} m; "
-                   f"no wall cabinets in that zone")
+        chim = config.appliance_for("chimney", hob.item.width)
+        hob_app = config.appliance_for("hob", hob.item.width)
+        det.append(f"Appliances: {hob_app['name']} hob ({hob_app['dims_mm'][0]} mm) and a {chim['name']} hood "
+                   f"({chim['dims_mm'][0]} mm wide) at {config.POS_Y_M['wall']:.2f} m; no wall cabinets in that zone")
         if sink is not None:
             dist = math.dist(world(sink), world(hob))
             same = sink.wall_id == hob.wall_id
             det.append(f"Sink to hob: {dist:.1f} m ({'same wall' if same else 'different walls'}; comfortable range 1.2-2.7 m)")
     add("Hob", f"{_desc(hob)} on {wname(hob.wall_id)}, chimney above" if hob else "Not placed",
         reasons.get("hob"), designer, det,
-        rules("hob moved", "hob unit narrowed", "hob could not"),
+        book("hob") + rules("hob moved", "hob unit narrowed", "hob could not", "hob landing", "R28/R29"),
         decision=_item(prop) if prop and hob and prop.aid != hob.item.aid else None)
 
     # -- spice --------------------------------------------------------------------------
@@ -188,7 +218,8 @@ def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, c
         det.append("Unit: " + what(spice.item))
         det.append("Right beside the hob" if spice in (left, right) else "Not directly beside the hob")
     add("Spice pull-out", _desc(spice) if spice else "None",
-        "Masalas and oils within reach of the cook." if spice else "", designer, det, rules("spice unit narrowed"))
+        "Masalas and oils within reach of the cook." if spice else "", designer, det,
+        book("spice") + rules("spice unit narrowed") + (["R44: only one spice pull-out per kitchen"] if spice else []))
 
     # -- LPG ----------------------------------------------------------------------------
     cyl = (roles.get("cylinder") or [None])[0]
@@ -199,8 +230,10 @@ def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, c
         det.append(f"On {wname(cyl.wall_id)} at {cyl.start_mm:.0f}-{cyl.end_mm:.0f} mm, beside the hob")
     elif hob:
         det.append(f"Hob wall free run {free_run(hob.wall_id):.0f} mm (a cylinder unit needs about 600 mm more)")
+    lpg_rules = book("cylinder_included") + book("cylinder") + rules("cylinder unit dropped", "cylinder unit moved")
     add("LPG cylinder", _desc(cyl) if cyl else "None", reasons.get("lpg"),
-        "customer" if prefs.include_cylinder is not None else designer, det, rules("cylinder unit dropped"), need=gas_need,
+        "customer" if prefs.include_cylinder is not None else ("rules" if facts and facts.for_role("cylinder_included") else designer),
+        det, lpg_rules, need=gas_need,
         decision=_item(catalog.get(proposal.cylinder_aid)) if proposal.cylinder_aid and not cyl and catalog.get(proposal.cylinder_aid) else None)
 
     # -- tall units ---------------------------------------------------------------------
@@ -269,10 +302,23 @@ def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, c
         why = reasons.get("storage") or "Standard storage."
     mix = Counter(f"{_name(p.item.category)} - {p.item.cabinet_combination}" for p in base_store)
     det = [f"{n} x {k}" for k, n in mix.most_common()]
-    det.append("Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)")
+    budget_rules = []
+    if prefs.budget != "auto":  # the budget tier decides plain base units (rule workbook)
+        style_name = f"{prefs.budget.title()} budget units"
+        why = {"essential": "Essential budget: shutter base units - single shutter under 600 mm, double shutter 600-900 mm.",
+               "premium": "Premium budget: drawer base units from 600 mm (double drawer), single shutter below 600 mm.",
+               "luxury": "Luxury budget: double-drawer base units from 600 mm, single shutter below 600 mm."}[prefs.budget]
+        budget_rules = [{"essential": "R6 / R7 / R43 (600 mm gaps: R31 double shutter if the aisle is under 1000 mm, "
+                                      "R32 single shutter otherwise)",
+                         "premium": "R8 / R9 / R33 / R39 / R40", "luxury": "R38 / R41"}[prefs.budget]
+                        + "; gaps over 900 mm are tiled with equal standard widths (R34 / R42)"]
+        how = "budget"
+    else:
+        det.append("Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)")
     add("Base cabinets", f"{style_name}: {n_drawer} of {len(base_store)} storage cabinets have drawers", why,
-        "customer" if how else designer, det,
-        need={"form": f"Asked for {store}", "brief": "The brief asks for drawers"}.get(how))
+        "customer" if how else designer, det, budget_rules,
+        need={"form": f"Asked for {store}", "brief": "The brief asks for drawers",
+              "budget": f"{prefs.budget.title()} budget"}.get(how))
 
     # -- feature units: where each requested unit ended up ----------------------------------
     det, missing = [], []
@@ -366,6 +412,38 @@ def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, c
             [f"Wall cabinets hang from 1440 mm up to {h.get('top_mm')} mm; tall units stand on the 100 mm plinth and "
              "end at the same line",
              "Height pairs in the catalogue: 600 / 1940, 700 / 2040, 900 / 2240 mm (wall / tall)"])
+
+    # -- shutter finishes (budget-tier finish rules) ----------------------------------------------
+    if finish_info and finish_info.get("palette"):
+        import finishes
+
+        pal, src = finish_info["palette"], finish_info.get("source", {})
+        built = "; ".join(f"{'Base + tall' if run == 'base' else 'Wall + loft'}: {finishes.describe(aid)}"
+                          for run, aid in pal.items())
+        who = set(src.values())
+        source = "customer" if who == {"customer"} else designer if "designer" in who else "rules"
+        run_name = {"base": "base run", "wall": "wall run"}
+        if who == {"designer"}:
+            why = reasons.get("finish") or ""
+        elif who == {"rules"}:
+            why = finish_info.get("default_why") or ""
+        else:  # mixed: say per run who chose it
+            parts = []
+            for run, aid in pal.items():
+                nm = finishes.catalogue().get(aid, {}).get("name", aid)
+                parts.append({"customer": f"{nm} on the {run_name[run]} is the customer's choice.",
+                              "designer": f"{nm} on the {run_name[run]}: {reasons.get('finish') or 'the designer chose it'}"}.get(
+                    src.get(run), f"{nm} on the {run_name[run]} is the "
+                                  f"{(finish_info.get('budget') or 'standard')} tier default."))
+            why = " ".join(parts)
+        det = [f"{'Base run (base + tall units)' if run == 'base' else 'Wall run (wall units + lofts)'}: "
+               f"{finishes.describe(aid)} - chosen by the {src.get(run, 'rules').replace('rules', 'rules (tier default)')}"
+               for run, aid in pal.items()]
+        det += finishes.rules().get("match", [])
+        tier_rule = (f"{finish_info['budget'].title()} tier: {finish_info['tier']}" if finish_info.get("budget")
+                     else "No budget stated: any finish allowed")
+        add("Finishes", built, why, source, det, [tier_rule] + list(finish_info.get("notes", [])),
+            need={b: f"{b.title()} budget" for b in ("essential", "premium", "luxury")}.get(finish_info.get("budget")))
 
     # -- corners (always the rules) -------------------------------------------------------------
     det = []

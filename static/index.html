@@ -7,28 +7,42 @@
 <meta name="color-scheme" content="light dark">
 <script type="importmap">{ "imports": { "three": "/static/vendor/three.module.min.js", "three/addons/": "/static/vendor/" } }</script>
 <style>
+@font-face {
+  font-family: "InterVariable"; font-style: normal; font-weight: 100 900; font-display: swap;
+  src: url("/static/vendor/fonts/inter-latin-wght-normal.woff2") format("woff2");  /* Inter, SIL OFL 1.1 */
+}
+/* Design system: calm warm-neutral surfaces, one confident accent (deep teal-indigo), soft layered depth */
 :root {
-  --bg: #f3f4f7; --panel: #ffffff; --panel-2: #f6f7fa; --stage: #eceff4; --text: #121620; --muted: #5a6272; --line: #e3e6ec; --line-2: #d3d8e1;
-  --accent: #3b57d6; --accent-2: #2e46b4; --accent-soft: #e9edfd; --accent-ink: #ffffff;
+  --bg: #f4f3f0; --bg-2: #ecebe6; --panel: #ffffff; --panel-2: #f7f6f3; --stage: #e9e8e3; --text: #15171c; --muted: #646a75; --line: #e4e2dc; --line-2: #d4d1c9;
+  --accent: #3446d6; --accent-2: #2433b0; --accent-soft: #ebedfd; --accent-ink: #ffffff; --accent-glow: rgba(52,70,214,.22);
   --ok: #1a7a45; --ok-soft: #e4f4ea; --warn: #8d5600; --warn-soft: #fcf1dc; --err: #b42424; --err-soft: #fbe8e8;
   --base: #4a78d6; --tall: #2b9a67; --wallu: #de8c22; --loft: #9466cf; --corner: #c2457a; --feature: #0e9aa7;
   --wall-line: #262a31; --door: #d24646; --window: #2399cf; --floor: #e8ebf0; --counter: #6b7280;
-  --shadow: 0 1px 2px rgba(16,24,40,.04), 0 6px 20px rgba(16,24,40,.06);
-  --radius: 16px; --radius-sm: 11px;
+  --shadow-sm: 0 1px 2px rgba(20,22,30,.05);
+  --shadow: 0 1px 2px rgba(20,22,30,.04), 0 4px 12px rgba(20,22,30,.05), 0 16px 40px rgba(20,22,30,.06);
+  --shadow-lg: 0 2px 4px rgba(20,22,30,.05), 0 12px 32px rgba(20,22,30,.09), 0 32px 80px rgba(20,22,30,.10);
+  --glass: rgba(255,255,255,.72); --glass-line: rgba(255,255,255,.65);
+  --radius: 18px; --radius-sm: 12px; --ease: cubic-bezier(.2,.7,.2,1); --t: 180ms;
+  --font: "InterVariable", "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0c0e12; --panel: #14171e; --panel-2: #1a1e26; --stage: #10131a; --text: #e8ebf1; --muted: #99a1b0; --line: #262b35; --line-2: #333a46;
-    --accent: #8299fb; --accent-2: #a5b5ff; --accent-soft: #1c2546; --accent-ink: #0c0e12;
+    --bg: #0b0c10; --bg-2: #111318; --panel: #15171d; --panel-2: #1b1e25; --stage: #0f1116; --text: #eceef3; --muted: #9ba2b0; --line: #252932; --line-2: #323744;
+    --accent: #8b98ff; --accent-2: #aab3ff; --accent-soft: #1d2247; --accent-ink: #0b0c10; --accent-glow: rgba(139,152,255,.25);
     --ok: #4cc283; --ok-soft: #13291e; --warn: #e3a64a; --warn-soft: #2c2213; --err: #f07272; --err-soft: #321818;
     --wall-line: #d8dce3; --floor: #1c2029; --counter: #a3a9b4; --feature: #34c3cf;
-    --shadow: 0 1px 2px rgba(0,0,0,.3); color-scheme: dark;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.25);
+    --shadow-lg: 0 2px 6px rgba(0,0,0,.4), 0 24px 64px rgba(0,0,0,.45);
+    --glass: rgba(21,23,29,.72); --glass-line: rgba(255,255,255,.08);
+    color-scheme: dark;
   }
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--bg); color: var(--text); }
-body { font: 14px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+body { font: 14px/1.5 var(--font); font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+  background: radial-gradient(1200px 600px at 85% -10%, var(--accent-soft), transparent 60%) no-repeat, var(--bg); }
 button, input, select, textarea { font: inherit; color: inherit; }
 h1 { font-size: 16.5px; margin: 0; font-weight: 700; letter-spacing: -.01em; }
 h2 { font-size: 15.5px; margin: 0; font-weight: 680; letter-spacing: -.005em; }
@@ -117,6 +131,59 @@ textarea { min-height: 72px; resize: vertical; }
 .switch input:checked + span { background: var(--accent); }
 .switch input:checked + span::after { transform: translateX(17px); }
 .switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* rule book filters */
+.rb-card { border: 1px solid var(--line); border-radius: 13px; padding: 12px; display: grid; gap: 15px; min-width: 0; }
+#rb-section.no-rb .rb-api { display: none !important; }
+.label.sm { font-size: 12.5px; margin-bottom: 6px; }
+.choice.five { grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.choice.five label { min-height: 56px; padding: 8px 3px; }
+.choice.five label b { font-size: 12.5px; }
+.choice.five label small { font-size: 10.5px; }
+@media (max-width: 440px) { .choice.five { grid-template-columns: repeat(3, 1fr); } }
+.rb-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.rb-cards input, .seg-choice input { position: absolute; opacity: 0; pointer-events: none; }
+.rb-cards label { display: block; height: 100%; border: 1.5px solid var(--line); border-radius: 11px; padding: 9px 10px; cursor: pointer; background: var(--panel); transition: border-color .12s, background .12s; }
+.rb-cards label:hover { border-color: var(--accent); }
+.rb-cards label b { display: block; font-size: 13px; }
+.rb-cards label ul { margin: 4px 0 0; padding-left: 14px; font-size: 11.5px; color: var(--muted); line-height: 1.35; }
+.rb-cards label li { margin-bottom: 2px; }
+.rb-cards input:checked + label { border-color: var(--accent); background: var(--accent-soft); box-shadow: 0 0 0 1px var(--accent) inset; }
+.rb-cards input:checked + label b { color: var(--accent); }
+.rb-cards input:focus-visible + label, .seg-choice input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 340px) { .rb-cards { grid-template-columns: 1fr; } }
+.seg-choice { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 11px; padding: 3px; }
+@media (max-width: 440px) { .seg-choice { grid-template-columns: 1fr 1fr; } }
+.seg-choice label { display: grid; place-items: center; text-align: center; padding: 6px 4px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; line-height: 1.25; }
+.seg-choice label:hover { color: var(--text); }
+.seg-choice input:checked + label { background: var(--panel); color: var(--accent); box-shadow: 0 1px 2px rgba(16,24,40,.08), 0 0 0 1px var(--line); }
+/* finish swatches (budget-tier finish rules from /api/finishes) */
+.fin-run { margin-top: 8px; }
+.fin-run > .sub { display: block; margin-bottom: 5px; }
+.fin-swatches { display: flex; flex-wrap: wrap; gap: 8px; }
+.fin-swatches input { position: absolute; opacity: 0; pointer-events: none; }
+.fin-swatches label { display: grid; justify-items: center; gap: 4px; width: 74px; cursor: pointer; font-size: 10.5px; line-height: 1.2; text-align: center; color: var(--muted); }
+.fin-swatches .chip { width: 44px; height: 44px; border-radius: 12px; border: 1.5px solid var(--line); box-shadow: inset 0 0 0 2px var(--panel); transition: transform .12s, border-color .12s; display: grid; place-items: center; color: var(--muted); background: var(--panel-2); }
+.fin-swatches .chip.wood { background: repeating-linear-gradient(100deg, #b58a5f 0 3px, #a77b51 3px 5px, #bf9468 5px 9px); }
+.fin-swatches .chip.wood.light { background: repeating-linear-gradient(100deg, #d2b48f 0 3px, #c6a67f 3px 5px, #dcc09c 5px 9px); }
+.fin-swatches label:hover .chip { transform: translateY(-1px); border-color: var(--accent); }
+.fin-swatches input:checked + label { color: var(--accent); font-weight: 650; }
+.fin-swatches input:checked + label .chip { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--panel), 0 0 0 2px var(--accent); }
+.fin-swatches input:focus-visible + label .chip { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fin-swatches .tag { font-size: 9.5px; opacity: .8; }
+.rb-effect, .rb-facts { margin-top: 6px; }
+.rb-facts b { color: var(--text); font-weight: 650; }
+.rb-facts .warn { color: var(--warn); }
+details.rb-rules { margin-top: 6px; font-size: 12px; }
+details.rb-rules summary { cursor: pointer; color: var(--accent); font-weight: 600; font-size: 12px; }
+details.rb-rules ul { margin: 6px 0 0; padding: 0; list-style: none; }
+details.rb-rules li { padding: 5px 0; border-top: 1px solid var(--line); color: var(--muted); line-height: 1.4; overflow-wrap: anywhere; }
+details.rb-rules li b { color: var(--text); margin-right: 5px; }
+.rb-hint { font-size: 11.5px; color: var(--muted); margin-top: 4px; line-height: 1.35; }
+table.rb-table { font-size: 12px; }
+table.rb-table th, table.rb-table td { padding: 5px 6px; white-space: nowrap; }
+table.rb-table tbody th { font-weight: 650; color: var(--text); text-transform: none; letter-spacing: 0; font-size: 12px; }
+table.rb-table .rid { color: var(--accent); font-weight: 700; font-size: 10.5px; margin-left: 3px; }
+table.rb-table .dc { color: var(--muted); font-style: italic; white-space: normal; min-width: 64px; font-size: 11.5px; }
 .needs-group { border: 1px solid var(--line); border-radius: 13px; padding: 12px; margin-bottom: 10px; }
 .needs-group > .gtitle { font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 9px; display: flex; align-items: center; gap: 7px; }
 .needs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
@@ -271,7 +338,22 @@ ul.ex-facts li { margin-bottom: 2px; }
 .ex-built { font-size: 13.5px; margin-top: 2px; }
 .ex-why { font-size: 13px; color: var(--muted); margin-top: 3px; }
 .ex-why i { font-style: normal; font-weight: 650; color: var(--text); }
-.ex-rule { font-size: 12.5px; color: var(--warn); background: var(--warn-soft); border-radius: 8px; padding: 4px 8px; margin-top: 5px; }
+.ex-rule { font-size: 12.5px; color: var(--warn); background: var(--warn-soft); border-radius: 8px; padding: 5px 9px; margin-top: 5px; line-height: 1.45; white-space: normal; overflow-wrap: anywhere; }
+.ex-rule b { font-weight: 700; margin-right: 4px; }
+ul.rules-applied { list-style: none; margin: 10px 0 0; padding: 0; font-size: 12.5px; }
+ul.rules-applied li { padding: 7px 0; border-top: 1px solid var(--line); line-height: 1.45; overflow-wrap: anywhere; }
+ul.rules-applied .rid { display: inline-block; min-width: 38px; font-weight: 700; color: var(--accent); }
+ul.rules-applied .chg { display: block; color: var(--warn); margin-top: 2px; }
+.fallback-warn { margin-top: 14px; border: 1px solid color-mix(in srgb, var(--warn) 45%, transparent); background: var(--warn-soft); color: var(--text); border-radius: 12px; padding: 12px 14px; display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
+.fallback-warn .ic { margin-top: 2px; }
+.fallback-warn .fw-text { flex: 1; min-width: 220px; font-size: 13.5px; }
+.fallback-warn .fw-text b { display: block; font-size: 14px; margin-bottom: 2px; }
+.fallback-warn details { margin-top: 6px; font-size: 12px; color: var(--muted); }
+.fallback-warn pre { white-space: pre-wrap; overflow-wrap: anywhere; margin: 6px 0 0; font-size: 11.5px; max-height: 180px; overflow: auto; }
+.banner-icon.warn { background: var(--warn-soft); color: var(--warn); }
+.model-note { margin-top: 3px; }
+.steps li.warnline { color: var(--warn); font-weight: 600; }
+.steps li.warnline .mk { color: var(--warn); }
 .src { font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 999px; }
 .src.qwen { background: var(--accent-soft); color: var(--accent); }
 .src.gemini { background: color-mix(in srgb, #8e44ad 14%, transparent); color: #9b59b6; }
@@ -311,6 +393,129 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
 .tier { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 650; color: #fff; }
 .scroll-x { overflow-x: auto; }
 .dl-row { display: flex; gap: 8px; flex-wrap: wrap; }
+/* ================= premium layer ================= */
+h1 { font-size: 17px; font-weight: 720; letter-spacing: -.02em; }
+h2 { font-size: 16px; font-weight: 700; letter-spacing: -.015em; }
+h3 { font-size: 16px; font-weight: 700; letter-spacing: -.015em; }
+.ico { width: 18px; height: 18px; flex: none; }
+.ico.sm { width: 15px; height: 15px; }
+.ico.lg { width: 22px; height: 22px; }
+.topbar { background: var(--glass); backdrop-filter: saturate(1.6) blur(18px); -webkit-backdrop-filter: saturate(1.6) blur(18px); border-bottom: 1px solid var(--line); padding: 12px 28px; }
+.logo { width: 36px; height: 36px; border-radius: 11px; background: linear-gradient(140deg, var(--accent), var(--accent-2)); box-shadow: 0 6px 16px var(--accent-glow); }
+.pill { background: var(--glass); border-color: var(--line); backdrop-filter: blur(8px); }
+.app { grid-template-columns: 420px minmax(0, 1fr); gap: 26px; padding: 26px 28px 64px; max-width: 1680px; }
+.sidebar { top: 80px; max-height: calc(100vh - 96px); gap: 16px; }
+.card { border-radius: var(--radius); border-color: color-mix(in srgb, var(--line) 85%, transparent); box-shadow: var(--shadow); padding: 20px; }
+@media (prefers-color-scheme: dark) { .card { background: linear-gradient(180deg, color-mix(in srgb, var(--panel) 96%, white 4%), var(--panel)); } }
+.num { background: var(--accent-soft); color: var(--accent); }
+.workspace { gap: 20px; }
+.workspace > #view-card { order: 1; }
+.workspace > #banner { order: 2; }
+.workspace > #why-card { order: 3; }
+.workspace > #details-card { order: 4; }
+.workspace.fallback > #banner { order: 0; }
+/* stepper */
+.stepper { list-style: none; margin: 0; padding: 6px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; background: var(--glass); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow-sm); backdrop-filter: blur(10px); }
+.stepper li { display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-radius: 11px; font-size: 12.5px; font-weight: 600; color: var(--muted); transition: background var(--t) var(--ease), color var(--t) var(--ease); }
+.stepper li span { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11.5px; font-weight: 750; background: var(--panel-2); border: 1px solid var(--line-2); flex: none; transition: all var(--t) var(--ease); }
+.stepper li.current { background: var(--accent-soft); color: var(--accent); }
+.stepper li.current span { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); box-shadow: 0 0 0 4px var(--accent-glow); }
+.stepper li.done { color: var(--text); }
+.stepper li.done span { background: var(--ok); border-color: var(--ok); color: #fff; }
+/* controls: micro-interactions */
+.btn, .choice label, .rb-cards label, .iseg button, .chip, .tab, .seg button, .idea, .drop, .seg-choice label { transition: transform var(--t) var(--ease), box-shadow var(--t) var(--ease), border-color var(--t) var(--ease), background var(--t) var(--ease), color var(--t) var(--ease); }
+.btn { border-radius: 12px; box-shadow: var(--shadow-sm); }
+.btn:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn:active, .choice label:active, .rb-cards label:active, .iseg button:active, .seg button:active { transform: translateY(0) scale(.98); }
+.btn.primary { background: linear-gradient(140deg, var(--accent), var(--accent-2)); border-color: transparent; box-shadow: 0 8px 22px var(--accent-glow); }
+.btn.primary:hover { box-shadow: 0 12px 28px var(--accent-glow); filter: none; }
+.btn.big { padding: 15px; font-size: 16px; border-radius: 15px; letter-spacing: -.01em; }
+.btn .ico { margin: -2px 0; }
+.choice label { border-radius: 14px; background: var(--panel); }
+.choice label:hover, .rb-cards label:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
+.choice input:checked + label, .rb-cards input:checked + label { box-shadow: 0 0 0 1px var(--accent) inset, 0 6px 18px var(--accent-glow); }
+.choice label .ico { color: var(--muted); }
+.choice input:checked + label .ico { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 10px; }
+select, textarea { border-radius: 12px; transition: border-color var(--t) var(--ease), box-shadow var(--t) var(--ease); }
+select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accent-glow); outline-color: var(--accent); }
+.needs-group { border-radius: 16px; padding: 14px; background: color-mix(in srgb, var(--panel-2) 55%, transparent); }
+.needs-group > .gtitle .ico { color: var(--accent); }
+.needs { grid-template-columns: 1fr; gap: 12px; }
+.needs label, .needlabel { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text); font-weight: 600; margin-bottom: 6px; }
+.needs label .ico, .needlabel .ico, .label .ico { color: var(--accent); }
+.toggle { border-radius: 14px; background: var(--panel); }
+.toggle > div { display: flex; align-items: center; gap: 10px; }
+/* icon segmented control (wraps a hidden select: the select stays the source of truth) */
+.seg-src { display: none !important; }
+.iseg { display: grid; grid-template-columns: repeat(auto-fit, minmax(84px, 1fr)); gap: 6px; }
+.iseg button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-height: 64px; padding: 9px 6px; border: 1.5px solid var(--line); border-radius: 13px; background: var(--panel); color: var(--muted); cursor: pointer; font: inherit; font-size: 11.5px; font-weight: 600; line-height: 1.2; text-align: center; }
+.iseg button .ico { width: 20px; height: 20px; }
+.iseg button:hover { border-color: var(--accent); color: var(--text); transform: translateY(-1px); box-shadow: var(--shadow); }
+.iseg button[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.iseg button[aria-checked="true"] .ico { color: var(--accent); }
+.iseg.compact { grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); }
+.iseg.compact button { min-height: 56px; }
+/* rule book */
+.rb-card { border-radius: 16px; background: color-mix(in srgb, var(--panel-2) 55%, transparent); }
+.rb-card > *, .rb-row, .needs > *, .field, .needs-group, .iseg, .seg-choice { min-width: 0; }
+.rb-cards label { border-radius: 14px; }
+.gems { display: flex; gap: 2px; color: var(--accent); margin-bottom: 4px; }
+.gems .ico { width: 15px; height: 15px; }
+.rb-cards input:not(:checked) + label .gems { color: var(--muted); }
+.seg-choice { border-radius: 13px; }
+.seg-choice label { display: flex; flex-direction: column; gap: 4px; padding: 8px 4px; }
+.seg-choice label .ico { width: 18px; height: 18px; }
+/* stage: the 3D view is the star */
+.stage { border-radius: 18px; border-color: color-mix(in srgb, var(--line) 80%, transparent); box-shadow: inset 0 1px 0 rgba(255,255,255,.4); }
+.stage.is-3d { height: clamp(460px, calc(100vh - 230px), 900px); }
+.float { background: var(--glass); border: 1px solid var(--glass-line); backdrop-filter: saturate(1.6) blur(16px); -webkit-backdrop-filter: saturate(1.6) blur(16px); box-shadow: var(--shadow); border-radius: 13px; }
+.v3d-group, .mini-switch { border-radius: 13px; }
+.mini-switch .ico, .v3d-group .ico, .seg button .ico { color: var(--muted); }
+.seg button { display: inline-flex; align-items: center; gap: 5px; border-radius: 9px; }
+.seg button[aria-pressed="true"] .ico { color: var(--accent); }
+.tabs { border-radius: 14px; background: var(--glass); backdrop-filter: blur(10px); }
+.tab { border-radius: 10px; }
+.kpis { gap: 10px; }
+.kpi { border-radius: 14px; background: color-mix(in srgb, var(--panel-2) 70%, transparent); padding: 11px 14px; }
+.kpi b { font-size: 18px; letter-spacing: -.02em; }
+.banner-icon { width: 46px; height: 46px; }
+.welcome { max-width: 680px; padding: 40px 24px; }
+.welcome h2 { font-size: 26px; letter-spacing: -.03em; margin-bottom: 8px; }
+.welcome .lead { font-size: 14.5px; color: var(--muted); max-width: 520px; margin: 0 auto; }
+.how div { border-radius: 16px; padding: 14px; box-shadow: var(--shadow-sm); background: var(--glass); backdrop-filter: blur(8px); }
+.how .hico { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+/* generation progress: docked glass card over the 3D building loader */
+.progress.docked { inset: auto auto 16px 16px; width: min(400px, calc(100% - 32px)); display: block; padding: 16px 18px; background: var(--glass); border: 1px solid var(--glass-line); border-radius: 18px; box-shadow: var(--shadow-lg); backdrop-filter: saturate(1.6) blur(18px); -webkit-backdrop-filter: saturate(1.6) blur(18px); }
+.progress.docked .progress-box { width: 100%; }
+.progress.docked .steps { max-height: 170px; overflow: auto; }
+.loader-pill { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 5; padding: 7px 16px; font-size: 13px; font-weight: 650; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.loader-pill .dotpulse { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 var(--accent-glow); animation: pulse 1.6s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 var(--accent-glow); } 70% { box-shadow: 0 0 0 10px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+#panel-3d.loading .v3d-bar, #panel-3d.loading .v3d-hint, #panel-3d.loading .v3d-load { display: none; }
+/* while the canvas animates every frame (building loader, walk mode), glass over it is near-opaque instead of
+   re-blurred each frame: backdrop blur over a changing WebGL canvas is costly on laptop GPUs */
+#stage.anim .float, #stage.anim .progress.docked { backdrop-filter: none; -webkit-backdrop-filter: none; background: color-mix(in srgb, var(--panel) 92%, transparent); }
+@media (max-width: 1040px) {
+  .app { grid-template-columns: minmax(0, 1fr); padding: 16px 16px 44px; gap: 16px; }
+  .sidebar { position: static; max-height: none; }
+  .topbar { padding: 10px 16px; }
+}
+@media (max-width: 640px) {
+  .card { padding: 16px; }
+  .stepper li { font-size: 11.5px; padding: 6px; gap: 6px; }
+  .stage.is-3d { height: clamp(380px, 68vh, 600px); }
+  .progress.docked { left: 10px; bottom: 10px; width: calc(100% - 20px); padding: 12px 14px; }
+  .progress.docked .steps { max-height: 92px; }
+  .welcome h2 { font-size: 21px; }
+  .iseg { grid-template-columns: repeat(auto-fit, minmax(76px, 1fr)); }
+  .mini-switch .lbl, #v3d-mode .lbl, .v3d-group > span.l { display: none; }
+  .mini-switch { padding: 6px 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; scroll-behavior: auto !important; }
+  .btn:hover, .choice label:hover, .rb-cards label:hover, .iseg button:hover { transform: none; }
+}
 </style>
 </head>
 <body>
@@ -331,6 +536,11 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
 <main class="app">
   <!-- ===================== sidebar: the three steps ===================== -->
   <aside class="sidebar" aria-label="Design steps">
+    <ol class="stepper" id="stepper" aria-label="Progress">
+      <li data-step="1" class="current"><span>1</span>Floor plan</li>
+      <li data-step="2"><span>2</span>Your kitchen</li>
+      <li data-step="3"><span>3</span>Design</li>
+    </ol>
     <section class="card" aria-labelledby="h-upload">
       <div class="card-head"><span class="num" id="n1">1</span><h2 id="h-upload">Floor plan</h2></div>
       <div id="upload-box">
@@ -365,25 +575,11 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
         <span class="label" id="lbl-designer">Who designs it?</span>
         <div class="choice three" role="radiogroup" aria-labelledby="lbl-designer">
           <input type="radio" name="ai" id="ai-qwen" value="auto" checked>
-          <label for="ai-qwen"><b>Qwen</b><small id="ai-time">AI designer · a few minutes</small></label>
+          <label for="ai-qwen" data-ico="chip"><b>Qwen</b><small id="ai-time">AI designer · a few minutes</small></label>
           <input type="radio" name="ai" id="ai-gemini" value="gemini" disabled>
-          <label for="ai-gemini" id="lbl-gemini" title="Start the server with GEMINI_API_KEY set to enable Gemini"><b>Gemini</b><small id="gemini-time">Google AI · not set up</small></label>
+          <label for="ai-gemini" id="lbl-gemini" data-ico="sparkle" title="Start the server with GEMINI_API_KEY set to enable Gemini"><b>Gemini</b><small id="gemini-time">Google AI · not set up</small></label>
           <input type="radio" name="ai" id="ai-rules" value="fallback">
-          <label for="ai-rules"><b>Quick rules</b><small>standard · seconds</small></label>
-        </div>
-      </div>
-
-      <div class="field">
-        <span class="label" id="lbl-layout">Layout</span>
-        <div class="choice four" role="radiogroup" aria-labelledby="lbl-layout">
-          <input type="radio" name="layout" id="lay-auto" value="auto" checked>
-          <label for="lay-auto"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M13 3l1.8 4.2L19 9l-4.2 1.8L13 15l-1.8-4.2L7 9l4.2-1.8z" fill="currentColor"/></svg><b>Best fit</b></label>
-          <input type="radio" name="layout" id="lay-single" value="single">
-          <label for="lay-single"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><rect x="3" y="3" width="20" height="5" rx="1" fill="currentColor"/></svg><b>One wall</b></label>
-          <input type="radio" name="layout" id="lay-l" value="L">
-          <label for="lay-l"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M3 3h20v5H8v10H3z" fill="currentColor"/></svg><b>L-shape</b></label>
-          <input type="radio" name="layout" id="lay-u" value="U">
-          <label for="lay-u"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M3 3h20v15h-5V8h-10v10H3z" fill="currentColor"/></svg><b>U-shape</b></label>
+          <label for="ai-rules" data-ico="ruler"><b>Quick rules</b><small>standard · seconds</small></label>
         </div>
       </div>
 
@@ -392,24 +588,86 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
         <select id="style"><option>Slab (Plain)</option></select>
       </div>
 
+      <!-- Rule book filters: options, labels, effects and rule texts all come from GET /api/rulebook -->
+      <div class="field" id="rb-section">
+        <span class="label">Rule book filters <span class="sub" id="rb-source"></span></span>
+        <div class="rb-card">
+          <div class="rb-row">
+            <span class="label sm needlabel" id="lbl-layout" data-ico="cube">Kitchen type</span>
+            <div class="choice five" role="radiogroup" aria-labelledby="lbl-layout">
+              <input type="radio" name="layout" id="lay-auto" value="auto" checked>
+              <label for="lay-auto"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M13 3l1.8 4.2L19 9l-4.2 1.8L13 15l-1.8-4.2L7 9l4.2-1.8z" fill="currentColor"/></svg><b>Best fit</b></label>
+              <input type="radio" name="layout" id="lay-single" value="single">
+              <label for="lay-single"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><rect x="3" y="3" width="20" height="5" rx="1" fill="currentColor"/></svg><b>Straight</b></label>
+              <input type="radio" name="layout" id="lay-l" value="L">
+              <label for="lay-l"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M3 3h20v5H8v10H3z" fill="currentColor"/></svg><b>L-Shape</b></label>
+              <input type="radio" name="layout" id="lay-u" value="U">
+              <label for="lay-u"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><path d="M3 3h20v15h-5V8h-10v10H3z" fill="currentColor"/></svg><b>U-Shape</b></label>
+              <input type="radio" name="layout" id="lay-par" value="parallel" disabled>
+              <label for="lay-par" title="Parallel kitchens are not generated yet"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><rect x="3" y="2" width="20" height="5" rx="1" fill="currentColor"/><rect x="3" y="13" width="20" height="5" rx="1" fill="currentColor"/></svg><b>Parallel</b><small>not generated yet</small></label>
+            </div>
+          </div>
+          <div class="rb-row rb-api">
+            <label class="label sm needlabel" for="rb-band" data-ico="area">Size band</label>
+            <select id="rb-band"><option value="auto">From the floor area</option></select>
+            <div class="sub rb-facts" id="rb-facts">Add a floor plan to see its size band.</div>
+          </div>
+          <div class="rb-row rb-api">
+            <span class="label sm needlabel" id="lbl-budget" data-ico="gem">Budget</span>
+            <div class="rb-cards" role="radiogroup" aria-labelledby="lbl-budget" id="rb-budget"></div>
+            <details class="rb-rules" id="rb-budget-rules"><summary>Rules</summary><ul></ul></details>
+          </div>
+          <div class="rb-row hidden" data-pref="base_finish" id="fin-row">
+            <span class="label sm needlabel" data-ico="palette">Finishes</span>
+            <div class="sub rb-effect" id="fin-tier"></div>
+            <div class="fin-run"><span class="sub">Base + tall units</span>
+              <div class="fin-swatches" role="radiogroup" aria-label="Base and tall unit finish" id="fin-base"></div></div>
+            <div class="fin-run"><span class="sub">Wall units + lofts</span>
+              <div class="fin-swatches" role="radiogroup" aria-label="Wall unit and loft finish" id="fin-wall"></div></div>
+            <details class="rb-rules" id="fin-rules"><summary>Finish rules</summary><ul></ul></details>
+          </div>
+          <div class="rb-row rb-api">
+            <span class="label sm needlabel" id="lbl-fuel" data-ico="flame">Hob fuel</span>
+            <div class="seg-choice" role="radiogroup" aria-labelledby="lbl-fuel" id="rb-fuel"></div>
+            <div class="sub rb-effect" id="rb-fuel-effect"></div>
+            <details class="rb-rules" id="rb-fuel-rules"><summary>Rules</summary><ul></ul></details>
+          </div>
+          <div class="rb-row hidden" data-pref="primary_wall">
+            <div class="needs">
+              <div><label for="need-hobwall" data-ico="hob">Cooking (hob) wall</label>
+                <select id="need-hobwall"><option value="">Let the designer decide</option></select>
+                <div class="rb-hint" id="hint-hobwall"></div></div>
+              <div><label for="need-sinkwall" data-ico="faucet">Sink wall</label>
+                <select id="need-sinkwall"><option value="">Let the designer decide</option></select>
+                <div class="rb-hint" id="hint-sinkwall"></div></div>
+            </div>
+          </div>
+          <div class="rb-row rb-api">
+            <span class="label sm needlabel" data-ico="ruler">Module sizes for this kitchen</span>
+            <div class="scroll-x"><table class="rb-table" id="rb-modules"></table></div>
+            <div class="rb-hint">Widths in mm · R = rule-book row · the rule engine applies these</div>
+          </div>
+          <details class="rb-rules rb-api" id="rb-always"><summary>Always applied</summary><ul></ul></details>
+          <div class="sub hidden" id="rb-missing">The rule book is not available from this server.</div>
+        </div>
+      </div>
+
       <div class="field">
         <span class="label">Household needs <span class="sub">· a stated need is always followed</span></span>
 
         <div class="needs-group" role="group" aria-labelledby="g-util">
-          <div class="gtitle" id="g-util">Appliances &amp; services</div>
+          <div class="gtitle" id="g-util" data-ico="microwave">Appliances &amp; services</div>
           <div class="needs">
             <div><label for="need-pur">Water purifier (Aquaguard)</label>
               <select id="need-pur"><option value="auto">Let the designer decide</option><option value="yes">Needed, on the wall</option><option value="no">Not needed</option></select></div>
-            <div><label for="cyl">Gas supply</label>
-              <select id="cyl"><option value="">Let the designer decide</option><option value="true">LPG cylinder</option><option value="false">Piped gas</option></select></div>
             <div class="wide"><label for="need-tower">Built-in oven / microwave</label>
               <select id="need-tower"><option value="auto">Let the designer decide</option><option value="none">None</option><option value="microwave">Microwave</option><option value="oven">Oven</option><option value="oven_microwave">Oven + microwave</option></select></div>
           </div>
         </div>
 
         <div class="needs-group" role="group" aria-labelledby="g-store">
-          <div class="gtitle" id="g-store">Storage</div>
-          <div class="toggle" style="margin-bottom:10px"><div>Tall storage<small>Pantry, oven or microwave tower</small></div><label class="switch"><input type="checkbox" id="tall" checked aria-label="Tall storage"><span></span></label></div>
+          <div class="gtitle" id="g-store" data-ico="drawers">Storage</div>
+          <div class="toggle" style="margin-bottom:10px"><div data-ico="tall"><div>Tall storage<small>Pantry, oven or microwave tower</small></div></div><label class="switch"><input type="checkbox" id="tall" checked aria-label="Tall storage"><span></span></label></div>
           <div class="needs">
             <div><label for="need-base">Base cabinets</label>
               <select id="need-base"><option value="auto">Let the designer decide</option><option value="drawers">More drawers</option><option value="mixed">Drawer + shutter mix</option><option value="shutters">Mostly shutters</option></select></div>
@@ -427,11 +685,11 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
         </div>
 
         <div class="needs-group" role="group" aria-labelledby="g-home">
-          <div class="gtitle" id="g-home">Household</div>
+          <div class="gtitle" id="g-home" data-ico="users">Household</div>
           <div class="needs">
             <div><label for="need-cook">Cooking</label>
               <select id="need-cook"><option value="auto">Not stated</option><option value="heavy">Heavy, every day</option><option value="light">Light</option></select></div>
-            <div><label for="need-size">People at home</label>
+            <div><label for="need-size" data-ico="users">People at home</label>
               <select id="need-size"><option value="">Not stated</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option value="8">7 or more</option></select></div>
           </div>
         </div>
@@ -458,7 +716,7 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
 
     <section class="card" aria-labelledby="h-go">
       <div class="card-head"><span class="num">3</span><h2 id="h-go">Design</h2></div>
-      <button class="btn primary big" id="go" type="button" disabled>Design my kitchen</button>
+      <button class="btn primary big" id="go" type="button" disabled><span id="go-label">Design my kitchen</span></button>
       <div class="hint" id="go-hint">Add a floor plan to start.</div>
       <div class="alert" id="run-err" role="alert"></div>
     </section>
@@ -469,12 +727,13 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
     <section class="card hidden" id="banner" aria-live="polite">
       <div class="banner">
         <div class="banner-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></div>
-        <div class="banner-text"><h2 id="banner-title">Your kitchen is ready</h2><p class="sub" id="banner-sub"></p></div>
+        <div class="banner-text"><h2 id="banner-title">Your kitchen is ready</h2><p class="sub" id="banner-sub"></p><p class="sub model-note hidden" id="model-note"></p></div>
         <div class="banner-actions">
-          <a class="btn primary" id="dl-scene" href="#" download>Download kitchen file</a>
-          <a class="btn" id="dl-report" href="#" download>Design report</a>
+          <a class="btn primary" id="dl-scene" href="#" download data-ico="download">Download kitchen file</a>
+          <a class="btn" id="dl-report" href="#" download data-ico="report">Design report</a>
         </div>
       </div>
+      <div class="fallback-warn hidden" id="fallback-box" role="alert"></div>
       <div class="kpis" id="kpis"></div>
       <nav class="jump" aria-label="Jump to">
         <a href="#view-card" data-jump="3d">3D view</a>
@@ -492,37 +751,38 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
       <div class="stage" id="stage" role="tabpanel" aria-live="off">
         <div class="welcome" id="empty">
           <h2>Design a kitchen in three steps</h2>
-          <p class="sub">Your floor plan and files stay on this computer. Only the design question (room facts, cabinet codes, your brief) goes to the AI designer you pick.</p>
+          <p class="lead">Upload your room, choose what the household needs, and walk through a modular kitchen built from the MagickHome catalogue and rule book. Your files stay on this computer; only the design question goes to the AI designer you pick.</p>
           <div class="how">
-            <div><span class="num">1</span><b>Add the floor plan</b><span class="sub">The MagickHome scene file with walls, doors and windows.</span></div>
-            <div><span class="num">2</span><b>Pick your options</b><span class="sub">Layout, door style, household needs and a short brief.</span></div>
-            <div><span class="num">3</span><b>Get the design</b><span class="sub">Walk around it in 3D, read why each choice was made, and download the kitchen file.</span></div>
+            <div><span class="hico" data-ico="plan"></span><b>1 · Add the floor plan</b><span class="sub">The MagickHome scene file with walls, doors and windows.</span></div>
+            <div><span class="hico" data-ico="sliders"></span><b>2 · Pick your options</b><span class="sub">Kitchen type, budget, fuel and household needs.</span></div>
+            <div><span class="hico" data-ico="cube"></span><b>3 · Get the design</b><span class="sub">Walk around it in 3D, see why each choice was made, download the file.</span></div>
           </div>
         </div>
         <div id="svg-host" class="hidden"></div>
         <div id="panel-3d" class="hidden">
+          <div class="loader-pill float hidden" id="loader-pill" role="status"><span class="dotpulse" aria-hidden="true"></span><span id="loader-text">Designing your kitchen…</span></div>
           <div id="three-host"></div>
           <div class="v3d-bar">
             <div class="float v3d-group" role="group" aria-label="View mode">
               <div class="seg" id="v3d-mode">
-                <button type="button" data-mode="orbit" aria-pressed="true" title="Look at the whole kitchen from above">Orbit</button>
-                <button type="button" data-mode="walk" aria-pressed="false" title="Walk through the kitchen at eye height">Walk</button>
+                <button type="button" data-mode="orbit" aria-pressed="true" title="Look at the whole kitchen from above" aria-label="Orbit view" data-ico="orbit"><span class="lbl">Orbit</span></button>
+                <button type="button" data-mode="walk" aria-pressed="false" title="Walk through the kitchen at eye height" aria-label="Walk mode" data-ico="walk"><span class="lbl">Walk</span></button>
               </div>
             </div>
             <button class="btn sm float" id="v3d-reset" type="button" title="Back to the starting view" aria-label="Reset view">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="lbl">Reset view</span></button>
             <div class="float v3d-group orbit-only" role="group" aria-label="Walls">
-              <span class="l">Walls</span>
+              <span class="l" data-ico="walls" title="Walls">Walls</span>
               <div class="seg" id="v3d-walls">
                 <button type="button" data-walls="auto" aria-pressed="true" title="Hide the walls between you and the kitchen">Cut away</button>
                 <button type="button" data-walls="show" aria-pressed="false">Show</button>
                 <button type="button" data-walls="hide" aria-pressed="false">Hide</button>
               </div>
             </div>
-            <label class="float mini-switch"><input type="checkbox" id="v3d-upper" checked> Upper cabinets</label>
-            <label class="float mini-switch"><input type="checkbox" id="v3d-type"> Colour by type</label>
+            <label class="float mini-switch" title="Show the wall cabinets, lofts and chimney"><input type="checkbox" id="v3d-upper" checked aria-label="Upper cabinets"><span data-ico="cabinets_up"></span><span class="lbl">Upper cabinets</span></label>
+            <label class="float mini-switch" title="Colour each cabinet by its type"><input type="checkbox" id="v3d-type" aria-label="Colour by type"><span data-ico="palette"></span><span class="lbl">Colour by type</span></label>
             <div class="float v3d-group" role="group" aria-label="Quality">
-              <span class="l">Quality</span>
+              <span class="l" data-ico="quality" title="Render quality">Quality</span>
               <div class="seg" id="v3d-quality">
                 <button type="button" data-q="standard" aria-pressed="true" title="Fast on laptop graphics">Standard</button>
                 <button type="button" data-q="high" aria-pressed="false" title="Ambient occlusion and sharper shadows - needs a stronger GPU">High</button>
@@ -567,7 +827,7 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
 
     <section class="card hidden" id="details-card" aria-labelledby="h-details">
       <div class="section-title"><h3 id="h-details">Details &amp; downloads</h3>
-        <div class="dl-row" style="margin-left:auto"><a class="btn sm" id="dl-scene2" href="#" download>Kitchen file</a><a class="btn sm" id="dl-report2" href="#" download>Design report</a></div>
+        <div class="dl-row" style="margin-left:auto"><a class="btn sm" id="dl-scene2" href="#" download data-ico="download">Kitchen file</a><a class="btn sm" id="dl-report2" href="#" download data-ico="report">Design report</a></div>
       </div>
       <div class="dgrid">
         <div class="box">
@@ -582,6 +842,7 @@ tr.group td .sub { font-weight: 400; margin-left: 6px; }
         <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
           <div class="box hidden" id="heights-box"><h4>Cabinet heights</h4><dl class="kv" id="heights"></dl></div>
           <div class="box hidden" id="needs-box"><h4>What the designer was told</h4><ul class="plain" id="needs-list"></ul></div>
+          <div class="box hidden" id="rulebook-box"><h4>Rule book</h4><dl class="kv" id="rulebook-facts"></dl><ul class="rules-applied" id="rulebook-rules"></ul></div>
         </div>
       </div>
       <div class="box" style="margin-top:14px">
@@ -608,6 +869,7 @@ import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUnifo
 
 RectAreaLightUniformsLib.init();  // under-cabinet LED strips
 const EYE = 1.6, WALK_SPEED = 1.4, BODY_R = 0.25;  // walk mode: eye height (m), speed (m/s), body radius (m)
+const REDUCED = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const cssVar = (n, fb) => getComputedStyle(document.documentElement).getPropertyValue(n).trim() || fb;
 const escH = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -970,8 +1232,19 @@ class KitchenViewer {
   _loop() {
     if (!this.active) { this.raf = 0; return; }
     this.raf = requestAnimationFrame(this._loop);
-    if (this.mode === "walk") { this._walkStep(); this.dirty = true; }  // continuous only while walking
-    else this.controls.update();
+    const now = performance.now();
+    if (this.loader) { this._loaderStep(now); this.controls.update(); this.dirty = true; }  // building animation
+    else if (this.mode === "walk") { this._walkStep(); this.dirty = true; }  // continuous only while walking
+    else {
+      if (this.tween) {  // camera move from the loader into the finished kitchen
+        const tw = this.tween, k = Math.min(1, (now - tw.t0) / tw.dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+        this.camera.position.lerpVectors(tw.from.pos, tw.to.pos, e);
+        this.controls.target.lerpVectors(tw.from.target, tw.to.target, e);
+        if (k >= 1) this.tween = null;
+        this.dirty = true;
+      }
+      this.controls.update();
+    }
     this._updateWalls();
     if (this.dirty) {  // otherwise render on demand only
       this.dirty = false;
@@ -982,12 +1255,25 @@ class KitchenViewer {
   show(doc, keepCamera = false) {
     const t0 = performance.now();
     if (this.mode === "walk") this.setMode("orbit");
+    let from = null;
+    if (this.loader) {  // finishing the building animation: remember the camera for a smooth move
+      from = { pos: this.camera.position.clone(), target: this.controls.target.clone() };
+      this.loader = null;
+      this.controls.autoRotate = false;
+      this.renderer.shadowMap.autoUpdate = false;
+      keepCamera = false;
+    }
     this.gen++;
     this.doc = doc;
     this._clear();
     this.scene.background = new THREE.Color(cssVar("--stage", "#eceff4"));
     this._build(readRoom(doc));
     if (!keepCamera || !this.fitted) this.resetView();
+    if (from && !REDUCED()) {
+      this.tween = { from, to: { pos: this.camera.position.clone(), target: this.controls.target.clone() }, t0: performance.now(), dur: 1200 };
+      this.camera.position.copy(from.pos);
+      this.controls.target.copy(from.target);
+    }
     this.fitted = true;
     this.buildMs = Math.round(performance.now() - t0);
     this._loadModels();
@@ -1799,6 +2085,164 @@ class KitchenViewer {
     }
   }
 
+  // ---------- 3D building loader (while a design is being generated) ----------
+  // The real layout is unknown until the job ends, so procedural placeholders are built along the
+  // walls the kitchen most likely uses; stages follow the job's progress messages.
+  startLoader(doc) {
+    if (this.mode === "walk") this.setMode("orbit");
+    this.gen++;
+    this.doc = null;
+    this.tween = null;
+    this._clear();
+    this.scene.background = new THREE.Color(cssVar("--stage", "#e9e8e3"));
+    const R = readRoom(doc);
+    this.R = R;
+    this._materials(R);
+    const M = this.M;
+    const xs = R.walls.flatMap((w) => [w.start[0], w.end[0]]), zs = R.walls.flatMap((w) => [w.start[1], w.end[1]]);
+    const H = Math.max(R.H0, ...R.walls.map((w) => R.F[w.id].h));
+    this.bounds = xs.length ? { minX: Math.min(...xs), maxX: Math.max(...xs), minZ: Math.min(...zs), maxZ: Math.max(...zs), H }
+                            : { minX: -2, maxX: 2, minZ: -2, maxZ: 2, H };
+    if (R.outline) {
+      const floor = new THREE.Mesh(new THREE.ShapeGeometry(new THREE.Shape(R.outline.map(([x, z]) => new THREE.Vector2(x, -z)))), M.floor);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      this.root.add(floor);
+    }
+    const now = performance.now();
+    const L = (this.loader = { stage: "read", at: { read: now }, walls: [], ghosts: [], base: [], tops: [], uppers: [], apps: [], scan: null });
+    for (const w of R.walls) {
+      this._wall(w, R);
+      const g = this.groups[w.id];
+      g.scale.y = 0.001;  // walls rise from the floor
+      L.walls.push(g);
+    }
+    // likely cabinet walls: long walls without a door, the window wall first (sink), at most three
+    const doorsOn = (f) => R.all.filter((n) => n.type === "door" && n.wallId === f.w.id && Array.isArray(n.position));
+    const winsOn = (f) => R.all.filter((n) => n.type === "window" && n.wallId === f.w.id && Array.isArray(n.position));
+    const cand = R.walls.map((w) => R.F[w.id]).filter((f) => f.L >= 1.6);
+    let pick = cand.filter((f) => !doorsOn(f).length);
+    if (pick.length < 2) pick = cand;
+    pick = pick.sort((a, b) => (winsOn(b).length - winsOn(a).length) || (b.L - a.L)).slice(0, 3);
+    const accent = cssVar("--accent", "#3446d6"), hasLoft = H >= 2.66;
+    const hit = (x0, x1, list, pad) => list.some((o) => x1 > o.position[0] - o.width / 2 - pad && x0 < o.position[0] + o.width / 2 + pad);
+    pick.forEach((f, wi) => {
+      const g = this.groups[f.w.id], s = f.s, t = f.t, dl = doorsOn(f), wl = winsOn(f);
+      const runs = [];
+      let cur = null;
+      for (let x = 0.06; x + 0.6 <= f.L - 0.06 + 1e-6; x += 0.6) {
+        if (hit(x, x + 0.6, dl, 0.1)) { cur = null; continue; }
+        if (cur) cur.x1 = x + 0.6; else { cur = { x0: x, x1: x + 0.6 }; runs.push(cur); }
+        const cx = x + 0.3, z = s * (t / 2 + 0.28);
+        const ghost = this._mesh(this._box(0.57, 0.7, 0.55), this._mat({ color: accent, transparent: true, opacity: 0.2, emissive: new THREE.Color(accent),
+          emissiveIntensity: 0.35, roughness: 0.6, depthWrite: false }), cx, 0.45, z, g, { cast: false, receive: false });
+        ghost.visible = false;
+        L.ghosts.push(ghost);
+        const base = this._mesh(this._rbox(0.585, 0.7, 0.56, 0.006), M.front.base, cx, 0.45, z, g);
+        base.visible = false;
+        base.userData.z = z; base.userData.s = s;
+        L.base.push(base);
+        if (!hit(x, x + 0.6, wl, 0.04)) {
+          const up = this._mesh(this._rbox(0.585, 0.6, 0.33, 0.006), M.front.wall, cx, 1.74, s * (t / 2 + 0.165), g);
+          up.visible = false; up.userData.y = 1.74;
+          L.uppers.push(up);
+          if (hasLoft) {
+            const lh = Math.min(0.6, H - 2.1);
+            const lf = this._mesh(this._rbox(0.585, lh, 0.33, 0.006), M.front.loft, cx, 2.06 + lh / 2, s * (t / 2 + 0.165), g);
+            lf.visible = false; lf.userData.y = 2.06 + lh / 2;
+            L.uppers.push(lf);
+          }
+        }
+      }
+      for (const r of runs) {
+        const top = this._mesh(this._box(r.x1 - r.x0, 0.04, 0.6), M.worktop, (r.x0 + r.x1) / 2, 0.82, s * (t / 2 + 0.3), g);
+        top.visible = false;
+        L.tops.push(top);
+      }
+      // a sink under the window wall's window, a hob on the next wall
+      const run = runs.sort((a, b) => (b.x1 - b.x0) - (a.x1 - a.x0))[0];
+      if (!run) return;
+      const win = wl[0], sx = win && wi === 0 ? Math.min(run.x1 - 0.5, Math.max(run.x0 + 0.5, win.position[0])) : (run.x0 + run.x1) / 2;
+      if (wi === 0) {
+        const sink = this._mesh(this._box(0.78, 0.012, 0.45), M.steel, sx, 0.846, s * (t / 2 + 0.3), g);
+        sink.visible = false; L.apps.push(sink);
+      } else if (wi === 1) {
+        const hob = this._mesh(this._rbox(0.75, 0.012, 0.5, 0.003), M.hob, sx, 0.846, s * (t / 2 + 0.3), g);
+        hob.visible = false; L.apps.push(hob);
+        const hood = this._mesh(this._rbox(0.9, 0.06, 0.5, 0.004), M.steel, sx, 1.47, s * (t / 2 + 0.3), g);
+        hood.visible = false; L.apps.push(hood);
+      }
+    });
+    // the "thinking" scan: a soft light sheet sweeping across the room
+    const b = this.bounds, cx = (b.minX + b.maxX) / 2, cz = (b.minZ + b.maxZ) / 2, size = Math.max(b.maxX - b.minX, b.maxZ - b.minZ, 2);
+    const scan = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), this._mat({ color: accent, transparent: true, opacity: 0.18,
+      blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }, THREE.MeshBasicMaterial));
+    scan.scale.set(Math.max(0.5, b.maxZ - b.minZ), H, 1);
+    scan.rotation.y = Math.PI / 2;
+    scan.position.set(b.minX, H / 2, cz);
+    scan.visible = false;
+    this.root.add(scan);
+    L.scan = scan;
+    this.sun.position.set(cx + 0.35 * size, H + size * 1.5, cz + 0.55 * size);
+    this.sun.target.position.set(cx, 0, cz);
+    const sc = this.sun.shadow.camera;
+    sc.left = -size * 0.8; sc.right = size * 0.8; sc.top = size * 0.8; sc.bottom = -size * 0.8; sc.near = 0.1; sc.far = H + size * 4;
+    sc.updateProjectionMatrix();
+    this.lamp.position.set(cx, H - 0.15, cz);
+    this.resetView();
+    this.controls.autoRotate = !REDUCED();
+    this.controls.autoRotateSpeed = 0.7;
+    this.renderer.shadowMap.autoUpdate = true;  // blocks move while building
+    this.dirty = true;
+    if (this.opts.loadNote) this.opts.loadNote.classList.add("hidden");
+  }
+
+  // stages arrive in order; skipped ones still play, briefly staggered
+  loaderStage(stage) {
+    const L = this.loader, order = ["read", "design", "rules", "build"];
+    if (!L) return;
+    const i = order.indexOf(L.stage), j = order.indexOf(stage);
+    if (j <= i) return;
+    const now = performance.now();
+    for (let k = i + 1; k <= j; k++) L.at[order[k]] = L.at[order[k]] || now + (k - i - 1) * 450;
+    L.stage = stage;
+  }
+
+  _loaderStep(now) {
+    const L = this.loader, fast = REDUCED() ? 0.02 : 1;
+    const ease = (x) => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+    const since = (s) => (L.at[s] !== undefined && now >= L.at[s] ? (now - L.at[s]) / 1000 : -1);
+    const tr = since("read"), td = since("design"), tru = since("rules"), tb = since("build");
+    L.walls.forEach((g) => { g.scale.y = Math.max(0.001, ease(tr / (1.1 * fast))); });
+    L.ghosts.forEach((m, i) => {
+      const on = td >= 0 && (tru < 0 || tru < 0.35 + i * 0.05);
+      m.visible = on;
+      if (on) m.material.opacity = (0.12 + 0.16 * (0.5 + 0.5 * Math.sin(now / 320 + i * 0.7))) * Math.min(1, td * 2 + 0.2);
+    });
+    if (L.scan) {
+      L.scan.visible = td >= 0 && tb < 0;
+      if (L.scan.visible) { const b = this.bounds; L.scan.position.x = b.minX + (b.maxX - b.minX) * (0.5 + 0.5 * Math.sin(td * 1.2)); }
+    }
+    L.base.forEach((m, i) => {
+      const k = tru < 0 ? -1 : ease((tru - i * 0.05 * fast) / (0.45 * fast));
+      m.visible = k > 0;
+      if (k > 0) m.position.z = m.userData.z + m.userData.s * (1 - k) * 0.9;  // slide in from the room
+    });
+    const kt = tru < 0 ? -1 : ease((tru - (L.base.length * 0.05 + 0.2) * fast) / (0.5 * fast));
+    L.tops.forEach((m) => { m.visible = kt > 0; m.scale.x = Math.max(0.001, kt); });
+    L.uppers.forEach((m, i) => {
+      const k = tb < 0 ? -1 : ease((tb - i * 0.06 * fast) / (0.5 * fast));
+      m.visible = k > 0;
+      if (k > 0) m.position.y = m.userData.y + (1 - k) * 1.1;  // drop in from above
+    });
+    L.apps.forEach((m, i) => {
+      const k = tb < 0 ? -1 : ease((tb - (0.3 + i * 0.15) * fast) / (0.4 * fast));
+      m.visible = k > 0;
+      if (k > 0) m.scale.setScalar(Math.max(0.001, k));
+    });
+  }
+  loaderInfo() { return this.loader ? { stage: this.loader.stage, base: this.loader.base.length, uppers: this.loader.uppers.length } : null; }
+
   // ---------- walk mode (first person) ----------
   setMode(mode) {
     mode = mode === "walk" ? "walk" : "orbit";
@@ -2143,6 +2587,115 @@ window.dispatchEvent(new Event("kv3d-ready"));
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
+  // ---------- icons: one consistent 24px stroke set (currentColor), drawn for this app ----------
+  const ICONS = {
+    chip: '<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 7V4M14 7V4M10 20v-3M14 20v-3M7 10H4M7 14H4M20 10h-3M20 14h-3"/>',
+    sparkle: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z"/>',
+    ruler: '<path d="M3 16 16 3l5 5L8 21z"/><path d="M7.5 11.5l2 2M10.5 8.5l1.5 1.5M13.5 5.5l2 2M5 14l1.5 1.5"/>',
+    wand: '<path d="M4 20 14.5 9.5"/><path d="M14.5 9.5l2 2"/><path d="M17 3v3M15.5 4.5h3M20 8v2M19 9h2M11 3.5v2M10 4.5h2"/>',
+    door_slab: '<rect x="6" y="3" width="12" height="18" rx="1.5"/><path d="M15 10.5v3"/>',
+    door_shaker: '<rect x="6" y="3" width="12" height="18" rx="1.5"/><rect x="8.5" y="5.5" width="7" height="13" rx=".8"/>',
+    droplet: '<path d="M12 3.2s6 6.3 6 10.4a6 6 0 0 1-12 0C6 9.5 12 3.2 12 3.2z"/>',
+    droplet_off: '<path d="M12 3.2s6 6.3 6 10.4a6 6 0 0 1-12 0C6 9.5 12 3.2 12 3.2z"/><path d="M4 4l16 16"/>',
+    none: '<circle cx="12" cy="12" r="8"/><path d="M6.5 6.5l11 11"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    question: '<circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.4c-.6.3-1 .9-1 1.6v.4M12 17h.01"/>',
+    flame: '<path d="M12 21c-3.7 0-6-2.5-6-5.6 0-3.6 3.3-5.6 3.9-9.4 2.1 1.4 3.4 3.3 3.6 5.3.8-.6 1.3-1.6 1.4-2.8 1.9 1.6 3.1 3.9 3.1 6.4C18 18.4 15.7 21 12 21z"/>',
+    cylinder: '<rect x="7" y="6.5" width="10" height="14.5" rx="4"/><path d="M10 6.5V3.5h4v3M7 11.5h10"/>',
+    pipe: '<path d="M3 8h7a4 4 0 0 1 4 4v9"/><path d="M3 13h4.5a1.5 1.5 0 0 1 1.5 1.5V21"/><path d="M3 6v9M7.5 21h9"/>',
+    induction: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r="1.6"/>',
+    microwave: '<rect x="2.5" y="5" width="19" height="14" rx="2"/><rect x="5" y="7.5" width="10" height="9" rx="1"/><path d="M18 8.5v1M18 12v1M18 15.5v1"/>',
+    oven: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 8h16"/><rect x="7" y="11" width="10" height="7" rx="1"/><path d="M8 5.5h.01M12 5.5h.01M16 5.5h.01"/>',
+    oven_micro: '<rect x="4" y="2.5" width="16" height="19" rx="2"/><path d="M4 10h16"/><rect x="6.5" y="4.5" width="8" height="3.5" rx=".6"/><rect x="7" y="12.5" width="10" height="6.5" rx="1"/>',
+    glass_cab: '<rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M12 3v18"/><path d="M7.5 8l2.5-2.5M7.5 11.5l3-3M14.5 8 17 5.5M14.5 11.5l3-3"/>',
+    drawers: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 6h4M10 12h4M10 18h4"/>',
+    mixed: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 8.5h16M12 8.5V21M10 5.8h4M9.5 13.5v2M14.5 13.5v2"/>',
+    shutters: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M12 3v18M9.5 11v2M14.5 11v2"/>',
+    hinged: '<rect x="5" y="4" width="9" height="16" rx="1.5"/><path d="M14 4l5 2.5v11L14 20"/><path d="M11.5 11v2"/>',
+    liftup: '<path d="M4 20h16v-8H4z"/><path d="M4 12 6.5 5h11L20 12"/><path d="M10 16h4M12 3v3"/>',
+    shelf: '<path d="M4 3v18M20 3v18M4 9h16M4 15h16"/><path d="M7 9V6.5h3V9M13 15v-3h2.5v3"/>',
+    cup: '<path d="M5 8h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16M4 21h14"/>',
+    loft: '<path d="M3 3h18"/><rect x="4" y="5" width="16" height="6" rx="1"/><path d="M12 5v6"/><path d="M5 15h14M5 19h14" stroke-dasharray="2 2.5"/>',
+    tall: '<rect x="7" y="2.5" width="10" height="19" rx="1.5"/><path d="M7 13h10M14.5 8v2M14.5 16v2"/>',
+    pot: '<path d="M4 11h16v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M2 11h2M20 11h2M9.5 7.5c0-1.5 1-1.5 1-3M13.5 7.5c0-1.5 1-1.5 1-3"/>',
+    users: '<circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2a5 5 0 0 1 5.5 5.8"/>',
+    gem: '<path d="M7 4h10l4 5-9 11L3 9z"/><path d="M3 9h18M12 20 8.5 9 10 4M12 20l3.5-11L14 4"/>',
+    area: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 8h3M3 13h2M3 18h3M8 3v3M13 3v2M18 3v3"/>',
+    sq_s: '<rect x="8" y="8" width="8" height="8" rx="1.5"/>',
+    sq_m: '<rect x="6" y="6" width="12" height="12" rx="1.8"/>',
+    sq_l: '<rect x="3.5" y="3.5" width="17" height="17" rx="2.2"/>',
+    hob: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="8.5" cy="12" r="2.6"/><circle cx="15.5" cy="12" r="2.6"/>',
+    faucet: '<path d="M4 21h16M8 21v-4h8v4"/><path d="M12 17v-7a3 3 0 0 1 6 0v1"/><path d="M18 14v1.5"/>',
+    orbit: '<circle cx="12" cy="12" r="3"/><path d="M21 12c0 2.8-4 5-9 5s-9-2.2-9-5 4-5 9-5c2.8 0 5.3.7 7 1.8"/><path d="M16.5 6.5 19 8.8l-3 .8"/>',
+    walk: '<circle cx="13.5" cy="4.5" r="1.8"/><path d="M10 21l2.2-6.3 2.6 2.5V21M12.2 14.7 11.3 10l3-1.5 2.3 3.2H19M11.3 10 8.4 12v3"/>',
+    reset: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+    walls: '<path d="M4 20V9l8-5 8 5v11"/><path d="M4 20h16M9 20v-6h6v6"/>',
+    cabinets_up: '<rect x="3" y="3" width="18" height="7" rx="1.5"/><path d="M12 3v7M3 14h18M3 19h18"/>',
+    palette: '<path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.6-.8 1.6-1.6 0-1.2-.9-1.6-.9-2.6 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/>',
+    quality: '<path d="M12 3.5l2.4 5 5.6.8-4 3.9.9 5.5L12 16.1l-4.9 2.6.9-5.5-4-3.9 5.6-.8z"/>',
+    download: '<path d="M12 4v11M7 10l5 5 5-5M5 20h14"/>',
+    report: '<path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>',
+    cube: '<path d="M12 3 4 7.5v9L12 21l8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/>',
+    plan: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 11h8v10M14 3v8h7"/>',
+    sliders: '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+  };
+  const ico = (name, cls = "") => (ICONS[name]
+    ? `<svg class="ico ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name]}</svg>` : "");
+  document.querySelectorAll("[data-ico]").forEach((el) => el.insertAdjacentHTML("afterbegin", ico(el.dataset.ico)));
+
+  // icon segmented controls for selects with few options; the hidden select stays the source of truth
+  const SEG_ICONS = {
+    "need-pur": { auto: "wand", yes: "droplet", no: "droplet_off" },
+    "need-tower": { auto: "wand", none: "none", microwave: "microwave", oven: "oven", oven_microwave: "oven_micro" },
+    "need-disp": { auto: "wand", yes: "glass_cab", no: "none" },
+    "need-base": { auto: "wand", drawers: "drawers", mixed: "mixed", shutters: "shutters" },
+    "need-wallstyle": { auto: "wand", shutters: "hinged", lift_up: "liftup" },
+    "need-loft": { "": "wand", true: "loft", false: "none" },
+    "need-open": { auto: "wand", yes: "shelf", no: "none" },
+    "need-crock": { auto: "wand", yes: "cup", no: "none" },
+    "need-cook": { auto: "question", heavy: "pot", light: "cup" },
+    "rb-band": { auto: "area", small: "sq_s", medium: "sq_m", large: "sq_l" },
+    style: (v) => (/shaker/i.test(v) ? "door_shaker" : "door_slab"),
+  };
+  const SEG_LABEL = { "need-tower": { oven_microwave: "Oven + micro" } };
+  function refreshSeg(id) {
+    const sel = document.getElementById(id), map = SEG_ICONS[id];
+    if (!sel || !map) return;
+    let box = sel.nextElementSibling && sel.nextElementSibling.classList.contains("iseg") ? sel.nextElementSibling : null;
+    if (!box) {
+      box = document.createElement("div");
+      box.className = "iseg" + (sel.options.length > 4 ? " compact" : "");
+      box.setAttribute("role", "radiogroup");
+      const lab = document.querySelector(`label[for="${id}"]`);
+      if (lab) { lab.id = lab.id || `lbl-${id}`; box.setAttribute("aria-labelledby", lab.id); }
+      sel.classList.add("seg-src");
+      sel.after(box);
+      box.addEventListener("click", (e) => {
+        const b = e.target.closest("button[data-v]");
+        if (!b) return;
+        sel.value = b.dataset.v;
+        sel.dispatchEvent(new Event("change", { bubbles: true }));
+        refreshSeg(id);
+      });
+      sel.addEventListener("change", () => refreshSeg(id));
+    }
+    box.innerHTML = [...sel.options].map((o) => {
+      const name = typeof map === "function" ? map(o.value) : map[o.value];
+      const text = (SEG_LABEL[id] || {})[o.value] || o.textContent;
+      return `<button type="button" role="radio" aria-checked="${o.value === sel.value}" data-v="${esc(o.value)}" title="${esc(o.textContent)}">${ico(name || "check")}<span>${esc(text)}</span></button>`;
+    }).join("");
+  }
+  const refreshSegs = () => Object.keys(SEG_ICONS).forEach(refreshSeg);
+  // progress stepper: 1 floor plan, 2 your kitchen, 3 design
+  function setStep(n, allDone = false) {
+    document.querySelectorAll("#stepper li").forEach((li) => {
+      const k = Number(li.dataset.step);
+      li.classList.toggle("done", allDone || k < n);
+      li.classList.toggle("current", !allDone && k === n);
+      li.querySelector("span").textContent = allDone || k < n ? "✓" : String(k);
+    });
+  }
+
   async function api(path, opts = {}) {
     const r = await fetch(path, opts);
     const ct = r.headers.get("content-type") || "";
@@ -2219,6 +2772,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
       const styles = await api("/api/door-styles");
       $("#style").innerHTML = styles.map((s) => `<option${s === "Slab (Plain)" ? " selected" : ""}>${esc(s)}</option>`).join("");
     } catch (e) { /* keep default */ }
+    refreshSeg("style");
   }
   // New household needs are sent only when this server's API knows them, so the page works
   // with both older and newer servers.
@@ -2228,7 +2782,10 @@ window.dispatchEvent(new Event("kv3d-ready"));
       const props = (((spec.components || {}).schemas || {}).KitchenPreferences || {}).properties || {};
       const lo = props.include_loft || {};
       const types = [lo.type, ...(lo.anyOf || []).map((s) => s.type)].flat();
-      state.sup = { loftNull: types.includes("null"), wall_style: "wall_style" in props, open_unit: "open_unit" in props, crockery_unit: "crockery_unit" in props };
+      state.sup = { loftNull: types.includes("null"), wall_style: "wall_style" in props, open_unit: "open_unit" in props, crockery_unit: "crockery_unit" in props,
+                    budget: "budget" in props, primary_wall: "primary_wall" in props && "secondary_wall" in props,
+                    base_finish: "base_finish" in props && "wall_finish" in props,
+                    fuel: "fuel" in props, size_band: "size_band" in props };
     } catch (e) { state.sup = { loftNull: false }; }
     $$("[data-pref]").forEach((el) => el.classList.toggle("hidden", !state.sup[el.dataset.pref]));
     if (!state.sup.loftNull) {
@@ -2238,6 +2795,145 @@ window.dispatchEvent(new Event("kv3d-ready"));
     }
     updateDecideLabels();
   }
+
+  // ---------- rule book filters (everything comes from /api/rulebook) ----------
+  const checkedVal = (name, fb = "auto") => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : fb; };
+  const capWord = (s) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : s);
+  const ruleLi = (t) => { const m = String(t ?? "").match(/^(R\d+)\s*:\s*([\s\S]*)$/); return `<li>${m ? `<b>${esc(m[1])}</b>${esc(m[2])}` : esc(t)}</li>`; };
+  async function loadRulebook() {
+    try { state.rulebook = await api("/api/rulebook"); } catch (e) { state.rulebook = null; }
+    try { state.finishes = await api("/api/finishes"); } catch (e) { state.finishes = null; }
+    renderRulebook();
+    renderFinishes();
+  }
+  // ---------- finishes: swatches filtered by the budget tier's finish rules (/api/finishes) ----------
+  function renderFinishes() {
+    const F = state.finishes, row = $("#fin-row");
+    if (!F || !(F.finishes || []).length) { row.classList.add("hidden"); return; }
+    const budget = checkedVal("budget"), allowed = (F.allowed || {})[budget] || (F.allowed || {}).auto || {};
+    const dflt = ((F.defaults || {})[budget] || {}), pal = dflt.palette || {};
+    const byAid = Object.fromEntries(F.finishes.map((f) => [f.aid, f]));
+    const tier = (F.tiers || {})[budget];
+    $("#fin-tier").innerHTML = (tier ? `<b>${esc(capWord(budget))}:</b> ${esc(tier.note || "")}` : "No budget stated: every finish is allowed.")
+      + (pal.base || pal.wall ? ` If you let the designer decide, the default is ${[pal.base, pal.wall].map((a) => esc((byAid[a] || {}).name || a)).join(" / ")}.` : "");
+    for (const run of ["base", "wall"]) {
+      const box = $(`#fin-${run}`), name = `fin-${run}`;
+      const prev = (document.querySelector(`input[name="${name}"]:checked`) || {}).value || "";
+      const opts = (allowed[run] || []).map((a) => byAid[a]).filter(Boolean);
+      const chip = (f) => f.color ? `<span class="chip" style="background:${esc(f.color)}"></span>`
+        : `<span class="chip wood${/ash|maple/i.test(f.name || "") ? " light" : ""}"></span>`;
+      box.innerHTML = `<input type="radio" name="${name}" id="${name}-auto" value=""><label for="${name}-auto" title="The designer chooses within the ${esc(budget === "auto" ? "" : budget + " ")}finish rules"><span class="chip">${ico("wand")}</span>Designer decides</label>`
+        + opts.map((f) => `<input type="radio" name="${name}" id="${name}-${esc(f.aid)}" value="${esc(f.aid)}">`
+          + `<label for="${name}-${esc(f.aid)}" title="${esc(`${f.name} - ${f.category} ${String(f.shutter || "").toLowerCase()}, ${f.brand}`)}">${chip(f)}${esc(f.name)}<span class="tag">${esc(f.category)}</span></label>`).join("");
+      const keep = opts.some((f) => f.aid === prev) ? prev : "";
+      const el = document.getElementById(keep ? `${name}-${keep}` : `${name}-auto`);
+      if (el) el.checked = true;
+    }
+    $("#fin-rules ul").innerHTML = [...(tier ? [`${capWord(budget)}: base run ${(tier.base || []).join(" / ")}, wall run ${(tier.wall || []).join(" / ")}`
+      + (tier.max_pu_runs != null ? `, at most ${tier.max_pu_runs} PU run(s)` : "")] : []), ...(F.match || [])].map((t) => `<li>${esc(t)}</li>`).join("");
+    row.classList.toggle("hidden", !state.sup || !state.sup.base_finish);
+  }
+  document.addEventListener("change", (e) => { if (e.target && e.target.name === "budget") renderFinishes(); });
+  function renderRulebook() {
+    const rb = state.rulebook;
+    $("#rb-section").classList.toggle("no-rb", !rb);
+    $("#rb-missing").classList.toggle("hidden", !!rb);
+    if (!rb) return;
+    $("#rb-source").textContent = rb.source ? `· ${rb.source}` : "";
+    for (const kt of rb.kitchen_type || []) {  // rule-book names on the layout buttons; unsupported types disabled
+      const input = document.querySelector(`input[name="layout"][value="${CSS.escape(String(kt.layout))}"]`);
+      if (!input) continue;
+      const lab = document.querySelector(`label[for="${input.id}"]`);
+      if (lab && lab.querySelector("b")) lab.querySelector("b").textContent = kt.label;
+      input.disabled = kt.supported === false;
+      if (lab) lab.title = kt.supported === false ? `${kt.label} kitchens are not generated yet` : `${kt.label} kitchen`;
+    }
+    const bandNow = $("#rb-band").value || "auto";
+    $("#rb-band").innerHTML = (rb.size_band || []).map((o) => `<option value="${esc(o.value)}">${esc(o.label)}${o.range ? ` (${esc(o.range)})` : ""}</option>`).join("");
+    $("#rb-band").value = [...$("#rb-band").options].some((o) => o.value === bandNow) ? bandNow : "auto";
+    const card = (name, o, body) => `<input type="radio" name="${name}" id="${name}-${esc(o.value)}" value="${esc(o.value)}"${o.value === "auto" ? " checked" : ""}>`
+      + `<label for="${name}-${esc(o.value)}">${body}</label>`;
+    const GEMS = { essential: 1, premium: 2, luxury: 3 }, FUEL_ICO = { auto: "flame", lpg: "cylinder", png: "pipe", induction: "induction" };
+    $("#rb-budget").innerHTML = (rb.budget || []).map((o) => card("budget", o,
+      `<span class="gems" aria-hidden="true">${GEMS[o.value] ? ico("gem").repeat(GEMS[o.value]) : ico("wand")}</span>`
+      + `<b>${esc(o.label)}</b>${(o.effects || []).length ? `<ul>${o.effects.map((e) => `<li>${esc(e)}</li>`).join("")}</ul>` : ""}`)).join("");
+    $("#rb-fuel").innerHTML = (rb.fuel || []).map((o) => card("fuel", o, `${ico(FUEL_ICO[o.value] || "flame")}<span>${esc(o.label)}</span>`)).join("");
+    $("#hint-hobwall").textContent = (rb.walls || {}).primary || "";
+    $("#hint-sinkwall").textContent = (rb.walls || {}).secondary || "";
+    const always = rb.always || [];
+    $("#rb-always ul").innerHTML = always.map(ruleLi).join("");
+    $("#rb-always summary").textContent = `Always applied (${always.length} rules)`;
+    $("#rb-always").classList.toggle("hidden", !always.length);
+    updateRulebookDetails();
+    renderModules();
+    refreshSeg("rb-band");
+  }
+  function updateRulebookDetails() {
+    const rb = state.rulebook;
+    if (!rb) return;
+    const b = (rb.budget || []).find((o) => o.value === checkedVal("budget")) || {};
+    $("#rb-budget-rules summary").textContent = `Rules for ${b.label || "this budget"} (${(b.rules || []).length})`;
+    $("#rb-budget-rules ul").innerHTML = (b.rules || []).map(ruleLi).join("") || `<li>No budget rules: ${esc((b.effects || []).join(" ") || "the designer chooses.")}</li>`;
+    const f = (rb.fuel || []).find((o) => o.value === checkedVal("fuel")) || {};
+    $("#rb-fuel-effect").textContent = (f.effects || []).join(" ");
+    $("#rb-fuel-rules summary").textContent = `Rules (${(f.rules || []).length})`;
+    $("#rb-fuel-rules ul").innerHTML = (f.rules || []).map(ruleLi).join("");
+  }
+  // live preview of the rule-book module widths for the chosen kitchen type and size band
+  function renderModules() {
+    const rb = state.rulebook, t = $("#rb-modules");
+    if (!rb) { t.innerHTML = ""; return; }
+    const mw = rb.module_widths || {}, layout = checkedVal("layout");
+    const typeOf = (lay) => ((rb.kitchen_type || []).find((k) => k.layout === lay) || {}).label;
+    const types = (layout === "auto" ? ["L", "U"] : [layout]).map(typeOf).filter(Boolean);
+    const allBands = (rb.size_band || []).filter((o) => o.value !== "auto").map((o) => capWord(o.value));
+    const chosen = $("#rb-band").value;
+    let bands = chosen && chosen !== "auto" ? [capWord(chosen)] : state.facts && state.facts.size_band ? [state.facts.size_band] : allBands;
+    if (!types.some((ty) => bands.some((bd) => (mw[ty] || {})[bd]))) bands = allBands;  // e.g. a room outside every band
+    const cols = ["hob", "sink", "spice", "cylinder", "corner"], fuel = checkedVal("fuel"), noCyl = fuel === "png" || fuel === "induction";
+    const fuelLabel = ((rb.fuel || []).find((o) => o.value === fuel) || {}).label || fuel;
+    const rows = [];
+    for (const ty of types) for (const bd of bands) {
+      const m = (mw[ty] || {})[bd];
+      if (!m) continue;
+      rows.push(`<tr><th scope="row">${esc(ty)} · ${esc(bd)}</th>${cols.map((c) => {
+        if (c === "cylinder" && noCyl) return `<td class="dc">none (${esc(fuelLabel)})</td>`;
+        const v = m[c];
+        return v && v.width ? `<td title="${esc(v.combination || "")}">${esc(v.width)}<span class="rid">R${esc(v.rule)}</span></td>` : `<td class="dc">designer's choice</td>`;
+      }).join("")}</tr>`);
+    }
+    t.innerHTML = rows.length
+      ? `<thead><tr><th>Kitchen</th>${cols.map((c) => `<th>${esc(capWord(c))}</th>`).join("")}</tr></thead><tbody>${rows.join("")}</tbody>`
+      : `<tbody><tr><td class="dc">${layout === "parallel" ? "Parallel kitchens are not generated yet." : "No module sizes in the rule book for this choice."}</td></tr></tbody>`;
+  }
+  // facts about the loaded plan: floor area -> size band, ceiling -> lofts
+  async function loadFacts() {
+    if (!state.input) return;
+    const seq = (state.factsSeq = (state.factsSeq || 0) + 1);
+    const walls = [...document.querySelectorAll("#walls-pick input:checked")].map((i) => i.value);
+    $("#rb-facts").textContent = "Reading the room…";
+    try {
+      const f = await api("/api/plan-facts", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ scene: state.input, preferences: walls.length ? { cabinet_walls: walls } : {} }) });
+      if (seq !== state.factsSeq) return;
+      state.facts = f;
+      const area = Number(f.floor_area_sqft);
+      $("#rb-facts").innerHTML = `Your room: <b>${Number.isFinite(area) ? Math.round(area) : "?"} sqft → ${esc(f.size_band || "?")}</b>`
+        + `${f.size_note ? ` <span class="warn">(${esc(f.size_note)})</span>` : ""}`
+        + ` · ceiling <b>${esc(f.ceiling_mm)} mm</b> - ${f.lofts_possible ? "lofts possible" : '<span class="warn">too low for lofts</span>'}`;
+    } catch (e) {
+      if (seq !== state.factsSeq) return;
+      state.facts = null;
+      $("#rb-facts").textContent = "";
+    }
+    renderModules();
+  }
+  document.addEventListener("change", (e) => {
+    const n = e.target && e.target.name, id = e.target && e.target.id;
+    if (n === "budget" || n === "fuel") updateRulebookDetails();
+    if (n === "budget" || n === "fuel" || n === "layout" || id === "rb-band") renderModules();
+    if (e.target && e.target.closest && e.target.closest("#walls-pick")) loadFacts();
+  });
 
   // ---------- geometry ----------
   function geom(doc) {
@@ -2319,6 +3015,14 @@ window.dispatchEvent(new Event("kv3d-ready"));
       const f = g.frames[ch.parentId], [w, , d] = ch.asset.dimensions, [x, , z] = ch.position;
       const p = [W(f, x - w / 2, z - d / 2), W(f, x + w / 2, z - d / 2), W(f, x + w / 2, z + d / 2), W(f, x - w / 2, z + d / 2)];
       out.push(`<polygon points="${pts(p)}" fill="none" stroke="${cssVar("--door")}" stroke-width="1.4" stroke-dasharray="1 2" vector-effect="non-scaling-stroke"><title>Chimney</title></polygon>`);
+    }
+    // walls the customer picked for cooking / the sink: a soft coloured band on the room side
+    const picked = state.output ? {} : { [$("#need-hobwall").value]: ["--wallu", "Cooking (hob) wall"], [$("#need-sinkwall").value]: ["--window", "Sink wall"] };
+    for (const wl of g.walls) {
+      const pk = picked[wl.id], f = g.frames[wl.id];
+      if (!pk) continue;
+      const a = Wi(f, 0, f.t / 2 + 0.12), bnd = Wi(f, f.L, f.t / 2 + 0.12);
+      out.push(`<line x1="${a[0]}" y1="${a[1]}" x2="${bnd[0]}" y2="${bnd[1]}" stroke="${cssVar(pk[0])}" stroke-opacity=".55" stroke-width="0.16" stroke-linecap="round"><title>${esc(pk[1])}</title></line>`);
     }
     for (const wl of g.walls) {
       out.push(`<line x1="${wl.start[0]}" y1="${wl.start[1]}" x2="${wl.end[0]}" y2="${wl.end[1]}" stroke="${cssVar("--wall-line")}" stroke-width="${g.frames[wl.id].t}" stroke-linecap="square"/>`);
@@ -2482,6 +3186,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
     if (a.category === "appliance") return { title: m.category || n.name, sub: m.description || "", lines: [`${m.width ?? "?"} × ${m.height ?? "?"} × ${m.depth ?? "?"} mm`, "Placed by the design rules"] };
     return { title: n.name || "Item", sub: "", lines: [] };
   }
+  const LOADER = { loader: true };  // viewerDoc marker while the building loader runs
   async function show3D(doc) {
     const msg = $("#v3d-msg");
     if (!state.viewer) {
@@ -2498,11 +3203,22 @@ window.dispatchEvent(new Event("kv3d-ready"));
       } catch (e) {
         state.viewerFailed = true;
         msg.innerHTML = `<div><b>The 3D view could not start</b><br>${esc(e.message || e)}.<br>The top view and wall elevations still work.</div>`;
+        if (state.loading) {  // no WebGL: fall back to the plain progress view
+          state.loading = false;
+          $("#progress").classList.remove("docked");
+          $("#loader-pill").classList.add("hidden");
+          $("#panel-3d").classList.remove("loading");
+        }
         return;
       }
       msg.classList.add("hidden");
     }
     if (state.tab !== "3d") return;  // switched away while loading
+    if (state.loading && state.input && state.viewer.startLoader) {  // 3D building loader while the design is made
+      if (state.viewerDoc !== LOADER) { state.viewer.startLoader(state.input); state.viewerDoc = LOADER; }
+      state.viewer.setActive(true);
+      return;
+    }
     const cur = state.output || state.input;
     if (state.viewerDoc !== cur) {
       // same document again (theme change) keeps the camera; a new design gets a fresh view
@@ -2517,6 +3233,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
   function walkUI(mode, locked = false) {
     const walking = mode === "walk", touch = touchFirst();
     $("#panel-3d").classList.toggle("walking", walking);
+    $("#stage").classList.toggle("anim", walking || $("#panel-3d").classList.contains("loading"));
     $$("#v3d-mode [data-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.mode === (walking ? "walk" : "orbit"))));
     $("#v3d-pad").classList.toggle("hidden", !walking || !touch);
     $("#v3d-cross").classList.toggle("hidden", !walking || !locked);
@@ -2562,7 +3279,9 @@ window.dispatchEvent(new Event("kv3d-ready"));
     if (!doc.scene || typeof doc.scene.nodes !== "object") return showFileError("The file has no room in it (scene.nodes is missing).");
     const g = geom(doc);
     if (!g.walls.length) return showFileError("The floor plan has no walls.");
-    state.input = doc; state.filename = name; state.output = null; state.report = null; state.jobId = null; state.tab = "plan";
+    state.input = doc; state.filename = name; state.output = null; state.report = null; state.jobId = null;
+    state.tab = state.viewerFailed ? "plan" : "3d";  // the room in 3D is the hero
+    setStep(2);
     const items = g.all.filter((n) => n.type === "item").length;
     $("#file-name").textContent = name;
     $("#file-note").textContent = items ? `${items} existing items will be replaced` : "Empty room, ready to design";
@@ -2578,11 +3297,22 @@ window.dispatchEvent(new Event("kv3d-ready"));
       const tags = [g.all.some((n) => n.type === "window" && n.wallId === w.id) ? "window" : "", g.all.some((n) => n.type === "door" && n.wallId === w.id) ? "door" : ""].filter(Boolean).join(", ");
       return `<label><input type="checkbox" value="${esc(w.id)}"> ${esc(w.name || w.id)}${tags ? ` <span class="sub">(${tags})</span>` : ""}</label>`;
     }).join("");
+    // cooking / sink wall pickers: one option per wall of this plan (rebuilt for every new plan)
+    const wallOpts = g.walls.map((w) => {
+      const tags = [g.all.some((n) => n.type === "window" && n.wallId === w.id) ? "window" : "", g.all.some((n) => n.type === "door" && n.wallId === w.id) ? "door" : ""].filter(Boolean).join(", ");
+      return `<option value="${esc(w.id)}">${esc(w.name || w.id)}${tags ? ` (${tags})` : ""}</option>`;
+    }).join("");
+    ["#need-hobwall", "#need-sinkwall"].forEach((sel) => { $(sel).innerHTML = `<option value="">Let the designer decide</option>${wallOpts}`; });
+    updateDecideLabels();
+    state.facts = null;
+    loadFacts();
     hideResults();
     $("#go").disabled = false;
     updateHint();
     render();
   }
+  // highlight the chosen cooking / sink walls in the top view
+  ["#need-hobwall", "#need-sinkwall"].forEach((sel) => $(sel).addEventListener("change", () => { if (state.tab === "plan") render(); }));
   const designerChoice = () => document.querySelector('input[name="ai"]:checked').value;  // auto | gemini | fallback
   function updateHint() {
     if (!state.input) { $("#go-hint").textContent = "Add a floor plan to start."; return; }
@@ -2591,7 +3321,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
       : d === "auto" ? `Qwen takes ${state.aiTime ? (/^(under|over|about)/.test(state.aiTime) ? "" : "about ") + state.aiTime : "a few minutes"}.` : "Ready in a few seconds.";
   }
   // "Let the designer decide" names the designer: Qwen / Gemini decides (and explains why), or the quick rules do.
-  const DECIDE = ["#need-pur", "#cyl", "#need-tower", "#need-disp", "#need-base", "#need-loft", "#need-wallstyle", "#need-open", "#need-crock"];
+  // (gas supply is not here: "not stated" means LPG is assumed - rule R11 - not a designer decision)
+  const DECIDE = ["#need-pur", "#need-tower", "#need-disp", "#need-base", "#need-loft", "#need-wallstyle", "#need-open", "#need-crock", "#need-hobwall", "#need-sinkwall"];
   function updateDecideLabels() {
     const d = designerChoice();
     const text = d === "gemini" ? "Let Gemini decide" : d === "auto" ? "Let Qwen decide" : "Standard choice";
@@ -2599,6 +3330,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
       const opt = $(sel) && $(sel).querySelector('option[value="auto"], option[value=""]');
       if (opt) opt.textContent = text;
     });
+    refreshSegs();
   }
   $$('input[name="ai"]').forEach((el) => el.addEventListener("change", () => { updateHint(); updateDecideLabels(); }));
   function readFile(file) {
@@ -2632,13 +3364,14 @@ window.dispatchEvent(new Event("kv3d-ready"));
     if (/drawer/i.test(b.textContent)) $("#need-base").value = "drawers";
     if (/microwave/i.test(b.textContent) && $("#need-tower").value === "auto") $("#need-tower").value = "microwave";
     if (/bake/i.test(b.textContent) && $("#need-tower").value === "auto") $("#need-tower").value = "oven";
+    refreshSegs();
     t.focus();
   });
 
   // ---------- step 3: design ----------
   function prefs() {
     const walls = [...document.querySelectorAll("#walls-pick input:checked")].map((i) => i.value);
-    const cyl = $("#cyl").value, loft = $("#need-loft").value;
+    const fuel = checkedVal("fuel"), loft = $("#need-loft").value;
     const ai = designerChoice();
     const p = {
       ai_mode: ai === "fallback" ? "fallback" : state.strict ? "ollama" : "auto",
@@ -2647,7 +3380,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
       door_style: $("#style").value,
       include_tall: $("#tall").checked,
       include_loft: loft === "" ? (state.sup.loftNull ? null : false) : loft === "true",
-      include_cylinder: cyl === "" ? null : cyl === "true",
+      // fuel replaces the old gas field; older servers only know include_cylinder
+      include_cylinder: state.sup.fuel || fuel === "auto" ? null : fuel === "lpg",
       water_purifier: $("#need-pur").value,
       built_in: $("#need-tower").value,
       display_unit: $("#need-disp").value,
@@ -2660,6 +3394,18 @@ window.dispatchEvent(new Event("kv3d-ready"));
     if (state.sup.wall_style) p.wall_style = $("#need-wallstyle").value;
     if (state.sup.open_unit) p.open_unit = $("#need-open").value;
     if (state.sup.crockery_unit) p.crockery_unit = $("#need-crock").value;
+    if (state.sup.budget) p.budget = checkedVal("budget");
+    if (state.sup.base_finish) {  // sent only when the customer picked a finish
+      const bf = checkedVal("fin-base", ""), wf = checkedVal("fin-wall", "");
+      if (bf) p.base_finish = bf;
+      if (wf) p.wall_finish = wf;
+    }
+    if (state.sup.fuel) p.fuel = fuel;
+    if (state.sup.size_band) p.size_band = $("#rb-band").value || "auto";
+    if (state.sup.primary_wall) {  // sent only when chosen
+      if ($("#need-hobwall").value) p.primary_wall = $("#need-hobwall").value;
+      if ($("#need-sinkwall").value) p.secondary_wall = $("#need-sinkwall").value;
+    }
     return p;
   }
   function showRunError(msg) { const el = $("#run-err"); el.textContent = msg; el.classList.toggle("show", !!msg); }
@@ -2672,7 +3418,28 @@ window.dispatchEvent(new Event("kv3d-ready"));
   function hideResults() {
     ["#banner", "#why-card", "#details-card"].forEach((s) => $(s).classList.add("hidden"));
   }
+  // job log -> stage of the 3D building loader
+  function stageOf(log) {
+    for (const s of [...(log || [])].reverse()) {
+      const m = String(s.msg || "");
+      if (/building the 3d scene/i.test(m)) return "build";
+      if (/applying design rules|rule book/i.test(m)) return "rules";
+      if (/designing|designer/i.test(m)) return "design";
+      if (/reading|loading/i.test(m)) return "read";
+    }
+    return "read";
+  }
+  const STAGE_TEXT = { read: "Reading your floor plan", design: "Designing the kitchen", rules: "Applying the rule book", build: "Building the 3D scene" };
   function startProgress(isAI) {
+    // the 3D building loader replaces the plain overlay when we have the room and WebGL
+    const use3d = !!state.input && !state.viewerFailed && !!window.WebGLRenderingContext;
+    state.loading = use3d;
+    $("#progress").classList.toggle("docked", use3d);
+    $("#loader-pill").classList.toggle("hidden", !use3d);
+    $("#panel-3d").classList.toggle("loading", use3d);
+    $("#stage").classList.toggle("anim", use3d);
+    $("#loader-text").textContent = STAGE_TEXT.read;
+    if (use3d) { state.tab = "3d"; render(); }
     $("#progress").classList.add("show");
     $("#p-stage").textContent = "Starting…";
     $("#p-steps").innerHTML = "";
@@ -2688,12 +3455,14 @@ window.dispatchEvent(new Event("kv3d-ready"));
       $("#p-bar").style.width = `${Math.min(95, (s / total) * 100).toFixed(1)}%`;
     }, 500);
   }
-  async function generate() {
+  async function generate(override) {
     if (!state.input) return;
     showRunError("");
-    const p = prefs();
+    const p = override && override.ai_mode ? override : prefs();
+    state.lastPrefs = p;  // "Try again" re-sends exactly these
     $("#go").disabled = true;
     $("#go").textContent = "Designing…";
+    setStep(3);
     hideResults();
     startProgress(p.ai_mode === "fallback" ? false : p.ai_provider === "gemini" ? "gemini" : true);
     document.getElementById("view-card").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -2709,8 +3478,16 @@ window.dispatchEvent(new Event("kv3d-ready"));
       $("#p-stage").textContent = j.status === "queued" ? `Waiting for another design to finish (${j.queue_position} ahead)` : j.stage;
       $("#p-steps").innerHTML = j.log.map((s, i) => {
         const last = i === j.log.length - 1 && j.status === "running";
+        if (FALLBACK_LOG.test(s.msg)) {  // the AI designer failed: say so as a warning, not a normal step
+          return `<li class="warnline" role="alert"><span class="mk">!</span><span>${esc(s.msg)}</span><span class="t">${fmt(s.t)}</span></li>`;
+        }
         return `<li class="${last ? "current" : "done"}"><span class="mk">${last ? "•" : "✓"}</span><span>${esc(s.msg)}</span><span class="t">${fmt(s.t)}</span></li>`;
       }).join("");
+      if (state.loading) {
+        const st = stageOf(j.log);
+        $("#loader-text").textContent = j.status === "queued" ? "Waiting in the queue" : STAGE_TEXT[st];
+        if (state.viewer && state.viewer.loaderStage) state.viewer.loaderStage(st);
+      }
       if (j.status === "done") return done(j);
       if (j.status === "error") { finish(); return showRunError(j.error || "The design could not be made."); }
       setTimeout(poll, 1500);
@@ -2718,9 +3495,18 @@ window.dispatchEvent(new Event("kv3d-ready"));
   }
   function finish() {
     clearInterval(state.tick);
-    $("#progress").classList.remove("show");
+    $("#progress").classList.remove("show", "docked");
+    $("#loader-pill").classList.add("hidden");
+    $("#panel-3d").classList.remove("loading");
+    $("#stage").classList.toggle("anim", $("#panel-3d").classList.contains("walking"));
+    if (state.loading) {  // failed while building: back to the plain room
+      state.loading = false;
+      state.viewerDoc = null;
+      render();
+    }
     $("#go").disabled = !state.input;
     $("#go").textContent = state.output ? "Design again" : "Design my kitchen";
+    if (!state.output) setStep(state.input ? 2 : 1);
   }
   async function done(job) {
     try {
@@ -2736,6 +3522,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
       else if (want && state.output.scene.nodes[want]) { state.tab = "elev"; state.wall = want; }
       else state.tab = "3d";
       history.replaceState(null, "", `?job=${encodeURIComponent(job.id)}`);
+      state.loading = false;  // the viewer moves from the building loader into the real kitchen
+      setStep(3, true);
       render();
     } catch (e) { showRunError(e.message); }
     finish();
@@ -2752,9 +3540,48 @@ window.dispatchEvent(new Event("kv3d-ready"));
     return (n && n.metadata) || {};
   }
   const TECH = /hinged|-> MT|\bAID\b|score|reserve \[/i;
+  const FALLBACK_LOG = /AI designer was not available|used the rule-based designer instead/i;
+  // which designer the job asked for: its progress log names it ("Gemini (...) is designing ...")
+  function askedDesigner(job, ai) {
+    const log = (job.log || []).map((s) => s.msg).join("\n"), why = String(ai.fallback_reason || "");
+    if (/^Gemini\b/m.test(log) || /gemini/i.test(why)) return "gemini";
+    if (/^Qwen\b/m.test(log) || /ollama|qwen|colab/i.test(why)) return "qwen";
+    if (state.lastPrefs && state.lastPrefs.ai_mode !== "fallback") return state.lastPrefs.ai_provider === "gemini" ? "gemini" : "qwen";
+    return null;
+  }
+  // plain-language reasons from the backend's technical text (several models can fail differently)
+  const REASONS = [
+    [/quota|resource[_ ]exhausted|per day|daily limit/i, "the free daily quota is used up (it resets at midnight Pacific time)"],
+    [/\b503\b|busy|high demand|overload|"UNAVAILABLE"/i, "the service was busy (high demand)"],
+    [/\b429\b|rate.?limit|too many requests/i, "too many requests in a short time"],
+    [/connection|reset by peer|aborted|timed? ?out|timeout|remote end closed|disconnected/i, "the connection dropped"],
+    [/not reachable|unreachable|getaddrinfo|name resolution|failed to resolve|offline|refused|no route/i, "it could not be reached (check the internet connection, or that Ollama / Colab is running)"],
+    [/api[_ ]key|not set up|permission denied|\b401\b|\b403\b/i, "it is not set up on this server (API key)"],
+    [/not installed/i, "the AI model is not installed"],
+    [/still downloading/i, "the AI model is still downloading"],
+  ];
+  const plainReasons = (t) => REASONS.filter(([re]) => re.test(t)).map(([, s]) => s);
+  // "R17: In a Large L-Shape kitchen ..." -> rule id in bold, long text wraps
+  const ruleHtml = (m) => {
+    const s = String(m ?? ""), mm = s.match(/^(R\d+)\s*[:.-]\s*([\s\S]*)$/);
+    return mm ? `<div class="ex-rule"><b>${esc(mm[1])}</b>${esc(mm[2])}</div>` : `<div class="ex-rule"><b>Rule</b>${esc(s)}</div>`;
+  };
+  function retryWith(asked) {
+    const base = state.lastPrefs || prefs();
+    const p = { ...base, ai_provider: asked, ai_mode: state.strict ? "ollama" : "auto" };
+    const radio = asked === "gemini" ? $("#ai-gemini") : $("#ai-qwen");
+    if (radio && !radio.disabled) { radio.checked = true; updateHint(); updateDecideLabels(); }
+    if (!state.input && state.output) {  // re-opened job link: the finished scene is a valid plan (its items are replaced)
+      state.input = state.output;
+      state.filename = state.filename || state.jobFilename || "kitchen.json";
+    }
+    generate(p);
+  }
   const LAYOUT_NAME = { 1: "one-wall kitchen", 2: "L-shaped kitchen", 3: "U-shaped kitchen" };
   const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1);
-  const HEIGHT_LABEL = { wall_mm: "Wall cabinets", tall_mm: "Tall units", base_mm: "Base cabinets", loft: "Lofts", loft_mm: "Lofts", ceiling_mm: "Ceiling", wall_height_mm: "Room height" };
+  const HEIGHT_LABEL = { wall_mm: "Wall cabinets", tall_mm: "Tall units", base_mm: "Base cabinets", loft: "Lofts", loft_mm: "Loft height",
+    loft_y_mm: "Loft bottom (from floor)", reveal_mm: "Gap under the ceiling", top_mm: "Top of wall / tall units", ceiling_mm: "Ceiling",
+    wall_height_mm: "Room height", wall_style: "Wall cabinet doors" };
   const showVal = (k, v) => typeof v === "number" ? `${v}${/_mm$/.test(k) ? " mm" : ""}` : typeof v === "boolean" ? (v ? "Yes" : "No")
     : Array.isArray(v) ? v.join(", ") : v && typeof v === "object" ? Object.entries(v).map(([a, b]) => `${a}: ${b}`).join(", ") : String(v ?? "");
 
@@ -2780,12 +3607,38 @@ window.dispatchEvent(new Event("kv3d-ready"));
       [allOk ? "All passed" : `${r.validation_issues.length} issue(s)`, "design rules"],
       [dur(job.elapsed_s || r.seconds || 0), "design time"],
     ].map(([v, l]) => `<div class="kpi"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
+    // the AI designer failed and the rules designer stood in: say so clearly, offer a retry
+    state.jobFilename = job.filename;
+    const asked = askedDesigner(job, ai), askedName = asked === "gemini" ? "Gemini" : asked === "qwen" ? "Qwen" : "The AI designer";
+    const fb = $("#fallback-box"), failed = ai.mode === "fallback" && !!ai.fallback_reason;
+    document.querySelector(".workspace").classList.toggle("fallback", failed);  // the warning goes above the 3D stage
+    if (failed) {
+      const rs = plainReasons(ai.fallback_reason);
+      fb.innerHTML = `<span class="ic warn" aria-hidden="true">!</span>
+        <div class="fw-text"><b>${esc(askedName)} could not design this kitchen - the quick rules were used instead.</b>
+          ${rs.length ? `Reason: ${esc(rs.join("; "))}.` : "The AI designer did not answer."}
+          <details><summary>Technical details</summary><pre>${esc(ai.fallback_reason)}</pre></details></div>
+        ${asked ? `<button class="btn sm primary" type="button" id="retry-ai">Try again with ${esc(askedName)}</button>` : ""}`;
+      const btn = $("#retry-ai");
+      if (btn) btn.addEventListener("click", () => retryWith(asked));
+    }
+    fb.classList.toggle("hidden", !failed);
+    $("#banner .banner-icon").classList.toggle("warn", failed);
+    // a backup Gemini model answered
+    const skipped = (Array.isArray(ai.model_notes) ? ai.model_notes : ai.model_notes ? [ai.model_notes] : [])
+      .map((n) => (typeof n === "string" ? n : JSON.stringify(n)));
+    const mn = $("#model-note");
+    if (ai.mode === "gemini" && skipped.length) {
+      mn.textContent = `Answered by ${ai.model || "a backup model"} (${/quota/i.test(skipped.join(" ")) ? "the main model's free quota was used up" : "the main model was busy"}).`;
+      mn.title = skipped.join("\n");
+    }
+    mn.classList.toggle("hidden", !(ai.mode === "gemini" && skipped.length));
     $("#banner").classList.remove("hidden");
 
     // why these choices
     $("#ai-badge").innerHTML = isAI
       ? `<span class="badge ai">${who} AI designer · ${esc(modelName)}${esc(ownJudgement)}</span>`
-      : `<span class="badge rules">Quick rules designer</span> <span class="sub">${esc(ai.fallback_reason ? "The AI designer was not available, so the quick rules were used." : "")}</span>`;
+      : `<span class="badge rules">Quick rules designer</span> <span class="sub">${esc(ai.fallback_reason ? `${askedName} was not available, so the quick rules were used.` : "")}</span>`;
     const raw = ai.raw || {};
     let notes = "";
     if (isAI && raw.room_reading) notes += `<div class="quote"><small>How ${who} read the room</small>${esc(raw.room_reading)}</div>`;
@@ -2809,7 +3662,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
         </div>
         <div class="ex-side">
           ${(e.details || []).length ? `<div class="ex-facts-title">Facts checked by the system</div><ul class="ex-facts">${e.details.map((d) => `<li>${esc(d)}</li>`).join("")}</ul>` : ""}
-          ${(e.rules || []).map((m) => `<div class="ex-rule">Rules: ${esc(m)}</div>`).join("")}
+          ${(e.rules || []).map(ruleHtml).join("")}
         </div>
       </li>`).join("") || "<li class=\"sub\">No explanation available for this design.</li>";
     $("#why-card").classList.remove("hidden");
@@ -2854,6 +3707,30 @@ window.dispatchEvent(new Event("kv3d-ready"));
     $("#needs-list").innerHTML = needs.map((s) => `<li>${esc(s)}</li>`).join("");
     $("#needs-box").classList.toggle("hidden", !needs.length);
 
+    // MagickHome rule book: kitchen size band / type and every rule it applied
+    const rb = r.rulebook;
+    if (rb && typeof rb === "object") {
+      const facts = [
+        ["Floor area", Number.isFinite(Number(rb.floor_area_sqft)) ? `${Math.round(Number(rb.floor_area_sqft))} sq ft` : ""],
+        ["Size band", [rb.size_band, rb.size_note].filter(Boolean).join(" - ")],
+        ["Kitchen type", rb.kitchen_type],
+        ["Source", rb.source],
+      ].filter(([, v]) => v);
+      $("#rulebook-facts").innerHTML = facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("");
+      $("#rulebook-rules").innerHTML = (rb.applied || []).map((a) => {
+        const built = [a.width ? `${a.width} mm` : "", a.combination].filter(Boolean).join(" ");
+        const role = a.role ? cap(String(a.role).replace(/_/g, " ")) : "";
+        const notes = [];
+        if (a.changed && a.designer) notes.push(`Designer first chose ${showVal("designer", a.designer)} - changed by this rule`);
+        if (a.missing) notes.push(`Not in the catalogue: ${showVal("missing", a.missing)}`);
+        if (a.built === false) notes.push("Could not be built in this room");
+        return `<li><span class="rid">${esc(a.rule !== undefined && a.rule !== null ? `R${a.rule}` : "Rule")}</span> ${esc(a.text || "")}`
+          + `${role || built ? ` <span class="sub">· ${esc([role, built].filter(Boolean).join(": "))}</span>` : ""}`
+          + notes.map((t) => `<span class="chg">${esc(t)}</span>`).join("") + `</li>`;
+      }).join("") || `<li class="sub">No size rules applied to this kitchen.</li>`;
+      $("#rulebook-box").classList.remove("hidden");
+    } else $("#rulebook-box").classList.add("hidden");
+
     // cabinet list grouped by wall
     const tierOrder = { base: 0, tall: 1, wall: 2, loft: 3 };
     const body = [];
@@ -2880,6 +3757,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
   setInterval(refreshHealth, 30000);  // pick up server restarts / Colab or Gemini becoming available
   loadStyles();
   loadPrefSupport();
+  loadRulebook();
   const qs = new URLSearchParams(location.search);
   const aiParam = qs.get("ai");
   if (aiParam === "fallback") $("#ai-rules").checked = true;

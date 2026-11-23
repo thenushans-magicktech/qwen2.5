@@ -1,7 +1,7 @@
 {
  "format": "magickhomes-scene",
  "version": 1,
- "exportedAt": "2026-11-20T11:22:30.466Z",
+ "exportedAt": "2026-11-23T05:22:17.818Z",
  "scene": {
   "nodes": {
    "site_ak8kgyj1ac61iknj": {
@@ -68,7 +68,7 @@
      "wall_7sna3rldnsuwipgy",
      "slab_jvsqwiezhnodq0cv",
      "ceiling_13bdm8luvqcre1tc",
-     "item_t27d1f9waz8hpill"
+     "item_81338uuhgjosofxj"
     ],
     "level": 0
    },
@@ -81,33 +81,34 @@
     "visible": true,
     "children": [
      "door_6a3cugqojq1bwey8",
-     "item_ipexgczzp7y6s3tu",
-     "item_bbhauel5j8f3jlla",
-     "item_kok4obkt4k1hjv45",
-     "item_hg5cnmr7cuqvqcv7",
-     "item_3yeztc5i36yql2nj",
-     "item_iixn6hqxrnwd7oou",
-     "item_qdeppjayrb8g4rfo",
-     "item_wjkrc8p5lnm70ql2",
-     "item_phfjwia4ghkbidcp",
-     "item_2akl0p677djbss9n",
-     "item_re396k702dkjr465",
-     "item_7edgb1eeebij9xlk",
-     "item_qm2ky3swgai6jsi1",
-     "item_ue61o1yn40mnndvq",
-     "item_bhu4fesww8ja8vhl",
-     "item_loi73jpjlpaa3s33",
-     "item_yepw4jcg7t0356mp",
-     "item_5793doo0ka3ft2qt",
-     "item_kw8yo6e5mm6jk8ob",
-     "item_gscjyfi49je0166i",
-     "item_90hfv1nvj8ung8hp",
-     "item_i4by0mvn8v7dzyaz",
-     "item_tgr31aco7j31aed0",
-     "item_axpv6ckb5tfyzbv2",
-     "item_1d59a85uxnvs5y82",
-     "item_8bhjl6dmi210kws3",
-     "item_z76s8kljt7nhcqf0"
+     "item_15v54mkv36d9m80k",
+     "item_tyjxim2i0329z1a3",
+     "item_izkkjhlcv20ib9dg",
+     "item_057aw3ayq0xuxjem",
+     "item_2su28csfctruddn6",
+     "item_eanjvklnghshgyfs",
+     "item_24sqi5dw5m55lagq",
+     "item_0m9wruz5vymaztt9",
+     "item_h05dpq49948gobsc",
+     "item_e8horquz2ibbh0nh",
+     "item_je4gq0we0cjzahx1",
+     "item_ro1h3v6957uo0m99",
+     "item_kjcdzsnbhc1bkmr1",
+     "item_oyu64x0fcs6h4k48",
+     "item_17mx7yni2i39egqi",
+     "item_cxlosr5njkjszjrx",
+     "item_7x5bjv2uj4hwlyk2",
+     "item_592a8p19zgf05ojc",
+     "item_yg2flxldc6lu4zgi",
+     "item_03k59ch676iah1rp",
+     "item_owtwp55zh4x6fgr0",
+     "item_dczrh27w274giuuy",
+     "item_o3qm5apwsrccflv4",
+     "item_7hu38rnbko5estie",
+     "item_enporyj06t35yws9",
+     "item_9hlwlwfadmimw4tg",
+     "item_1ohdojy65csg2mcq",
+     "item_c6gxpqb8qf7q4vr5"
     ],
     "start": [
      -3.6500000000000004,
@@ -131,41 +132,41 @@
     "visible": true,
     "children": [
      "window_a6jgraczhlas4vwp",
-     "item_87b2rt92g4eq7nol",
-     "item_e04w19vuqc5g249p",
-     "item_iauzd4hylxdpbp9v",
-     "item_wa6wpe7gdsjuqcz7",
-     "item_3e4lv1gfirhi81ef",
-     "item_vi8yydtwquw3r52u",
-     "item_0cv8vnwis5q1rztl",
-     "item_50ovxi4426p9jb7k",
-     "item_hdxinh2j8as33u86",
-     "item_fgfb2jh9jl1fehu0",
-     "item_nomuwjqe243vjyz6",
-     "item_3espilkyo5cu2ayn",
-     "item_5g4pbx0vf3x8thr9",
-     "item_3jnrz5zuh48pla6h",
-     "item_1utbfxg4reugducy",
-     "item_2kf1epu35m9b4hzd",
-     "item_nsfs1v0hfmpkh9aq",
-     "item_syfwb3qh8s4wmqu7",
-     "item_vz7p58qpws1dvwkw",
-     "item_j0qoqhrccdognwh9",
-     "item_slk4e6ux2wo3jb6n",
-     "item_o3u5lvd70u9cw8gn",
-     "item_epp9gi8rxuewn3u5",
-     "item_xwirazig1omme4ng",
-     "item_dr8nrgvb9pv7c7v2",
-     "item_c4tttsra1mbqp6sl",
-     "item_alcw5o79rxlkalin",
-     "item_cq8ana3lig32ge43",
-     "item_6qmf6sfa29g96q2o",
-     "item_b71u4vw3vhqpkgco",
-     "item_yeer0f4lea0ir0tc",
-     "item_1kyya9nuaeulagxn",
-     "item_p9d9mjzrcvnql2ky",
-     "item_7aon4hdol3p64r9q",
-     "item_e9z0pqavpvajmg4b"
+     "item_2zsq4csmzs7kz5zg",
+     "item_gm2iyrec654sy515",
+     "item_vvha1if41ua6sd01",
+     "item_9m15xk6onsmsivvb",
+     "item_4kmwz2wg198zqhdq",
+     "item_ip2hmy5bx6zynxjw",
+     "item_89a5gxcpnc55no9u",
+     "item_jde8ngusqh6cluzy",
+     "item_owpzkf2p2a2fp0wn",
+     "item_e8c3pz4k790qs5sc",
+     "item_8w3xq89tn9gltnla",
+     "item_xjbfpj7nifiwgdhq",
+     "item_e6eq3gscqu0udr81",
+     "item_psq4m77kkg2s62cb",
+     "item_8umdsrw7iiynsbrz",
+     "item_k2vl2gie3cuou2ro",
+     "item_ule6xteceznmovi4",
+     "item_8eo5wka870po6lfc",
+     "item_58wr5gdvrvgazee8",
+     "item_cz6kfseaw6jrrimg",
+     "item_1rjjn4h16dwxfl0i",
+     "item_ejfs3x122loe9l21",
+     "item_eb6zroiy9my8otvf",
+     "item_7czcr2zsgl2e6oft",
+     "item_pzduxpdg2v4pr9nv",
+     "item_jk6ja32rflz5qmhk",
+     "item_vrpmqdmjzo8xj64a",
+     "item_a24o2ma4nrqafk78",
+     "item_7ovdc2i7kgh7a8ee",
+     "item_7350x5cllcv9vovo",
+     "item_mny2xxndoeqdawsn",
+     "item_k58wx3r1yekw54l5",
+     "item_0xgz1ifg1kyr7tmp",
+     "item_rnpyls8nrb1iyuxb",
+     "item_f02wr3ii3tyv5vu5"
     ],
     "start": [
      -3.65,
@@ -414,9 +415,9 @@
     "sillDepth": 0.08,
     "sillThickness": 0.03
    },
-   "item_ipexgczzp7y6s3tu": {
+   "item_15v54mkv36d9m80k": {
     "object": "node",
-    "id": "item_ipexgczzp7y6s3tu",
+    "id": "item_15v54mkv36d9m80k",
     "type": "item",
     "name": "MTBABCU600560800SCSSSLLEHNS",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -762,9 +763,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_bbhauel5j8f3jlla": {
+   "item_tyjxim2i0329z1a3": {
     "object": "node",
-    "id": "item_bbhauel5j8f3jlla",
+    "id": "item_tyjxim2i0329z1a3",
     "type": "item",
     "name": "MTBABHU900560700DTDASLPUEHNS",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -1074,7 +1075,7 @@
      1
     ],
     "children": [
-     "item_n7cf6s317mdpow6w"
+     "item_w1cqhlpwvrjwkytp"
     ],
     "wallId": "wall_1oy5ecjq6k11pfoo",
     "wallT": 0.5219512195121951,
@@ -1112,9 +1113,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_kok4obkt4k1hjv45": {
+   "item_izkkjhlcv20ib9dg": {
     "object": "node",
-    "id": "item_kok4obkt4k1hjv45",
+    "id": "item_izkkjhlcv20ib9dg",
     "type": "item",
     "name": "MTBABSP300560700DSPSLPUEHNS",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -1460,9 +1461,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_hg5cnmr7cuqvqcv7": {
+   "item_057aw3ayq0xuxjem": {
     "object": "node",
-    "id": "item_hg5cnmr7cuqvqcv7",
+    "id": "item_057aw3ayq0xuxjem",
     "type": "item",
     "name": "MTBABU600560700DFDSLPUEHNS",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -1808,9 +1809,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_3yeztc5i36yql2nj": {
+   "item_2su28csfctruddn6": {
     "object": "node",
-    "id": "item_3yeztc5i36yql2nj",
+    "id": "item_2su28csfctruddn6",
     "type": "item",
     "name": "MTWAWU550330600SSSSLLEH1S",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -2156,9 +2157,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_iixn6hqxrnwd7oou": {
+   "item_eanjvklnghshgyfs": {
     "object": "node",
-    "id": "item_iixn6hqxrnwd7oou",
+    "id": "item_eanjvklnghshgyfs",
     "type": "item",
     "name": "MTWAWU750330600SDSSLBOEH1S",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -2504,9 +2505,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_qdeppjayrb8g4rfo": {
+   "item_24sqi5dw5m55lagq": {
     "object": "node",
-    "id": "item_qdeppjayrb8g4rfo",
+    "id": "item_24sqi5dw5m55lagq",
     "type": "item",
     "name": "MTWCWLC650650600SLCSLBOEH1S",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -2854,40 +2855,40 @@
      "cornerAtEnd": true
     }
    },
-   "item_wjkrc8p5lnm70ql2": {
+   "item_0m9wruz5vymaztt9": {
     "object": "node",
-    "id": "item_wjkrc8p5lnm70ql2",
+    "id": "item_0m9wruz5vymaztt9",
     "type": "item",
-    "name": "MTLOLU1200330600SDSSLBOEHNS",
+    "name": "MTLOLFS550330600SSSSLLEHNS",
     "parentId": "wall_1oy5ecjq6k11pfoo",
     "visible": true,
     "metadata": {
-     "_id": "MTLOLU1200330600SDSSLBOEHNS",
-     "aid": "MTLOLU1200330600SDSSLBOEHNS",
-     "description": "Loft-Loft - Modular-1200 × 330 × 600 mm — Shutter, Double Shutter, Slab (Plain) finish. Opens Both, External Handle. Internals: No Shelf.",
-     "width": 1200,
+     "_id": "MTLOLFS550330600SSSSLLEHNS",
+     "aid": "MTLOLFS550330600SSSSLLEHNS",
+     "description": "Loft-Loft - Frame with Shutter-550 × 330 × 600 mm — Shutter, Single Shutter, Slab (Plain) finish. Opens Left, External Handle. Internals: No Shelf.",
+     "width": 550,
      "depth": 330,
      "height": 600,
      "unitFamily": "Loft",
-     "category": "Loft - Modular",
+     "category": "Loft - Frame with Shutter",
      "doorType": "Shutter",
-     "cabinetCombination": "Double Shutter",
-     "shutterCount": 2,
+     "cabinetCombination": "Single Shutter",
+     "shutterCount": 1,
      "drawerCount": 0,
      "doorStyle": "Slab (Plain)",
-     "openingDirection": "Both",
+     "openingDirection": "Left",
      "handleType": "External Handle",
      "internals": "No Shelf",
-     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLU1200330600SDSSLBOEHNS.glb",
-     "modelKey": "catalogue-models/MTLOLU1200330600SDSSLBOEHNS.glb",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU1200330600SDSSLBOEHNS.png",
+     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS550330600SSSSLLEHNS.glb",
+     "modelKey": "catalogue-models/MTLOLFS550330600SSSSLLEHNS.glb",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS550330600SSSSLLEHNS.png",
      "placeholderThumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/cabinet_dummythumbnail.png",
      "isActive": true,
-     "id": "MTLOLU1200330600SDSSLBOEHNS",
-     "name": "MTLOLU1200330600SDSSLBOEHNS",
-     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU1200330600SDSSLBOEHNS.png",
-     "aidAssetId": "MTLOLU1200330600SDSSLBOEHNS",
-     "subCategory": "Loft - Modular",
+     "id": "MTLOLFS550330600SSSSLLEHNS",
+     "name": "MTLOLFS550330600SSSSLLEHNS",
+     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS550330600SSSSLLEHNS.png",
+     "aidAssetId": "MTLOLFS550330600SSSSLLEHNS",
+     "subCategory": "Loft - Frame with Shutter",
      "catalogSource": "xlsx",
      "textures": [
       {
@@ -3151,7 +3152,7 @@
      ]
     },
     "position": [
-     1.7,
+     1.365,
      2.058,
      0.215
     ],
@@ -3167,16 +3168,16 @@
     ],
     "children": [],
     "wallId": "wall_1oy5ecjq6k11pfoo",
-    "wallT": 0.4146341463414634,
+    "wallT": 0.3329268292682927,
     "asset": {
-     "id": "MTLOLU1200330600SDSSLBOEHNS",
+     "id": "MTLOLFS550330600SSSSLLEHNS",
      "category": "kitchen",
-     "name": "MTLOLU1200330600SDSSLBOEHNS",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU1200330600SDSSLBOEHNS.png",
+     "name": "MTLOLFS550330600SSSSLLEHNS",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS550330600SSSSLLEHNS.png",
      "source": "library",
-     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLU1200330600SDSSLBOEHNS.glb",
+     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS550330600SSSSLLEHNS.glb",
      "dimensions": [
-      1.2,
+      0.55,
       0.6,
       0.33
      ],
@@ -3202,22 +3203,22 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_phfjwia4ghkbidcp": {
+   "item_h05dpq49948gobsc": {
     "object": "node",
-    "id": "item_phfjwia4ghkbidcp",
+    "id": "item_h05dpq49948gobsc",
     "type": "item",
-    "name": "MTLOLU1100330600SDSSLBOEHNS",
+    "name": "MTLOLFS1000330600SDSSLBOEHNS",
     "parentId": "wall_1oy5ecjq6k11pfoo",
     "visible": true,
     "metadata": {
-     "_id": "MTLOLU1100330600SDSSLBOEHNS",
-     "aid": "MTLOLU1100330600SDSSLBOEHNS",
-     "description": "Loft-Loft - Modular-1100 × 330 × 600 mm — Shutter, Double Shutter, Slab (Plain) finish. Opens Both, External Handle. Internals: No Shelf.",
-     "width": 1100,
+     "_id": "MTLOLFS1000330600SDSSLBOEHNS",
+     "aid": "MTLOLFS1000330600SDSSLBOEHNS",
+     "description": "Loft-Loft - Frame with Shutter-1000 × 330 × 600 mm — Shutter, Double Shutter, Slab (Plain) finish. Opens Both, External Handle. Internals: No Shelf.",
+     "width": 1000,
      "depth": 330,
      "height": 600,
      "unitFamily": "Loft",
-     "category": "Loft - Modular",
+     "category": "Loft - Frame with Shutter",
      "doorType": "Shutter",
      "cabinetCombination": "Double Shutter",
      "shutterCount": 2,
@@ -3226,16 +3227,16 @@
      "openingDirection": "Both",
      "handleType": "External Handle",
      "internals": "No Shelf",
-     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLU1100330600SDSSLBOEHNS.glb",
-     "modelKey": "catalogue-models/MTLOLU1100330600SDSSLBOEHNS.glb",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU1100330600SDSSLBOEHNS.png",
+     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS1000330600SDSSLBOEHNS.glb",
+     "modelKey": "catalogue-models/MTLOLFS1000330600SDSSLBOEHNS.glb",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS1000330600SDSSLBOEHNS.png",
      "placeholderThumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/cabinet_dummythumbnail.png",
      "isActive": true,
-     "id": "MTLOLU1100330600SDSSLBOEHNS",
-     "name": "MTLOLU1100330600SDSSLBOEHNS",
-     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU1100330600SDSSLBOEHNS.png",
-     "aidAssetId": "MTLOLU1100330600SDSSLBOEHNS",
-     "subCategory": "Loft - Modular",
+     "id": "MTLOLFS1000330600SDSSLBOEHNS",
+     "name": "MTLOLFS1000330600SDSSLBOEHNS",
+     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS1000330600SDSSLBOEHNS.png",
+     "aidAssetId": "MTLOLFS1000330600SDSSLBOEHNS",
+     "subCategory": "Loft - Frame with Shutter",
      "catalogSource": "xlsx",
      "textures": [
       {
@@ -3499,7 +3500,7 @@
      ]
     },
     "position": [
-     2.85,
+     2.14,
      2.058,
      0.215
     ],
@@ -3515,16 +3516,16 @@
     ],
     "children": [],
     "wallId": "wall_1oy5ecjq6k11pfoo",
-    "wallT": 0.6951219512195121,
+    "wallT": 0.5219512195121951,
     "asset": {
-     "id": "MTLOLU1100330600SDSSLBOEHNS",
+     "id": "MTLOLFS1000330600SDSSLBOEHNS",
      "category": "kitchen",
-     "name": "MTLOLU1100330600SDSSLBOEHNS",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU1100330600SDSSLBOEHNS.png",
+     "name": "MTLOLFS1000330600SDSSLBOEHNS",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS1000330600SDSSLBOEHNS.png",
      "source": "library",
-     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLU1100330600SDSSLBOEHNS.glb",
+     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS1000330600SDSSLBOEHNS.glb",
      "dimensions": [
-      1.1,
+      1.0,
       0.6,
       0.33
      ],
@@ -3550,40 +3551,388 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_2akl0p677djbss9n": {
+   "item_e8horquz2ibbh0nh": {
     "object": "node",
-    "id": "item_2akl0p677djbss9n",
+    "id": "item_e8horquz2ibbh0nh",
     "type": "item",
-    "name": "MTLCLLCM650650600SLCMSLBOEHNS",
+    "name": "MTLOLFS750330600SDSSLBOEHNS",
     "parentId": "wall_1oy5ecjq6k11pfoo",
     "visible": true,
     "metadata": {
-     "_id": "MTLCLLCM650650600SLCMSLBOEHNS",
-     "aid": "MTLCLLCM650650600SLCMSLBOEHNS",
-     "description": "Loft Corner-Loft – L Corner - Modular-650 × 650 × 600 mm — Shutter, L Corner Loft – Modular, Slab (Plain) finish. Opens Both, External Handle. Internals: No Shelf.",
+     "_id": "MTLOLFS750330600SDSSLBOEHNS",
+     "aid": "MTLOLFS750330600SDSSLBOEHNS",
+     "description": "Loft-Loft - Frame with Shutter-750 × 330 × 600 mm — Shutter, Double Shutter, Slab (Plain) finish. Opens Both, External Handle. Internals: No Shelf.",
+     "width": 750,
+     "depth": 330,
+     "height": 600,
+     "unitFamily": "Loft",
+     "category": "Loft - Frame with Shutter",
+     "doorType": "Shutter",
+     "cabinetCombination": "Double Shutter",
+     "shutterCount": 2,
+     "drawerCount": 0,
+     "doorStyle": "Slab (Plain)",
+     "openingDirection": "Both",
+     "handleType": "External Handle",
+     "internals": "No Shelf",
+     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS750330600SDSSLBOEHNS.glb",
+     "modelKey": "catalogue-models/MTLOLFS750330600SDSSLBOEHNS.glb",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS750330600SDSSLBOEHNS.png",
+     "placeholderThumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/cabinet_dummythumbnail.png",
+     "isActive": true,
+     "id": "MTLOLFS750330600SDSSLBOEHNS",
+     "name": "MTLOLFS750330600SDSSLBOEHNS",
+     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS750330600SDSSLBOEHNS.png",
+     "aidAssetId": "MTLOLFS750330600SDSSLBOEHNS",
+     "subCategory": "Loft - Frame with Shutter",
+     "catalogSource": "xlsx",
+     "textures": [
+      {
+       "_id": "6a991fb3d9ab0af9a6d9ce71",
+       "aid": "MHS212",
+       "code": "R50157",
+       "type": "Shutter",
+       "brand": "Magickhome",
+       "profile": [
+        "Handle",
+        "Gola",
+        "Edge"
+       ],
+       "category": "PU",
+       "family": "Solids",
+       "shutter": "Matte",
+       "name": "Stromma White",
+       "isGroup": true,
+       "groupNormalToken": "MHSC008FM015S006_groupnormal",
+       "groupAORMToken": "MHSC008FM015S006_groupAORM",
+       "isAvailable": true,
+       "textureWidth": 2438,
+       "textureHeight": 2438,
+       "colorCode": "#F2F2F2",
+       "isFrosted": false,
+       "glassOpacity": "Nil",
+       "normalIntensity": "0",
+       "useTexture": false,
+       "metalic": "0",
+       "roughness": "0.3",
+       "materialName": "ShutterFrontM",
+       "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+       "thumbnailKey": "thumbnail-texture/MHS212.jpg",
+       "isActive": true,
+       "__v": 0,
+       "createdAt": "2026-09-03T07:20:19.220Z",
+       "updatedAt": "2026-10-27T13:15:56.385Z",
+       "SKU_ID": "SPHP129"
+      },
+      {
+       "_id": "6a991fb3d9ab0af9a6d9cddc",
+       "aid": "MHS063",
+       "code": "21039",
+       "type": "Shutter",
+       "brand": "Merino",
+       "profile": [
+        "Handle",
+        "Gola",
+        "Edge"
+       ],
+       "category": "Laminate",
+       "family": "Solids",
+       "shutter": "Suede",
+       "name": "Misty Grey",
+       "isGroup": true,
+       "groupNormalToken": "MHSC006FM015S009_groupnormal",
+       "groupAORMToken": "MHSC006FM015S009_groupAORM",
+       "isAvailable": true,
+       "textureWidth": 2438,
+       "textureHeight": 2438,
+       "colorCode": "#383838",
+       "isFrosted": false,
+       "glassOpacity": "Nil",
+       "normalIntensity": "0",
+       "useTexture": false,
+       "metalic": "0",
+       "roughness": "0.3",
+       "materialName": "ShutterFrontM",
+       "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS063.jpg",
+       "thumbnailKey": "thumbnail-texture/MHS063.jpg",
+       "isActive": true,
+       "__v": 0,
+       "createdAt": "2026-09-03T07:20:19.213Z",
+       "updatedAt": "2026-10-27T13:15:56.260Z",
+       "SKU_ID": "SPHP129"
+      },
+      {
+       "_id": "6a991fb3d9ab0af9a6d9cddd",
+       "aid": "MHS064",
+       "code": "21003",
+       "type": "Shutter",
+       "brand": "Merino",
+       "profile": [
+        "Handle",
+        "Gola",
+        "Edge"
+       ],
+       "category": "Laminate",
+       "family": "Solids",
+       "shutter": "Suede",
+       "name": "Prairie Green",
+       "isGroup": true,
+       "groupNormalToken": "MHSC006FM015S009_groupnormal",
+       "groupAORMToken": "MHSC006FM015S009_groupAORM",
+       "isAvailable": true,
+       "textureWidth": 2438,
+       "textureHeight": 2438,
+       "colorCode": "#6F855F",
+       "isFrosted": false,
+       "glassOpacity": "Nil",
+       "normalIntensity": "0",
+       "useTexture": false,
+       "metalic": "0",
+       "roughness": "0.3",
+       "materialName": "ShutterFrontM",
+       "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS064.jpg",
+       "thumbnailKey": "thumbnail-texture/MHS064.jpg",
+       "isActive": true,
+       "__v": 0,
+       "createdAt": "2026-09-03T07:20:19.213Z",
+       "updatedAt": "2026-10-27T13:15:56.260Z",
+       "SKU_ID": "SPHP129"
+      },
+      {
+       "_id": "6a991fb3d9ab0af9a6d9cdd1",
+       "aid": "MHS052",
+       "code": "22079",
+       "type": "Shutter",
+       "brand": "Merino",
+       "profile": [
+        "Handle",
+        "Gola",
+        "Edge"
+       ],
+       "category": "Laminate",
+       "family": "Solids",
+       "shutter": "Suede",
+       "name": "Dove grey",
+       "isGroup": true,
+       "groupNormalToken": "MHSC006FM015S009_groupnormal",
+       "groupAORMToken": "MHSC006FM015S009_groupAORM",
+       "isAvailable": true,
+       "textureWidth": 2438,
+       "textureHeight": 2438,
+       "colorCode": "#80837C",
+       "isFrosted": false,
+       "glassOpacity": "Nil",
+       "normalIntensity": "0",
+       "useTexture": false,
+       "metalic": "0",
+       "roughness": "0.3",
+       "materialName": "ShutterFrontM",
+       "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS052.jpg",
+       "thumbnailKey": "thumbnail-texture/MHS052.jpg",
+       "isActive": true,
+       "__v": 0,
+       "createdAt": "2026-09-03T07:20:19.212Z",
+       "updatedAt": "2026-10-27T13:15:56.250Z",
+       "SKU_ID": "SPHP129"
+      },
+      {
+       "_id": "6a991fb3d9ab0af9a6d9ce24",
+       "aid": "MHS135",
+       "code": "10514 V",
+       "type": "Shutter",
+       "brand": "Merino",
+       "profile": [
+        "Handle",
+        "Gola",
+        "Edge"
+       ],
+       "category": "Laminate",
+       "family": "Wooden",
+       "shutter": "Suede",
+       "name": "Pure Legno Oak",
+       "isGroup": true,
+       "groupNormalToken": "MHSC006FM019S009_groupnormal",
+       "groupAORMToken": "MHSC006FM019S009_groupAORM",
+       "isAvailable": true,
+       "textureWidth": 2438,
+       "textureHeight": 2438,
+       "colorCode": "Nil",
+       "isFrosted": false,
+       "glassOpacity": "Nil",
+       "normalIntensity": "0",
+       "useTexture": true,
+       "metalic": "0",
+       "roughness": "0.5",
+       "materialName": "ShutterFrontM",
+       "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
+       "thumbnailKey": "thumbnail-texture/MHS135.jpg",
+       "texture1K": {
+        "baseColor": {
+         "key": "texture-material/1K/MHS135_baseColor_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS135_baseColor_1K.ktx2"
+        }
+       },
+       "texture2K": {
+        "baseColor": {
+         "key": "texture-material/2K/MHS135_baseColor_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS135_baseColor_2K.ktx2"
+        }
+       },
+       "texture512": {
+        "baseColor": {
+         "key": "texture-material/512/MHS135_baseColor_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS135_baseColor_512.ktx2"
+        }
+       },
+       "isActive": true,
+       "__v": 0,
+       "createdAt": "2026-09-03T07:20:19.216Z",
+       "updatedAt": "2026-10-27T13:15:56.324Z",
+       "SKU_ID": "SPHP129"
+      },
+      {
+       "_id": "6a991fb3d9ab0af9a6d9ce32",
+       "aid": "MHS149",
+       "code": "14665 RH",
+       "type": "Shutter",
+       "brand": "Merino",
+       "profile": [
+        "Handle",
+        "Gola",
+        "Edge"
+       ],
+       "category": "Laminate",
+       "family": "Wooden",
+       "shutter": "Suede",
+       "name": "Natural Ashwood",
+       "isGroup": true,
+       "groupNormalToken": "MHSC006FM019S009_groupnormal",
+       "groupAORMToken": "MHSC006FM019S009_groupAORM",
+       "isAvailable": true,
+       "textureWidth": 2438,
+       "textureHeight": 2438,
+       "colorCode": "Nil",
+       "isFrosted": false,
+       "glassOpacity": "Nil",
+       "normalIntensity": "0",
+       "useTexture": true,
+       "metalic": "0",
+       "roughness": "0.3",
+       "materialName": "ShutterFrontM",
+       "thumbnailUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS149.jpg",
+       "thumbnailKey": "thumbnail-texture/MHS149.jpg",
+       "texture1K": {
+        "baseColor": {
+         "key": "texture-material/1K/MHS149_baseColor_1K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/1K/MHS149_baseColor_1K.ktx2"
+        }
+       },
+       "texture2K": {
+        "baseColor": {
+         "key": "texture-material/2K/MHS149_baseColor_2K.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/2K/MHS149_baseColor_2K.ktx2"
+        }
+       },
+       "texture512": {
+        "baseColor": {
+         "key": "texture-material/512/MHS149_baseColor_512.ktx2",
+         "url": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/texture-material/512/MHS149_baseColor_512.ktx2"
+        }
+       },
+       "isActive": true,
+       "__v": 0,
+       "createdAt": "2026-09-03T07:20:19.217Z",
+       "updatedAt": "2026-10-27T13:15:56.335Z",
+       "SKU_ID": "SPHP129"
+      }
+     ]
+    },
+    "position": [
+     3.025,
+     2.058,
+     0.215
+    ],
+    "rotation": [
+     0,
+     3.141592653589793,
+     0
+    ],
+    "scale": [
+     1,
+     1,
+     1
+    ],
+    "children": [],
+    "wallId": "wall_1oy5ecjq6k11pfoo",
+    "wallT": 0.7378048780487805,
+    "asset": {
+     "id": "MTLOLFS750330600SDSSLBOEHNS",
+     "category": "kitchen",
+     "name": "MTLOLFS750330600SDSSLBOEHNS",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS750330600SDSSLBOEHNS.png",
+     "source": "library",
+     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS750330600SDSSLBOEHNS.glb",
+     "dimensions": [
+      0.75,
+      0.6,
+      0.33
+     ],
+     "offset": [
+      0,
+      0.3,
+      0
+     ],
+     "rotation": [
+      0,
+      0,
+      0
+     ],
+     "scale": [
+      0.01,
+      0.01,
+      0.01
+     ]
+    },
+    "placement": {
+     "level": "loft",
+     "side": 1,
+     "designSource": "ai-kitchen-v1"
+    }
+   },
+   "item_je4gq0we0cjzahx1": {
+    "object": "node",
+    "id": "item_je4gq0we0cjzahx1",
+    "type": "item",
+    "name": "MTLCLLCFS650650600SLCFSSLBOEHNS",
+    "parentId": "wall_1oy5ecjq6k11pfoo",
+    "visible": true,
+    "metadata": {
+     "_id": "MTLCLLCFS650650600SLCFSSLBOEHNS",
+     "aid": "MTLCLLCFS650650600SLCFSSLBOEHNS",
+     "description": "Loft Corner-Loft – L Corner - Frame with Shutter-650 × 650 × 600 mm — Shutter, L Corner Loft – Frame with Shutter, Slab (Plain) finish. Opens Both, External Handle. Internals: No Shelf.",
      "width": 650,
      "depth": 650,
      "height": 600,
      "unitFamily": "Loft Corner",
-     "category": "Loft – L Corner - Modular",
+     "category": "Loft – L Corner - Frame with Shutter",
      "doorType": "Shutter",
-     "cabinetCombination": "L Corner Loft – Modular",
+     "cabinetCombination": "L Corner Loft – Frame with Shutter",
      "shutterCount": 2,
      "drawerCount": 0,
      "doorStyle": "Slab (Plain)",
      "openingDirection": "Both",
      "handleType": "External Handle",
      "internals": "No Shelf",
-     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLCLLCM650650600SLCMSLBOEHNS.glb",
-     "modelKey": "catalogue-models/MTLCLLCM650650600SLCMSLBOEHNS.glb",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLCLLCM650650600SLCMSLBOEHNS.png",
+     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLCLLCFS650650600SLCFSSLBOEHNS.glb",
+     "modelKey": "catalogue-models/MTLCLLCFS650650600SLCFSSLBOEHNS.glb",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLCLLCFS650650600SLCFSSLBOEHNS.png",
      "placeholderThumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/cabinet_dummythumbnail.png",
      "isActive": true,
-     "id": "MTLCLLCM650650600SLCMSLBOEHNS",
-     "name": "MTLCLLCM650650600SLCMSLBOEHNS",
-     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLCLLCM650650600SLCMSLBOEHNS.png",
-     "aidAssetId": "MTLCLLCM650650600SLCMSLBOEHNS",
-     "subCategory": "Loft – L Corner - Modular",
+     "id": "MTLCLLCFS650650600SLCFSSLBOEHNS",
+     "name": "MTLCLLCFS650650600SLCFSSLBOEHNS",
+     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLCLLCFS650650600SLCFSSLBOEHNS.png",
+     "aidAssetId": "MTLCLLCFS650650600SLCFSSLBOEHNS",
+     "subCategory": "Loft – L Corner - Frame with Shutter",
      "catalogSource": "xlsx",
      "textures": [
       {
@@ -3865,12 +4214,12 @@
     "wallId": "wall_1oy5ecjq6k11pfoo",
     "wallT": 0.9085365853658537,
     "asset": {
-     "id": "MTLCLLCM650650600SLCMSLBOEHNS",
+     "id": "MTLCLLCFS650650600SLCFSSLBOEHNS",
      "category": "kitchen",
-     "name": "MTLCLLCM650650600SLCMSLBOEHNS",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLCLLCM650650600SLCMSLBOEHNS.png",
+     "name": "MTLCLLCFS650650600SLCFSSLBOEHNS",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLCLLCFS650650600SLCFSSLBOEHNS.png",
      "source": "library",
-     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLCLLCM650650600SLCMSLBOEHNS.glb",
+     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLCLLCFS650650600SLCFSSLBOEHNS.glb",
      "dimensions": [
       0.65,
       0.6,
@@ -3900,9 +4249,9 @@
      "cornerAtEnd": true
     }
    },
-   "item_87b2rt92g4eq7nol": {
+   "item_2zsq4csmzs7kz5zg": {
     "object": "node",
-    "id": "item_87b2rt92g4eq7nol",
+    "id": "item_2zsq4csmzs7kz5zg",
     "type": "item",
     "name": "MTBCBCR1050560700SBCRSLREH1S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -4250,9 +4599,9 @@
      "cornerAtEnd": false
     }
    },
-   "item_e04w19vuqc5g249p": {
+   "item_gm2iyrec654sy515": {
     "object": "node",
-    "id": "item_e04w19vuqc5g249p",
+    "id": "item_gm2iyrec654sy515",
     "type": "item",
     "name": "MTBABU350560700DSDSSSLLEH1S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -4598,9 +4947,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_iauzd4hylxdpbp9v": {
+   "item_vvha1if41ua6sd01": {
     "object": "node",
-    "id": "item_iauzd4hylxdpbp9v",
+    "id": "item_vvha1if41ua6sd01",
     "type": "item",
     "name": "MTBABSU1050560700SSDSSLBOEHNS",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -4910,7 +5259,7 @@
      1
     ],
     "children": [
-     "item_cmwbo9jvl6lty598"
+     "item_bswwmtwt24ih07z3"
     ],
     "wallId": "wall_56i56ymve0xf69fm",
     "wallT": 0.48565132443497816,
@@ -4948,9 +5297,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_wa6wpe7gdsjuqcz7": {
+   "item_9m15xk6onsmsivvb": {
     "object": "node",
-    "id": "item_wa6wpe7gdsjuqcz7",
+    "id": "item_9m15xk6onsmsivvb",
     "type": "item",
     "name": "MTBABGT600560700DGTEDSLPUEHNS",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -5296,9 +5645,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_3e4lv1gfirhi81ef": {
+   "item_4kmwz2wg198zqhdq": {
     "object": "node",
-    "id": "item_3e4lv1gfirhi81ef",
+    "id": "item_4kmwz2wg198zqhdq",
     "type": "item",
     "name": "MTBABU300560700DSDSSSLREH1S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -5644,9 +5993,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_vi8yydtwquw3r52u": {
+   "item_ip2hmy5bx6zynxjw": {
     "object": "node",
-    "id": "item_vi8yydtwquw3r52u",
+    "id": "item_ip2hmy5bx6zynxjw",
     "type": "item",
     "name": "MTTATU6005601940SSSSLREH4S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -5992,9 +6341,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_0cv8vnwis5q1rztl": {
+   "item_89a5gxcpnc55no9u": {
     "object": "node",
-    "id": "item_0cv8vnwis5q1rztl",
+    "id": "item_89a5gxcpnc55no9u",
     "type": "item",
     "name": "MTWAWU500330600SSSSLLEH1S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -6340,9 +6689,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_50ovxi4426p9jb7k": {
+   "item_jde8ngusqh6cluzy": {
     "object": "node",
-    "id": "item_50ovxi4426p9jb7k",
+    "id": "item_jde8ngusqh6cluzy",
     "type": "item",
     "name": "MTWAWAU600330600SASSSLREHNS",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -6688,22 +7037,22 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_hdxinh2j8as33u86": {
+   "item_owpzkf2p2a2fp0wn": {
     "object": "node",
-    "id": "item_hdxinh2j8as33u86",
+    "id": "item_owpzkf2p2a2fp0wn",
     "type": "item",
-    "name": "MTLOLU500330600SSSSLLEHNS",
+    "name": "MTLOLFS500330600SSSSLLEHNS",
     "parentId": "wall_56i56ymve0xf69fm",
     "visible": true,
     "metadata": {
-     "_id": "MTLOLU500330600SSSSLLEHNS",
-     "aid": "MTLOLU500330600SSSSLLEHNS",
-     "description": "Loft-Loft - Modular-500 × 330 × 600 mm — Shutter, Single Shutter, Slab (Plain) finish. Opens Left, External Handle. Internals: No Shelf.",
+     "_id": "MTLOLFS500330600SSSSLLEHNS",
+     "aid": "MTLOLFS500330600SSSSLLEHNS",
+     "description": "Loft-Loft - Frame with Shutter-500 × 330 × 600 mm — Shutter, Single Shutter, Slab (Plain) finish. Opens Left, External Handle. Internals: No Shelf.",
      "width": 500,
      "depth": 330,
      "height": 600,
      "unitFamily": "Loft",
-     "category": "Loft - Modular",
+     "category": "Loft - Frame with Shutter",
      "doorType": "Shutter",
      "cabinetCombination": "Single Shutter",
      "shutterCount": 1,
@@ -6712,16 +7061,16 @@
      "openingDirection": "Left",
      "handleType": "External Handle",
      "internals": "No Shelf",
-     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLU500330600SSSSLLEHNS.glb",
-     "modelKey": "catalogue-models/MTLOLU500330600SSSSLLEHNS.glb",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU500330600SSSSLLEHNS.png",
+     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS500330600SSSSLLEHNS.glb",
+     "modelKey": "catalogue-models/MTLOLFS500330600SSSSLLEHNS.glb",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS500330600SSSSLLEHNS.png",
      "placeholderThumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/cabinet_dummythumbnail.png",
      "isActive": true,
-     "id": "MTLOLU500330600SSSSLLEHNS",
-     "name": "MTLOLU500330600SSSSLLEHNS",
-     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU500330600SSSSLLEHNS.png",
-     "aidAssetId": "MTLOLU500330600SSSSLLEHNS",
-     "subCategory": "Loft - Modular",
+     "id": "MTLOLFS500330600SSSSLLEHNS",
+     "name": "MTLOLFS500330600SSSSLLEHNS",
+     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS500330600SSSSLLEHNS.png",
+     "aidAssetId": "MTLOLFS500330600SSSSLLEHNS",
+     "subCategory": "Loft - Frame with Shutter",
      "catalogSource": "xlsx",
      "textures": [
       {
@@ -7003,12 +7352,12 @@
     "wallId": "wall_56i56ymve0xf69fm",
     "wallT": 0.23170731707317074,
     "asset": {
-     "id": "MTLOLU500330600SSSSLLEHNS",
+     "id": "MTLOLFS500330600SSSSLLEHNS",
      "category": "kitchen",
-     "name": "MTLOLU500330600SSSSLLEHNS",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU500330600SSSSLLEHNS.png",
+     "name": "MTLOLFS500330600SSSSLLEHNS",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS500330600SSSSLLEHNS.png",
      "source": "library",
-     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLU500330600SSSSLLEHNS.glb",
+     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS500330600SSSSLLEHNS.glb",
      "dimensions": [
       0.5,
       0.6,
@@ -7036,40 +7385,40 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_fgfb2jh9jl1fehu0": {
+   "item_e8c3pz4k790qs5sc": {
     "object": "node",
-    "id": "item_fgfb2jh9jl1fehu0",
+    "id": "item_e8c3pz4k790qs5sc",
     "type": "item",
-    "name": "MTLOLU600330600SDSSLBOEHNS",
+    "name": "MTLOLFS600330600SSSSLLEHNS",
     "parentId": "wall_56i56ymve0xf69fm",
     "visible": true,
     "metadata": {
-     "_id": "MTLOLU600330600SDSSLBOEHNS",
-     "aid": "MTLOLU600330600SDSSLBOEHNS",
-     "description": "Loft-Loft - Modular-600 × 330 × 600 mm — Shutter, Double Shutter, Slab (Plain) finish. Opens Both, External Handle. Internals: No Shelf.",
+     "_id": "MTLOLFS600330600SSSSLLEHNS",
+     "aid": "MTLOLFS600330600SSSSLLEHNS",
+     "description": "Loft-Loft - Frame with Shutter-600 × 330 × 600 mm — Shutter, Single Shutter, Slab (Plain) finish. Opens Left, External Handle. Internals: No Shelf.",
      "width": 600,
      "depth": 330,
      "height": 600,
      "unitFamily": "Loft",
-     "category": "Loft - Modular",
+     "category": "Loft - Frame with Shutter",
      "doorType": "Shutter",
-     "cabinetCombination": "Double Shutter",
-     "shutterCount": 2,
+     "cabinetCombination": "Single Shutter",
+     "shutterCount": 1,
      "drawerCount": 0,
      "doorStyle": "Slab (Plain)",
-     "openingDirection": "Both",
+     "openingDirection": "Left",
      "handleType": "External Handle",
      "internals": "No Shelf",
-     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLU600330600SDSSLBOEHNS.glb",
-     "modelKey": "catalogue-models/MTLOLU600330600SDSSLBOEHNS.glb",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU600330600SDSSLBOEHNS.png",
+     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS600330600SSSSLLEHNS.glb",
+     "modelKey": "catalogue-models/MTLOLFS600330600SSSSLLEHNS.glb",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS600330600SSSSLLEHNS.png",
      "placeholderThumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/cabinet_dummythumbnail.png",
      "isActive": true,
-     "id": "MTLOLU600330600SDSSLBOEHNS",
-     "name": "MTLOLU600330600SDSSLBOEHNS",
-     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU600330600SDSSLBOEHNS.png",
-     "aidAssetId": "MTLOLU600330600SDSSLBOEHNS",
-     "subCategory": "Loft - Modular",
+     "id": "MTLOLFS600330600SSSSLLEHNS",
+     "name": "MTLOLFS600330600SSSSLLEHNS",
+     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS600330600SSSSLLEHNS.png",
+     "aidAssetId": "MTLOLFS600330600SSSSLLEHNS",
+     "subCategory": "Loft - Frame with Shutter",
      "catalogSource": "xlsx",
      "textures": [
       {
@@ -7351,12 +7700,12 @@
     "wallId": "wall_56i56ymve0xf69fm",
     "wallT": 0.7600414634146342,
     "asset": {
-     "id": "MTLOLU600330600SDSSLBOEHNS",
+     "id": "MTLOLFS600330600SSSSLLEHNS",
      "category": "kitchen",
-     "name": "MTLOLU600330600SDSSLBOEHNS",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU600330600SDSSLBOEHNS.png",
+     "name": "MTLOLFS600330600SSSSLLEHNS",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS600330600SSSSLLEHNS.png",
      "source": "library",
-     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLU600330600SDSSLBOEHNS.glb",
+     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS600330600SSSSLLEHNS.glb",
      "dimensions": [
       0.6,
       0.6,
@@ -7384,40 +7733,40 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_nomuwjqe243vjyz6": {
+   "item_8w3xq89tn9gltnla": {
     "object": "node",
-    "id": "item_nomuwjqe243vjyz6",
+    "id": "item_8w3xq89tn9gltnla",
     "type": "item",
-    "name": "MTLOLU600560600SDSSLBOEHNS",
+    "name": "MTLOLFS600560600SSSSLREHNS",
     "parentId": "wall_56i56ymve0xf69fm",
     "visible": true,
     "metadata": {
-     "_id": "MTLOLU600560600SDSSLBOEHNS",
-     "aid": "MTLOLU600560600SDSSLBOEHNS",
-     "description": "Loft-Loft - Modular-600 × 560 × 600 mm — Shutter, Double Shutter, Slab (Plain) finish. Opens Both, External Handle. Internals: No Shelf.",
+     "_id": "MTLOLFS600560600SSSSLREHNS",
+     "aid": "MTLOLFS600560600SSSSLREHNS",
+     "description": "Loft-Loft - Frame with Shutter-600 × 560 × 600 mm — Shutter, Single Shutter, Slab (Plain) finish. Opens Right, External Handle. Internals: No Shelf.",
      "width": 600,
      "depth": 560,
      "height": 600,
      "unitFamily": "Loft",
-     "category": "Loft - Modular",
+     "category": "Loft - Frame with Shutter",
      "doorType": "Shutter",
-     "cabinetCombination": "Double Shutter",
-     "shutterCount": 2,
+     "cabinetCombination": "Single Shutter",
+     "shutterCount": 1,
      "drawerCount": 0,
      "doorStyle": "Slab (Plain)",
-     "openingDirection": "Both",
+     "openingDirection": "Right",
      "handleType": "External Handle",
      "internals": "No Shelf",
-     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLU600560600SDSSLBOEHNS.glb",
-     "modelKey": "catalogue-models/MTLOLU600560600SDSSLBOEHNS.glb",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU600560600SDSSLBOEHNS.png",
+     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS600560600SSSSLREHNS.glb",
+     "modelKey": "catalogue-models/MTLOLFS600560600SSSSLREHNS.glb",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS600560600SSSSLREHNS.png",
      "placeholderThumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/cabinet_dummythumbnail.png",
      "isActive": true,
-     "id": "MTLOLU600560600SDSSLBOEHNS",
-     "name": "MTLOLU600560600SDSSLBOEHNS",
-     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU600560600SDSSLBOEHNS.png",
-     "aidAssetId": "MTLOLU600560600SDSSLBOEHNS",
-     "subCategory": "Loft - Modular",
+     "id": "MTLOLFS600560600SSSSLREHNS",
+     "name": "MTLOLFS600560600SSSSLREHNS",
+     "imageUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS600560600SSSSLREHNS.png",
+     "aidAssetId": "MTLOLFS600560600SSSSLREHNS",
+     "subCategory": "Loft - Frame with Shutter",
      "catalogSource": "xlsx",
      "textures": [
       {
@@ -7699,12 +8048,12 @@
     "wallId": "wall_56i56ymve0xf69fm",
     "wallT": 0.9063830317520514,
     "asset": {
-     "id": "MTLOLU600560600SDSSLBOEHNS",
+     "id": "MTLOLFS600560600SSSSLREHNS",
      "category": "kitchen",
-     "name": "MTLOLU600560600SDSSLBOEHNS",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLU600560600SDSSLBOEHNS.png",
+     "name": "MTLOLFS600560600SSSSLREHNS",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-thumbnail/MTLOLFS600560600SSSSLREHNS.png",
      "source": "library",
-     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLU600560600SDSSLBOEHNS.glb",
+     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/catalogue-models/MTLOLFS600560600SSSSLREHNS.glb",
      "dimensions": [
       0.6,
       0.6,
@@ -7732,34 +8081,31 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_cmwbo9jvl6lty598": {
+   "item_bswwmtwt24ih07z3": {
     "object": "node",
-    "id": "item_cmwbo9jvl6lty598",
+    "id": "item_bswwmtwt24ih07z3",
     "type": "item",
-    "name": "Sink90",
-    "parentId": "item_iauzd4hylxdpbp9v",
+    "name": "Sink120",
+    "parentId": "item_vvha1if41ua6sd01",
     "visible": true,
     "metadata": {
-     "_id": "6a636ca492bd092f25db7fe3",
-     "aid": "APS02",
+     "textures": [],
+     "aid": "APS03",
      "category": "Sink",
-     "description": "Sink90",
-     "width": 780,
+     "description": "Sink120",
+     "width": 950,
      "depth": 450,
      "height": 450,
-     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APS02.glb",
-     "modelKey": "appliance-models/APS02.glb",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APS02.jpg",
+     "modelUrl": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APS03.glb",
+     "modelKey": "appliance-models/APS03.glb",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APS03.jpg",
      "isActive": true,
-     "createdAt": "2026-07-24T13:46:12.643Z",
-     "updatedAt": "2026-09-08T11:35:16.324Z",
-     "__v": 0,
      "applianceKind": "sink",
+     "hostCabinetId": "item_vvha1if41ua6sd01",
+     "designSource": "ai-kitchen-v1-appliance",
      "level": "base",
      "subCategory": "Sink",
-     "textures": [],
-     "hostCabinetId": "item_iauzd4hylxdpbp9v",
-     "designSource": "ai-kitchen-v1-appliance"
+     "_id": "APS03"
     },
     "position": [
      0.0,
@@ -7780,14 +8126,14 @@
     "wallId": "wall_56i56ymve0xf69fm",
     "wallT": 0.48565132443497816,
     "asset": {
-     "id": "6a636ca492bd092f25db7fe3",
+     "id": "APS03",
      "category": "appliance",
-     "name": "Sink90",
-     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APS02.jpg",
+     "name": "Sink120",
+     "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APS03.jpg",
      "source": "library",
-     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APS02.glb",
+     "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APS03.glb",
      "dimensions": [
-      0.78,
+      0.95,
       0.45,
       0.45
      ],
@@ -7808,12 +8154,12 @@
      ]
     }
    },
-   "item_n7cf6s317mdpow6w": {
+   "item_w1cqhlpwvrjwkytp": {
     "object": "node",
-    "id": "item_n7cf6s317mdpow6w",
+    "id": "item_w1cqhlpwvrjwkytp",
     "type": "item",
     "name": "Hob90",
-    "parentId": "item_bbhauel5j8f3jlla",
+    "parentId": "item_tyjxim2i0329z1a3",
     "visible": true,
     "metadata": {
      "_id": "6a636ca592bd092f25db7fe6",
@@ -7979,7 +8325,7 @@
        "updatedAt": "2026-09-28T13:44:13.284Z"
       }
      ],
-     "hostCabinetId": "item_bbhauel5j8f3jlla",
+     "hostCabinetId": "item_tyjxim2i0329z1a3",
      "designSource": "ai-kitchen-v1-appliance"
     },
     "position": [
@@ -8029,9 +8375,9 @@
      ]
     }
    },
-   "item_re396k702dkjr465": {
+   "item_ro1h3v6957uo0m99": {
     "object": "node",
-    "id": "item_re396k702dkjr465",
+    "id": "item_ro1h3v6957uo0m99",
     "type": "item",
     "name": "Chimney90",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -8128,7 +8474,7 @@
        "updatedAt": "2026-09-28T13:44:13.291Z"
       }
      ],
-     "hostCabinetId": "item_bbhauel5j8f3jlla",
+     "hostCabinetId": "item_tyjxim2i0329z1a3",
      "designSource": "ai-kitchen-v1-appliance"
     },
     "position": [
@@ -8178,9 +8524,9 @@
      ]
     }
    },
-   "item_7edgb1eeebij9xlk": {
+   "item_kjcdzsnbhc1bkmr1": {
     "object": "node",
-    "id": "item_7edgb1eeebij9xlk",
+    "id": "item_kjcdzsnbhc1bkmr1",
     "type": "item",
     "name": "Toe-kick fixture_toekick_wall_1oy5ecjq6k11pfoo_run0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -8245,9 +8591,9 @@
      ]
     }
    },
-   "item_qm2ky3swgai6jsi1": {
+   "item_oyu64x0fcs6h4k48": {
     "object": "node",
-    "id": "item_qm2ky3swgai6jsi1",
+    "id": "item_oyu64x0fcs6h4k48",
     "type": "item",
     "name": "Toe-kick fixture_toekick_wall_1oy5ecjq6k11pfoo_side_run0_lo",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -8312,9 +8658,9 @@
      ]
     }
    },
-   "item_ue61o1yn40mnndvq": {
+   "item_17mx7yni2i39egqi": {
     "object": "node",
-    "id": "item_ue61o1yn40mnndvq",
+    "id": "item_17mx7yni2i39egqi",
     "type": "item",
     "name": "Slab fixture_slab_wall_1oy5ecjq6k11pfoo_base_lo_run0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -8636,9 +8982,9 @@
      ]
     }
    },
-   "item_bhu4fesww8ja8vhl": {
+   "item_cxlosr5njkjszjrx": {
     "object": "node",
-    "id": "item_bhu4fesww8ja8vhl",
+    "id": "item_cxlosr5njkjszjrx",
     "type": "item",
     "name": "Countertop fixture_countertop_wall_1oy5ecjq6k11pfoo_ct0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -8913,9 +9259,9 @@
      ]
     }
    },
-   "item_loi73jpjlpaa3s33": {
+   "item_7x5bjv2uj4hwlyk2": {
     "object": "node",
-    "id": "item_loi73jpjlpaa3s33",
+    "id": "item_7x5bjv2uj4hwlyk2",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_1oy5ecjq6k11pfoo_bs0_0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -9216,9 +9562,9 @@
      ]
     }
    },
-   "item_yepw4jcg7t0356mp": {
+   "item_592a8p19zgf05ojc": {
     "object": "node",
-    "id": "item_yepw4jcg7t0356mp",
+    "id": "item_592a8p19zgf05ojc",
     "type": "item",
     "name": "Slab fixture_slab_wall_1oy5ecjq6k11pfoo_wall_lo_run0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -9540,9 +9886,9 @@
      ]
     }
    },
-   "item_5793doo0ka3ft2qt": {
+   "item_yg2flxldc6lu4zgi": {
     "object": "node",
-    "id": "item_5793doo0ka3ft2qt",
+    "id": "item_yg2flxldc6lu4zgi",
     "type": "item",
     "name": "Slab fixture_slab_wall_1oy5ecjq6k11pfoo_wall_hi_run0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -9864,9 +10210,9 @@
      ]
     }
    },
-   "item_kw8yo6e5mm6jk8ob": {
+   "item_03k59ch676iah1rp": {
     "object": "node",
-    "id": "item_kw8yo6e5mm6jk8ob",
+    "id": "item_03k59ch676iah1rp",
     "type": "item",
     "name": "Slab fixture_slab_wall_1oy5ecjq6k11pfoo_wall_lo_run1",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -10188,9 +10534,9 @@
      ]
     }
    },
-   "item_gscjyfi49je0166i": {
+   "item_owtwp55zh4x6fgr0": {
     "object": "node",
-    "id": "item_gscjyfi49je0166i",
+    "id": "item_owtwp55zh4x6fgr0",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_1oy5ecjq6k11pfoo_upper0_0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -10491,9 +10837,9 @@
      ]
     }
    },
-   "item_90hfv1nvj8ung8hp": {
+   "item_dczrh27w274giuuy": {
     "object": "node",
-    "id": "item_90hfv1nvj8ung8hp",
+    "id": "item_dczrh27w274giuuy",
     "type": "item",
     "name": "Slab fixture_slab_wall_1oy5ecjq6k11pfoo_loft_bottom_run0_0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -10501,13 +10847,13 @@
     "metadata": {
      "fixtureKind": "slab",
      "fixtureId": "fixture_slab_wall_1oy5ecjq6k11pfoo_loft_bottom_run0_0",
-     "widthM": 2.3,
+     "widthM": 2.31,
      "thicknessM": 0.018,
      "depthM": 0.348,
      "color": "#e8e8e8",
      "materialSlot": "door",
      "side": 1,
-     "wallT": 0.5487804878048781,
+     "wallT": 0.5475609756097561,
      "designSource": "ai-kitchen-v1-fixture",
      "fromDesignResponse": true,
      "level": "loft",
@@ -10767,7 +11113,7 @@
      ]
     },
     "position": [
-     2.25,
+     2.245,
      2.049,
      0.224
     ],
@@ -10783,7 +11129,7 @@
     ],
     "children": [],
     "wallId": "wall_1oy5ecjq6k11pfoo",
-    "wallT": 0.5487804878048781,
+    "wallT": 0.5475609756097561,
     "asset": {
      "id": "fixture_slab_wall_1oy5ecjq6k11pfoo_loft_bottom_run0_0",
      "category": "fixture",
@@ -10792,7 +11138,7 @@
      "source": "library",
      "src": "asset://fixture/slab",
      "dimensions": [
-      2.3,
+      2.31,
       0.018,
       0.348
      ],
@@ -10813,9 +11159,9 @@
      ]
     }
    },
-   "item_i4by0mvn8v7dzyaz": {
+   "item_o3qm5apwsrccflv4": {
     "object": "node",
-    "id": "item_i4by0mvn8v7dzyaz",
+    "id": "item_o3qm5apwsrccflv4",
     "type": "item",
     "name": "Filler fixture_filler_wall_1oy5ecjq6k11pfoo_loft_top_run0_0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -10823,13 +11169,13 @@
     "metadata": {
      "fixtureKind": "filler",
      "fixtureId": "fixture_filler_wall_1oy5ecjq6k11pfoo_loft_top_run0_0",
-     "widthM": 2.3,
+     "widthM": 2.31,
      "thicknessM": 0.042,
      "depthM": 0.018,
      "color": "#e8e8e8",
      "materialSlot": "door",
      "side": 1,
-     "wallT": 0.5487804878048781,
+     "wallT": 0.5475609756097561,
      "designSource": "ai-kitchen-v1-fixture",
      "fromDesignResponse": true,
      "level": "loft",
@@ -11089,7 +11435,7 @@
      ]
     },
     "position": [
-     2.25,
+     2.245,
      2.679,
      0.389
     ],
@@ -11105,7 +11451,7 @@
     ],
     "children": [],
     "wallId": "wall_1oy5ecjq6k11pfoo",
-    "wallT": 0.5487804878048781,
+    "wallT": 0.5475609756097561,
     "asset": {
      "id": "fixture_filler_wall_1oy5ecjq6k11pfoo_loft_top_run0_0",
      "category": "fixture",
@@ -11114,7 +11460,7 @@
      "source": "library",
      "src": "asset://fixture/filler",
      "dimensions": [
-      2.3,
+      2.31,
       0.042,
       0.018
      ],
@@ -11135,9 +11481,9 @@
      ]
     }
    },
-   "item_tgr31aco7j31aed0": {
+   "item_7hu38rnbko5estie": {
     "object": "node",
-    "id": "item_tgr31aco7j31aed0",
+    "id": "item_7hu38rnbko5estie",
     "type": "item",
     "name": "Slab fixture_slab_wall_1oy5ecjq6k11pfoo_loft_bottom_run0_1",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -11457,9 +11803,9 @@
      ]
     }
    },
-   "item_axpv6ckb5tfyzbv2": {
+   "item_enporyj06t35yws9": {
     "object": "node",
-    "id": "item_axpv6ckb5tfyzbv2",
+    "id": "item_enporyj06t35yws9",
     "type": "item",
     "name": "Filler fixture_filler_wall_1oy5ecjq6k11pfoo_loft_top_run0_1",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -11779,9 +12125,9 @@
      ]
     }
    },
-   "item_1d59a85uxnvs5y82": {
+   "item_9hlwlwfadmimw4tg": {
     "object": "node",
-    "id": "item_1d59a85uxnvs5y82",
+    "id": "item_9hlwlwfadmimw4tg",
     "type": "item",
     "name": "Slab fixture_slab_wall_1oy5ecjq6k11pfoo_loft_bank_side_run0_1",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -12101,9 +12447,9 @@
      ]
     }
    },
-   "item_8bhjl6dmi210kws3": {
+   "item_1ohdojy65csg2mcq": {
     "object": "node",
-    "id": "item_8bhjl6dmi210kws3",
+    "id": "item_1ohdojy65csg2mcq",
     "type": "item",
     "name": "Slab fixture_slab_wall_1oy5ecjq6k11pfoo_loft_side_lo_run0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -12117,7 +12463,7 @@
      "color": "#e8e8e8",
      "materialSlot": "door",
      "side": 1,
-     "wallT": 0.26609756097560977,
+     "wallT": 0.26365853658536587,
      "designSource": "ai-kitchen-v1-fixture",
      "fromDesignResponse": true,
      "level": "loft",
@@ -12377,7 +12723,7 @@
      ]
     },
     "position": [
-     1.091,
+     1.081,
      2.358,
      0.224
     ],
@@ -12393,7 +12739,7 @@
     ],
     "children": [],
     "wallId": "wall_1oy5ecjq6k11pfoo",
-    "wallT": 0.26609756097560977,
+    "wallT": 0.26365853658536587,
     "asset": {
      "id": "fixture_slab_wall_1oy5ecjq6k11pfoo_loft_side_lo_run0",
      "category": "fixture",
@@ -12423,9 +12769,9 @@
      ]
     }
    },
-   "item_z76s8kljt7nhcqf0": {
+   "item_c6gxpqb8qf7q4vr5": {
     "object": "node",
-    "id": "item_z76s8kljt7nhcqf0",
+    "id": "item_c6gxpqb8qf7q4vr5",
     "type": "item",
     "name": "Filler fixture_filler_wall_1oy5ecjq6k11pfoo_loft_side_top_lo_run0",
     "parentId": "wall_1oy5ecjq6k11pfoo",
@@ -12439,7 +12785,7 @@
      "color": "#e8e8e8",
      "materialSlot": "door",
      "side": 1,
-     "wallT": 0.26609756097560977,
+     "wallT": 0.26365853658536587,
      "designSource": "ai-kitchen-v1-fixture",
      "fromDesignResponse": true,
      "level": "loft",
@@ -12699,7 +13045,7 @@
      ]
     },
     "position": [
-     1.091,
+     1.081,
      2.679,
      0.224
     ],
@@ -12715,7 +13061,7 @@
     ],
     "children": [],
     "wallId": "wall_1oy5ecjq6k11pfoo",
-    "wallT": 0.26609756097560977,
+    "wallT": 0.26365853658536587,
     "asset": {
      "id": "fixture_filler_wall_1oy5ecjq6k11pfoo_loft_side_top_lo_run0",
      "category": "fixture",
@@ -12745,9 +13091,9 @@
      ]
     }
    },
-   "item_3espilkyo5cu2ayn": {
+   "item_xjbfpj7nifiwgdhq": {
     "object": "node",
-    "id": "item_3espilkyo5cu2ayn",
+    "id": "item_xjbfpj7nifiwgdhq",
     "type": "item",
     "name": "Toe-kick fixture_toekick_wall_56i56ymve0xf69fm_run0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -12812,9 +13158,9 @@
      ]
     }
    },
-   "item_5g4pbx0vf3x8thr9": {
+   "item_e6eq3gscqu0udr81": {
     "object": "node",
-    "id": "item_5g4pbx0vf3x8thr9",
+    "id": "item_e6eq3gscqu0udr81",
     "type": "item",
     "name": "Filler fixture_filler_wall_56i56ymve0xf69fm_base_mid_run0_1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -13135,9 +13481,9 @@
      ]
     }
    },
-   "item_3jnrz5zuh48pla6h": {
+   "item_psq4m77kkg2s62cb": {
     "object": "node",
-    "id": "item_3jnrz5zuh48pla6h",
+    "id": "item_psq4m77kkg2s62cb",
     "type": "item",
     "name": "Countertop fixture_countertop_wall_56i56ymve0xf69fm_ct0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -13162,147 +13508,147 @@
       {
        "outline": [
         [
-         0.6130852150917051,
+         0.6980852150917051,
          -0.21999999999999997
         ],
         [
-         0.616011569921947,
+         0.701011569921947,
          -0.21971177920604842
         ],
         [
-         0.6188254665771814,
+         0.7038254665771814,
          -0.21885819298766926
         ],
         [
-         0.6214187685869992,
+         0.7064187685869991,
          -0.21747204418453814
         ],
         [
-         0.6236918168095034,
+         0.7086918168095033,
          -0.21560660171779816
         ],
         [
-         0.6255572592762433,
+         0.7105572592762432,
          -0.21333355349529398
         ],
         [
-         0.6269434080793744,
+         0.7119434080793744,
          -0.21074025148547632
         ],
         [
-         0.6277969942977536,
+         0.7127969942977536,
          -0.20792635483024188
         ],
         [
-         0.6280852150917051,
+         0.7130852150917051,
          -0.20499999999999996
         ],
         [
-         0.6280852150917051,
+         0.7130852150917051,
          0.17500000000000004
         ],
         [
-         0.6277969942977536,
+         0.7127969942977536,
          0.17792635483024197
         ],
         [
-         0.6269434080793744,
+         0.7119434080793744,
          0.1807402514854764
         ],
         [
-         0.6255572592762433,
+         0.7105572592762432,
          0.18333355349529407
         ],
         [
-         0.6236918168095034,
+         0.7086918168095033,
          0.18560660171779825
         ],
         [
-         0.6214187685869992,
+         0.7064187685869991,
          0.18747204418453822
         ],
         [
-         0.6188254665771814,
+         0.7038254665771814,
          0.18885819298766934
         ],
         [
-         0.616011569921947,
+         0.701011569921947,
          0.1897117792060485
         ],
         [
-         0.6130852150917051,
+         0.6980852150917051,
          0.19000000000000006
         ],
         [
-         -0.09691478490829487,
+         -0.18191478490829488,
          0.19000000000000006
         ],
         [
-         -0.0998411397385368,
+         -0.1848411397385368,
          0.1897117792060485
         ],
         [
-         -0.10265503639377122,
+         -0.18765503639377124,
          0.18885819298766934
         ],
         [
-         -0.10524833840358891,
+         -0.1902483384035889,
          0.18747204418453822
         ],
         [
-         -0.10752138662609309,
+         -0.19252138662609308,
          0.18560660171779825
         ],
         [
-         -0.10938682909283305,
+         -0.19438682909283306,
          0.18333355349529407
         ],
         [
-         -0.11077297789596417,
+         -0.19577297789596418,
          0.1807402514854764
         ],
         [
-         -0.11162656411434332,
+         -0.19662656411434334,
          0.17792635483024197
         ],
         [
-         -0.11191478490829487,
+         -0.1969147849082949,
          0.17500000000000004
         ],
         [
-         -0.11191478490829487,
+         -0.1969147849082949,
          -0.20499999999999996
         ],
         [
-         -0.11162656411434332,
+         -0.19662656411434334,
          -0.20792635483024188
         ],
         [
-         -0.11077297789596417,
+         -0.19577297789596418,
          -0.21074025148547632
         ],
         [
-         -0.10938682909283305,
+         -0.19438682909283306,
          -0.21333355349529398
         ],
         [
-         -0.10752138662609309,
+         -0.19252138662609308,
          -0.21560660171779816
         ],
         [
-         -0.10524833840358891,
+         -0.1902483384035889,
          -0.21747204418453814
         ],
         [
-         -0.10265503639377122,
+         -0.18765503639377124,
          -0.21885819298766926
         ],
         [
-         -0.09984113973853681,
+         -0.1848411397385368,
          -0.21971177920604842
         ],
         [
-         -0.09691478490829487,
+         -0.18191478490829488,
          -0.21999999999999997
         ]
        ]
@@ -13412,9 +13758,9 @@
      ]
     }
    },
-   "item_1utbfxg4reugducy": {
+   "item_8umdsrw7iiynsbrz": {
     "object": "node",
-    "id": "item_1utbfxg4reugducy",
+    "id": "item_8umdsrw7iiynsbrz",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_56i56ymve0xf69fm_bs0_0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -13715,9 +14061,9 @@
      ]
     }
    },
-   "item_2kf1epu35m9b4hzd": {
+   "item_k2vl2gie3cuou2ro": {
     "object": "node",
-    "id": "item_2kf1epu35m9b4hzd",
+    "id": "item_k2vl2gie3cuou2ro",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_56i56ymve0xf69fm_bs0_1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -14018,9 +14364,9 @@
      ]
     }
    },
-   "item_nsfs1v0hfmpkh9aq": {
+   "item_ule6xteceznmovi4": {
     "object": "node",
-    "id": "item_nsfs1v0hfmpkh9aq",
+    "id": "item_ule6xteceznmovi4",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_tall_side_lo_run0_counter",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -14341,9 +14687,9 @@
      ]
     }
    },
-   "item_syfwb3qh8s4wmqu7": {
+   "item_8eo5wka870po6lfc": {
     "object": "node",
-    "id": "item_syfwb3qh8s4wmqu7",
+    "id": "item_8eo5wka870po6lfc",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_tall_side_lo_run0_upper",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -14664,9 +15010,9 @@
      ]
     }
    },
-   "item_vz7p58qpws1dvwkw": {
+   "item_58wr5gdvrvgazee8": {
     "object": "node",
-    "id": "item_vz7p58qpws1dvwkw",
+    "id": "item_58wr5gdvrvgazee8",
     "type": "item",
     "name": "Filler fixture_filler_wall_56i56ymve0xf69fm_tall_hi_run0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -14987,9 +15333,9 @@
      ]
     }
    },
-   "item_j0qoqhrccdognwh9": {
+   "item_cz6kfseaw6jrrimg": {
     "object": "node",
-    "id": "item_j0qoqhrccdognwh9",
+    "id": "item_cz6kfseaw6jrrimg",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_wall_hi_run0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -15311,9 +15657,9 @@
      ]
     }
    },
-   "item_slk4e6ux2wo3jb6n": {
+   "item_1rjjn4h16dwxfl0i": {
     "object": "node",
-    "id": "item_slk4e6ux2wo3jb6n",
+    "id": "item_1rjjn4h16dwxfl0i",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_wall_lo_run1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -15635,9 +15981,9 @@
      ]
     }
    },
-   "item_o3u5lvd70u9cw8gn": {
+   "item_ejfs3x122loe9l21": {
     "object": "node",
-    "id": "item_o3u5lvd70u9cw8gn",
+    "id": "item_ejfs3x122loe9l21",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_56i56ymve0xf69fm_upper0_0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -15938,9 +16284,9 @@
      ]
     }
    },
-   "item_epp9gi8rxuewn3u5": {
+   "item_eb6zroiy9my8otvf": {
     "object": "node",
-    "id": "item_epp9gi8rxuewn3u5",
+    "id": "item_eb6zroiy9my8otvf",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_56i56ymve0xf69fm_upper0_1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -16241,9 +16587,9 @@
      ]
     }
    },
-   "item_xwirazig1omme4ng": {
+   "item_7czcr2zsgl2e6oft": {
     "object": "node",
-    "id": "item_xwirazig1omme4ng",
+    "id": "item_7czcr2zsgl2e6oft",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_loft_bottom_run0_0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -16563,9 +16909,9 @@
      ]
     }
    },
-   "item_dr8nrgvb9pv7c7v2": {
+   "item_pzduxpdg2v4pr9nv": {
     "object": "node",
-    "id": "item_dr8nrgvb9pv7c7v2",
+    "id": "item_pzduxpdg2v4pr9nv",
     "type": "item",
     "name": "Filler fixture_filler_wall_56i56ymve0xf69fm_loft_top_run0_0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -16885,9 +17231,9 @@
      ]
     }
    },
-   "item_c4tttsra1mbqp6sl": {
+   "item_jk6ja32rflz5qmhk": {
     "object": "node",
-    "id": "item_c4tttsra1mbqp6sl",
+    "id": "item_jk6ja32rflz5qmhk",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_loft_side_hi_run0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -17207,9 +17553,9 @@
      ]
     }
    },
-   "item_alcw5o79rxlkalin": {
+   "item_vrpmqdmjzo8xj64a": {
     "object": "node",
-    "id": "item_alcw5o79rxlkalin",
+    "id": "item_vrpmqdmjzo8xj64a",
     "type": "item",
     "name": "Filler fixture_filler_wall_56i56ymve0xf69fm_loft_side_top_hi_run0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -17529,9 +17875,9 @@
      ]
     }
    },
-   "item_cq8ana3lig32ge43": {
+   "item_a24o2ma4nrqafk78": {
     "object": "node",
-    "id": "item_cq8ana3lig32ge43",
+    "id": "item_a24o2ma4nrqafk78",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_loft_bottom_run1_0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -17851,9 +18197,9 @@
      ]
     }
    },
-   "item_6qmf6sfa29g96q2o": {
+   "item_7ovdc2i7kgh7a8ee": {
     "object": "node",
-    "id": "item_6qmf6sfa29g96q2o",
+    "id": "item_7ovdc2i7kgh7a8ee",
     "type": "item",
     "name": "Filler fixture_filler_wall_56i56ymve0xf69fm_loft_top_run1_0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -18173,9 +18519,9 @@
      ]
     }
    },
-   "item_b71u4vw3vhqpkgco": {
+   "item_7350x5cllcv9vovo": {
     "object": "node",
-    "id": "item_b71u4vw3vhqpkgco",
+    "id": "item_7350x5cllcv9vovo",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_loft_bottom_run1_1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -18495,9 +18841,9 @@
      ]
     }
    },
-   "item_yeer0f4lea0ir0tc": {
+   "item_mny2xxndoeqdawsn": {
     "object": "node",
-    "id": "item_yeer0f4lea0ir0tc",
+    "id": "item_mny2xxndoeqdawsn",
     "type": "item",
     "name": "Filler fixture_filler_wall_56i56ymve0xf69fm_loft_top_run1_1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -18817,9 +19163,9 @@
      ]
     }
    },
-   "item_1kyya9nuaeulagxn": {
+   "item_k58wx3r1yekw54l5": {
     "object": "node",
-    "id": "item_1kyya9nuaeulagxn",
+    "id": "item_k58wx3r1yekw54l5",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_loft_bank_side_run1_1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -19139,9 +19485,9 @@
      ]
     }
    },
-   "item_p9d9mjzrcvnql2ky": {
+   "item_0xgz1ifg1kyr7tmp": {
     "object": "node",
-    "id": "item_p9d9mjzrcvnql2ky",
+    "id": "item_0xgz1ifg1kyr7tmp",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_loft_side_lo_run1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -19461,9 +19807,9 @@
      ]
     }
    },
-   "item_7aon4hdol3p64r9q": {
+   "item_rnpyls8nrb1iyuxb": {
     "object": "node",
-    "id": "item_7aon4hdol3p64r9q",
+    "id": "item_rnpyls8nrb1iyuxb",
     "type": "item",
     "name": "Filler fixture_filler_wall_56i56ymve0xf69fm_loft_side_top_lo_run1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -19783,9 +20129,9 @@
      ]
     }
    },
-   "item_e9z0pqavpvajmg4b": {
+   "item_f02wr3ii3tyv5vu5": {
     "object": "node",
-    "id": "item_e9z0pqavpvajmg4b",
+    "id": "item_f02wr3ii3tyv5vu5",
     "type": "item",
     "name": "Filler fixture_filler_wall_56i56ymve0xf69fm_loft_hi_run1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -20105,9 +20451,9 @@
      ]
     }
    },
-   "item_t27d1f9waz8hpill": {
+   "item_81338uuhgjosofxj": {
     "object": "node",
-    "id": "item_t27d1f9waz8hpill",
+    "id": "item_81338uuhgjosofxj",
     "type": "item",
     "name": "Floor",
     "parentId": "level_d48imrjpuiv83tez",

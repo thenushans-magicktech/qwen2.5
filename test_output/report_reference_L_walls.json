@@ -7,16 +7,36 @@
   "customer_needs": [
     "- Door style Slab (Plain); layout preference auto; wants tall storage.",
     "- Water purifier: water purifier not stated.",
-    "- Gas: gas supply not stated.",
+    "- Gas: not stated - LPG is assumed, so the cylinder unit is included (rule R11).",
     "- Built-in appliances: built-in appliances not stated.",
     "- Glass display: glass display not stated.",
     "- Cooking: cooking style not stated; household size not stated.",
     "- Base cabinets: base cabinet style not stated - you choose drawers, mixed or shutters.",
     "- Wall cabinets: door type not stated - you choose hinged shutters or lift-up; open shelf unit not stated.",
     "- Crockery: crockery unit not stated.",
-    "- Lofts: lofts not stated."
+    "- Lofts: lofts not stated.",
+    "- Budget: not stated.",
+    "- Finishes: base run not stated - you choose; wall run not stated - you choose (the codes allowed are the ones the budget tier permits)."
   ],
   "explanation": [
+    {
+      "item": "Rule book",
+      "decision": null,
+      "built": "Large L-Shape kitchen (172 sqft)",
+      "why": "Module sizes, landings, gas and lofts follow the MagickHome rule workbook for this kitchen size and shape.",
+      "source": "rules",
+      "details": [
+        "Floor area 172 sqft -> Large band (Small 60-80, Medium 81-120, Large 121-180 sqft)",
+        "Kitchen type from the cabinet walls: L-Shape",
+        "Rules from the MagickHome Kitchen Rule Engine (workbook Kitchen_Rule_Engine_V1.xlsx)",
+        "R17: hob -> 900 mm Triple Drawer - A",
+        "R18: sink -> 1200 mm Sink Double Shutter",
+        "R19: spice -> 300 mm Spice Pullout",
+        "R20: cylinder -> 600 mm Cylinder Single Shutter"
+      ],
+      "rules": [],
+      "need": null
+    },
     {
       "item": "Layout",
       "decision": null,
@@ -45,6 +65,7 @@
         "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
       ],
       "rules": [
+        "R18: In a Large L-Shape kitchen (121–180 sqft), set the Base Sink Unit width to 1200 mm.",
         "Designer chose 1200 mm; the rules used 1050 mm so it centres under the window."
       ],
       "need": null
@@ -60,10 +81,12 @@
         "Wall 1 has no window - a solid wall for the chimney",
         "Nearest door on this wall is 705 mm from the hob (keep 600+)",
         "Beside it: LPG cylinder unit 600 mm (Cylinder Single Shutter) / Spice pull-out 300 mm (Spice Pullout)",
-        "Chimney 900 mm wide above it at 1.44 m; no wall cabinets in that zone",
+        "Appliances: Hob90 hob (750 mm) and a Chimney90 hood (900 mm wide) at 1.44 m; no wall cabinets in that zone",
         "Sink to hob: 2.3 m (different walls; comfortable range 1.2-2.7 m)"
       ],
-      "rules": [],
+      "rules": [
+        "R17: In a Large L-Shape kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm."
+      ],
       "need": null
     },
     {
@@ -76,20 +99,25 @@
         "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
         "Right beside the hob"
       ],
-      "rules": [],
+      "rules": [
+        "R19: In a Large L-Shape kitchen (121–180 sqft), set the Base Spice Pullout width to 300 mm.",
+        "R44: only one spice pull-out per kitchen"
+      ],
       "need": null
     },
     {
       "item": "LPG cylinder",
       "decision": null,
       "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
-      "why": "Hob wall is long enough for a cylinder unit.",
+      "why": "Fuel not stated: LPG is assumed, so the cylinder unit is included (rule R11).",
       "source": "rules-designer",
       "details": [
         "Unit: 600 x 560 x 800 mm (W x D x H) - LPG cylinder, beside the hob (needs a long hob wall)",
         "On Wall 1 at 1090-1690 mm, beside the hob"
       ],
-      "rules": [],
+      "rules": [
+        "R20: In a Large L-Shape kitchen (121–180 sqft), set the Base Cylinder Unit width to 600 mm."
+      ],
       "need": null
     },
     {
@@ -220,6 +248,23 @@
       "need": null
     },
     {
+      "item": "Finishes",
+      "decision": null,
+      "built": "Base + tall: Cadet Blue (PU matte, Magickhome); Wall + loft: Stromma White (PU matte, Magickhome)",
+      "why": "MagickHome sample palette: Cadet Blue PU base, Stromma White PU wall run.",
+      "source": "rules",
+      "details": [
+        "Base run (base + tall units): Cadet Blue (PU matte, Magickhome) - chosen by the rules (tier default)",
+        "Wall run (wall units + lofts): Stromma White (PU matte, Magickhome) - chosen by the rules (tier default)",
+        "Tall units take the base-run finish and lofts take the wall-run finish (finish continuity).",
+        "Fillers, slabs, end panels and cover panels take the finish of the run they close (workbook: Filler Panel / Cover End Panel finish must match the cabinets)."
+      ],
+      "rules": [
+        "No budget stated: any finish allowed"
+      ],
+      "need": null
+    },
+    {
       "item": "Corners",
       "decision": null,
       "built": "1 corner(s)",
@@ -272,11 +317,12 @@
     "base_storage": "mixed",
     "lofts": false,
     "wall_style": "shutters",
+    "finishes": {},
     "reasons": {
       "layout": "L-shape on the walls with the longest free runs.",
       "sink": "1200 mm suits a 4000 mm window-wall run.",
       "hob": "Drawer hob unit on Wall 1, a different wall from the sink.",
-      "lpg": "Hob wall is long enough for a cylinder unit.",
+      "lpg": "Fuel not stated: LPG is assumed, so the cylinder unit is included (rule R11).",
       "tall": "Pantry at a run end.",
       "purifier": "Standard beside the sink window.",
       "display": "Not requested.",
@@ -284,6 +330,7 @@
       "open": "Not requested.",
       "wall_style": "Hinged shutters: the standard, lowest-cost door.",
       "lofts": "Ceiling too low for lofts.",
+      "finish": "MagickHome sample palette: Cadet Blue PU base, Stromma White PU wall run.",
       "storage": "Drawer + shutter units: a cutlery drawer on top, shelf space below."
     },
     "notes": "L-shaped kitchen: sink on Wall 2 under the window, hob on Wall 1, tall storage on Wall 2.",
@@ -452,7 +499,8 @@
     },
     "chimney": {
       "wall_id": "wall_1oy5ecjq6k11pfoo",
-      "center_mm": 2140.0
+      "center_mm": 2140.0,
+      "width_mm": 900
     },
     "corners": [
       {
@@ -495,6 +543,82 @@
     "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
     "wall_style": "shutters"
   },
+  "rulebook": {
+    "floor_area_sqft": 172.1,
+    "size_band": "Large",
+    "size_note": "",
+    "kitchen_type": "L-Shape",
+    "source": "workbook Kitchen_Rule_Engine_V1.xlsx",
+    "applied": [
+      {
+        "role": "hob",
+        "rule": 17,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm.",
+        "width": 900,
+        "combination": "Triple Drawer - A",
+        "changed": false,
+        "designer": null
+      },
+      {
+        "role": "sink",
+        "rule": 18,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Sink Unit width to 1200 mm.",
+        "width": 1200,
+        "combination": "Sink Double Shutter",
+        "changed": false,
+        "designer": null
+      },
+      {
+        "role": "spice",
+        "rule": 19,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Spice Pullout width to 300 mm.",
+        "width": 300,
+        "combination": "Spice Pullout",
+        "changed": false,
+        "designer": null
+      },
+      {
+        "role": "cylinder",
+        "rule": 20,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Cylinder Unit width to 600 mm.",
+        "width": 600,
+        "combination": "Cylinder Single Shutter",
+        "changed": false,
+        "designer": null
+      }
+    ]
+  },
+  "finishes": {
+    "base": {
+      "aid": "MHS224",
+      "code": "CADET-BLUE-PU",
+      "name": "Cadet Blue",
+      "category": "PU",
+      "family": "Solids",
+      "shutter": "Matte",
+      "brand": "Magickhome",
+      "color": "#3B5A6E",
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
+      "texture": false,
+      "source": "rules"
+    },
+    "wall": {
+      "aid": "MHS212",
+      "code": "STROMMA-WHITE-PU",
+      "name": "Stromma White",
+      "category": "PU",
+      "family": "Solids",
+      "shutter": "Matte",
+      "brand": "Magickhome",
+      "color": "#F2F2F2",
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+      "texture": false,
+      "source": "rules"
+    },
+    "budget": null,
+    "tier_rule": "",
+    "notes": []
+  },
   "nodes_added": {
     "kitchen": 15,
     "appliance": 3,
@@ -508,8 +632,8 @@
   "validation_issues": [],
   "catalog": {
     "source": "xlsx",
-    "filtered_skus": 495,
+    "filtered_skus": 1065,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.54
+  "seconds": 0.22
 }

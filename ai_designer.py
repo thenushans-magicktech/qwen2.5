@@ -29,7 +29,7 @@ import threading
 import time
 from typing import Literal, Optional
 
-from pydantic import BaseModel, Field, ValidationError, create_model
+from pydantic import BaseModel, Field, ValidationError, create_model, model_validator
 
 import config
 import design_knowledge
@@ -76,7 +76,28 @@ class KitchenPreferences(BaseModel):
         None, description="Lofts above the wall cabinets when the wall height allows (>= 2.658 m); None = the designer decides"
     )
     include_tall: bool = True
-    include_cylinder: Optional[bool] = Field(None, description="LPG cylinder unit beside the hob (None = auto)")
+    include_cylinder: Optional[bool] = Field(
+        None, description="LPG cylinder unit beside the hob. None = not stated: LPG is assumed and the unit is "
+                          "included (rule R11); False = piped gas (PNG) or induction"
+    )
+    fuel: Literal["auto", "lpg", "png", "induction"] = Field(
+        "auto", description="Hob fuel (rule R11): lpg keeps the cylinder unit, png (piped gas) and induction drop it; "
+                            "auto = not stated (LPG assumed). Overrides include_cylinder when set"
+    )
+    size_band: Literal["auto", "small", "medium", "large"] = Field(
+        "auto", description="Rule-book size band; auto = from the floor area (Small 60-80, Medium 81-120, Large 121-180 sqft)"
+    )
+    budget: Literal["auto", "essential", "premium", "luxury"] = Field(
+        "auto", description="Budget tier (rule workbook): Essential = shutter base units, Premium / Luxury = drawer "
+                            "base units and L-corner wall units. auto = not stated (the designer's base style is used)"
+    )
+    base_finish: Optional[str] = Field(
+        None, description="Shutter finish aid for the base run (base + tall units), e.g. MHS135; None = the designer "
+                          "chooses within the budget tier's finish rules (knowledge/finish_rules.json)"
+    )
+    wall_finish: Optional[str] = Field(None, description="Shutter finish aid for the wall run (wall units + lofts)")
+    primary_wall: Optional[str] = Field(None, description="Wall id the customer chose for the hob / cooking (rule R24)")
+    secondary_wall: Optional[str] = Field(None, description="Wall id the customer chose for the sink (rule R25)")
     sink_under_window: bool = True
     style_notes: str = Field("", max_length=500, description="Free-text brief passed to the AI designer")
     # Household needs. "auto" = not stated: Qwen decides and explains why. Any other
@@ -105,6 +126,15 @@ class KitchenPreferences(BaseModel):
     strip_existing_items: bool = True
     include_floor: bool = True
     seed: Optional[int] = None
+
+    @model_validator(mode="after")
+    def _fuel_sets_cylinder(self):
+        """R11: the fuel decides the cylinder unit - LPG keeps it, piped gas / induction drop it."""
+        if self.fuel == "lpg":
+            self.include_cylinder = True
+        elif self.fuel in ("png", "induction"):
+            self.include_cylinder = False
+        return self
 
 
 # ---------------------------------------------------------------------------
@@ -404,8 +434,9 @@ def allowed_codes(menu, group: str, prefs: Optional["KitchenPreferences"]) -> li
         need = p.open_unit if p else "auto"
         return ["NONE"] if need == "no" or not codes else codes if need == "yes" else codes + ["NONE"]
     if group == "cylinder":
+        # R11: LPG is assumed unless the customer has piped gas / induction - no NONE then
         need = p.include_cylinder if p else None
-        return ["NONE"] if need is False or not codes else codes if need else codes + ["NONE"]
+        return ["NONE"] if need is False or not codes else codes
     if group == "tall":
         crockery = p.crockery_unit if p else "auto"
         if crockery == "no":  # customer does not want a crockery unit: not offered
@@ -427,6 +458,7 @@ def build_design_model_v2(
     require_tall: bool = False,
     prefs: Optional["KitchenPreferences"] = None,
     lofts_possible: bool = True,
+    fixed_walls: Optional[dict[str, str]] = None,
 ) -> type[BaseModel]:
     """v2 schema: enums of option codes and wall names.
 
@@ -436,6 +468,9 @@ def build_design_model_v2(
     "no" only when the ceiling is too low for them.
     """
     Wall = _lit(walls)
+    fixed = fixed_walls or {}  # R24 / R25: the customer's hob and sink walls
+    HobWall = _lit([fixed["hob_wall"]]) if fixed.get("hob_wall") in walls else Wall
+    SinkWall = _lit([fixed["sink_wall"]]) if fixed.get("sink_wall") in walls else Wall
 
     def codes(group: str):
         return _lit(allowed_codes(menu, group, prefs) or ["NONE"])
@@ -468,10 +503,10 @@ def build_design_model_v2(
         layout_why=why("choice of cabinet walls"),
         cabinet_walls=(list[Wall], Field(min_length=1, max_length=3)),
         sink_why=why("sink unit and its wall"),
-        sink_wall=(Wall, ...),
+        sink_wall=(SinkWall, ...),
         sink=(codes("sink"), ...),
         hob_why=why("hob unit, its wall and position"),
-        hob_wall=(Wall, ...),
+        hob_wall=(HobWall, ...),
         hob=(codes("hob"), ...),
         hob_center_mm=(int, Field(ge=0, le=20000, description="hob centre, mm from the hob wall's start")),
         spice=(codes("spice"), ...),
@@ -493,9 +528,24 @@ def build_design_model_v2(
         wall_cabinet_sizes=(list[WallSizes], Field(max_length=3)),
         wall_style_why=why("wall cabinet doors (hinged shutters / lift-up)"),
         wall_style=(_lit(allowed_wall_styles(prefs)), ...),
+        finish_why=why("shutter finishes of the base run and the wall run"),
+        base_finish=(_lit(finish_codes("base", prefs)), ...),
+        wall_finish=(_lit(finish_codes("wall", prefs)), ...),
         loft_why=why("loft decision"),
         lofts=(_lit(allowed_lofts(prefs, lofts_possible)), ...),
     )
+
+
+def finish_codes(run: str, prefs: Optional["KitchenPreferences"]) -> list[str]:
+    """Finish codes the designer may pick for ``run``: the customer's stated finish, else every
+    finish the budget tier allows (knowledge/finish_rules.json)."""
+    import finishes
+
+    stated = getattr(prefs, f"{run}_finish", None) if prefs else None
+    if stated in finishes.catalogue():
+        return [finishes.code(stated)]
+    budget = prefs.budget if prefs and prefs.budget != "auto" else None
+    return [finishes.code(a) for a in finishes.allowed(run, budget)] or ["STANDARD"]
 
 
 WALL_STYLES = ("shutters", "lift_up")
@@ -669,6 +719,15 @@ def room_brief_v2(geometry: RoomGeometry, labels: dict[str, str], hints: bool = 
                 f"- U-shape on {name[wid]}: aisle between the {name[adj[0]]} and {name[adj[1]]} runs "
                 f"would be {aisle:.0f} mm (needs {config.MIN_AISLE_MM}+)."
             )
+    import rulebook
+
+    area = rulebook.floor_area_sqft(geometry)
+    if hints:
+        band, note = rulebook.size_band(area)
+        lines.append(f"- Floor area {area:.0f} sqft: a {band} kitchen in the rule book"
+                     + (f" ({note})" if note else "") + " - module sizes follow its table (playbook RULE BOOK).")
+    else:
+        lines.append(f"- Floor area {area:.0f} sqft.")
     h = min(w.height_m for w in geometry.walls.values())
     if hints:
         top = config.LOFT_TOP_M * 1000
@@ -677,6 +736,24 @@ def room_brief_v2(geometry: RoomGeometry, labels: dict[str, str], hints: bool = 
             f"too low for lofts (they need {top:.0f} mm); wall and tall units grow towards the ceiling instead."))
     else:
         lines.append(f"- Wall height {h * 1000:.0f} mm.")
+    return lines
+
+
+def _finish_lines(knowledge: bool = True) -> list[str]:
+    """Shutter finishes (MagickHome finish records) - static, so the prompt prefix stays cacheable.
+    With knowledge: the budget-tier finish rules too."""
+    import finishes
+
+    lines = ["SHUTTER FINISHES - choose by CODE (code | type | look | brand | colour):"]
+    for aid in finishes.catalogue():
+        s = finishes.summary(aid)
+        look = f"{(s['shutter'] or '').lower()}" + (", wood texture" if (s["family"] or "").lower() == "wooden" else "")
+        lines.append(f"  {s['code']} | {s['category']} | {look} | {s['brand']} | {s['color'] or 'texture'}")
+    if knowledge:
+        for tier, t in finishes.rules().get("tiers", {}).items():
+            lines.append(f"  {tier.title()} budget: base run {'/'.join(t.get('base', []))}, wall run "
+                         f"{'/'.join(t.get('wall', []))} - {t.get('note', '')}")
+        lines += [f"  {m}" for m in finishes.rules().get("match", [])]
     return lines
 
 
@@ -720,7 +797,9 @@ def customer_needs(prefs: KitchenPreferences) -> list[str]:
     pur = {"yes": "NEEDS a wall water-purifier (Aquaguard) cabinet", "no": "does NOT want a water-purifier cabinet"}.get(
         p.water_purifier, "water purifier not stated")
     gas = "uses an LPG cylinder - needs a cylinder unit" if p.include_cylinder else (
-        "has piped gas - no cylinder unit" if p.include_cylinder is False else "gas supply not stated")
+        {"png": "has piped gas (PNG) - no cylinder unit", "induction": "cooks on induction - no cylinder unit"}.get(
+            p.fuel, "has piped gas (PNG) or induction - no cylinder unit") if p.include_cylinder is False
+        else "not stated - LPG is assumed, so the cylinder unit is included (rule R11)")
     tower = {
         "none": "no built-in oven or microwave", "microwave": "NEEDS a built-in microwave tower",
         "oven": "NEEDS a built-in oven tower", "oven_microwave": "NEEDS a built-in oven + microwave tower",
@@ -753,7 +832,19 @@ def customer_needs(prefs: KitchenPreferences) -> list[str]:
         f"- Wall cabinets: {wall_doors}; {open_unit}.",
         f"- Crockery: {crockery}.",
         f"- Lofts: {loft}.",
+        f"- Budget: " + ({"essential": "Essential (shutter base units, blind corners, laminate fronts)",
+                           "premium": "Premium (drawer base units, L corners, laminate + one PU run)",
+                           "luxury": "Luxury (drawer base units, L corners, PU fronts)"}.get(p.budget) or "not stated") + ".",
+        "- Finishes: " + "; ".join(
+            f"{run} run {_finish_need(val)}" for run, val in (("base", p.base_finish), ("wall", p.wall_finish)))
+        + " (the codes allowed are the ones the budget tier permits).",
     ]
+
+
+def _finish_need(aid: Optional[str]) -> str:
+    import finishes
+
+    return f"{finishes.describe(aid)} (customer's choice)" if aid in finishes.catalogue() else "not stated - you choose"
 
 
 PLAIN_SYSTEM_PROMPT = """You are an experienced modular-kitchen designer working on homes in India for MagickHome.
@@ -787,6 +878,8 @@ def _plain_task() -> list[str]:
         "   wall_style = the doors of the plain wall cabinets: hinged shutters or lift-up (flap-up).",
         "   lofts = storage cabinets above the wall cabinets, up to the ceiling. Without lofts the engine makes",
         "   the wall and tall units as tall as the ceiling allows.",
+        "   base_finish / wall_finish = shutter finish of the base run (base + tall units) and of the wall run",
+        "   (wall units + lofts); panels and fillers take the same finish.",
         "   NONE = leave that unit out.",
     ]
 
@@ -795,15 +888,19 @@ def _user_prompt_v2(geometry: RoomGeometry, menu, labels: dict[str, str], prefs:
                     knowledge: bool = True) -> str:
     # The menu comes first: it is identical for every room of one door style, so
     # Ollama can reuse the cached prompt prefix between requests.
-    lines = _menu_lines(menu, knowledge=knowledge)
+    lines = _menu_lines(menu, knowledge=knowledge) + _finish_lines(knowledge)
     lines += ["", "ROOM (mm measured along each wall from its start; walls listed in order around the room):"]
     lines += room_brief_v2(geometry, labels, hints=knowledge)
     lines += ["", "CUSTOMER NEEDS (stated needs are fixed; 'not stated' means you decide and say why):"]
     lines += customer_needs(prefs)
+    inv = {wid: label for label, wid in labels.items()}
     if prefs.cabinet_walls:
-        inv = {wid: label for label, wid in labels.items()}
         names = [inv[w] for w in prefs.cabinet_walls if w in inv]
         lines.append(f"- Use exactly these cabinet walls: {', '.join(names)}.")
+    if prefs.primary_wall in inv:
+        lines.append(f"- The hob goes on {inv[prefs.primary_wall]} (the customer's cooking wall).")
+    if prefs.secondary_wall in inv:
+        lines.append(f"- The sink goes on {inv[prefs.secondary_wall]} (the customer's choice).")
     if prefs.style_notes:
         lines.append(f"- Brief from the customer: {prefs.style_notes}")
     if not knowledge:
@@ -906,8 +1003,10 @@ def build_messages(geometry: RoomGeometry, groups, prefs: KitchenPreferences, ve
             return _design_to_proposal(d, prefs)
     else:
         menu, labels = build_menu(groups), wall_labels(geometry)
+        inv = {wid: label for label, wid in labels.items()}
+        fixed = {"hob_wall": inv.get(prefs.primary_wall), "sink_wall": inv.get(prefs.secondary_wall)}
         Model = build_design_model_v2(menu, list(labels), require_tall=prefs.include_tall, prefs=prefs,
-                                      lofts_possible=lofts_possible(geometry))
+                                      lofts_possible=lofts_possible(geometry), fixed_walls=fixed)
         system = design_knowledge.system_prompt() if knowledge else PLAIN_SYSTEM_PROMPT
         user = _user_prompt_v2(geometry, menu, labels, prefs, knowledge=knowledge)
 
@@ -1008,8 +1107,12 @@ def _design_to_proposal_v2(d, menu, labels: dict[str, str], prefs: KitchenPrefer
         "layout": d.layout_why, "sink": d.sink_why, "hob": d.hob_why, "lpg": d.lpg_why, "tall": d.tall_why,
         "purifier": d.purifier_why, "display": d.display_why, "features": d.features_why,
         "storage": d.storage_why, "wall_cabinets": d.wall_cabinets_why,
-        "open": d.open_why, "wall_style": d.wall_style_why, "lofts": d.loft_why,
+        "open": d.open_why, "wall_style": d.wall_style_why, "lofts": d.loft_why, "finish": d.finish_why,
     }
+    import finishes
+
+    by_code = {finishes.code(a): a for a in finishes.catalogue()}
+    chosen_finishes = {run: by_code[c] for run, c in (("base", d.base_finish), ("wall", d.wall_finish)) if c in by_code}
     talls = [(labels[t.wall], code[t.unit]) for t in d.tall_units] if prefs.include_tall else []
     host = labels[d.hob_wall] if d.hob_wall in labels else None
     talls, added = _ensure_built_in(talls, menu, prefs, host)
@@ -1037,6 +1140,7 @@ def _design_to_proposal_v2(d, menu, labels: dict[str, str], prefs: KitchenPrefer
         base_storage=d.base_storage,
         lofts=d.lofts == "yes",
         wall_style=d.wall_style,
+        finishes=chosen_finishes,
         reasons={k: (v or "").strip() for k, v in reasons.items()},
         notes=f"{d.room_reading.strip()} {d.design_plan.strip()}".strip(),
         source="ollama",
@@ -1126,7 +1230,7 @@ def fallback_proposal(geometry: RoomGeometry, groups, prefs: KitchenPreferences)
     hob = groups["hob"][0]
     spice = groups["spice"][0] if groups["spice"] else None
     cyl = None
-    if prefs.include_cylinder or (prefs.include_cylinder is None and _free_len(geometry, hob_wall) >= 2700):
+    if prefs.include_cylinder is not False:  # R11: LPG assumed unless piped gas / induction
         cyl = groups["cylinder"][0].aid if groups["cylinder"] else None
     talls = []
     if prefs.include_tall and groups["tall"]:
@@ -1165,8 +1269,8 @@ def fallback_proposal(geometry: RoomGeometry, groups, prefs: KitchenPreferences)
         "sink": f"{sink.width} mm suits a {sink_free:.0f} mm window-wall run." if window_walls else "Longest free wall.",
         "hob": f"Drawer hob unit on {W[hob_wall].name}, a different wall from the sink.",
         "lpg": "Customer uses LPG." if prefs.include_cylinder else (
-            "Customer has piped gas." if prefs.include_cylinder is False else
-            ("Hob wall is long enough for a cylinder unit." if cyl else "Hob wall too short for a cylinder unit.")),
+            "Customer has piped gas or induction." if prefs.include_cylinder is False else
+            "Fuel not stated: LPG is assumed, so the cylinder unit is included (rule R11)."),
         "tall": "Matches the customer's built-in appliance need." if prefs.built_in not in ("auto", "none") else "Pantry at a run end.",
         "purifier": "Customer needs a water purifier." if prefs.water_purifier == "yes" else (
             "Customer does not want one." if prefs.water_purifier == "no" else
@@ -1177,6 +1281,7 @@ def fallback_proposal(geometry: RoomGeometry, groups, prefs: KitchenPreferences)
         "wall_style": "Customer's choice." if prefs.wall_style != "auto" else "Hinged shutters: the standard, lowest-cost door.",
         "lofts": ("Customer wants lofts." if prefs.include_loft else "Lofts store big vessels and seasonal items.")
         if lofts else ("Customer does not want lofts." if prefs.include_loft is False else "Ceiling too low for lofts."),
+        "finish": _fallback_finish_reason(prefs),
     }
     tall_aids = {a for _, a in talls}
     if any(it.cat == CAT_TALL_GLASS and it.aid in tall_aids for it in groups["tall"]):
@@ -1218,6 +1323,13 @@ def fallback_proposal(geometry: RoomGeometry, groups, prefs: KitchenPreferences)
         ),
         source="fallback",
     )
+
+
+def _fallback_finish_reason(prefs: KitchenPreferences) -> str:
+    import finishes
+
+    budget = prefs.budget if prefs.budget != "auto" else None
+    return finishes.default(budget)[1] or "Standard MagickHome palette."
 
 
 def design_kitchen(
