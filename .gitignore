@@ -1,0 +1,33 @@
+# Python bytecode / tool caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets (GEMINI_API_KEY, OLLAMA_API_KEY, asset API token ...)
+.env
+.env.*
+
+# Runtime output: designs saved by the web UI, files rewritten by test_pipeline.py
+designs/
+test_output/
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Excel lock files
+~$*.xlsx
+
+# Kept on purpose (offline fallback when the Assets API is unreachable):
+#   data/catalog_api_cache.json, data/texture_api_cache.json
