@@ -1,6 +1,6 @@
 """Connect the local kitchen designer to Qwen or Gemma running in Colab (or any remote Ollama behind the proxy).
 
-    python colab/connect_colab.py https://<random>.trycloudflare.com <password> [port] [--designer qwen|gemma]
+    python colab/connect_colab.py https://<random>.trycloudflare.com <password> [port] [--designer qwen|gemma] [--finetuned]
 
 Checks that the URL answers and the password is accepted, shows which models Colab has,
 then starts the web app on this laptop (default http://127.0.0.1:8000) with every Ollama
@@ -8,6 +8,8 @@ call (Qwen and Gemma) going to Colab. Everything else - UI, rules, catalogue, fi
 
 ``--designer gemma`` (use with colab/Gemma_on_Colab_GPU.ipynb) checks that Gemma is on Colab
 and makes it the default designer; Qwen stays selectable if Colab has it too.
+``--finetuned`` (use with finetune/Gemma_finetune_on_Colab.ipynb) = the fine-tuned Gemma
+(GEMMA_MODEL, default magick-gemma) with the SHORT prompt: the knowledge pack is in its weights.
 GEMINI_API_KEY, if set in this shell, is passed on to the app.
 """
 import json
@@ -23,6 +25,11 @@ from pathlib import Path
 def main() -> int:
     args = sys.argv[1:]
     designer = "qwen"
+    finetuned = "--finetuned" in args
+    if finetuned:
+        args.remove("--finetuned")
+        designer = "gemma"
+        os.environ.setdefault("GEMMA_MODEL", "magick-gemma")
     if "--designer" in args:
         i = args.index("--designer")
         designer = args[i + 1] if i + 1 < len(args) else ""
@@ -58,8 +65,10 @@ def main() -> int:
                AI_EXPECTED_TIME="under a minute", GEMMA_EXPECTED_TIME="under a minute")
     if designer == "gemma":
         env["MAGICKHOME_AI_PROVIDER"] = "gemma"
+        env["GEMMA_MODEL"] = want
+        env["GEMMA_USE_KNOWLEDGE"] = "0" if finetuned else env.get("GEMMA_USE_KNOWLEDGE", "1")
     root = Path(__file__).resolve().parents[1]
-    name = "Gemma" if designer == "gemma" else "Qwen"
+    name = ("fine-tuned Gemma" if finetuned else "Gemma") if designer == "gemma" else "Qwen"
     print(f"Starting the kitchen designer on http://127.0.0.1:{port} ({name} runs on Colab). Press Ctrl+C to stop.")
     return subprocess.call([sys.executable, "main.py", "--serve", "--port", port], cwd=root, env=env)
 

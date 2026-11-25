@@ -39,6 +39,9 @@ OLLAMA_OPTIONS = {
 GEMMA_MODEL = os.getenv("GEMMA_MODEL", "gemma4:E4B")
 GEMMA_THINK = os.getenv("GEMMA_THINK", "0").strip().lower() not in ("", "0", "false", "no", "off")
 GEMMA_EXPECTED_TIME = os.getenv("GEMMA_EXPECTED_TIME", "2-4 minutes")
+# 1 (default): Gemma gets the full knowledge pack in the prompt, like Qwen. 0: the short prompt only
+# (room, menu, needs) - for a Gemma fine-tuned on finetune/ data, which has the knowledge in its weights.
+GEMMA_USE_KNOWLEDGE = os.getenv("GEMMA_USE_KNOWLEDGE", "1").strip().lower() not in ("", "0", "false", "no", "off")
 AI_MAX_RETRIES = 1
 AI_SHORTLIST_MIN = 35
 AI_SHORTLIST_MAX = 45

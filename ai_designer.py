@@ -1043,7 +1043,9 @@ def design_with_ollama(
     client = client or _client()
     model = ollama_model_for(provider)
     ensure_model(client, wait=prefs.ai_mode == "ollama", model=model)
-    messages, Model, to_proposal = build_messages(geometry, groups, prefs, version)
+    # A fine-tuned Gemma (finetune/) has the knowledge pack in its weights: send the short prompt.
+    knowledge = config.GEMMA_USE_KNOWLEDGE if provider == "gemma" else True
+    messages, Model, to_proposal = build_messages(geometry, groups, prefs, version, knowledge=knowledge)
     schema = Model.model_json_schema()
     extra = {"think": config.GEMMA_THINK} if provider == "gemma" else {}
     errors = []
@@ -1072,6 +1074,7 @@ def design_with_ollama(
             "mode": "gemma" if provider == "gemma" else "ollama",
             "provider": provider,
             "model": model,
+            "knowledge": knowledge,
             "prompt_version": version,
             "attempts": attempt + 1,
             "seconds": round(time.time() - t0, 1),
