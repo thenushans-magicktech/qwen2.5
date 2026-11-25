@@ -26,8 +26,11 @@ OLLAMA_TIMEOUT_S = float(os.getenv("OLLAMA_TIMEOUT_S", "1200"))  # CPU inference
 AI_EXPECTED_TIME = os.getenv("AI_EXPECTED_TIME", "4-5 minutes" if "7b" in OLLAMA_MODEL else "2-3 minutes")
 OLLAMA_KEEP_ALIVE = os.getenv("OLLAMA_KEEP_ALIVE", "10m")
 OLLAMA_OPTIONS = {
-    "temperature": 0,
-    "seed": 42,
+    # Creative: every design is a fresh idea for the same plan. The schema still only allows real
+    # codes and walls, and the rules still check everything. Set MAGICKHOME_AI_TEMPERATURE=0 (and
+    # a request seed) for exactly repeatable designs.
+    "temperature": float(os.getenv("MAGICKHOME_AI_TEMPERATURE", "0.7")),
+    "top_p": 0.9,
     "num_ctx": 8192,
     "num_predict": 1500,
 }
@@ -46,15 +49,28 @@ GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 GEMINI_TIMEOUT_S = float(os.getenv("GEMINI_TIMEOUT_S", "240"))
 # Backup models tried in order when the main one is busy (503), out of its free daily quota (429)
 # or times out - each model has its own quota. Comma-separated; "" = no backups.
-GEMINI_FALLBACK_MODELS = [m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.7-flash,gemini-2.5-flash").split(",")]
+GEMINI_FALLBACK_MODELS = [m.strip() for m in os.getenv("GEMINI_FALLBACK_MODELS", "gemini-3.8-flash,gemini-3.7-flash").split(",")]
 # Off (default): Gemini designs from its own judgement - it gets the plain room facts, the cabinet
 # list, the customer's needs and the answer format, but NOT the MagickHome knowledge pack (playbook,
 # worked examples, cabinet notes, rule hints). Set GEMINI_USE_KNOWLEDGE=1 to give it the same prompt as Qwen.
 GEMINI_USE_KNOWLEDGE = os.getenv("GEMINI_USE_KNOWLEDGE", "0").strip().lower() not in ("", "0", "false", "no", "off")
+# Brief reader: Gemini reads the customer's free-text brief in any language, fills the form settings it
+# clearly asks for and writes a clear English brief for the designer (Qwen). "gemini" (default; used only
+# when GEMINI_API_KEY is set) or "off" (the designer reads the raw text). BRIEF_MODEL "" = GEMINI_MODEL.
+BRIEF_READER = os.getenv("MAGICKHOME_BRIEF_READER", "gemini").strip().lower()
+BRIEF_MODEL = os.getenv("MAGICKHOME_BRIEF_MODEL", "").strip()
+BRIEF_TIMEOUT_S = float(os.getenv("MAGICKHOME_BRIEF_TIMEOUT_S", "60"))  # per model; busy models are skipped
 KNOWLEDGE_DIR = Path(os.getenv("MAGICKHOME_KNOWLEDGE_DIR", str(BASE_DIR / "knowledge")))
 # MagickHome Kitchen Rule Engine workbook (module widths by kitchen type / size band, budget
 # rules, lofts ...); read by rulebook.py. Rules are cited by their row number (R1, R12, ...).
 RULEBOOK_PATH = Path(os.getenv("MAGICKHOME_RULEBOOK_PATH", str(KNOWLEDGE_DIR / "Kitchen_Rule_Engine_V1.xlsx")))
+# Which design rules apply:
+#   "rulebook" (default) - only the MagickHome rule workbook + the checks that make a kitchen buildable
+#              (inside the room, no overlaps, door / window clearance, corner units at corners, chimney
+#              zone, real SKUs). The AI designer's knowledge is the workbook's rules, nothing else.
+#   "extended" - also the generator's own design rules: the designer playbook and worked examples,
+#              wall / tall heights grown to the ceiling, hob landing and hob-away-from-sink preferences.
+DESIGN_RULES = os.getenv("MAGICKHOME_DESIGN_RULES", "rulebook").strip().lower()
 # Finished web-UI designs are saved here so ?job=<id> links survive a server restart.
 JOBS_DIR = Path(os.getenv("MAGICKHOME_JOBS_DIR", str(BASE_DIR / "designs")))
 

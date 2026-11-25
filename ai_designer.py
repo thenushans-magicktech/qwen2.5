@@ -100,8 +100,15 @@ class KitchenPreferences(BaseModel):
     backsplash_finish: Optional[str] = Field(None, description="Backsplash finish aid (e.g. MHB021); None = scene default")
     primary_wall: Optional[str] = Field(None, description="Wall id the customer chose for the hob / cooking (rule R24)")
     secondary_wall: Optional[str] = Field(None, description="Wall id the customer chose for the sink (rule R25)")
-    sink_under_window: bool = True
+    sink_under_window: Optional[bool] = Field(
+        None, description="True = the sink must be centred under the window; None = the designer chooses the sink wall "
+                          "and position (Qwen / Gemini decide; the quick rules centre it under the window)"
+    )
     style_notes: str = Field("", max_length=500, description="Free-text brief passed to the AI designer")
+    read_brief: Optional[bool] = Field(
+        None, description="Gemini reads the brief (any language) into settings + a clear English brief before the "
+                          "design (brief_reader.py). None = when GEMINI_API_KEY is set; False = the designer reads it as written"
+    )
     # Household needs. "auto" = not stated: Qwen decides and explains why. Any other
     # value is the customer's requirement and is enforced (Qwen cannot override it).
     water_purifier: Literal["auto", "yes", "no"] = Field("auto", description="Wall purifier (Aquaguard) cabinet")
@@ -267,7 +274,7 @@ def build_shortlist_v2(catalog: Catalog) -> dict[str, list[CatalogItem]]:
 
 V2_GROUP_ORDER = ("sink", "hob", "spice", "cylinder", "tall", "base", "wall", "purifier", "display", "open")
 V2_GROUP_TITLES = {
-    "sink": "SINK UNIT - one, centred under the window",
+    "sink": "SINK UNIT - one, usually under or near the window; you set its centre (sink_center_mm)",
     "hob": "HOB UNIT - one, on a solid wall; chimney above",
     "spice": "SPICE PULL-OUT - right beside the hob (or NONE)",
     "cylinder": "LPG CYLINDER UNIT - beside the hob (or NONE)",
@@ -504,9 +511,10 @@ def build_design_model_v2(
         design_plan=(str, Field(max_length=200, description="zones and work triangle in one or two sentences")),
         layout_why=why("choice of cabinet walls"),
         cabinet_walls=(list[Wall], Field(min_length=1, max_length=3)),
-        sink_why=why("sink unit and its wall"),
+        sink_why=why("sink unit, its wall and position"),
         sink_wall=(SinkWall, ...),
         sink=(codes("sink"), ...),
+        sink_center_mm=(int, Field(ge=0, le=20000, description="sink centre, mm from the sink wall's start")),
         hob_why=why("hob unit, its wall and position"),
         hob_wall=(HobWall, ...),
         hob=(codes("hob"), ...),
@@ -708,7 +716,7 @@ def room_brief_v2(geometry: RoomGeometry, labels: dict[str, str], hints: bool = 
             facts.append("Too short for cabinets.")
         elif w.windows:
             win = max(w.windows, key=lambda o: o.width_mm)
-            facts.append(f"Wet zone: sink centred at {win.center_mm:.0f}.")
+            facts.append(f"Wet zone: a sink here gets daylight; centred under the window it sits at {win.center_mm:.0f}.")
         else:
             rng = _hob_range(segs)
             facts.append(f"Hob centre range {rng[0]}-{rng[1]}." if rng else "Too short for the hob: storage only.")
@@ -871,6 +879,20 @@ Write each *_why before its decision: your reason in one or two short sentences,
 Answer only with the JSON."""
 
 
+def rulebook_system_prompt() -> str:
+    """The AI designer's knowledge in "rulebook" mode: its own judgement, bounded only by the
+    MagickHome rule workbook (no generator playbook, examples or hints)."""
+    import rulebook
+
+    rb = rulebook.load()
+    return (PLAIN_SYSTEM_PROMPT
+            + "\n\nThink like a designer seeing this room for the first time: there are several good layouts - "
+              "pick the one you find best for this household and say why.\n\n"
+              f"MAGICKHOME RULE BOOK ({rb.source}) - your design must follow these rules; the placement engine "
+              "enforces them too (sizes by kitchen type and size band, gas, landings, budget, corners, lofts):\n"
+            + "\n".join(rb.prompt_lines()))
+
+
 def _plain_task() -> list[str]:
     """What each answer field means - the answer format only, no design advice."""
     return [
@@ -880,6 +902,7 @@ def _plain_task() -> list[str]:
         "2. design_plan: your design idea for this kitchen.",
         "3. the decisions, each after its *_why (your reason).",
         "   hob_center_mm = the hob's centre, in mm from the start of the hob wall.",
+        "   sink_center_mm = the sink's centre, in mm from the start of the sink wall.",
         "   base_storage = the style of the plain base cabinets that fill the runs.",
         "   base_feature_units = special base units you want on a wall (the plain base cabinets fill the rest).",
         "   wall_cabinet_sizes = wall-cabinet widths you prefer on a wall.",
@@ -925,6 +948,7 @@ def _user_prompt_v2(geometry: RoomGeometry, menu, labels: dict[str, str], prefs:
         "   rather than the other options on the menu (e.g. a smaller or larger size, or NONE). Use only the needs",
         "   listed above for THIS customer - never facts from the worked examples (other families).",
         "   hob_center_mm is measured from the hob wall's start and should sit inside that wall's hob centre range.",
+        "   sink_center_mm is measured from the sink wall's start: you decide where the sink sits on its wall.",
     ]
     return "\n".join(lines)
 
@@ -1017,8 +1041,13 @@ def build_messages(geometry: RoomGeometry, groups, prefs: KitchenPreferences, ve
         fixed = {"hob_wall": inv.get(prefs.primary_wall), "sink_wall": inv.get(prefs.secondary_wall)}
         Model = build_design_model_v2(menu, list(labels), require_tall=prefs.include_tall, prefs=prefs,
                                       lofts_possible=lofts_possible(geometry), fixed_walls=fixed)
-        system = design_knowledge.system_prompt() if knowledge else PLAIN_SYSTEM_PROMPT
-        user = _user_prompt_v2(geometry, menu, labels, prefs, knowledge=knowledge)
+        if knowledge and config.DESIGN_RULES == "rulebook":
+            # only the MagickHome rule workbook as knowledge; plain room facts and cabinet list
+            system = rulebook_system_prompt()
+            user = _user_prompt_v2(geometry, menu, labels, prefs, knowledge=False)
+        else:
+            system = design_knowledge.system_prompt() if knowledge else PLAIN_SYSTEM_PROMPT
+            user = _user_prompt_v2(geometry, menu, labels, prefs, knowledge=knowledge)
 
         def to_proposal(d):
             return _design_to_proposal_v2(d, menu, labels, prefs)
@@ -1034,6 +1063,11 @@ def design_with_ollama(
     ensure_model(client, wait=prefs.ai_mode == "ollama")
     messages, Model, to_proposal = build_messages(geometry, groups, prefs, version)
     schema = Model.model_json_schema()
+    # a fresh seed per design, so the same plan gets a new idea each time; a request seed repeats one
+    import random
+
+    seed = prefs.seed if prefs.seed is not None else random.randint(1, 2**31 - 1)
+    options = dict(config.OLLAMA_OPTIONS, seed=seed)
     errors = []
     for attempt in range(config.AI_MAX_RETRIES + 1):
         t0 = time.time()
@@ -1042,7 +1076,7 @@ def design_with_ollama(
                 model=config.OLLAMA_MODEL,
                 messages=messages,
                 format=schema,
-                options=dict(config.OLLAMA_OPTIONS),
+                options=options,
                 keep_alive=config.OLLAMA_KEEP_ALIVE,
             )
         except Exception as exc:
@@ -1059,6 +1093,8 @@ def design_with_ollama(
             "mode": "ollama",
             "model": config.OLLAMA_MODEL,
             "prompt_version": version,
+            "seed": seed,  # pass it as preferences.seed to repeat this exact design
+            "temperature": options.get("temperature"),
             "attempts": attempt + 1,
             "seconds": round(time.time() - t0, 1),
             "prompt_tokens": getattr(resp, "prompt_eval_count", None),
@@ -1135,6 +1171,7 @@ def _design_to_proposal_v2(d, menu, labels: dict[str, str], prefs: KitchenPrefer
         cabinet_walls=list(dict.fromkeys(prefs.cabinet_walls or walls)),
         sink_wall_id=labels[d.sink_wall],
         sink_aid=code[d.sink],
+        sink_center_mm=float(d.sink_center_mm),
         hob_wall_id=labels[d.hob_wall],
         hob_aid=code[d.hob],
         hob_center_mm=float(d.hob_center_mm),

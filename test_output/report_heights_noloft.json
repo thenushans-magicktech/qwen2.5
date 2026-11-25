@@ -277,6 +277,7 @@
       "need": null
     }
   ],
+  "brief": null,
   "proposal": {
     "layout_type": "L",
     "cabinet_walls": [
@@ -669,5 +670,5 @@
     "filtered_skus": 1065,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.44
+  "seconds": 0.85
 }

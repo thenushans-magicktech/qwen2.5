@@ -93,6 +93,20 @@ class Rulebook:
     source: str
     widths: list[WidthRule]
     texts: dict[int, str] = field(default_factory=dict)  # rule number -> workbook description
+    groups: dict[str, list[int]] = field(default_factory=dict)  # "Category > Subcategory" -> rule numbers
+
+    def prompt_lines(self) -> list[str]:
+        """The workbook's active rules for the AI designer's prompt, grouped as in the sheet."""
+        out = []
+        for group, nos in self.groups.items():
+            out.append(f"{group}:")
+            seen = set()
+            for n in nos:
+                t = " ".join((self.texts.get(n) or "").split())
+                if t and t not in seen:
+                    seen.add(t)
+                    out.append(f"  R{n}: {t}")
+        return out
 
     def cite(self, rule: int) -> str:
         """``R12: <workbook description>`` for explanations."""
@@ -129,13 +143,14 @@ def load() -> Rulebook:
         def v(r, name):
             return _clean(r[hdr.index(name)]) if name in hdr else None
 
-        widths, texts = [], {}
+        widths, texts, groups = [], {}, {}
         for r in rows[1:]:
             no = v(r, "S.No")
             if no is None or (v(r, "status") or "").lower() != "active":
                 continue
             no = int(float(no))
             texts[no] = v(r, "description") or ""
+            groups.setdefault(f"{v(r, 'category') or 'Other'} > {v(r, 'subcategory') or 'General'}", []).append(no)
             unconditional = not any(v(r, f"when_fact_1_{p}") for p in ("subtype", "family", "property"))
             if (v(r, "action") == "SET_VALUE" and (v(r, "action_target_property") or "").lower() == "width"
                     and unconditional and v(r, "action_min")):
@@ -149,7 +164,7 @@ def load() -> Rulebook:
         if not widths:
             raise ValueError("no module-width rules found")
         log.info("rule workbook: %d rules, %d module-width rules from %s", len(texts), len(widths), path.name)
-        return Rulebook(f"workbook {path.name}", widths, texts)
+        return Rulebook(f"workbook {path.name}", widths, texts, groups)
     except Exception as exc:  # missing file, renamed sheet, ... -> built-in copy
         log.warning("rule workbook unavailable (%s) - using the built-in module-width table", exc)
         return Rulebook("built-in table", [WidthRule(*row) for row in _BUILTIN_WIDTHS])
@@ -346,6 +361,45 @@ def options() -> dict:
     }
 
 
+def _free_run_mm(geometry, wid: str) -> float:
+    """Longest wall span free of doors (with their clearance)."""
+    w = geometry.walls[wid]
+    lo, hi = w.usable
+    segs, cur = [], lo
+    for a, b in sorted(d.interval(config.DOOR_CLEARANCE_MM) for d in w.doors):
+        if min(a, hi) > cur:
+            segs.append(min(a, hi) - cur)
+        cur = max(cur, b)
+    if hi > cur:
+        segs.append(hi - cur)
+    return max(segs, default=0.0)
+
+
+def near_walls(geometry, wid: Optional[str]) -> list[str]:
+    """The walls meeting a wall at its corners - end corner first, then start corner. Only these can
+    be the sink (secondary) wall for that cooking (primary) wall."""
+    w = geometry.walls.get(wid or "")
+    if w is None:
+        return []
+    out = []
+    for c in (w.neighbor_end, w.neighbor_start):
+        if c and c in geometry.walls and c != wid and c not in out:
+            out.append(c)
+    return out
+
+
+def next_wall(geometry, wid: Optional[str], among: Optional[list[str]] = None) -> Optional[str]:
+    """The secondary (sink) wall that goes with a primary (cooking) wall: the next wall round the
+    room - the one meeting the primary wall at its end corner - or, if that one cannot carry
+    cabinets (too short / a door), the wall at its start corner (R24 / R25: hob on the primary
+    wall, sink on the secondary wall)."""
+    cands = [c for c in near_walls(geometry, wid) if not among or c in among]  # among: the customer's walls
+    for c in cands:
+        if _free_run_mm(geometry, c) >= config.MIN_CABINET_WALL_MM:
+            return c
+    return cands[0] if cands else None
+
+
 def plan_facts(geometry, cabinet_walls: Optional[list[str]] = None) -> dict:
     """Rule-book facts read from a floor plan: floor area and band, ceiling, lofts, walls, aisles."""
     area = floor_area_sqft(geometry)
@@ -360,6 +414,8 @@ def plan_facts(geometry, cabinet_walls: Optional[list[str]] = None) -> dict:
         "lofts_possible": ceiling + 1 >= round(config.LOFT_TOP_M * 1000),
         "walls": [{"id": wid, "name": geometry.walls[wid].name, "length_mm": geometry.walls[wid].length_mm,
                    "window": bool(geometry.walls[wid].windows), "door": bool(geometry.walls[wid].doors),
+                   "next": next_wall(geometry, wid),  # the sink wall that goes with this cooking wall
+                   "near": near_walls(geometry, wid),  # the only walls the sink may go on with this cooking wall
                    "aisle_mm": (round(a) if (a := working_aisle_mm(geometry, wid, walls)) is not None else None)}
                   for wid in geometry.wall_order],
     }

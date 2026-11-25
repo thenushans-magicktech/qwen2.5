@@ -37,6 +37,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import BaseModel, ConfigDict, Field
 
+import brief_reader
 import config
 import finishes
 import rulebook
@@ -62,6 +63,28 @@ def generate_kitchen(
     if prefs.strip_existing_items:
         doc = strip_items(doc)
     geometry = parse_scene(doc)
+    # The customer's brief, in any language: Gemini fills the settings left on "decide" and writes a
+    # clear English brief for the designer (before the wall rules below check the walls it names).
+    brief_info = None
+    if (prefs.style_notes or "").strip() and prefs.read_brief is not False and brief_reader.available():
+        step("Gemini is reading the customer's brief")
+    prefs, brief_info = brief_reader.read_brief(prefs, geometry)
+    # R24 / R25: a chosen cooking (primary) wall brings its sink (secondary) wall. The sink wall must
+    # meet the cooking wall at a corner; if none was chosen - or the chosen one does not meet it - the
+    # sink goes on the next wall round the room. Set before the designer sees the needs.
+    # With the customer's cabinet walls (an L / U picked wall by wall) the sink wall is one of them; a
+    # straight (single-wall) kitchen has its sink on the cooking wall.
+    auto_sink_wall, moved_from = None, None
+    picked = [w for w in (prefs.cabinet_walls or []) if w in geometry.walls]
+    straight = prefs.layout == "single" or len(picked) == 1
+    if prefs.primary_wall in geometry.walls:
+        allowed = [prefs.primary_wall] if straight else [
+            w for w in rulebook.near_walls(geometry, prefs.primary_wall) if not picked or w in picked]
+        if prefs.secondary_wall not in allowed:
+            auto_sink_wall = prefs.primary_wall if straight else rulebook.next_wall(geometry, prefs.primary_wall, picked)
+            if auto_sink_wall:
+                moved_from = prefs.secondary_wall if prefs.secondary_wall in geometry.walls else None
+                prefs = prefs.model_copy(update={"secondary_wall": auto_sink_wall})
     step("Loading the cabinet catalogue")
     catalog = load_filtered_catalog(prefs.door_style, prefs.handle_type)
 
@@ -88,6 +111,19 @@ def generate_kitchen(
     # Rule workbook: module widths by kitchen type / size band, LPG assumed (R11), ...
     step("Applying the MagickHome rule book: module sizes for this kitchen size and shape")
     facts = rulebook.apply_module_rules(proposal, geometry, catalog, prefs)
+    if auto_sink_wall:
+        cook, sink_w = geometry.walls[prefs.primary_wall].name, geometry.walls[auto_sink_wall].name
+        if auto_sink_wall == prefs.primary_wall:
+            why = f"A straight kitchen has one wall, so the sink goes on the cooking wall, {cook}."
+        elif moved_from:
+            why = (f"The sink wall asked for, {geometry.walls[moved_from].name}, does not meet the cooking wall "
+                   f"{cook}{' within the chosen walls' if picked else ''}, so the sink goes on the next wall, {sink_w}.")
+        else:
+            why = f"The customer chose {cook} for cooking, so the sink goes on the next wall, {sink_w}."
+        facts.applied.append({"role": "sink_wall", "rule": 25,
+                              "text": f"{rulebook.load().texts.get(25, '')} {why}".strip(),
+                              "built": f"sink on {sink_w}" + ("" if auto_sink_wall == prefs.primary_wall
+                                                                   else f" (next wall after the cooking wall, {cook})")})
     # Base cabinet style: the customer's stated style, else the designer's (Qwen's) choice.
     stated_storage = base_storage_need(prefs)[0]
     storage = stated_storage if stated_storage != "auto" else (proposal.base_storage or "auto")
@@ -104,7 +140,9 @@ def generate_kitchen(
             include_loft=lofts,
             layout=prefs.layout,
             cabinet_walls=prefs.cabinet_walls,
-            sink_under_window=prefs.sink_under_window,
+            # the AI designer chooses the sink position; the quick rules (and a customer who asks) centre it
+            sink_under_window=prefs.sink_under_window if prefs.sink_under_window is not None
+            else proposal.source == "fallback",
             base_storage=storage,
             wall_style=wall_style,
             budget=None if prefs.budget == "auto" else prefs.budget,
@@ -128,7 +166,9 @@ def generate_kitchen(
     report = {
         "ai": ai_info,
         "customer_needs": customer_needs(prefs),
-        "explanation": explain_design(proposal, layout, prefs, geometry, catalog, facts, finish_info),
+        "explanation": ([brief_reader.explanation_entry(brief_info)] if brief_info else [])
+                       + explain_design(proposal, layout, prefs, geometry, catalog, facts, finish_info),
+        "brief": brief_info,
         "proposal": proposal.to_dict(),
         "layout": layout.summary(),
         "heights": dict(layout.heights, wall_style=wall_style),
@@ -433,6 +473,29 @@ def plan_facts(req: GenerateRequest) -> dict:
     except SceneError as exc:
         raise HTTPException(status_code=400, detail=f"invalid scene: {exc}")
     return rulebook.plan_facts(geometry, req.preferences.cabinet_walls)
+
+
+class BriefRequest(BaseModel):
+    scene: dict[str, Any] = Field(..., description="magickhomes-scene v1 document (the walls the brief may name)")
+    text: str = Field(..., max_length=500, description="The customer's brief, any language")
+    preferences: KitchenPreferences = Field(default_factory=KitchenPreferences)
+
+
+@app.post("/api/read-brief")
+def read_brief_api(req: BriefRequest) -> dict:
+    """Preview: what Gemini understood from the brief and the settings it would fill (the form's own
+    choices are kept). Used by the page's "Read my brief" button."""
+    try:
+        geometry = parse_scene(_request_doc(req))
+    except SceneError as exc:
+        raise HTTPException(status_code=400, detail=f"invalid scene: {exc}")
+    if not brief_reader.available():
+        raise HTTPException(status_code=503, detail="Gemini is not set up on this server (GEMINI_API_KEY)")
+    prefs = req.preferences.model_copy(update={"style_notes": req.text, "read_brief": True})
+    _, info = brief_reader.read_brief(prefs, geometry)
+    if not info or info.get("skipped"):
+        raise HTTPException(status_code=503, detail=(info or {}).get("skipped", "nothing to read"))
+    return info
 
 
 @app.post("/api/catalog/refresh")

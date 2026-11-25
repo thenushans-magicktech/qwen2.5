@@ -122,9 +122,9 @@
       "why": "Pantry at a run end. Crockery unit as the customer wants.",
       "source": "customer",
       "details": [
-        "Crockery unit 600 mm (Slab - Single Glass Shutter): 600 x 560 x 2240 mm (W x D x H) - crockery unit - glass doors; at the run end nearest the dining area, away from the hob",
+        "Crockery unit 600 mm (Slab - Single Glass Shutter): 600 x 560 x 1940 mm (W x D x H) - crockery unit - glass doors; at the run end nearest the dining area, away from the hob",
         "On Wall 1 at 1100-1700 mm - end of the run, clear of windows",
-        "Tall pantry 600 mm (Single Shutter): 600 x 560 x 2240 mm (W x D x H) - single door pantry",
+        "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
         "On Wall 1 at 1700-2300 mm - inside the run, clear of windows",
         "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry, Crockery unit, Crockery unit"
       ],
@@ -138,7 +138,7 @@
       "why": "Standard beside the sink window.",
       "source": "rules-designer",
       "details": [
-        "Unit: 600 x 330 x 900 mm (W x D x H) - one shutter",
+        "Unit: 600 x 330 x 600 mm (W x D x H) - one shutter",
         "On Wall 2 at 2800-3400 mm, wall-cabinet height",
         "1117 mm from the sink centre (water and power nearby)",
         "Purifier sizes on offer: 600, 450, 750"
@@ -202,7 +202,7 @@
     {
       "item": "Wall cabinet doors",
       "decision": null,
-      "built": "Lift-up doors on 2 of 5 wall cabinets",
+      "built": "Lift-up doors on 4 of 5 wall cabinets",
       "why": "Customer's choice.",
       "source": "customer",
       "details": [
@@ -219,7 +219,7 @@
       "why": "Customer wants an open shelf unit.",
       "source": "customer",
       "details": [
-        "Unit: 600 x 330 x 900 mm (W x D x H) - open shelves - one unit at a run end, away from the hob",
+        "Unit: 600 x 330 x 600 mm (W x D x H) - open shelves - one unit at a run end, away from the hob",
         "On Wall 1 at 2800-3400 mm, at the end of a wall-cabinet run, away from the hob"
       ],
       "rules": [],
@@ -240,11 +240,11 @@
     {
       "item": "Cabinet heights",
       "decision": null,
-      "built": "Wall cabinets 900 mm, tall units 2240 mm",
-      "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
+      "built": "Wall cabinets 600 mm, tall units 1940 mm",
+      "why": "No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units.",
       "source": "rules",
       "details": [
-        "Wall cabinets hang from 1440 mm up to 2340 mm; tall units stand on the 100 mm plinth and end at the same line",
+        "Wall cabinets hang from 1440 mm up to 2040 mm; tall units stand on the 100 mm plinth and end at the same line",
         "Height pairs in the catalogue: 600 / 1940, 700 / 2040, 900 / 2240 mm (wall / tall)"
       ],
       "rules": [],
@@ -281,6 +281,7 @@
       "need": null
     }
   ],
+  "brief": null,
   "proposal": {
     "layout_type": "U",
     "cabinet_walls": [
@@ -374,7 +375,7 @@
           "opening": "Left"
         },
         {
-          "aid": "MTTATGU6005602240SSSGSSLLEH4S",
+          "aid": "MTTATGU6005601940SSSGSSLLEH4S",
           "category": "Tall Glass Unit",
           "tier": "tall",
           "role": "tall",
@@ -384,7 +385,7 @@
           "opening": "Left"
         },
         {
-          "aid": "MTTATU6005602240SSSSLLEH5S",
+          "aid": "MTTATU6005601940SSSSLLEH4S",
           "category": "Tall Unit",
           "tier": "tall",
           "role": "tall",
@@ -394,17 +395,17 @@
           "opening": "Left"
         },
         {
-          "aid": "MTWAWU500330900SSSSLLEH1S",
-          "category": "Wall Unit",
+          "aid": "MTWAWLU500330600LUSSTLSSLLUEHNS",
+          "category": "Wall Lift Up Unit",
           "tier": "wall",
           "role": "wall",
           "width": 500,
           "start_mm": 2300.0,
           "end_mm": 2800.0,
-          "opening": "Left"
+          "opening": "Lift Up"
         },
         {
-          "aid": "MTWAWOU600330900OOUCONONH2S",
+          "aid": "MTWAWOU600330600OOUCONONH1S",
           "category": "Wall Open Unit",
           "tier": "wall",
           "role": "open",
@@ -414,7 +415,7 @@
           "opening": null
         },
         {
-          "aid": "MTWCWLC650650900SLCSLBOEH2S",
+          "aid": "MTWCWLC650650600SLCSLBOEH1S",
           "category": "Wall L Corner",
           "tier": "wall",
           "role": "wall_corner",
@@ -466,17 +467,17 @@
           "opening": "Right"
         },
         {
-          "aid": "MTWAWU500330900SSSSLLEH1S",
-          "category": "Wall Unit",
+          "aid": "MTWAWLU500330600LUSSTLSSLLUEHNS",
+          "category": "Wall Lift Up Unit",
           "tier": "wall",
           "role": "wall",
           "width": 500,
           "start_mm": 700.0,
           "end_mm": 1200.0,
-          "opening": "Left"
+          "opening": "Lift Up"
         },
         {
-          "aid": "MTWAWAU600330900SASSSLLEHNS",
+          "aid": "MTWAWAU600330600SASSSLLEHNS",
           "category": "Wall Aquaguard Unit",
           "tier": "wall",
           "role": "purifier",
@@ -486,7 +487,7 @@
           "opening": "Left"
         },
         {
-          "aid": "MTWCWLC650650900SLCSLBOEH2S",
+          "aid": "MTWCWLC650650600SLCSLBOEH1S",
           "category": "Wall L Corner",
           "tier": "wall",
           "role": "wall_corner",
@@ -558,27 +559,27 @@
           "opening": "Pull Out"
         },
         {
-          "aid": "MTWAWLU750330900LUSBFLSSLBFEH1S",
+          "aid": "MTWAWLU750330600LUSSTLSSLLUEHNS",
           "category": "Wall Lift Up Unit",
           "tier": "wall",
           "role": "wall",
           "width": 750,
           "start_mm": 700.0,
           "end_mm": 1450.0,
-          "opening": "Bi-Fold"
+          "opening": "Lift Up"
         },
         {
-          "aid": "MTWAWLU750330900LUSBFLSSLBFEH1S",
+          "aid": "MTWAWLU750330600LUSSTLSSLLUEHNS",
           "category": "Wall Lift Up Unit",
           "tier": "wall",
           "role": "wall",
           "width": 750,
           "start_mm": 1450.0,
           "end_mm": 2200.0,
-          "opening": "Bi-Fold"
+          "opening": "Lift Up"
         },
         {
-          "aid": "MTWAWU850330900SDSSLBOEH1S",
+          "aid": "MTWAWU850330600SDSSLBOEH1S",
           "category": "Wall Unit",
           "tier": "wall",
           "role": "wall",
@@ -601,7 +602,7 @@
           "wall_56i56ymve0xf69fm"
         ],
         "base_unit": "MTBCBCL1050560700SBCLSLLEH1S",
-        "wall_unit": "MTWCWLC650650900SLCSLBOEH2S",
+        "wall_unit": "MTWCWLC650650600SLCSLBOEH1S",
         "loft_unit": null,
         "open_tiers": []
       },
@@ -611,23 +612,23 @@
           "wall_56i56ymve0xf69fm"
         ],
         "base_unit": "MTBCBCR1050560700SBCRSLREH1S",
-        "wall_unit": "MTWCWLC650650900SLCSLBOEH2S",
+        "wall_unit": "MTWCWLC650650600SLCSLBOEH1S",
         "loft_unit": null,
         "open_tiers": []
       }
     ],
     "loft_walls": [],
     "heights": {
-      "wall_mm": 900,
-      "tall_mm": 2240,
+      "wall_mm": 600,
+      "tall_mm": 1940,
       "lofts": false,
       "ceiling_mm": 2500,
-      "top_mm": 2340,
-      "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling."
+      "top_mm": 2040,
+      "why": "No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units."
     },
     "score": 54.54,
     "decisions": [
-      "heights: No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
+      "heights: No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units.",
       "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2800-3400 mm",
       "Wall 1: open unit Wall Open Unit 600 at 2800-3400 mm",
       "Wall 2: Base Unit 350 hinged Right (towards corner) -> MTBABU350560700DSDSSSLREH1S"
@@ -635,12 +636,12 @@
     "warnings": []
   },
   "heights": {
-    "wall_mm": 900,
-    "tall_mm": 2240,
+    "wall_mm": 600,
+    "tall_mm": 1940,
     "lofts": false,
     "ceiling_mm": 2500,
-    "top_mm": 2340,
-    "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
+    "top_mm": 2040,
+    "why": "No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units.",
     "wall_style": "lift_up"
   },
   "rulebook": {
@@ -742,5 +743,5 @@
     "filtered_skus": 1065,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.55
+  "seconds": 1.32
 }

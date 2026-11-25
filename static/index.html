@@ -199,6 +199,14 @@ table.rb-table .dc { color: var(--muted); font-style: italic; white-space: norma
 .ideas { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
 .idea { border: 1px solid var(--line); background: var(--panel-2); border-radius: 999px; padding: 3px 10px; font-size: 12px; cursor: pointer; color: var(--muted); }
 .idea:hover { border-color: var(--accent); color: var(--accent); }
+.brief-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.brief-tools .sub { flex: 1 1 220px; font-size: 12px; }
+.brief-out { margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 11px; background: var(--panel-2); font-size: 12.5px; line-height: 1.5; }
+.brief-out b { font-weight: 650; }
+.brief-out ul { margin: 4px 0 6px; padding-left: 18px; }
+.brief-out .ok { color: var(--accent); }
+.brief-out .warn { color: var(--warn, #b7791f); }
+.brief-out.err { border-color: var(--warn, #b7791f); }
 details.more { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 4px; }
 details.more summary { cursor: pointer; font-size: 13px; font-weight: 650; color: var(--muted); list-style: none; display: flex; align-items: center; gap: 6px; }
 details.more summary::before { content: "▸"; font-size: 11px; transition: transform .15s; }
@@ -207,6 +215,8 @@ details.more summary::-webkit-details-marker { display: none; }
 .walls-pick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
 .walls-pick label { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 12.5px; cursor: pointer; }
 .walls-pick input { accent-color: var(--accent); margin: 0; }
+.walls-pick label.off { opacity: .45; cursor: not-allowed; }
+.walls-pick label:has(input:checked) { border-color: var(--accent); }
 
 /* ---------- buttons ---------- */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 15px; border-radius: 11px; border: 1px solid var(--line-2); background: var(--panel); cursor: pointer; font-weight: 650; text-decoration: none; color: var(--text); white-space: nowrap; transition: border-color .12s, filter .12s, background .12s; }
@@ -612,6 +622,11 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
               <label for="lay-par" title="Parallel kitchens are not generated yet"><svg width="26" height="20" viewBox="0 0 26 20" aria-hidden="true"><rect x="3" y="2" width="20" height="5" rx="1" fill="currentColor"/><rect x="3" y="13" width="20" height="5" rx="1" fill="currentColor"/></svg><b>Parallel</b><small>not generated yet</small></label>
             </div>
           </div>
+          <div class="rb-row" id="shape-walls">
+            <span class="label sm needlabel" id="lbl-walls" data-ico="cube">Kitchen walls</span>
+            <div class="walls-pick" id="walls-pick" role="group" aria-labelledby="lbl-walls"><span class="sub">Add a floor plan first.</span></div>
+            <div class="rb-hint" id="hint-walls">Leave all unticked to let the designer decide.</div>
+          </div>
           <div class="rb-row rb-api">
             <label class="label sm needlabel" for="rb-band" data-ico="area">Size band</label>
             <select id="rb-band"><option value="auto">From the floor area</option></select>
@@ -711,7 +726,12 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
 
       <div class="field">
         <label class="label" for="notes">Tell the designer about the family <span class="sub">(optional)</span></label>
-        <textarea id="notes" maxlength="500" placeholder="e.g. family of four, cooks every day, needs lots of drawers"></textarea>
+        <textarea id="notes" maxlength="500" placeholder="Any language - e.g. family of four, cooks every day, needs lots of drawers"></textarea>
+        <div class="brief-tools hidden" id="brief-tools">
+          <button class="btn sm" type="button" id="brief-read" data-ico="wand">Read my brief</button>
+          <span class="sub">Write in any language. Gemini (Google) reads it, fills the settings above and writes a clear brief for the designer.</span>
+        </div>
+        <div class="brief-out hidden" id="brief-out" aria-live="polite"></div>
         <div class="ideas" id="ideas" aria-label="Brief ideas">
           <button class="idea" type="button">Family of four, cooks daily</button>
           <button class="idea" type="button">Lots of drawers</button>
@@ -721,11 +741,6 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
         </div>
       </div>
 
-      <details class="more" id="walls-box">
-        <summary>Choose which walls get cabinets</summary>
-        <div class="walls-pick" id="walls-pick"><span class="sub">Add a floor plan first.</span></div>
-        <p class="sub" style="margin-top:8px">Leave all unticked to let the designer decide.</p>
-      </details>
     </section>
 
     <section class="card" aria-labelledby="h-go">
@@ -2835,6 +2850,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
       const gem = h.gemini || {};
       state.geminiModel = gem.model;
       $("#ai-gemini").disabled = !gem.available;
+      state.briefReader = !!gem.available;
+      $("#brief-tools").classList.toggle("hidden", !gem.available);
       $("#gemini-time").textContent = gem.available ? `Google AI · ${gem.knowledge ? "with your knowledge" : "own judgement"} · 1-2 min` : "Google AI · not set up";
       $("#lbl-gemini").title = gem.available
         ? `Google ${gem.model} - ${gem.knowledge ? "given the MagickHome playbook and examples" : "designs from its own judgement (no MagickHome playbook, examples or cabinet notes)"}`
@@ -2999,6 +3016,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
     $("#rb-fuel").innerHTML = (rb.fuel || []).map((o) => card("fuel", o, `${ico(FUEL_ICO[o.value] || "flame")}<span>${esc(o.label)}</span>`)).join("");
     $("#hint-hobwall").textContent = (rb.walls || {}).primary || "";
     $("#hint-sinkwall").textContent = (rb.walls || {}).secondary || "";
+    if (state.input) syncWalls();  // the rule book can arrive after the plan: keep the wall hints current
     const always = rb.always || [];
     $("#rb-always ul").innerHTML = always.map(ruleLi).join("");
     $("#rb-always summary").textContent = `Always applied (${always.length} rules)`;
@@ -3056,6 +3074,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
         body: JSON.stringify({ scene: state.input, preferences: walls.length ? { cabinet_walls: walls } : {} }) });
       if (seq !== state.factsSeq) return;
       state.facts = f;
+      state.factsFailed = false;
+      syncWalls();
       const area = Number(f.floor_area_sqft);
       $("#rb-facts").innerHTML = `Your room: <b>${Number.isFinite(area) ? Math.round(area) : "?"} sqft → ${esc(f.size_band || "?")}</b>`
         + `${f.size_note ? ` <span class="warn">(${esc(f.size_note)})</span>` : ""}`
@@ -3063,6 +3083,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
     } catch (e) {
       if (seq !== state.factsSeq) return;
       state.facts = null;
+      state.factsFailed = true;
+      syncSinkWall();
       $("#rb-facts").textContent = "";
     }
     renderModules();
@@ -3071,7 +3093,13 @@ window.dispatchEvent(new Event("kv3d-ready"));
     const n = e.target && e.target.name, id = e.target && e.target.id;
     if (n === "budget" || n === "fuel") updateRulebookDetails();
     if (n === "budget" || n === "fuel" || n === "layout" || id === "rb-band") renderModules();
-    if (e.target && e.target.closest && e.target.closest("#walls-pick")) loadFacts();
+    if (n === "layout") {  // a smaller shape drops walls picked for a bigger one
+      const need = shapeCount();
+      if (need && pickedWalls().length > need) document.querySelectorAll("#walls-pick input:checked").forEach((i) => { i.checked = false; });
+      syncWalls();
+      loadFacts();
+    }
+    if (e.target && e.target.closest && e.target.closest("#walls-pick")) { syncWalls(); loadFacts(); }
   });
 
   // ---------- geometry ----------
@@ -3441,9 +3469,10 @@ window.dispatchEvent(new Event("kv3d-ready"));
       const tags = [g.all.some((n) => n.type === "window" && n.wallId === w.id) ? "window" : "", g.all.some((n) => n.type === "door" && n.wallId === w.id) ? "door" : ""].filter(Boolean).join(", ");
       return `<option value="${esc(w.id)}">${esc(w.name || w.id)}${tags ? ` (${tags})` : ""}</option>`;
     }).join("");
-    ["#need-hobwall", "#need-sinkwall"].forEach((sel) => { $(sel).innerHTML = `<option value="">Let the designer decide</option>${wallOpts}`; });
-    updateDecideLabels();
+    $("#need-hobwall").innerHTML = `<option value="">Let the designer decide</option>${wallOpts}`;
+    state.wallOpts = Object.fromEntries([...$("#need-hobwall").options].slice(1).map((o) => [o.value, o.textContent]));
     state.facts = null;
+    syncWalls();
     loadFacts();
     hideResults();
     $("#go").disabled = false;
@@ -3452,6 +3481,95 @@ window.dispatchEvent(new Event("kv3d-ready"));
   }
   // highlight the chosen cooking / sink walls in the top view
   ["#need-hobwall", "#need-sinkwall"].forEach((sel) => $(sel).addEventListener("change", () => { if (state.tab === "plan") render(); }));
+  // R24 / R25: choosing the cooking wall sets the sink wall to the next wall round the room (from
+  // /api/plan-facts: the wall meeting it at a corner that can carry cabinets); the customer can still change it
+  // Kitchen walls: Straight = 1 wall, L = 2 meeting at a corner, U = 3 joined by corners (corners from
+  // /api/plan-facts `near`). The cooking wall is one of the picked walls; the sink wall one of them
+  // meeting the cooking wall - or, in a straight kitchen, the cooking wall itself.
+  const SHAPE_WALLS = { single: 1, L: 2, U: 3 };
+  const SHAPE_NAME = { single: "Straight", L: "L-shape", U: "U-shape" };
+  const shapeOf = () => (document.querySelector('input[name="layout"]:checked') || {}).value;
+  const shapeCount = () => SHAPE_WALLS[shapeOf()] || 0;
+  const pickedWalls = () => [...document.querySelectorAll("#walls-pick input:checked")].map((i) => i.value);
+  const nearOf = (id) => ((((state.facts || {}).walls || []).find((x) => x.id === id) || {}).near) || [];
+  // straight: the Straight type, or one wall ticked with no type chosen (in an L / U one wall is half a pick)
+  const isStraight = () => shapeOf() === "single" || (!shapeCount() && pickedWalls().length === 1);
+  function syncWalls() {
+    const need = shapeCount(), picked = pickedWalls(), hint = $("#hint-walls");
+    const boxes = [...document.querySelectorAll("#walls-pick input")];
+    boxes.forEach((b) => {
+      const ok = b.checked || !need || (picked.length < need
+        && (!picked.length || !state.facts || picked.some((w) => nearOf(w).includes(b.value))));
+      b.disabled = !ok;
+      b.closest("label").classList.toggle("off", !ok);
+    });
+    if (hint && boxes.length) {
+      const name = SHAPE_NAME[shapeOf()];
+      hint.textContent = !need
+        ? (picked.length ? `${picked.length} wall${picked.length > 1 ? "s" : ""} chosen for cabinets.` : "Leave all unticked to let the designer decide.")
+        : !picked.length ? `${name}: tick ${need === 1 ? "the wall" : `${need} walls joined at corners`} - or leave unticked to let the designer choose.`
+        : picked.length < need ? `${name}: ${picked.length} of ${need} - tick ${need - picked.length} more next to ${picked.length > 1 ? "them" : "it"}.`
+        : `${name}: walls chosen. Now pick the cooking wall.`;
+    }
+    // cooking wall: one of the picked walls (all walls when none are picked)
+    const hobSel = $("#need-hobwall"), keep = hobSel.value, labels = state.wallOpts || {};
+    const pool = picked.length ? picked : Object.keys(labels);
+    hobSel.innerHTML = `<option value="">Let the designer decide</option>` + pool.map((id) => `<option value="${esc(id)}">${esc(labels[id] || id)}</option>`).join("");
+    hobSel.value = pool.includes(keep) ? keep : "";
+    if (keep && hobSel.value !== keep) $("#need-sinkwall").value = "";
+    updateDecideLabels();
+    syncSinkWall();
+    if (state.tab === "plan") render();
+  }
+  // The sink wall can only be a wall meeting the cooking wall at a corner (from /api/plan-facts
+  // `near`, next wall first) - among the picked walls. No cooking wall chosen: the designer picks both.
+  function syncSinkWall() {
+    const sel = $("#need-sinkwall"), hint = $("#hint-sinkwall"), hob = $("#need-hobwall").value;
+    const keep = sel.value, labels = state.wallOpts || {};
+    if (!hob) {
+      sel.innerHTML = `<option value="">Let the designer decide</option>`;
+      sel.disabled = true;
+      hint.textContent = isStraight() ? "Choose the cooking wall first: in a straight kitchen the sink goes on the same wall."
+        : "Choose the cooking wall first: the sink goes on a wall next to it.";
+      updateDecideLabels();
+      return;
+    }
+    if (isStraight()) {  // one wall: hob and sink share it
+      sel.innerHTML = `<option value="${esc(hob)}">${esc(labels[hob] || hob)} - same wall</option>`;
+      sel.value = hob;
+      sel.disabled = true;
+      hint.textContent = "A straight kitchen has one wall: the sink goes on the cooking wall.";
+      return;
+    }
+    const w = ((state.facts || {}).walls || []).find((x) => x.id === hob);
+    if (!w) {  // room facts still loading (re-run when they arrive) or not available
+      sel.innerHTML = `<option value="">${state.factsFailed ? "Next wall after the cooking wall" : "Finding the walls next to it…"}</option>`;
+      sel.disabled = true;
+      hint.textContent = state.factsFailed ? "The sink goes on the next wall round the room." : "";
+      return;
+    }
+    const picked = pickedWalls();
+    const near = (w.near || []).filter((id) => labels[id] && (!picked.length || picked.includes(id)));
+    if (!near.length) {
+      sel.innerHTML = `<option value="">Let the designer decide</option>`;
+      sel.disabled = true;
+      hint.textContent = picked.length ? "None of the chosen walls meets this cooking wall at a corner - pick walls joined at a corner."
+        : "No wall meets this cooking wall at a corner, so the designer places the sink.";
+      updateDecideLabels();
+      return;
+    }
+    sel.innerHTML = near.map((id) => `<option value="${esc(id)}">${esc(labels[id])}${id === w.next ? " - next wall" : ""}</option>`).join("");
+    sel.disabled = false;
+    sel.value = near.includes(keep) ? keep : (near.includes(w.next) ? w.next : near[0]);
+    hint.textContent = near.length > 1
+      ? `Only the ${picked.length ? "chosen " : ""}walls next to the cooking wall can take the sink.`
+      : `The only ${picked.length ? "chosen " : ""}wall next to the cooking wall.`;
+  }
+  $("#need-hobwall").addEventListener("change", () => {
+    $("#need-sinkwall").value = "";  // a new cooking wall starts from its next wall
+    syncSinkWall();
+    if (state.tab === "plan") render();
+  });
   const designerChoice = () => document.querySelector('input[name="ai"]:checked').value;  // auto | gemini | fallback
   function updateHint() {
     if (!state.input) { $("#go-hint").textContent = "Add a floor plan to start."; return; }
@@ -3466,6 +3584,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
     const d = designerChoice();
     const text = d === "gemini" ? "Let Gemini decide" : d === "auto" ? "Let Qwen decide" : "Standard choice";
     DECIDE.forEach((sel) => {
+      if (sel === "#need-sinkwall" && $("#need-hobwall").value) return;  // set by the cooking wall
       const opt = $(sel) && $(sel).querySelector('option[value="auto"], option[value=""]');
       if (opt) opt.textContent = text;
     });
@@ -3539,12 +3658,90 @@ window.dispatchEvent(new Event("kv3d-ready"));
     }
     if (state.sup.fuel) p.fuel = fuel;
     if (state.sup.size_band) p.size_band = $("#rb-band").value || "auto";
+    const b = state.brief;
+    if (b && b.text === p.style_notes && b.info && b.info.english_brief) {  // already read by Gemini
+      p.style_notes = b.info.english_brief.slice(0, 500);
+      p.read_brief = false;
+    }
     if (state.sup.primary_wall) {  // sent only when chosen
       if ($("#need-hobwall").value) p.primary_wall = $("#need-hobwall").value;
       if ($("#need-sinkwall").value) p.secondary_wall = $("#need-sinkwall").value;
     }
     return p;
   }
+  // ---------- the customer's brief, read by Gemini (any language) ----------
+  // POST /api/read-brief: settings the brief clearly asks for (only where the form says "decide"),
+  // a clear English brief for the designer, and the wishes that cannot be built.
+  function setControl(field, v) {
+    const pick = (name) => { const el = document.querySelector(`input[name="${name}"][value="${CSS.escape(String(v))}"]`); if (el && !el.disabled) { el.checked = true; el.dispatchEvent(new Event("change", { bubbles: true })); } };
+    const sel = (id, val) => { const el = $(id); if (el && [...el.options].some((o) => o.value === val)) { el.value = val; el.dispatchEvent(new Event("change", { bubbles: true })); } };
+    const MAP = { built_in: "#need-tower", water_purifier: "#need-pur", display_unit: "#need-disp", base_storage: "#need-base",
+      wall_style: "#need-wallstyle", open_unit: "#need-open", crockery_unit: "#need-crock", cooking: "#need-cook" };
+    if (field === "layout" || field === "fuel" || field === "budget") pick(field);
+    else if (MAP[field]) sel(MAP[field], String(v));
+    else if (field === "household_size") sel("#need-size", String(v >= 7 ? 8 : v));
+    else if (field === "include_loft") sel("#need-loft", v ? "true" : "false");
+    else if (field === "include_tall") { $("#tall").checked = !!v; }
+  }
+  function applyBrief(changes) {
+    const c = changes || {};
+    for (const f of ["layout", "built_in", "water_purifier", "display_unit", "base_storage", "wall_style", "open_unit",
+      "crockery_unit", "cooking", "household_size", "include_loft", "include_tall", "fuel", "budget"]) {
+      if (f in c) setControl(f, c[f]);
+    }
+    if (c.cabinet_walls) {
+      document.querySelectorAll("#walls-pick input").forEach((i) => { i.checked = c.cabinet_walls.includes(i.value); });
+      syncWalls();
+      loadFacts();
+    }
+    if (c.primary_wall && [...$("#need-hobwall").options].some((o) => o.value === c.primary_wall)) {
+      $("#need-hobwall").value = c.primary_wall;
+      $("#need-hobwall").dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    if (c.secondary_wall && [...$("#need-sinkwall").options].some((o) => o.value === c.secondary_wall)) $("#need-sinkwall").value = c.secondary_wall;
+    refreshSegs();
+    updateRulebookDetails();
+    renderModules();
+  }
+  function showBrief(info) {
+    const out = $("#brief-out"), li = (xs, cls = "") => xs.length ? `<ul>${xs.map((x) => `<li class="${cls}">${esc(x)}</li>`).join("")}</ul>` : "";
+    const set = (info.applied || []).map((a) => `${a.setting}: ${a.value}`);
+    out.classList.remove("hidden", "err");
+    out.innerHTML = `<b>Understood</b>${info.language ? ` <span class="sub">(${esc(info.language)})</span>` : ""}`
+      + `<div>For the designer: ${esc(info.english_brief || "")}</div>`
+      + (set.length ? `<b>Filled in above</b>${li(set, "ok")}` : `<div class="sub">No settings to fill - the designer reads the brief.</div>`)
+      + ((info.kept_form || []).length ? `<b>Your form choices kept</b>${li(info.kept_form, "warn")}` : "")
+      + ((info.not_possible || []).length ? `<b>Cannot be built here</b>${li(info.not_possible, "warn")}` : "");
+  }
+  async function readBrief() {
+    const text = $("#notes").value.trim(), out = $("#brief-out"), btn = $("#brief-read");
+    if (!text || !state.input) {
+      out.classList.remove("hidden"); out.classList.add("err");
+      out.textContent = !state.input ? "Add a floor plan first: the brief may name its walls." : "Write the brief first.";
+      return;
+    }
+    btn.disabled = true; btn.textContent = "Reading…";
+    out.classList.remove("hidden", "err"); out.textContent = "Gemini is reading the brief…";
+    try {
+      const p = prefs(); delete p.read_brief;
+      const info = await api("/api/read-brief", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ scene: state.input, text, preferences: Object.assign(p, { style_notes: "" }) }) });
+      state.brief = { text, info };
+      applyBrief(info.changes);
+      showBrief(info);
+    } catch (e) {
+      state.brief = null;
+      out.classList.add("err");
+      out.textContent = `Could not read the brief (${e.message}). The designer will read your words as written.`;
+    } finally { btn.disabled = false; btn.textContent = "Read my brief"; }
+  }
+  $("#brief-read").addEventListener("click", readBrief);
+  $("#notes").addEventListener("input", () => {
+    if (state.brief && state.brief.text !== $("#notes").value.trim()) {
+      state.brief = null;
+      $("#brief-out").classList.add("hidden");
+    }
+  });
   function showRunError(msg) { const el = $("#run-err"); el.textContent = msg; el.classList.toggle("show", !!msg); }
   const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
   const dur = (s) => (s < 1 ? "under 1 s" : s < 60 ? `${Math.round(s)} s` : `${Math.floor(s / 60)} min ${String(Math.round(s % 60)).padStart(2, "0")} s`);
@@ -3595,6 +3792,12 @@ window.dispatchEvent(new Event("kv3d-ready"));
   async function generate(override) {
     if (!state.input) return;
     showRunError("");
+    const need = shapeCount(), got = pickedWalls().length;
+    if (!(override && override.ai_mode) && need && got && got !== need) {
+      showRunError(`${SHAPE_NAME[shapeOf()]} needs ${need} wall${need > 1 ? "s" : ""} - ${got} ticked. Tick ${need - got} more, or untick all to let the designer choose.`);
+      document.getElementById("shape-walls").scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
     const p = override && override.ai_mode ? override : prefs();
     state.lastPrefs = p;  // "Try again" re-sends exactly these
     $("#go").disabled = true;

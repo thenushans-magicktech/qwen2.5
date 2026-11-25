@@ -717,7 +717,16 @@ class LayoutSolver:
                 continue
             chosen.append(wid)
         expected = {"single": 1, "L": 2, "U": 3}.get(self.prefs.layout)
-        if chosen and expected and not self.prefs.cabinet_walls and len(chosen) != expected:
+        # R24 / R25: the customer's cooking (primary) and sink (secondary) walls always carry cabinets
+        keep = [w for w in dict.fromkeys((self.prefs.primary_wall, self.prefs.secondary_wall)) if w in chosen]
+        if keep and expected and not self.prefs.cabinet_walls and len(chosen) != expected:
+            built = self._walls_around(keep, expected, chosen)
+            self.decisions.append(
+                f"designer proposed {len(chosen)} wall(s) but the customer asked for layout {self.prefs.layout}; "
+                f"re-chosen around the customer's walls: {[walls[w].name for w in built]}"
+            )
+            chosen = built
+        elif chosen and expected and not self.prefs.cabinet_walls and len(chosen) != expected:
             self.decisions.append(
                 f"designer proposed {len(chosen)} wall(s) but the customer asked for layout {self.prefs.layout}; re-chosen"
             )
@@ -726,7 +735,8 @@ class LayoutSolver:
             chosen = suggest_cabinet_walls(self.g, self.prefs.layout)
             self.decisions.append(f"cabinet walls chosen by solver: {[walls[w].name for w in chosen]}")
 
-        if self.prefs.sink_under_window and not self.prefs.cabinet_walls:
+        # a window wall for the sink - not when the customer chose the sink wall
+        if self.prefs.sink_under_window and not self.prefs.cabinet_walls and not self.prefs.secondary_wall:
             if not any(walls[w].windows for w in chosen):
                 for win in sorted(self.g.windows, key=lambda o: -o.width_mm):
                     wid = win.wall_id
@@ -742,6 +752,23 @@ class LayoutSolver:
                     break
         order = {w: i for i, w in enumerate(self.g.wall_order)}
         return sorted(chosen, key=lambda w: order.get(w, 99))
+
+    def _walls_around(self, keep: list[str], n: int, preferred: list[str]) -> list[str]:
+        """`n` connected cabinet walls that include the customer's walls: grow from them one corner at a
+        time, preferring the designer's walls, then the solver's suggestion, then the longest free run.
+        A shape smaller than the customer's walls (single wall with two walls chosen) keeps both."""
+        walls = self.g.walls
+        free = lambda w: max((b - a for a, b in self.free_base_segments(walls[w])), default=0)  # noqa: E731
+        suggested = suggest_cabinet_walls(self.g, self.prefs.layout)
+        out = list(keep)
+        while len(out) < n:
+            cands = [w for w in self.g.wall_order
+                     if w not in out and free(w) >= config.MIN_CABINET_WALL_MM
+                     and any(self.g.corner_between(w, o) for o in out)]
+            if not cands:
+                break
+            out.append(min(cands, key=lambda w: (w not in preferred, w not in suggested, -free(w))))
+        return out
 
     def _door_features(self, wall: Wall, zone: str) -> list[Feature]:
         out = []
@@ -1054,8 +1081,10 @@ class LayoutSolver:
                         break
             else:
                 gaps = self._gaps(sink_wall, base_feats(sink_wall), anchors[sink_wall])
-                target = self.proposal.sink_center_mm
-                res = self._search_block(sink_wall, gaps, [(sink_item, "sink")], target, [], hob_rules=False)
+                target = self.proposal.sink_center_mm if self.proposal.sink_wall_id == sink_wall else None
+                # the designer chose this sink position: keep it unless the run cannot be filled there
+                res = self._search_block(sink_wall, gaps, [(sink_item, "sink")], target, [], hob_rules=False,
+                                         target_weight=0.2 if target is not None else 0.01)
                 if res:
                     sink = res[1][0]
                     score += res[0]
@@ -1172,8 +1201,8 @@ class LayoutSolver:
             warnings.append(f"requested feature unit(s) did not fit - no free base run left: {names}")
             score += 40 * len(carry)
         # Ergonomics penalties
-        if hob is not None and not self._has_landing(hob, placements):
-            score += 300
+        if hob is not None and config.DESIGN_RULES != "rulebook" and not self._has_landing(hob, placements):
+            score += 300  # generator rule (extended): base units on both sides of the hob
         # R26 / R27: 450 mm of counter between the hob / sink and the end of its run
         for unit, rule in ((hob, "R26"), (sink, "R27")):
             if unit is None:
@@ -1249,8 +1278,8 @@ class LayoutSolver:
             gaps = self._gaps(wid, base_feats(wid), anchors[wid], caps)
             target = self.proposal.hob_center_mm if wid == self.proposal.hob_wall_id else None
             bonus = 0.0 if wid == self.proposal.hob_wall_id else 40.0
-            if wid == sink_wall and len(self.walls) > 1:
-                bonus += 30.0
+            if wid == sink_wall and len(self.walls) > 1 and config.DESIGN_RULES != "rulebook":
+                bonus += 30.0  # generator preference (extended): hob and sink on different walls
             prefs = self._base_prefs(wid)
             # R28 / R29: spice pull-out on the hob's right, cylinder unit on its left (seen from the room)
             right = "hi" if self.g.walls[wid].side_of("end") == "right" else "lo"
@@ -1407,8 +1436,9 @@ class LayoutSolver:
                 return False
         return True
 
-    def _search_block(self, wid, gaps, elements, target, prefs, hob_rules, sink=None):
-        """Best position of a contiguous block of anchor cabinets inside ``gaps``."""
+    def _search_block(self, wid, gaps, elements, target, prefs, hob_rules, sink=None, target_weight=0.01):
+        """Best position of a contiguous block of anchor cabinets inside ``gaps``.
+        ``target_weight`` = penalty per mm away from ``target`` (higher = keep the requested spot)."""
         block_w = sum(it.width for it, _ in elements)
         best = None
         for gap in gaps:
@@ -1475,15 +1505,15 @@ class LayoutSolver:
                     for land, kind, cap in ends:
                         if (cap or kind not in ("anchor", "corner")) and land < config.MIN_END_LANDING_MM - EPS:
                             pen += 500
-                    # landing: hob side without spice/cylinder needs a storage unit
+                    # landing: hob side without spice/cylinder needs a storage unit (generator rule: extended only)
                     hob_idx = next(i for i, p in enumerate(pls) if p.role == "hob")
                     open_side = "lo" if hob_idx == 0 else ("hi" if hob_idx == len(pls) - 1 else None)
-                    if open_side is not None:
+                    if open_side is not None and config.DESIGN_RULES != "rulebook":
                         r = fills[0] if open_side == "lo" else fills[1]
                         units = [it for it, _, role in r.items if role == "storage"]
                         if not units or units[0 if open_side == "hi" else -1].width < config.MIN_LANDING_MM:
                             pen += 400
-                pen += 0.01 * abs(main.center_mm - tgt)
+                pen += target_weight * abs(main.center_mm - tgt)
                 if best is None or pen < best[0] - 1e-9:
                     best = (pen, pls)
         return best
@@ -2029,6 +2059,11 @@ def height_plan(geometry: RoomGeometry, lofts: bool) -> dict:
                 "why": f"Lofts above the wall run: {w} mm wall and {t} mm tall units, {h} mm lofts from {loft_y} mm, "
                        f"leaving a {reveal} mm reveal under the {ceiling} mm ceiling (R48: largest loft with an "
                        f"18-100 mm reveal).{note}"}
+    if config.DESIGN_RULES == "rulebook":  # the workbook only couples heights to lofts (R48): standard units
+        return {"wall_mm": std_w, "tall_mm": std_t, "lofts": False, "ceiling_mm": ceiling, "top_mm": bottom + std_w,
+                "why": (f"No lofts (the ceiling, {ceiling} mm, is below the {loft_top} mm a loft needs - R47): "
+                        if ceiling + 1 < loft_top else "No lofts: ")
+                       + f"standard {std_w} mm wall and {std_t} mm tall units."}
     w, t = next(((w, t) for w, t in config.WALL_TALL_HEIGHTS_MM if bottom + w <= ceiling - config.CEILING_GAP_MM),
                 (std_w, std_t))
     if ceiling + 1 < loft_top:

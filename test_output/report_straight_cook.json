@@ -1,0 +1,593 @@
+{
+  "ai": {
+    "shortlist_size": 40,
+    "prompt_version": "v2",
+    "mode": "fallback"
+  },
+  "customer_needs": [
+    "- Door style Slab (Plain); layout preference single; wants tall storage.",
+    "- Water purifier: water purifier not stated.",
+    "- Gas: not stated - LPG is assumed, so the cylinder unit is included (rule R11).",
+    "- Built-in appliances: built-in appliances not stated.",
+    "- Glass display: glass display not stated.",
+    "- Cooking: cooking style not stated; household size not stated.",
+    "- Base cabinets: base cabinet style not stated - you choose drawers, mixed or shutters.",
+    "- Wall cabinets: door type not stated - you choose hinged shutters or lift-up; open shelf unit not stated.",
+    "- Crockery: crockery unit not stated.",
+    "- Lofts: lofts not stated.",
+    "- Budget: not stated.",
+    "- Finishes: base run not stated - you choose; wall run not stated - you choose (the codes allowed are the ones the budget tier permits)."
+  ],
+  "explanation": [
+    {
+      "item": "Rule book",
+      "decision": null,
+      "built": "Large L-Shape kitchen (172 sqft)",
+      "why": "Module sizes, landings, gas and lofts follow the MagickHome rule workbook for this kitchen size and shape.",
+      "source": "rules",
+      "details": [
+        "Floor area 172 sqft -> Large band (Small 60-80, Medium 81-120, Large 121-180 sqft)",
+        "Kitchen type from the cabinet walls: L-Shape",
+        "Rules from the MagickHome Kitchen Rule Engine (workbook Kitchen_Rule_Engine_V1.xlsx)",
+        "R17: hob -> 900 mm Triple Drawer - A",
+        "R18: sink -> 1200 mm Sink Double Shutter",
+        "R19: spice -> 300 mm Spice Pullout",
+        "R20: cylinder -> 600 mm Cylinder Single Shutter",
+        "R25: sink wall -> sink on Wall 3"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Layout",
+      "decision": "Walls Wall 2, Wall 3",
+      "built": "One wall on Wall 3",
+      "why": "single-shape on the walls with the longest free runs.",
+      "source": "customer",
+      "details": [
+        "Wall 3: 4100 mm long, longest free run 4000 mm",
+        "Not used: Wall 1: 4100 mm long, door 85-985 mm, longest free run 2965 mm; Wall 2: 4100 mm long, window 1241-2741 mm, longest free run 4000 mm; Wall 4: 4100 mm long, longest free run 4000 mm",
+        "0 inside corner(s) between cabinet runs"
+      ],
+      "rules": [
+        "designer proposed 2 wall(s) but the customer asked for layout single; re-chosen around the customer's walls: ['Wall 3']"
+      ],
+      "need": "Customer asked for single layout"
+    },
+    {
+      "item": "Sink",
+      "decision": "Sink unit 1200 mm (Sink Double Shutter)",
+      "built": "Sink unit 900 mm (Sink Double Shutter) on Wall 3",
+      "why": "1200 mm suits a 4000 mm window-wall run.",
+      "source": "rules-designer",
+      "details": [
+        "Unit: 900 x 560 x 700 mm (W x D x H) - shutters, room for pipes; standard single-bowl sink - right for most kitchens",
+        "Position chosen by the designer: centre at 2050 mm",
+        "Wall 3 free run 4000 mm",
+        "Sizes on offer: 900 (standard single-bowl sink - right for most kitchens); 1050 (window wall 3000+ mm free); 1200 (large or double bowl - only with 3600+ mm free); 800 (small kitchens (window wall under 2400 mm free))"
+      ],
+      "rules": [
+        "R25: Place the Base Sink Unit on the user-selected secondary wall. A straight kitchen has one wall, so the sink goes on the cooking wall, Wall 3.",
+        "R18: In a Large L-Shape kitchen (121–180 sqft), set the Base Sink Unit width to 1200 mm.",
+        "Designer chose 1200 mm; the rules used 900 mm so it fits."
+      ],
+      "need": null
+    },
+    {
+      "item": "Hob",
+      "decision": "Hob unit 900 mm (Triple Drawer - A)",
+      "built": "Hob unit 600 mm (Triple Drawer - A) on Wall 3, chimney above",
+      "why": "Drawer hob unit on Wall 2, a different wall from the sink.",
+      "source": "rules-designer",
+      "details": [
+        "Unit: 600 x 560 x 700 mm (W x D x H) - 3 drawers: ladles, pans, pressure cookers - best choice",
+        "Wall 3 has no window - a solid wall for the chimney",
+        "No door on this wall",
+        "Beside it: LPG cylinder unit 600 mm (Cylinder Single Shutter) / Spice pull-out 300 mm (Spice Pullout)",
+        "Appliances: Hob60 hob (550 mm) and a Chimney60 hood (600 mm wide) at 1.44 m; no wall cabinets in that zone",
+        "Sink to hob: 1.4 m (same wall; comfortable range 1.2-2.7 m)"
+      ],
+      "rules": [
+        "R17: In a Large L-Shape kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm.",
+        "hob unit narrowed 900 -> 600 mm to fit the room",
+        "hob landing under 450 mm (R26): end side 300 mm"
+      ],
+      "need": null
+    },
+    {
+      "item": "Spice pull-out",
+      "decision": null,
+      "built": "Spice pull-out 300 mm (Spice Pullout)",
+      "why": "Masalas and oils within reach of the cook.",
+      "source": "rules-designer",
+      "details": [
+        "Unit: 300 x 560 x 700 mm (W x D x H) - masalas and oils, right beside the hob; standard",
+        "Right beside the hob"
+      ],
+      "rules": [
+        "R19: In a Large L-Shape kitchen (121–180 sqft), set the Base Spice Pullout width to 300 mm.",
+        "R44: only one spice pull-out per kitchen"
+      ],
+      "need": null
+    },
+    {
+      "item": "LPG cylinder",
+      "decision": null,
+      "built": "LPG cylinder unit 600 mm (Cylinder Single Shutter)",
+      "why": "Fuel not stated: LPG is assumed, so the cylinder unit is included (rule R11).",
+      "source": "rules-designer",
+      "details": [
+        "Unit: 600 x 560 x 800 mm (W x D x H) - LPG cylinder, beside the hob (needs a long hob wall)",
+        "On Wall 3 at 2500-3100 mm, beside the hob"
+      ],
+      "rules": [
+        "R20: In a Large L-Shape kitchen (121–180 sqft), set the Base Cylinder Unit width to 600 mm."
+      ],
+      "need": null
+    },
+    {
+      "item": "Tall units",
+      "decision": null,
+      "built": "Tall pantry 600 mm (Single Shutter) on Wall 3",
+      "why": "Pantry at a run end.",
+      "source": "rules-designer",
+      "details": [
+        "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
+        "On Wall 3 at 100-700 mm - end of the run, clear of windows; 2400 mm from the hob",
+        "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry, Crockery unit, Crockery unit"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Water purifier",
+      "decision": null,
+      "built": "Water purifier cabinet 600 mm (Aquaguard Single Shutter) on Wall 3",
+      "why": "Standard beside the sink window.",
+      "source": "rules-designer",
+      "details": [
+        "Unit: 600 x 330 x 600 mm (W x D x H) - one shutter",
+        "On Wall 3 at 2450-3050 mm, wall-cabinet height",
+        "713 mm from the sink centre (water and power nearby)",
+        "Purifier sizes on offer: 600, 450, 750"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Glass display",
+      "decision": null,
+      "built": "None",
+      "why": "Not requested.",
+      "source": "rules-designer",
+      "details": [],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Base cabinets",
+      "decision": null,
+      "built": "Drawer + shutter units: 1 of 1 storage cabinets have drawers",
+      "why": "Drawer + shutter units: a cutlery drawer on top, shelf space below.",
+      "source": "rules-designer",
+      "details": [
+        "1 x Base cabinet - Drawer with Double Shutter",
+        "Options: drawers (pans and vessels stay reachable), mixed (cutlery drawer on top, shelf below), shutters (lowest cost)"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Feature units",
+      "decision": null,
+      "built": "0 of 1 requested units built",
+      "why": "Drawers by the hob, grain trolley on the sink wall.",
+      "source": "rules-designer",
+      "details": [
+        "Base cabinet 600 mm (Four Drawer): asked for Wall 2 -> did not fit anywhere"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Wall cabinets",
+      "decision": null,
+      "built": "2 wall cabinets",
+      "why": "Wall cabinets above every base run, kept clear of windows and the chimney.",
+      "source": "rules-designer",
+      "details": [
+        "Wall 3: 2 cabinets (900, 850 mm); sizes asked no preference; kept clear: chimney zone"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Wall cabinet doors",
+      "decision": null,
+      "built": "Hinged shutter doors",
+      "why": "Hinged shutters: the standard, lowest-cost door.",
+      "source": "rules-designer",
+      "details": [
+        "Options: hinged shutters (standard, lowest cost) or lift-up / bi-fold doors (no door at head height)"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Open shelf unit",
+      "decision": null,
+      "built": "None",
+      "why": "Not requested.",
+      "source": "rules-designer",
+      "details": [],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Lofts",
+      "decision": null,
+      "built": "None",
+      "why": "The ceiling (2500 mm) is lower than the 2658 mm a loft needs.",
+      "source": "rules",
+      "details": [
+        "Ceiling (lowest wall) 2500 mm; a loft needs 2658 mm"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Cabinet heights",
+      "decision": null,
+      "built": "Wall cabinets 600 mm, tall units 1940 mm",
+      "why": "No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units.",
+      "source": "rules",
+      "details": [
+        "Wall cabinets hang from 1440 mm up to 2040 mm; tall units stand on the 100 mm plinth and end at the same line",
+        "Height pairs in the catalogue: 600 / 1940, 700 / 2040, 900 / 2240 mm (wall / tall)"
+      ],
+      "rules": [],
+      "need": null
+    },
+    {
+      "item": "Finishes",
+      "decision": null,
+      "built": "Base + tall: Cadet Blue (PU matte, Magickhome); Wall + loft: Stromma White (PU matte, Magickhome)",
+      "why": "MagickHome sample palette: Cadet Blue PU base, Stromma White PU wall run.",
+      "source": "rules",
+      "details": [
+        "Base run (base + tall units): Cadet Blue (PU matte, Magickhome) - chosen by the rules (tier default)",
+        "Wall run (wall units + lofts): Stromma White (PU matte, Magickhome) - chosen by the rules (tier default)",
+        "Tall units take the base-run finish and lofts take the wall-run finish (finish continuity).",
+        "Fillers, slabs, end panels and cover panels take the finish of the run they close (workbook: Filler Panel / Cover End Panel finish must match the cabinets)."
+      ],
+      "rules": [
+        "No budget stated: any finish allowed"
+      ],
+      "need": null
+    }
+  ],
+  "brief": null,
+  "proposal": {
+    "layout_type": "single",
+    "cabinet_walls": [
+      "wall_56i56ymve0xf69fm",
+      "wall_49fdugi4g7vj12pf"
+    ],
+    "sink": {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+      "center_mm": null
+    },
+    "hob": {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "aid": "MTBABHU900560700DTDASLPUEHNS",
+      "center_mm": null
+    },
+    "spice_aid": "MTBABSP300560700DSPSLPUEHNS",
+    "cylinder_aid": "MTBABCU600560800SCSSSLREHNS",
+    "tall_units": [
+      {
+        "wall_id": "wall_56i56ymve0xf69fm",
+        "aid": "MTTATU6005601940SSSSLLEH4S"
+      }
+    ],
+    "base_prefs": {
+      "wall_56i56ymve0xf69fm": [
+        "MTBABU600560700DFDSLPUEHNS"
+      ]
+    },
+    "wall_prefs": {},
+    "purifier_aid": "MTWAWAU600330600SASSSLLEHNS",
+    "purifier_required": false,
+    "display_aid": null,
+    "open_unit_aid": null,
+    "base_storage": "mixed",
+    "lofts": false,
+    "wall_style": "shutters",
+    "finishes": {},
+    "reasons": {
+      "layout": "single-shape on the walls with the longest free runs.",
+      "sink": "1200 mm suits a 4000 mm window-wall run.",
+      "hob": "Drawer hob unit on Wall 2, a different wall from the sink.",
+      "lpg": "Fuel not stated: LPG is assumed, so the cylinder unit is included (rule R11).",
+      "tall": "Pantry at a run end.",
+      "purifier": "Standard beside the sink window.",
+      "display": "Not requested.",
+      "features": "Drawers by the hob, grain trolley on the sink wall.",
+      "open": "Not requested.",
+      "wall_style": "Hinged shutters: the standard, lowest-cost door.",
+      "lofts": "Ceiling too low for lofts.",
+      "finish": "MagickHome sample palette: Cadet Blue PU base, Stromma White PU wall run.",
+      "storage": "Drawer + shutter units: a cutlery drawer on top, shelf space below."
+    },
+    "notes": "single-shaped kitchen: sink on Wall 2 under the window, hob on Wall 2, tall storage on Wall 2.",
+    "source": "fallback"
+  },
+  "layout": {
+    "cabinet_walls": [
+      "wall_49fdugi4g7vj12pf"
+    ],
+    "placements": {
+      "wall_49fdugi4g7vj12pf": [
+        {
+          "aid": "MTBABU900560700DSDDSSLBOEH1S",
+          "category": "Base Unit",
+          "tier": "base",
+          "role": "storage",
+          "width": 900,
+          "start_mm": 700.0,
+          "end_mm": 1600.0,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTBABSU900560700SSDSSLBOEHNS",
+          "category": "Base Sink Unit",
+          "tier": "base",
+          "role": "sink",
+          "width": 900,
+          "start_mm": 1600.0,
+          "end_mm": 2500.0,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTBABCU600560800SCSSSLREHNS",
+          "category": "Base Cylinder Unit",
+          "tier": "base",
+          "role": "cylinder",
+          "width": 600,
+          "start_mm": 2500.0,
+          "end_mm": 3100.0,
+          "opening": "Right"
+        },
+        {
+          "aid": "MTBABHU600560700DTDASLPUEHNS",
+          "category": "Base Hob Unit",
+          "tier": "base",
+          "role": "hob",
+          "width": 600,
+          "start_mm": 3100.0,
+          "end_mm": 3700.0,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTBABSP300560700DSPSLPUEHNS",
+          "category": "Base Spice Pull Out",
+          "tier": "base",
+          "role": "spice",
+          "width": 300,
+          "start_mm": 3700.0,
+          "end_mm": 4000.0,
+          "opening": "Pull Out"
+        },
+        {
+          "aid": "MTTATU6005601940SSSSLLEH4S",
+          "category": "Tall Unit",
+          "tier": "tall",
+          "role": "tall",
+          "width": 600,
+          "start_mm": 100.0,
+          "end_mm": 700.0,
+          "opening": "Left"
+        },
+        {
+          "aid": "MTWAWU900330600SDSSLBOEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 900,
+          "start_mm": 700.0,
+          "end_mm": 1600.0,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTWAWU850330600SDSSLBOEH1S",
+          "category": "Wall Unit",
+          "tier": "wall",
+          "role": "wall",
+          "width": 850,
+          "start_mm": 1600.0,
+          "end_mm": 2450.0,
+          "opening": "Both"
+        },
+        {
+          "aid": "MTWAWAU600330600SASSSLREHNS",
+          "category": "Wall Aquaguard Unit",
+          "tier": "wall",
+          "role": "purifier",
+          "width": 600,
+          "start_mm": 2450.0,
+          "end_mm": 3050.0,
+          "opening": "Right"
+        }
+      ]
+    },
+    "chimney": {
+      "wall_id": "wall_49fdugi4g7vj12pf",
+      "center_mm": 3400.0,
+      "width_mm": 600
+    },
+    "corners": [],
+    "loft_walls": [],
+    "heights": {
+      "wall_mm": 600,
+      "tall_mm": 1940,
+      "lofts": false,
+      "ceiling_mm": 2500,
+      "top_mm": 2040,
+      "why": "No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units."
+    },
+    "score": 826.25,
+    "decisions": [
+      "heights: No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units.",
+      "designer proposed 2 wall(s) but the customer asked for layout single; re-chosen around the customer's walls: ['Wall 3']",
+      "Wall 3: purifier unit Wall Aquaguard Unit 600 at 2450-3050 mm",
+      "Wall 3: Wall Aquaguard Unit 600 hinged Right (towards chimney) -> MTWAWAU600330600SASSSLREHNS"
+    ],
+    "warnings": [
+      "hob unit narrowed 900 -> 600 mm to fit the room",
+      "hob landing under 450 mm (R26): end side 300 mm"
+    ]
+  },
+  "heights": {
+    "wall_mm": 600,
+    "tall_mm": 1940,
+    "lofts": false,
+    "ceiling_mm": 2500,
+    "top_mm": 2040,
+    "why": "No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units.",
+    "wall_style": "shutters"
+  },
+  "rulebook": {
+    "floor_area_sqft": 172.1,
+    "size_band": "Large",
+    "size_note": "",
+    "kitchen_type": "L-Shape",
+    "source": "workbook Kitchen_Rule_Engine_V1.xlsx",
+    "applied": [
+      {
+        "role": "hob",
+        "rule": 17,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm.",
+        "width": 900,
+        "combination": "Triple Drawer - A",
+        "changed": false,
+        "designer": null
+      },
+      {
+        "role": "sink",
+        "rule": 18,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Sink Unit width to 1200 mm.",
+        "width": 1200,
+        "combination": "Sink Double Shutter",
+        "changed": false,
+        "designer": null
+      },
+      {
+        "role": "spice",
+        "rule": 19,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Spice Pullout width to 300 mm.",
+        "width": 300,
+        "combination": "Spice Pullout",
+        "changed": false,
+        "designer": null
+      },
+      {
+        "role": "cylinder",
+        "rule": 20,
+        "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Cylinder Unit width to 600 mm.",
+        "width": 600,
+        "combination": "Cylinder Single Shutter",
+        "changed": false,
+        "designer": null
+      },
+      {
+        "role": "sink_wall",
+        "rule": 25,
+        "text": "Place the Base Sink Unit on the user-selected secondary wall. A straight kitchen has one wall, so the sink goes on the cooking wall, Wall 3.",
+        "built": "sink on Wall 3"
+      }
+    ]
+  },
+  "finishes": {
+    "base": {
+      "aid": "MHS224",
+      "code": "CADET-BLUE-PU",
+      "name": "Cadet Blue",
+      "category": "PU",
+      "family": "Solids",
+      "shutter": "Matte",
+      "brand": "Magickhome",
+      "color": "#3B5A6E",
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
+      "texture": false,
+      "texture_width": 2438,
+      "texture_height": 2438,
+      "source": "rules"
+    },
+    "wall": {
+      "aid": "MHS212",
+      "code": "STROMMA-WHITE-PU",
+      "name": "Stromma White",
+      "category": "PU",
+      "family": "Solids",
+      "shutter": "Matte",
+      "brand": "Magickhome",
+      "color": "#F2F2F2",
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+      "texture": false,
+      "texture_width": 2438,
+      "texture_height": 2438,
+      "source": "rules"
+    },
+    "countertop": {
+      "aid": "MHC015",
+      "code": "MHC015-FINISH",
+      "name": "Ceaserstone Empiria White",
+      "category": "Quartz",
+      "family": "Unknown",
+      "shutter": "Unknown",
+      "brand": "Nil",
+      "color": null,
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHC015.jpg",
+      "texture": true,
+      "texture_width": 1219,
+      "texture_height": 1219,
+      "source": "default"
+    },
+    "backsplash": {
+      "aid": "MHB038",
+      "code": "MHB038-FINISH",
+      "name": "Coimbatore_Backsplash_Parallel",
+      "category": "Tile",
+      "family": "Unknown",
+      "shutter": "Unknown",
+      "brand": "Nil",
+      "color": null,
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHB038.jpg",
+      "texture": true,
+      "texture_width": 609,
+      "texture_height": 609,
+      "source": "default"
+    },
+    "budget": null,
+    "tier_rule": "",
+    "notes": []
+  },
+  "nodes_added": {
+    "kitchen": 9,
+    "appliance": 3,
+    "fixture:toe-kick": 1,
+    "fixture:filler": 2,
+    "fixture:countertop": 1,
+    "fixture:backsplash": 2,
+    "fixture:slab": 3,
+    "fixture:floor": 1
+  },
+  "validation_issues": [],
+  "catalog": {
+    "source": "xlsx",
+    "filtered_skus": 1065,
+    "door_style": "Slab (Plain)"
+  },
+  "seconds": 0.25
+}

@@ -168,6 +168,19 @@ def interval(n):
     return x - w / 2, x + w / 2
 
 
+def verify_ai_scene(doc: dict, **kw) -> list[str]:
+    """verify_scene for an AI-designed kitchen: the designer chooses the sink's wall and position,
+    so the sink is not required to be centred under the window."""
+    return verify_scene(doc, expect_window=None, **kw)
+
+
+def sink_centre_and_window(doc: dict, window_id: str = WINDOW_ID):
+    nodes = doc["scene"]["nodes"]
+    sink = by_category(nodes, "Base Sink Unit")[0]
+    win = nodes[window_id]
+    return sink, win
+
+
 def appliance_cfg(kind, host_node):
     """The appliance model expected on / above a host cabinet node (by its width)."""
     import config
@@ -523,9 +536,23 @@ def _level(out, level):
     return [n for n in cabinets(out["scene"]["nodes"]) if n["placement"]["level"] == level]
 
 
-def test_heights_follow_the_ceiling():
-    """2.5 m room (no lofts possible): 900 wall + 2240 tall units with level tops.
-    2.7 m room: lofts by default (standard 600 / 1940 below them); lofts declined -> 900 / 2240."""
+def test_rulebook_mode_keeps_standard_heights_without_lofts():
+    """Default "rulebook" mode: the workbook only couples heights to lofts (R48), so a room without
+    lofts keeps the standard 600 wall / 1940 tall units (the grow-to-ceiling rule is the generator's own)."""
+    out, report = run(KitchenPreferences(ai_mode="fallback"), PRIMARY, "heights_rulebook")
+    assert not verify_scene(out), verify_scene(out)
+    h = report["heights"]
+    assert (h["wall_mm"], h["tall_mm"], h["lofts"]) == (600, 1940, False) and "R47" in h["why"]
+    assert all(abs(n["asset"]["dimensions"][1] - 0.6) < 1e-6 for n in _level(out, "wall"))
+
+
+def test_heights_follow_the_ceiling(monkeypatch):
+    """"extended" mode (the generator's own rules on): 2.5 m room (no lofts possible): 900 wall +
+    2240 tall units with level tops. 2.7 m room: lofts by default (standard 600 / 1940 below them);
+    lofts declined -> 900 / 2240."""
+    import config
+
+    monkeypatch.setattr(config, "DESIGN_RULES", "extended")
     out, report = run(KitchenPreferences(ai_mode="fallback"), PRIMARY, "heights_low")
     assert not verify_scene(out), verify_scene(out)
     assert not report["validation_issues"], report["validation_issues"]
@@ -789,6 +816,151 @@ def test_quick_rules_never_wait_behind_an_ai_design(monkeypatch):
         assert store.public(store.get(quick["id"]))["queue_position"] == 0
     finally:
         release.set()
+
+
+def test_rulebook_mode_prompt_is_only_the_workbook(monkeypatch):
+    """Default "rulebook" mode: Qwen's knowledge is the MagickHome workbook's rules (all 81 active
+    ones, grouped as in the sheet) - no generator playbook, worked examples, cabinet notes or hints -
+    and it samples freely (a new seed each design)."""
+    import config
+    import design_knowledge
+    import rulebook
+
+    monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v2")
+    assert config.DESIGN_RULES == "rulebook"
+    menu = _v2_menu()
+    fake = FakeOllama(_v2_design(menu))
+    monkeypatch.setattr(ai_designer, "_client", lambda: fake)
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="ollama"))
+    system, user = fake.calls[0]["messages"][0]["content"], fake.calls[0]["messages"][1]["content"]
+    assert "MAGICKHOME RULE BOOK" in system
+    rb = rulebook.load()
+    assert all(f"R{n}:" in system for n in rb.texts if rb.texts[n]), "every active workbook rule is in the prompt"
+    for mine in ("WORK TRIANGLE", "WORKED EXAMPLES", design_knowledge.playbook()[:80]):
+        assert mine not in system
+    for hint in ("Wet zone", "Hob centre range", "designer note"):
+        assert hint not in user
+    assert fake.calls[0]["options"]["temperature"] > 0
+    assert not verify_ai_scene(out), verify_ai_scene(out)
+
+
+def test_qwen_chooses_the_sink_position(monkeypatch):
+    """The AI designer places the sink (wall + centre), even away from the window centre; the
+    quick rules still centre it under the window; a customer can ask for it centred."""
+    import config
+
+    monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v2")
+    menu = _v2_menu()
+    # 0.8 m off the window centre, clear of the corner unit space
+    monkeypatch.setattr(ai_designer, "_client", lambda: FakeOllama(_v2_design(menu, sink_center_mm=2800)))
+
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="ollama"))
+    assert not verify_ai_scene(out), verify_ai_scene(out)
+    sink, win = sink_centre_and_window(out)
+    assert sink["wallId"] == win["wallId"] and abs(sink["position"][0] - 2.8) <= 0.05 + 1e-6, sink["position"]
+    exp = next(e for e in report["explanation"] if e["item"] == "Sink")
+    assert any("Position chosen by the designer" in d for d in exp["details"])
+
+    out, _ = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="ollama", sink_under_window=True))
+    sink, win = sink_centre_and_window(out)
+    assert abs(sink["position"][0] - win["position"][0]) < 0.001, "customer asked for the sink centred"
+
+    out, _ = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="fallback"))
+    sink, win = sink_centre_and_window(out)
+    assert abs(sink["position"][0] - win["position"][0]) < 0.001, "the quick rules centre the sink"
+
+
+def test_cooking_wall_brings_the_next_wall_for_the_sink():
+    """Only a cooking (primary) wall chosen: the sink goes on the next wall round the room (R25),
+    the plan facts tell the UI which wall that is, and the explanation says why."""
+    import rulebook
+    from scene_parser import parse_scene
+
+    W3 = "wall_49fdugi4g7vj12pf"
+    geo = parse_scene(empty_plan())
+    nxt = rulebook.next_wall(geo, W3)
+    assert nxt in (geo.walls[W3].neighbor_end, geo.walls[W3].neighbor_start) and nxt != W3
+    facts = rulebook.plan_facts(geo)
+    assert next(w for w in facts["walls"] if w["id"] == W3)["next"] == nxt
+
+    out, report = run(KitchenPreferences(ai_mode="fallback", primary_wall=W3), name="primary_only")
+    assert not verify_ai_scene(out), verify_ai_scene(out)
+    nodes = out["scene"]["nodes"]
+    assert by_category(nodes, "Base Hob Unit")[0]["wallId"] == W3
+    assert by_category(nodes, "Base Sink Unit")[0]["wallId"] == nxt
+    sink = next(e for e in report["explanation"] if e["item"] == "Sink")
+    assert any(r.startswith("R25:") and "next wall" in r for r in sink["rules"]), sink["rules"]
+
+
+def test_sink_wall_must_meet_the_cooking_wall():
+    """A sink wall that does not meet the cooking wall at a corner is moved to the next wall (R25),
+    and the plan facts list only the corner walls as sink-wall choices."""
+    import rulebook
+    from scene_parser import parse_scene
+
+    W3 = "wall_49fdugi4g7vj12pf"
+    geo = parse_scene(empty_plan())
+    near = rulebook.near_walls(geo, W3)
+    far = next(w for w in geo.wall_order if w != W3 and w not in near)
+    assert set(near) == {geo.walls[W3].neighbor_end, geo.walls[W3].neighbor_start} - {None}
+    assert next(w for w in rulebook.plan_facts(geo)["walls"] if w["id"] == W3)["near"] == near
+
+    out, report = run(KitchenPreferences(ai_mode="fallback", primary_wall=W3, secondary_wall=far), name="far_sink")
+    assert not verify_ai_scene(out), verify_ai_scene(out)
+    nodes = out["scene"]["nodes"]
+    assert by_category(nodes, "Base Hob Unit")[0]["wallId"] == W3
+    assert by_category(nodes, "Base Sink Unit")[0]["wallId"] == rulebook.next_wall(geo, W3)
+    sink = next(e for e in report["explanation"] if e["item"] == "Sink")
+    assert any(r.startswith("R25:") and "does not meet" in r for r in sink["rules"]), sink["rules"]
+
+
+def test_shape_is_built_around_the_customers_walls():
+    """L / U chosen with a cooking and a sink wall: when the designer's walls do not match the shape,
+    the walls are re-chosen around the customer's two walls - never dropping them."""
+    import rulebook
+    from scene_parser import parse_scene
+
+    W3 = "wall_49fdugi4g7vj12pf"
+    geo = parse_scene(empty_plan())
+    sink_w = next(w for w in rulebook.near_walls(geo, W3) if w != W2)  # not the window wall the solver prefers
+    for shape, n in (("L", 2), ("U", 3)):
+        out, report = run(KitchenPreferences(ai_mode="fallback", layout=shape, primary_wall=W3, secondary_wall=sink_w),
+                          name=f"shape_{shape}_customer_walls")
+        assert not verify_ai_scene(out), verify_ai_scene(out)  # the sink follows the customer, not the window
+        nodes = out["scene"]["nodes"]
+        assert by_category(nodes, "Base Hob Unit")[0]["wallId"] == W3, shape
+        assert by_category(nodes, "Base Sink Unit")[0]["wallId"] == sink_w, shape
+        walls = report["layout"]["cabinet_walls"]
+        assert len(walls) == n and {W3, sink_w} <= set(walls), (shape, walls)
+
+
+def test_customer_picked_walls_and_straight_kitchen():
+    """Walls picked for the shape: the sink wall stays among them (moved to the next picked wall when
+    asked for elsewhere). Straight kitchen: hob and sink share the cooking wall."""
+    import rulebook
+    from scene_parser import parse_scene
+
+    W3 = "wall_49fdugi4g7vj12pf"
+    geo = parse_scene(empty_plan())
+    a, b = rulebook.near_walls(geo, W3)[:2]
+    out, report = run(KitchenPreferences(ai_mode="fallback", layout="L", cabinet_walls=[W3, a],
+                                         primary_wall=W3, secondary_wall=b), name="picked_L")
+    assert not verify_ai_scene(out), verify_ai_scene(out)
+    nodes = out["scene"]["nodes"]
+    assert set(report["layout"]["cabinet_walls"]) == {W3, a}
+    assert by_category(nodes, "Base Hob Unit")[0]["wallId"] == W3
+    assert by_category(nodes, "Base Sink Unit")[0]["wallId"] == a
+    sink = next(e for e in report["explanation"] if e["item"] == "Sink")
+    assert any(r.startswith("R25:") and "within the chosen walls" in r for r in sink["rules"]), sink["rules"]
+
+    out, report = run(KitchenPreferences(ai_mode="fallback", layout="single", primary_wall=W3), name="straight_cook")
+    assert not verify_ai_scene(out), verify_ai_scene(out)
+    nodes = out["scene"]["nodes"]
+    assert report["layout"]["cabinet_walls"] == [W3]
+    assert by_category(nodes, "Base Hob Unit")[0]["wallId"] == W3
+    assert by_category(nodes, "Base Sink Unit")[0]["wallId"] == W3
+    sink = next(e for e in report["explanation"] if e["item"] == "Sink")
+    assert any(r.startswith("R25:") and "straight kitchen" in r for r in sink["rules"]), sink["rules"]
 
 
 def test_customer_primary_and_secondary_walls():
@@ -1179,12 +1351,12 @@ def test_mocked_ollama_design_is_repaired(monkeypatch):
     out, report = run(KitchenPreferences(ai_mode="ollama"), name="mocked_ollama")
     assert fake.pulled, "missing model should be auto-pulled"
     call = fake.calls[0]
-    assert call["options"]["temperature"] == 0
+    assert call["options"]["temperature"] > 0 and report["ai"]["seed"] == call["options"]["seed"]  # a new idea each time
     # schema is enum-locked to the shortlist
     sink_enum = call["format"]["properties"]["sink_aid"]["enum"]
     assert set(sink_enum) == {i.aid for i in groups["sink"]}
     assert report["ai"]["mode"] == "ollama"
-    errs = verify_scene(out)
+    errs = verify_ai_scene(out)
     assert not errs, "\n".join(errs)
     hob = by_category(out["scene"]["nodes"], "Base Hob Unit")[0]
     assert hob["wallId"] != W2, "hob must not stay under the window"
@@ -1203,7 +1375,7 @@ def test_customer_layout_overrides_ai_wall_count(monkeypatch):
     out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="ollama", layout="U"))
     assert len(report["layout"]["cabinet_walls"]) == 3
     assert any("layout U" in d for d in report["layout"]["decisions"])
-    assert not verify_scene(out)
+    assert not verify_ai_scene(out)
 
 
 def test_schema_rejects_hallucinated_aid():
@@ -1247,6 +1419,7 @@ def _v2_design(menu, **over):
         "sink_why": "Window on Wall 2, standard 900 sink.",
         "sink_wall": "Wall 2",
         "sink": first["sink"],
+        "sink_center_mm": 1991,  # under the sample window's centre
         "hob_why": "Wall 3 is solid and far from the door.",
         "hob_wall": "Wall 3",
         "hob": first["hob"],
@@ -1287,6 +1460,7 @@ def test_v2_prompt_teaches_and_places_new_units(monkeypatch):
     import design_knowledge
 
     monkeypatch.setattr(config, "AI_PROMPT_VERSION", "v2")
+    monkeypatch.setattr(config, "DESIGN_RULES", "extended")  # the generator's playbook prompt
     menu = _v2_menu()
     fake = FakeOllama(_v2_design(menu))
     monkeypatch.setattr(ai_designer, "_client", lambda: fake)
@@ -1294,13 +1468,18 @@ def test_v2_prompt_teaches_and_places_new_units(monkeypatch):
     call = fake.calls[0]
     system, user = call["messages"][0]["content"], call["messages"][1]["content"]
     assert "WORK TRIANGLE" in system and "WORKED EXAMPLES" in system
-    assert "SINK-900 |" in user and "Hob centre range" in user and "Wet zone: sink centred at" in user
+    assert "SINK-900 |" in user and "Hob centre range" in user and "Wet zone:" in user and "sink_center_mm" in user
     assert design_knowledge.note_for(menu["sink"][0][1]) in user
     props = call["format"]["properties"]
     assert set(props["sink"]["enum"]) == {c for c, _ in menu["sink"]}
     assert report["ai"]["prompt_version"] == "v2"
-    errs = verify_scene(out)
+    errs = verify_ai_scene(out)
     assert not errs, "\n".join(errs)
+    # Qwen chose the sink position (1991 mm = the window centre): the sink sits under the window,
+    # within one 50 mm module of where it asked, and the engine did not force-centre it
+    sink, win = sink_centre_and_window(out)
+    assert sink["wallId"] == win["wallId"] and abs(sink["position"][0] - 1.991) <= 0.05 + 1e-6
+    assert report["layout"]["placements"] and not any("sink moved" in d for d in report["layout"]["decisions"])
 
     nodes = out["scene"]["nodes"]
     win = nodes[WINDOW_ID]
@@ -1353,13 +1532,14 @@ def test_gemini_designs_without_the_knowledge_pack(monkeypatch):
     assert set(schema["properties"]["sink"]["enum"]) == {c for c, _ in menu["sink"]}
     assert report["ai"]["mode"] == "gemini" and report["ai"]["knowledge"] is False
     assert report["ai"]["thoughts"] == "The window is on Wall 2."
-    assert not verify_scene(out)
+    assert not verify_ai_scene(out)
 
     # Qwen (and Gemini with GEMINI_USE_KNOWLEDGE=1) get the knowledge; the answer schema is identical.
     geo, groups, prefs = parse_scene(empty_plan()), ai_designer.build_shortlist_v2(load_filtered_catalog()), KitchenPreferences()
     (msgs_k, Model_k, _), (msgs_p, Model_p, _) = (
         ai_designer.build_messages(geo, groups, prefs, "v2", knowledge=k) for k in (True, False))
-    assert "WORK TRIANGLE" in msgs_k[0]["content"] and "Hob centre range" in msgs_k[1]["content"]
+    assert "MAGICKHOME RULE BOOK" in msgs_k[0]["content"] and "R17:" in msgs_k[0]["content"]  # default: the workbook
+    assert "MAGICKHOME RULE BOOK" not in msgs_p[0]["content"]
     assert Model_k.model_json_schema() == Model_p.model_json_schema()
 
 
@@ -1407,7 +1587,7 @@ def test_gemini_survives_dropped_connections_busy_models_and_quota(monkeypatch):
     assert calls.count("quota-model") == 1, "a used-up daily quota is not retried"
     notes = " ".join(report["ai"]["model_notes"])
     assert "connection dropped" in notes and "busy" in notes and "daily quota" in notes
-    assert not verify_scene(out)
+    assert not verify_ai_scene(out)
 
 
 def test_v2_schema_rejects_unknown_codes_and_walls():
@@ -1472,7 +1652,7 @@ def test_qwen_cannot_skip_a_needed_tower_and_reasons_are_reported(monkeypatch):
     monkeypatch.setattr(ai_designer, "_client", lambda: fake)
     prefs = KitchenPreferences(ai_mode="ollama", built_in="microwave", water_purifier="yes", include_cylinder=False)
     out, report = generate_kitchen(empty_plan(), prefs)
-    assert not verify_scene(out), verify_scene(out)
+    assert not verify_ai_scene(out), verify_ai_scene(out)
     user = fake.calls[0]["messages"][1]["content"]
     assert "NEEDS a wall water-purifier" in user and "piped gas" in user and "NEEDS a built-in microwave tower" in user
     nodes = out["scene"]["nodes"]
@@ -1513,7 +1693,7 @@ def test_left_to_qwen_the_base_cabinet_style_is_qwens_decision(monkeypatch):
     fake = FakeOllama(_v2_design(menu, base_storage="drawers", storage_why=reason))
     monkeypatch.setattr(ai_designer, "_client", lambda: fake)
     out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="ollama"))
-    assert not verify_scene(out), verify_scene(out)
+    assert not verify_ai_scene(out), verify_ai_scene(out)
     props = fake.calls[0]["format"]["properties"]
     assert set(props["base_storage"]["enum"]) == {"drawers", "mixed", "shutters"}
     store = [n for n in cabinets(out["scene"]["nodes"]) if n["metadata"]["category"] == "Base Unit"]
@@ -1538,7 +1718,7 @@ def test_every_decision_is_explained_with_facts(monkeypatch):
                  "Glass display", "Base cabinets", "Feature units", "Wall cabinets", "Corners"):
         assert item in ex, item
     facts = lambda item: " | ".join(ex[item]["details"])  # noqa: E731
-    assert "centred" in facts("Sink") and "Sizes on offer" in facts("Sink")
+    assert ("centred" in facts("Sink") or "Position chosen by the designer" in facts("Sink")) and "Sizes on offer" in facts("Sink")
     assert "Sink to hob" in facts("Hob") and "door" in facts("Hob").lower() and "Chimney" in facts("Hob")
     assert "built on" in facts("Feature units") or "did not fit" in facts("Feature units")
     assert ex["Wall cabinets"]["why"].startswith("Wide 900 units") and ex["Wall cabinets"]["source"] == "qwen"
@@ -1638,3 +1818,63 @@ if __name__ == "__main__":
     args, rest = ap.parse_known_args()
     os.environ["KITCHEN_TEST_AI_MODE"] = args.ai_mode
     sys.exit(pytest.main([__file__, "-v", "-p", "no:cacheprovider", *rest]))
+
+
+def _gemini_reply(reading: dict) -> dict:
+    return {"candidates": [{"content": {"parts": [{"text": json.dumps(reading)}]}}], "modelVersion": "gemini-test"}
+
+
+def test_brief_reader_fills_settings_from_any_language(monkeypatch):
+    """Gemini (stood in) reads a Tamil / English brief: it fills the settings left on "decide", keeps the
+    form's own choices, sends Qwen a clear English brief, and the explanation shows what it understood."""
+    import brief_reader
+    import config
+    from scene_parser import parse_scene
+
+    geo = parse_scene(empty_plan())
+    name = {w: geo.walls[w].name for w in geo.wall_order}
+    W3 = "wall_49fdugi4g7vj12pf"
+    far = next(w for w in geo.wall_order if w != W3 and w not in brief_reader.rulebook.near_walls(geo, W3))
+    reading = {
+        "language": "Tamil + English", "english_brief": "Family of five who bake on weekends; wants lots of drawers "
+        "and a warm wood look. Cooking on " + name[W3] + ".",
+        "understood": [{"setting": "Oven tower", "customer_words": "weekend la bake panrom"}],
+        "not_possible": ["a kitchen island"], "household_size": 5,
+        "cooking_wall": name[W3], "sink_wall": name[far], "cabinet_walls": [],
+        "layout": "L", "built_in": "oven", "water_purifier": "auto", "display_unit": "auto", "open_unit": "auto",
+        "crockery_unit": "auto", "base_storage": "drawers", "wall_style": "auto", "cooking": "heavy",
+        "fuel": "auto", "budget": "auto", "lofts": "no", "tall_units": "auto",
+    }
+    sent = []
+    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(config, "BRIEF_READER", "gemini")
+    monkeypatch.setattr(brief_reader, "_post", lambda model, body, key: sent.append(body) or _gemini_reply(reading))
+    import main as main_mod
+    seen = []
+    real_design = main_mod.design_kitchen
+    monkeypatch.setattr(main_mod, "design_kitchen", lambda g, c, p: seen.append(p) or real_design(g, c, p))
+    brief = "Naanga 5 per, weekend la bake panrom. Neraya drawers venum, island venum, cooking " + name[W3] + " la."
+    out, report = run(KitchenPreferences(ai_mode="fallback", style_notes=brief, base_storage="shutters"), name="brief_reader")
+    assert not verify_ai_scene(out), verify_ai_scene(out)
+    # the room walls and the customer's words went to Gemini
+    assert brief in sent[0]["contents"][0]["parts"][0]["text"] and name[W3] in sent[0]["contents"][0]["parts"][0]["text"]
+    b = report["brief"]
+    assert b["changes"]["layout"] == "L" and b["changes"]["built_in"] == "oven" and b["changes"]["include_loft"] is False
+    assert b["changes"]["primary_wall"] == W3 and b["changes"]["household_size"] == 5
+    assert "base_storage" not in b["changes"] and any("form kept" in k for k in b["kept_form"])  # the form wins
+    assert b["not_possible"] == ["a kitchen island"]
+    # the designer (Qwen) gets the clear English brief, not the original words, plus the settings
+    assert seen[-1].style_notes.startswith("Family of five who bake") and seen[-1].built_in == "oven"
+    assert any("NEEDS a built-in oven tower" in n for n in report["customer_needs"])
+    nodes = out["scene"]["nodes"]
+    assert by_category(nodes, "Base Hob Unit")[0]["wallId"] == W3
+    assert by_category(nodes, "Base Sink Unit")[0]["wallId"] == brief_reader.rulebook.next_wall(geo, W3)  # corner rule
+    assert report["heights"]["lofts"] is False
+    assert report["explanation"][0]["item"] == "Customer brief"
+    assert any("Cannot be built here: a kitchen island" in d for d in report["explanation"][0]["details"])
+
+    # no Gemini key: nothing changes, the designer reads the text as written
+    monkeypatch.delenv("GEMINI_API_KEY")
+    out, report = run(KitchenPreferences(ai_mode="fallback", style_notes=brief), name="brief_reader_off")
+    assert "skipped" in report["brief"] and report["explanation"][0]["built"] == "read as written"
+    assert seen[-1].style_notes == brief and seen[-1].built_in == "auto"

@@ -6,7 +6,10 @@ READ THE ROOM
 - A wall with less than 1200 mm of free run cannot carry cabinets.
 
 ZONES
-- WET zone: the sink is centred under the window (daylight, fresh air, view while washing). If the household needs a wall water purifier (Aquaguard), its cabinet hangs on the same wall beside the window. The vegetable wicker basket sits near the sink (wash, then cut).
+- WET zone: the sink usually goes under or near the window (daylight, fresh air, view while washing). YOU choose
+  its wall and exact position (sink_center_mm). Centred under the window is the classic choice; shift it when that
+  gives a better prep counter between sink and hob, keeps 450 mm of counter to the run end, keeps it out of a
+  corner, or the window sits close to a corner. A room with no usable window wall: put it where the workflow is best. If the household needs a wall water purifier (Aquaguard), its cabinet hangs on the same wall beside the window. The vegetable wicker basket sits near the sink (wash, then cut).
 - COOKING zone: hob + chimney on a SOLID wall with no window (wind from a window blows the flame out and the chimney needs a solid wall). Spice pull-out right beside the hob. Drawer units for pans, kadai and ladles on the hob wall. LPG cylinder unit on the other side of the hob only for homes on LPG, when the wall is long enough.
 - STORAGE zone: tall units (pantry, built-in oven or microwave) and the grain trolley at the END of a run, ideally the end nearest the entrance. Never in front of a window, never right beside the hob.
 

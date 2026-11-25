@@ -169,15 +169,24 @@ def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, c
     if sink:
         det.append("Unit: " + what(sink.item))
         win = layout.sink_window
-        if win is not None:
+        if win is not None:  # the sink had to be centred under the window (quick rules or the customer)
             det.append(f"Window {win.width_mm:.0f} mm wide, centre at {win.center_mm:.0f} mm; sink centre at "
                        f"{sink.center_mm:.0f} mm ({'centred' if abs(sink.center_mm - win.center_mm) < 1 else 'offset'})")
+        else:  # the designer chose the position
+            sw = W[sink.wall_id]
+            asked = proposal.sink_center_mm if proposal.sink_wall_id == sink.wall_id else None
+            det.append(f"Position chosen by the designer: centre at {sink.center_mm:.0f} mm"
+                       + (f" (asked for {asked:.0f} mm)" if asked is not None and abs(asked - sink.center_mm) >= 1 else ""))
+            for o in sw.windows:
+                det.append(f"Window {o.start_mm:.0f}-{o.end_mm:.0f} mm on this wall: the sink is "
+                           + ("under it" if o.start_mm <= sink.center_mm <= o.end_mm else f"{min(abs(sink.center_mm - o.start_mm), abs(sink.center_mm - o.end_mm)):.0f} mm beside it"))
         det.append(f"{wname(sink.wall_id)} free run {free_run(sink.wall_id):.0f} mm")
         if menu.get("sink"):
             det.append("Sizes on offer: " + offered("sink"))
         if prop and prop.width != sink.item.width:
-            sink_rules.append(f"Designer chose {prop.width} mm; the rules used {sink.item.width} mm so it centres under the window.")
-    sink_rules = book("sink") + sink_rules + rules("sink landing")
+            sink_rules.append(f"Designer chose {prop.width} mm; the rules used {sink.item.width} mm"
+                              + (" so it centres under the window." if win is not None else " so it fits."))
+    sink_rules = book("sink_wall") + book("sink") + sink_rules + rules("sink landing")
     add("Sink", f"{_desc(sink)} on {wname(sink.wall_id)}" if sink else "None", reasons.get("sink"), designer, det, sink_rules,
         decision=_item(prop) if prop and sink and prop.aid != sink.item.aid else None)
 

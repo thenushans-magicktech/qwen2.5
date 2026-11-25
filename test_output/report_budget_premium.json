@@ -128,7 +128,7 @@
       "why": "Pantry at a run end.",
       "source": "rules-designer",
       "details": [
-        "Tall pantry 600 mm (Single Shutter): 600 x 560 x 2240 mm (W x D x H) - single door pantry",
+        "Tall pantry 600 mm (Single Shutter): 600 x 560 x 1940 mm (W x D x H) - single door pantry",
         "On Wall 2 at 3416-4016 mm - end of the run, clear of windows",
         "Tall units on offer: Tall pantry, Oven tower, Microwave tower, Oven + microwave tower, Basket pantry, Crockery unit, Crockery unit"
       ],
@@ -142,7 +142,7 @@
       "why": "Standard beside the sink window.",
       "source": "rules-designer",
       "details": [
-        "Unit: 600 x 330 x 900 mm (W x D x H) - one shutter",
+        "Unit: 600 x 330 x 600 mm (W x D x H) - one shutter",
         "On Wall 2 at 2816-3416 mm, wall-cabinet height",
         "1133 mm from the sink centre (water and power nearby)",
         "Purifier sizes on offer: 600, 450, 750"
@@ -239,11 +239,11 @@
     {
       "item": "Cabinet heights",
       "decision": null,
-      "built": "Wall cabinets 900 mm, tall units 2240 mm",
-      "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
+      "built": "Wall cabinets 600 mm, tall units 1940 mm",
+      "why": "No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units.",
       "source": "rules",
       "details": [
-        "Wall cabinets hang from 1440 mm up to 2340 mm; tall units stand on the 100 mm plinth and end at the same line",
+        "Wall cabinets hang from 1440 mm up to 2040 mm; tall units stand on the 100 mm plinth and end at the same line",
         "Height pairs in the catalogue: 600 / 1940, 700 / 2040, 900 / 2240 mm (wall / tall)"
       ],
       "rules": [],
@@ -279,6 +279,7 @@
       "need": null
     }
   ],
+  "brief": null,
   "proposal": {
     "layout_type": "L",
     "cabinet_walls": [
@@ -386,7 +387,7 @@
           "opening": "Pull Out"
         },
         {
-          "aid": "MTWAWU550330900SSSSLLEH1S",
+          "aid": "MTWAWU550330600SSSSLLEH1S",
           "category": "Wall Unit",
           "tier": "wall",
           "role": "wall",
@@ -396,7 +397,7 @@
           "opening": "Left"
         },
         {
-          "aid": "MTWAWU750330900SDSSLBOEH1S",
+          "aid": "MTWAWU750330600SDSSLBOEH1S",
           "category": "Wall Unit",
           "tier": "wall",
           "role": "wall",
@@ -406,7 +407,7 @@
           "opening": "Both"
         },
         {
-          "aid": "MTWCWLC650650900SLCSLBOEH2S",
+          "aid": "MTWCWLC650650600SLCSLBOEH1S",
           "category": "Wall L Corner",
           "tier": "wall",
           "role": "wall_corner",
@@ -468,7 +469,7 @@
           "opening": "Right"
         },
         {
-          "aid": "MTTATU6005602240SSSSLREH5S",
+          "aid": "MTTATU6005601940SSSSLREH4S",
           "category": "Tall Unit",
           "tier": "tall",
           "role": "tall",
@@ -478,7 +479,7 @@
           "opening": "Right"
         },
         {
-          "aid": "MTWAWU500330900SSSSLLEH1S",
+          "aid": "MTWAWU500330600SSSSLLEH1S",
           "category": "Wall Unit",
           "tier": "wall",
           "role": "wall",
@@ -488,7 +489,7 @@
           "opening": "Left"
         },
         {
-          "aid": "MTWAWAU600330900SASSSLREHNS",
+          "aid": "MTWAWAU600330600SASSSLREHNS",
           "category": "Wall Aquaguard Unit",
           "tier": "wall",
           "role": "purifier",
@@ -511,38 +512,38 @@
           "wall_1oy5ecjq6k11pfoo"
         ],
         "base_unit": "MTBCBCR1050560700SBCRSLREH1S",
-        "wall_unit": "MTWCWLC650650900SLCSLBOEH2S",
+        "wall_unit": "MTWCWLC650650600SLCSLBOEH1S",
         "loft_unit": null,
         "open_tiers": []
       }
     ],
     "loft_walls": [],
     "heights": {
-      "wall_mm": 900,
-      "tall_mm": 2240,
+      "wall_mm": 600,
+      "tall_mm": 1940,
       "lofts": false,
       "ceiling_mm": 2500,
-      "top_mm": 2340,
-      "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling."
+      "top_mm": 2040,
+      "why": "No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units."
     },
     "score": 62.66,
     "decisions": [
-      "heights: No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
+      "heights: No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units.",
       "Wall 2: purifier unit Wall Aquaguard Unit 600 at 2816-3416 mm",
       "Wall 1: Base Cylinder Unit 600 hinged Left (towards door) -> MTBABCU600560800SCSSSLLEHNS",
       "Wall 2: Base Unit 300 hinged Right (towards tall) -> MTBABU300560700SSSSLREH1S",
-      "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005602240SSSSLREH5S",
-      "Wall 2: Wall Aquaguard Unit 600 hinged Right (towards tall) -> MTWAWAU600330900SASSSLREHNS"
+      "Wall 2: Tall Unit 600 hinged Right (towards wall) -> MTTATU6005601940SSSSLREH4S",
+      "Wall 2: Wall Aquaguard Unit 600 hinged Right (towards tall) -> MTWAWAU600330600SASSSLREHNS"
     ],
     "warnings": []
   },
   "heights": {
-    "wall_mm": 900,
-    "tall_mm": 2240,
+    "wall_mm": 600,
+    "tall_mm": 1940,
     "lofts": false,
     "ceiling_mm": 2500,
-    "top_mm": 2340,
-    "why": "No lofts: the ceiling (2500 mm) is below the 2658 mm a loft needs, so the tallest units that fit are used: 900 mm wall and 2240 mm tall units, tops level at 2340 mm under a 2500 mm ceiling.",
+    "top_mm": 2040,
+    "why": "No lofts (the ceiling, 2500 mm, is below the 2658 mm a loft needs - R47): standard 600 mm wall and 1940 mm tall units.",
     "wall_style": "shutters"
   },
   "rulebook": {
@@ -671,5 +672,5 @@
     "filtered_skus": 1065,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.4
+  "seconds": 0.94
 }

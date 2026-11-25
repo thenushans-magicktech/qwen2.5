@@ -436,7 +436,7 @@ rule-book filters.
 
 | Rule | Where |
 |---|---|
-| Sink centred under the (widest) window, on the window wall | `_sink_target`, `_plan_base`, retry |
+| Sink position: the AI designer chooses its wall and centre (`sink_center_mm`), kept within the 50 mm grid unless the run cannot be filled there; the quick rules, or a customer who sets `sink_under_window: true`, centre it under the (widest) window | `_sink_target`, `_plan_base` (`target_weight`), retry |
 | ≥ 100 mm door clearance; inward door swings kept clear on adjacent walls | `_static_features` |
 | Zero overlaps per tier; zero 3D collisions between walls; runs packed flush on the 50 mm module, fillers ≤ 150 mm | `fill_gap`, `validate_layout` |
 | Corners take only corner cabinets, correctly handed, or stay open | `_plan_base`, `_place_corner_tier`, `validate_layout` |
@@ -491,6 +491,8 @@ rule-book filters.
 | `GEMINI_MODEL` | `gemini-flash-latest` | Gemini model used by `gemini_designer.py` |
 | `GEMINI_USE_KNOWLEDGE` | `0` | `0` = Gemini designs from its own judgement (plain room facts, cabinet list, needs, answer format; no playbook, examples, cabinet notes or rule hints). `1` = same prompt as Qwen |
 | `MAGICKHOME_KNOWLEDGE_DIR` | `knowledge/` | Knowledge pack location |
+| `MAGICKHOME_DESIGN_RULES` | `rulebook` | `rulebook` = only the MagickHome workbook's rules (Qwen's knowledge is the workbook's 81 rules) plus build safety; `extended` = also the generator's own rules (designer playbook and worked examples, wall / tall units grown to the ceiling, hob-landing and hob-away-from-sink preferences) |
+| `MAGICKHOME_AI_TEMPERATURE` | `0.7` | Qwen's creativity. With a fresh seed per design, the same plan gets a new design each time; `0` plus `preferences.seed` repeats a design exactly (the report gives `ai.seed`) |
 | `MAGICKHOME_RULEBOOK_PATH` | `knowledge/Kitchen_Rule_Engine_V1.xlsx` | MagickHome rule workbook read by `rulebook.py` (replace the file to update the module-width rules) |
 | `GEMINI_FALLBACK_MODELS` | `gemini-3.7-flash,gemini-2.5-flash` | Backup Gemini models tried when the main one is busy, out of quota or slow |
 | `MAGICKHOME_JOBS_DIR` | `designs/` | Saved designs |
