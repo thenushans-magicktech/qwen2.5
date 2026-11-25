@@ -96,6 +96,8 @@ class KitchenPreferences(BaseModel):
                           "chooses within the budget tier's finish rules (knowledge/finish_rules.json)"
     )
     wall_finish: Optional[str] = Field(None, description="Shutter finish aid for the wall run (wall units + lofts)")
+    countertop_finish: Optional[str] = Field(None, description="Worktop finish aid (e.g. MHC015); None = scene default")
+    backsplash_finish: Optional[str] = Field(None, description="Backsplash finish aid (e.g. MHB021); None = scene default")
     primary_wall: Optional[str] = Field(None, description="Wall id the customer chose for the hob / cooking (rule R24)")
     secondary_wall: Optional[str] = Field(None, description="Wall id the customer chose for the sink (rule R25)")
     sink_under_window: bool = True
@@ -545,7 +547,9 @@ def finish_codes(run: str, prefs: Optional["KitchenPreferences"]) -> list[str]:
     if stated in finishes.catalogue():
         return [finishes.code(stated)]
     budget = prefs.budget if prefs and prefs.budget != "auto" else None
-    return [finishes.code(a) for a in finishes.allowed(run, budget)] or ["STANDARD"]
+    # a varied shortlist (the API has 174 shutter finishes - too many for the prompt); the customer
+    # can still pick any of them in the UI
+    return [finishes.code(a) for a in finishes.ai_shortlist(run, budget)] or ["STANDARD"]
 
 
 WALL_STYLES = ("shutters", "lift_up")
@@ -739,13 +743,19 @@ def room_brief_v2(geometry: RoomGeometry, labels: dict[str, str], hints: bool = 
     return lines
 
 
-def _finish_lines(knowledge: bool = True) -> list[str]:
-    """Shutter finishes (MagickHome finish records) - static, so the prompt prefix stays cacheable.
+def _finish_lines(knowledge: bool = True, prefs: Optional["KitchenPreferences"] = None) -> list[str]:
+    """Shutter finishes on offer (a shortlist of the MagickHome textures API for the budget tier).
     With knowledge: the budget-tier finish rules too."""
     import finishes
 
+    budget = prefs.budget if prefs and prefs.budget != "auto" else None
+    offered = list(dict.fromkeys(finishes.ai_shortlist("base", budget) + finishes.ai_shortlist("wall", budget)))
+    for run in finishes.RUNS:  # the customer's stated finishes are always listed
+        aid = getattr(prefs, f"{run}_finish", None) if prefs else None
+        if aid in finishes.catalogue() and aid not in offered:
+            offered.append(aid)
     lines = ["SHUTTER FINISHES - choose by CODE (code | type | look | brand | colour):"]
-    for aid in finishes.catalogue():
+    for aid in offered:
         s = finishes.summary(aid)
         look = f"{(s['shutter'] or '').lower()}" + (", wood texture" if (s["family"] or "").lower() == "wooden" else "")
         lines.append(f"  {s['code']} | {s['category']} | {look} | {s['brand']} | {s['color'] or 'texture'}")
@@ -888,7 +898,7 @@ def _user_prompt_v2(geometry: RoomGeometry, menu, labels: dict[str, str], prefs:
                     knowledge: bool = True) -> str:
     # The menu comes first: it is identical for every room of one door style, so
     # Ollama can reuse the cached prompt prefix between requests.
-    lines = _menu_lines(menu, knowledge=knowledge) + _finish_lines(knowledge)
+    lines = _menu_lines(menu, knowledge=knowledge) + _finish_lines(knowledge, prefs)
     lines += ["", "ROOM (mm measured along each wall from its start; walls listed in order around the room):"]
     lines += room_brief_v2(geometry, labels, hints=knowledge)
     lines += ["", "CUSTOMER NEEDS (stated needs are fixed; 'not stated' means you decide and say why):"]

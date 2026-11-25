@@ -116,7 +116,8 @@ def generate_kitchen(
     budget = None if prefs.budget == "auto" else prefs.budget
     palette, fin_src, fin_notes = finishes.resolve({"base": prefs.base_finish, "wall": prefs.wall_finish},
                                                    proposal.finishes, budget)
-    layout.finishes = palette
+    surfaces = finishes.surface_choice({"countertop": prefs.countertop_finish, "backsplash": prefs.backsplash_finish})
+    layout.finishes = {**palette, **surfaces}
     finish_info = {"palette": palette, "source": fin_src, "notes": fin_notes, "budget": budget,
                    "tier": finishes.rules().get("tiers", {}).get(budget or "", {}).get("note", ""),
                    "default_why": finishes.default(budget)[1]}
@@ -132,14 +133,27 @@ def generate_kitchen(
         "layout": layout.summary(),
         "heights": dict(layout.heights, wall_style=wall_style),
         "rulebook": facts.to_dict(),
-        "finishes": {**{run: dict(finishes.summary(aid), source=fin_src.get(run)) for run, aid in palette.items()},
-                     "budget": budget, "tier_rule": finish_info["tier"], "notes": fin_notes},
+        "finishes": _finish_report(out, palette, fin_src, budget, finish_info["tier"], fin_notes, surfaces),
         "nodes_added": stats,
         "validation_issues": issues,
         "catalog": {"source": catalog.source, "filtered_skus": len(catalog), "door_style": prefs.door_style},
         "seconds": round(time.time() - t0, 2),
     }
     return out, report
+
+
+def _finish_report(scene_doc: dict, palette: dict, src: dict, budget, tier_note: str, notes: list,
+                   surfaces: Optional[dict] = None) -> dict:
+    """report.finishes: the cabinet runs plus the worktop / backsplash actually in the scene."""
+    rep = {run: dict(finishes.summary(aid), source=src.get(run)) for run, aid in palette.items() if run in finishes.RUNS}
+    metas = [n.get("metadata") or {} for n in scene_doc["scene"]["nodes"].values()]
+    for kind in finishes.SURFACES:
+        first = next((m["textures"][0] for m in metas if m.get("fixtureKind") == kind and m.get("textures")), None)
+        if first:
+            rep[kind] = dict(finishes.summary(first["aid"], finishes.surface_options(kind)),
+                             source="customer" if (surfaces or {}).get(kind) else "default")
+    rep.update(budget=budget, tier_rule=tier_note, notes=notes)
+    return rep
 
 
 # ---------------------------------------------------------------------------
@@ -187,6 +201,9 @@ class JobStore:
         self.jobs: "OrderedDict[str, dict]" = OrderedDict()
         self.lock = threading.Lock()
         self.pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="kitchen-job")
+        # Quick-rules designs never call Qwen / Gemini and take about a second: their own lane, so
+        # they never wait behind a multi-minute AI design.
+        self.fast_pool = ThreadPoolExecutor(max_workers=2, thread_name_prefix="kitchen-fast")
 
     def submit(self, doc: dict, prefs: KitchenPreferences, filename: Optional[str]) -> dict:
         job_id = uuid.uuid4().hex[:12]
@@ -204,12 +221,13 @@ class JobStore:
             "error_code": None,
             "report": None,
             "result": None,
+            "lane": "fast" if prefs.ai_mode == "fallback" else "ai",
         }
         with self.lock:
             self.jobs[job_id] = job
             while len(self.jobs) > self.keep:
                 self.jobs.popitem(last=False)
-        self.pool.submit(self._run, job_id, doc, prefs)
+        (self.fast_pool if job["lane"] == "fast" else self.pool).submit(self._run, job_id, doc, prefs)
         return job
 
     def _progress(self, job_id: str, msg: str) -> None:
@@ -279,7 +297,8 @@ class JobStore:
 
     def public(self, job: dict) -> dict:
         with self.lock:
-            ahead = [j for j in self.jobs.values() if j["status"] == "queued" and j["created"] < job["created"]]
+            ahead = [j for j in self.jobs.values() if j["status"] == "queued" and j["created"] < job["created"]
+                     and j.get("lane", "ai") == job.get("lane", "ai")]
             now = time.time()
             return {
                 "id": job["id"],
@@ -401,6 +420,8 @@ def finish_options() -> dict:
         "defaults": {b or "auto": dict(zip(("palette", "why"), finishes.default(b))) for b in budgets},
         "match": r.get("match", []),
         "about": r.get("about", ""),
+        "surfaces": {k: [finishes.summary(a, finishes.surface_options(k)) for a in finishes.surface_options(k)]
+                     for k in finishes.SURFACES},
     }
 
 
@@ -417,7 +438,8 @@ def plan_facts(req: GenerateRequest) -> dict:
 @app.post("/api/catalog/refresh")
 def catalog_refresh() -> dict:
     cat = refresh_catalog()
-    return {"source": cat.source, "skus": len(cat)}
+    finishes.refresh()  # re-read the textures API too
+    return {"source": cat.source, "skus": len(cat), "finishes": len(finishes.catalogue())}
 
 
 @app.post("/api/generate-kitchen")
@@ -458,6 +480,44 @@ def job_scene(job_id: str, download: bool = False):
     body = json.dumps(job["result"], indent=1, ensure_ascii=False)
     headers = {"Content-Disposition": f'attachment; filename="{_download_name(job["filename"], "kitchen")}"'} if download else {}
     return Response(body, media_type="application/json", headers=headers)
+
+
+class FinishChange(BaseModel):
+    """New finishes for a finished design (missing / null = keep the current one)."""
+    base_finish: Optional[str] = None
+    wall_finish: Optional[str] = None
+    countertop_finish: Optional[str] = None
+    backsplash_finish: Optional[str] = None
+
+
+@app.post("/api/jobs/{job_id}/finishes")
+def change_finishes(job_id: str, req: FinishChange) -> dict:
+    """Re-apply finishes to a finished design without redesigning it: cabinet fronts (with their
+    panels and fillers), worktop and backsplash. The budget tier's finish rules still apply (a
+    customer's choice outside the tier is kept and flagged). Updates the saved scene and report."""
+    job = JOBS.get(job_id)
+    if job["status"] != "done" or not job.get("result"):
+        raise HTTPException(status_code=409, detail=f"job is {job['status']}")
+    rep = job["report"]
+    old = rep.get("finishes") or {}
+    budget = old.get("budget")
+    stated = {run: getattr(req, f"{run}_finish") or (old.get(run) or {}).get("aid") for run in finishes.RUNS}
+    palette, src, notes = finishes.resolve(stated, {}, budget)
+    surfaces = finishes.surface_choice({k: getattr(req, f"{k}_finish") for k in finishes.SURFACES})
+    with JOBS.lock:
+        changed = finishes.apply_to_scene(job["result"], {**palette, **surfaces})
+        tier = finishes.rules().get("tiers", {}).get(budget or "", {}).get("note", "")
+        rep["finishes"] = _finish_report(job["result"], palette, src, budget, tier, notes,
+                                         {**{k: True for k in surfaces}, **{k: True for k in finishes.SURFACES
+                                          if (old.get(k) or {}).get("source") == "customer"}})
+        for e in rep.get("explanation") or []:
+            if e.get("item") == "Finishes":
+                e["built"] = "; ".join(f"{'Base + tall' if r == 'base' else 'Wall + loft'}: {finishes.describe(a)}"
+                                       for r, a in palette.items())
+                e["why"], e["source"] = "Changed by the customer after the design.", "customer"
+                e["rules"] = ([f"{budget.title()} tier: {tier}"] if budget else ["No budget stated: any finish allowed"]) + notes
+    JOBS._save(job)
+    return {"changed_nodes": changed, "finishes": rep["finishes"]}
 
 
 @app.get("/api/jobs/{job_id}/report")

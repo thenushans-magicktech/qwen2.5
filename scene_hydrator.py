@@ -257,6 +257,9 @@ class SceneHydrator:
         textures = copy.deepcopy(self.presets.get("fixtureTextures", {}).get(tex_key, []))
         if kind in ("slab", "filler") and level:  # panels and fillers match the run they close
             textures = finishes.texture_list(textures, self._finish(level), drop_sku=True)
+        elif kind in finishes.SURFACES:  # the customer's worktop / backsplash
+            textures = finishes.texture_list(textures, (getattr(self.layout, "finishes", None) or {}).get(kind),
+                                             records=finishes.surface_options(kind))
         meta = {
             "fixtureKind": kind,
             "fixtureId": fixture_id,

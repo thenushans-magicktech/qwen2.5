@@ -681,6 +681,8 @@
       "color": "#3B5A6E",
       "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
       "texture": false,
+      "texture_width": 2438,
+      "texture_height": 2438,
       "source": "rules"
     },
     "wall": {
@@ -694,7 +696,39 @@
       "color": "#F2F2F2",
       "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
       "texture": false,
+      "texture_width": 2438,
+      "texture_height": 2438,
       "source": "rules"
+    },
+    "countertop": {
+      "aid": "MHC015",
+      "code": "MHC015-FINISH",
+      "name": "Ceaserstone Empiria White",
+      "category": "Quartz",
+      "family": "Unknown",
+      "shutter": "Unknown",
+      "brand": "Nil",
+      "color": null,
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHC015.jpg",
+      "texture": true,
+      "texture_width": 1219,
+      "texture_height": 1219,
+      "source": "default"
+    },
+    "backsplash": {
+      "aid": "MHB038",
+      "code": "MHB038-FINISH",
+      "name": "Coimbatore_Backsplash_Parallel",
+      "category": "Tile",
+      "family": "Unknown",
+      "shutter": "Unknown",
+      "brand": "Nil",
+      "color": null,
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHB038.jpg",
+      "texture": true,
+      "texture_width": 609,
+      "texture_height": 609,
+      "source": "default"
     },
     "budget": null,
     "tier_rule": "",
@@ -716,5 +750,5 @@
     "filtered_skus": 1065,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.23
+  "seconds": 0.34
 }

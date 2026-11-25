@@ -693,13 +693,15 @@ def test_finishes_follow_the_budget_tier():
     import finishes
 
     lam = {a for a, r in finishes.catalogue().items() if r["category"] == "Laminate"}
-    assert set(finishes.allowed("base", "essential")) == lam and set(finishes.allowed("wall", "luxury")) == {"MHS224", "MHS212"}
+    assert set(finishes.allowed("base", "essential")) == lam
+    assert {"MHS224", "MHS212"} <= set(finishes.allowed("wall", "luxury"))
+    assert all(finishes.is_premium(a) for a in finishes.allowed("wall", "luxury"))
     codes = ai_designer.finish_codes("base", KitchenPreferences(budget="essential"))
-    assert codes and all(c.endswith("-LAMINATE") for c in codes)
-    assert ai_designer.finish_codes("wall", KitchenPreferences(wall_finish="MHS064")) == ["PRAIRIE-GREEN-LAMINATE"]
+    assert codes and all("-LAMINATE" in c for c in codes) and len(codes) <= 30, "a shortlist, not every finish"
+    assert ai_designer.finish_codes("wall", KitchenPreferences(wall_finish="MHS064")) == [finishes.code("MHS064")]
 
     pal, src, notes = finishes.resolve({}, {"base": "MHS224", "wall": "MHS212"}, "premium")  # two PU runs
-    assert sum(finishes.catalogue()[a]["category"] == "PU" for a in pal.values()) == 1 and notes
+    assert sum(finishes.is_premium(a) for a in pal.values()) == 1 and notes
     pal, src, notes = finishes.resolve({}, {"base": "MHS224"}, "essential")  # PU not allowed in Essential
     assert finishes.catalogue()[pal["base"]]["category"] == "Laminate" and src["base"] == "rules" and notes
     pal, src, _ = finishes.resolve({"base": "MHS224"}, {}, "essential")  # the customer's choice wins
@@ -719,6 +721,74 @@ def test_finishes_follow_the_budget_tier():
             assert n["metadata"]["textures"][0]["aid"] == want[run_], (level, n["metadata"].get("fixtureKind"))
     fin = next(e for e in report["explanation"] if e["item"] == "Finishes")
     assert "Laminate" in fin["built"] and fin["rules"][0].startswith("Essential tier")
+
+
+def test_finishes_change_after_the_design_and_surfaces():
+    """Worktop / backsplash choices reach the scene; POST /api/jobs/{id}/finishes re-applies new
+    finishes to a finished design (fronts, their panels, worktop, backsplash) and its report."""
+    from fastapi.testclient import TestClient
+
+    import finishes
+    import main
+
+    def first(out, pred):
+        return {n["metadata"]["textures"][0]["aid"] for n in out["scene"]["nodes"].values()
+                if n["type"] == "item" and n["metadata"].get("textures") and pred(n)}
+
+    surf = lambda k: lambda n: n["metadata"].get("fixtureKind") == k  # noqa: E731
+    out, report = generate_kitchen(empty_plan(), KitchenPreferences(ai_mode="fallback", backsplash_finish="MHB021"))
+    assert first(out, surf("backsplash")) == {"MHB021"} and report["finishes"]["backsplash"]["source"] == "customer"
+    assert first(out, surf("countertop")) == {"MHC015"}
+
+    c = TestClient(main.app)
+    job = main.JOBS.submit(empty_plan(), KitchenPreferences(ai_mode="fallback", budget="premium"), "t.json")
+    for _ in range(200):
+        if main.JOBS.get(job["id"])["status"] in ("done", "error"):
+            break
+        import time
+        time.sleep(0.1)
+    r = c.post(f"/api/jobs/{job['id']}/finishes", json={"base_finish": "MHS064", "backsplash_finish": "MHB038"})
+    assert r.status_code == 200 and r.json()["changed_nodes"] > 0
+    scene = c.get(f"/api/jobs/{job['id']}/scene").json()
+    base_run = lambda n: n["asset"]["category"] == "kitchen" and n["placement"]["level"] in ("base", "tall")  # noqa: E731
+    assert first(scene, base_run) == {"MHS064"} and first(scene, surf("backsplash")) == {"MHB038"}
+    assert first(scene, lambda n: n["metadata"].get("fixtureKind") in ("slab", "filler") and n["metadata"].get("level") in ("base", "tall")) <= {"MHS064"}
+    rep = c.get(f"/api/jobs/{job['id']}/report").json()
+    assert rep["finishes"]["base"]["aid"] == "MHS064" and rep["finishes"]["base"]["source"] == "customer"
+    assert next(e for e in rep["explanation"] if e["item"] == "Finishes")["why"].startswith("Changed by the customer")
+    assert {f["aid"] for f in c.get("/api/finishes").json()["surfaces"]["backsplash"]} == set(finishes.surface_options("backsplash"))
+
+
+def test_quick_rules_never_wait_behind_an_ai_design(monkeypatch):
+    """A slow AI (Qwen on CPU) design must not hold up a quick-rules design: separate lanes."""
+    import threading
+    import time
+
+    import main
+
+    release = threading.Event()
+    real = main.generate_kitchen
+
+    def slow_or_real(doc, prefs, progress=None):
+        if prefs.ai_mode != "fallback":
+            release.wait(20)  # stands in for a multi-minute Qwen design (never contacts Qwen)
+            return real(doc, prefs.model_copy(update={"ai_mode": "fallback"}), progress)
+        return real(doc, prefs, progress)
+
+    monkeypatch.setattr(main, "generate_kitchen", slow_or_real)
+    store = main.JobStore()
+    monkeypatch.setattr(store, "_save", lambda job: None)
+    try:
+        ai = store.submit(empty_plan(), KitchenPreferences(ai_mode="ollama"), "a.json")
+        t0 = time.time()
+        quick = store.submit(empty_plan(), KitchenPreferences(ai_mode="fallback"), "q.json")
+        while store.get(quick["id"])["status"] not in ("done", "error") and time.time() - t0 < 15:
+            time.sleep(0.05)
+        assert store.get(quick["id"])["status"] == "done", "quick rules waited behind the AI design"
+        assert store.get(ai["id"])["status"] in ("queued", "running")
+        assert store.public(store.get(quick["id"]))["queue_position"] == 0
+    finally:
+        release.set()
 
 
 def test_customer_primary_and_secondary_walls():
@@ -1203,8 +1273,8 @@ def _v2_design(menu, **over):
         "loft_why": "The ceiling is too low for lofts.",
         "lofts": "no",
         "finish_why": "Warm oak below, a light PU wall run to keep the room bright.",
-        "base_finish": "PURE-LEGNO-OAK-LAMINATE",
-        "wall_finish": "STROMMA-WHITE-PU",
+        "base_finish": ai_designer.finish_codes("base", None)[-1],  # from the AI shortlist
+        "wall_finish": ai_designer.finish_codes("wall", None)[0],
     }
     d.update(over)
     return d

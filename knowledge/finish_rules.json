@@ -1,24 +1,25 @@
 {
-  "version": 1,
-  "about": "Shutter finishes by budget tier. PROPOSED by the generator and approved for use (2026-11-23): the MagickHome rule workbook says finish tiers are derived from the budget tier but defines no finish rows. Edit this file to MagickHome's real rules - the generator, the AI designer's choices and the UI follow it. 'base' = base + tall units, 'wall' = wall units + lofts.",
+  "version": 2,
+  "about": "Shutter finishes by budget tier. PROPOSED by the generator and approved for use (2026-11-23; acrylic added 2026-11-25 when the MagickHome textures API showed Rehau acrylic finishes): the rule workbook says finish tiers are derived from the budget tier but defines no finish rows. Edit this file to MagickHome's real rules - the generator, the AI designer's choices and the UI follow it. 'base' = base + tall units, 'wall' = wall units + lofts. Finishes come from the textures API (category Laminate / PU / Acrylic).",
+  "premium_categories": ["PU", "Acrylic"],
   "tiers": {
     "essential": {
       "base": ["Laminate"],
       "wall": ["Laminate"],
-      "max_pu_runs": 0,
-      "note": "Laminate (suede) fronts on every run - durable and lowest cost."
+      "max_premium_runs": 0,
+      "note": "Laminate fronts on every run - durable and lowest cost."
     },
     "premium": {
-      "base": ["Laminate", "PU"],
-      "wall": ["Laminate", "PU"],
-      "max_pu_runs": 1,
-      "note": "Laminate fronts with one PU accent run (the base run or the wall run)."
+      "base": ["Laminate", "PU", "Acrylic"],
+      "wall": ["Laminate", "PU", "Acrylic"],
+      "max_premium_runs": 1,
+      "note": "Laminate fronts with one PU or acrylic accent run (the base run or the wall run)."
     },
     "luxury": {
-      "base": ["PU"],
-      "wall": ["PU"],
-      "max_pu_runs": 2,
-      "note": "PU matte fronts on every run."
+      "base": ["PU", "Acrylic"],
+      "wall": ["PU", "Acrylic"],
+      "max_premium_runs": 2,
+      "note": "PU matte or acrylic high-gloss fronts on every run."
     }
   },
   "defaults": {

@@ -1,7 +1,7 @@
 {
  "format": "magickhomes-scene",
  "version": 1,
- "exportedAt": "2026-11-23T05:22:28.550Z",
+ "exportedAt": "2026-11-25T06:32:46.997Z",
  "scene": {
   "nodes": {
    "site_ak8kgyj1ac61iknj": {
@@ -71,7 +71,7 @@
      "wall_7sna3rldnsuwipgy",
      "slab_jvsqwiezhnodq0cv",
      "ceiling_13bdm8luvqcre1tc",
-     "item_bku25y1zzw7bv41d"
+     "item_b5jhtvlz5lbv09dd"
     ],
     "level": 0
    },
@@ -107,25 +107,25 @@
     "metadata": {},
     "children": [
      "window_a6jgraczhlas4vwp",
-     "item_4oam880udqcrl0qx",
-     "item_w3s1o39rhgf612fc",
-     "item_a7gdcmaixjfqurfs",
-     "item_k6ta7arj73f179ks",
-     "item_977g89airqopzubo",
-     "item_bvtggz3cyxa7gx7x",
-     "item_qmm5em1xsj7xokh1",
-     "item_ujwuga13s00j8p3n",
-     "item_jshvvyk10gnzh7wo",
-     "item_did976y5e7v89ybf",
-     "item_3p0vhjgeomvvdk1z",
-     "item_1utigv0bwmpi7uez",
-     "item_osek1wlu1zqrnlin",
-     "item_1u55urcftjsgk3ef",
-     "item_a311lfmsi0fwujy0",
-     "item_qnl7tm8duh1bgrtj",
-     "item_2o40l54qffd9wvx8",
-     "item_f18ikudx6sk40uzq",
-     "item_ilr9v7qeo37pnqgd"
+     "item_9jeutip2dmk0ixm2",
+     "item_ngt6jv7bbd4hwezv",
+     "item_vqmafloomebat58k",
+     "item_kgb60kzq2huxe5rr",
+     "item_4wgete2ikl2r4hyt",
+     "item_nm0grpqjxgtwyh4w",
+     "item_30grhgjqfdbxrsbh",
+     "item_j6ydw479leugnub1",
+     "item_fhxmaw6e2hmcw9fh",
+     "item_i3tulk0wxgj37kx5",
+     "item_5g7e4r7kf7h5t1yu",
+     "item_law85ci7ycjss1ep",
+     "item_246dr9fy4okcoceh",
+     "item_kjpfk1sjrh2z4gu7",
+     "item_vp5n2poxo5idjsmp",
+     "item_ao2njf633ezgg391",
+     "item_npa5ruhtt29mzsuq",
+     "item_eut3pxr5vqgwc6hy",
+     "item_lc48tl2s1jr06g4p"
     ],
     "start": [
      -3.65,
@@ -147,23 +147,23 @@
     "visible": true,
     "metadata": {},
     "children": [
-     "item_sdncjrndamnzuo2o",
-     "item_fz4wlr4ipeovv7bp",
-     "item_ab8nnx7atdrg54wh",
-     "item_9rbmd22qte4czy7c",
-     "item_8396dbwa6vlkmksq",
-     "item_341zanxwaakopu2d",
-     "item_vj7b6jkuuheot7c5",
-     "item_eibrm240qjg3kfwt",
-     "item_jrcn4wvcx387uif7",
-     "item_a01q7zn7d7ft60m7",
-     "item_xfn5rdzi8pt2asfl",
-     "item_xxc1fo4e9rmb1wjr",
-     "item_5fj85xln85weop0m",
-     "item_nmtgft5uifex42l2",
-     "item_nuld2nclan5gojv9",
-     "item_vdyha170k2fkm14p",
-     "item_whugf78levigulq3"
+     "item_46m5qshq78trcv9u",
+     "item_9rp13g42mlfvb10m",
+     "item_olr5njlx0bu70e4f",
+     "item_c5f77b8xw23t3pdx",
+     "item_j8rm6ix61ffcttdo",
+     "item_70nrylgsklm1qk0y",
+     "item_rc3slpvlnydksnax",
+     "item_0cdn8wbpimazusd5",
+     "item_mdtnw4w31v2wihjr",
+     "item_epmsbms6tme39xd6",
+     "item_1jnge4dp3so9q42j",
+     "item_r5na7krny2j0kj12",
+     "item_hdfq4gd9oderpmxs",
+     "item_uaw8hbfu151zuocl",
+     "item_regv9ywk53604lhk",
+     "item_wntk1ssupialh4a8",
+     "item_rz7awh9qmjucd7ek"
     ],
     "start": [
      0.45,
@@ -472,9 +472,9 @@
     "sillDepth": 0.08,
     "sillThickness": 0.03
    },
-   "item_4oam880udqcrl0qx": {
+   "item_9jeutip2dmk0ixm2": {
     "object": "node",
-    "id": "item_4oam880udqcrl0qx",
+    "id": "item_9jeutip2dmk0ixm2",
     "type": "item",
     "name": "MTBABU800560700SDSSLBOEH1S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -820,9 +820,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_w3s1o39rhgf612fc": {
+   "item_ngt6jv7bbd4hwezv": {
     "object": "node",
-    "id": "item_w3s1o39rhgf612fc",
+    "id": "item_ngt6jv7bbd4hwezv",
     "type": "item",
     "name": "MTBABSU1050560700SSDSSLBOEHNS",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -1132,7 +1132,7 @@
      1
     ],
     "children": [
-     "item_gq1qpvatm4fwfnzu"
+     "item_rql8xai8cg0g9n1c"
     ],
     "wallId": "wall_56i56ymve0xf69fm",
     "wallT": 0.48565132443497816,
@@ -1170,9 +1170,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_a7gdcmaixjfqurfs": {
+   "item_vqmafloomebat58k": {
     "object": "node",
-    "id": "item_a7gdcmaixjfqurfs",
+    "id": "item_vqmafloomebat58k",
     "type": "item",
     "name": "MTBABU600560700SDSSLBOEH1S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -1518,9 +1518,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_k6ta7arj73f179ks": {
+   "item_kgb60kzq2huxe5rr": {
     "object": "node",
-    "id": "item_k6ta7arj73f179ks",
+    "id": "item_kgb60kzq2huxe5rr",
     "type": "item",
     "name": "MTBABU350560700SSSSLREH1S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -1866,9 +1866,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_977g89airqopzubo": {
+   "item_4wgete2ikl2r4hyt": {
     "object": "node",
-    "id": "item_977g89airqopzubo",
+    "id": "item_4wgete2ikl2r4hyt",
     "type": "item",
     "name": "MTTATU6005602240SSSSLLEH5S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -2214,9 +2214,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_bvtggz3cyxa7gx7x": {
+   "item_nm0grpqjxgtwyh4w": {
     "object": "node",
-    "id": "item_bvtggz3cyxa7gx7x",
+    "id": "item_nm0grpqjxgtwyh4w",
     "type": "item",
     "name": "MTWAWU550330900SSSSLLEH1S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -2562,9 +2562,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_qmm5em1xsj7xokh1": {
+   "item_30grhgjqfdbxrsbh": {
     "object": "node",
-    "id": "item_qmm5em1xsj7xokh1",
+    "id": "item_30grhgjqfdbxrsbh",
     "type": "item",
     "name": "MTWAWU600330900SDSSLBOEH1S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -2910,9 +2910,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_ujwuga13s00j8p3n": {
+   "item_j6ydw479leugnub1": {
     "object": "node",
-    "id": "item_ujwuga13s00j8p3n",
+    "id": "item_j6ydw479leugnub1",
     "type": "item",
     "name": "MTWCWLC650650900SLCSLBOEH2S",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -3260,9 +3260,9 @@
      "cornerAtEnd": true
     }
    },
-   "item_sdncjrndamnzuo2o": {
+   "item_46m5qshq78trcv9u": {
     "object": "node",
-    "id": "item_sdncjrndamnzuo2o",
+    "id": "item_46m5qshq78trcv9u",
     "type": "item",
     "name": "MTBCBCR1050560700SBCRSLREH1S",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -3610,9 +3610,9 @@
      "cornerAtEnd": false
     }
    },
-   "item_fz4wlr4ipeovv7bp": {
+   "item_9rp13g42mlfvb10m": {
     "object": "node",
-    "id": "item_fz4wlr4ipeovv7bp",
+    "id": "item_9rp13g42mlfvb10m",
     "type": "item",
     "name": "MTBABU550560700SSSSLLEH1S",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -3958,9 +3958,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_ab8nnx7atdrg54wh": {
+   "item_olr5njlx0bu70e4f": {
     "object": "node",
-    "id": "item_ab8nnx7atdrg54wh",
+    "id": "item_olr5njlx0bu70e4f",
     "type": "item",
     "name": "MTBABCU600560800SCSSSLLEHNS",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -4306,9 +4306,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_9rbmd22qte4czy7c": {
+   "item_c5f77b8xw23t3pdx": {
     "object": "node",
-    "id": "item_9rbmd22qte4czy7c",
+    "id": "item_c5f77b8xw23t3pdx",
     "type": "item",
     "name": "MTBABHU900560700DTDASLPUEHNS",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -4618,7 +4618,7 @@
      1
     ],
     "children": [
-     "item_op3wjdd5ecg4prph"
+     "item_rjhimn86gg1ig1cr"
     ],
     "wallId": "wall_49fdugi4g7vj12pf",
     "wallT": 0.6585365853658537,
@@ -4656,9 +4656,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_8396dbwa6vlkmksq": {
+   "item_j8rm6ix61ffcttdo": {
     "object": "node",
-    "id": "item_8396dbwa6vlkmksq",
+    "id": "item_j8rm6ix61ffcttdo",
     "type": "item",
     "name": "MTBABSP300560700DSPSLPUEHNS",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -5004,9 +5004,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_341zanxwaakopu2d": {
+   "item_70nrylgsklm1qk0y": {
     "object": "node",
-    "id": "item_341zanxwaakopu2d",
+    "id": "item_70nrylgsklm1qk0y",
     "type": "item",
     "name": "MTBABU600560700DFDSLPUEHNS",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -5352,9 +5352,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_vj7b6jkuuheot7c5": {
+   "item_rc3slpvlnydksnax": {
     "object": "node",
-    "id": "item_vj7b6jkuuheot7c5",
+    "id": "item_rc3slpvlnydksnax",
     "type": "item",
     "name": "MTWAWU300330900SSSSLLEH1S",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -5700,9 +5700,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_eibrm240qjg3kfwt": {
+   "item_0cdn8wbpimazusd5": {
     "object": "node",
-    "id": "item_eibrm240qjg3kfwt",
+    "id": "item_0cdn8wbpimazusd5",
     "type": "item",
     "name": "MTWAWU600330900SDSSLBOEH1S",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -6048,9 +6048,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_jrcn4wvcx387uif7": {
+   "item_mdtnw4w31v2wihjr": {
     "object": "node",
-    "id": "item_jrcn4wvcx387uif7",
+    "id": "item_mdtnw4w31v2wihjr",
     "type": "item",
     "name": "MTWAWU600330900SDSSLBOEH1S",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -6396,9 +6396,9 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_a01q7zn7d7ft60m7": {
+   "item_epmsbms6tme39xd6": {
     "object": "node",
-    "id": "item_a01q7zn7d7ft60m7",
+    "id": "item_epmsbms6tme39xd6",
     "type": "item",
     "name": "MTWAWU850330900SDSSLBOEH1S",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -6744,18 +6744,18 @@
      "designSource": "ai-kitchen-v1"
     }
    },
-   "item_gq1qpvatm4fwfnzu": {
+   "item_rql8xai8cg0g9n1c": {
     "object": "node",
-    "id": "item_gq1qpvatm4fwfnzu",
+    "id": "item_rql8xai8cg0g9n1c",
     "type": "item",
-    "name": "Sink120",
-    "parentId": "item_w3s1o39rhgf612fc",
+    "name": "Left Sink105",
+    "parentId": "item_ngt6jv7bbd4hwezv",
     "visible": true,
     "metadata": {
      "textures": [],
      "aid": "APS03",
      "category": "Sink",
-     "description": "Sink120",
+     "description": "Left Sink105",
      "width": 950,
      "depth": 450,
      "height": 450,
@@ -6764,7 +6764,7 @@
      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APS03.jpg",
      "isActive": true,
      "applianceKind": "sink",
-     "hostCabinetId": "item_w3s1o39rhgf612fc",
+     "hostCabinetId": "item_ngt6jv7bbd4hwezv",
      "designSource": "ai-kitchen-v1-appliance",
      "level": "base",
      "subCategory": "Sink",
@@ -6791,7 +6791,7 @@
     "asset": {
      "id": "APS03",
      "category": "appliance",
-     "name": "Sink120",
+     "name": "Left Sink105",
      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-thumbnail/APS03.jpg",
      "source": "library",
      "src": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/appliance-models/APS03.glb",
@@ -6817,12 +6817,12 @@
      ]
     }
    },
-   "item_op3wjdd5ecg4prph": {
+   "item_rjhimn86gg1ig1cr": {
     "object": "node",
-    "id": "item_op3wjdd5ecg4prph",
+    "id": "item_rjhimn86gg1ig1cr",
     "type": "item",
     "name": "Hob90",
-    "parentId": "item_9rbmd22qte4czy7c",
+    "parentId": "item_c5f77b8xw23t3pdx",
     "visible": true,
     "metadata": {
      "_id": "6a636ca592bd092f25db7fe6",
@@ -6988,7 +6988,7 @@
        "updatedAt": "2026-09-28T13:44:13.284Z"
       }
      ],
-     "hostCabinetId": "item_9rbmd22qte4czy7c",
+     "hostCabinetId": "item_c5f77b8xw23t3pdx",
      "designSource": "ai-kitchen-v1-appliance"
     },
     "position": [
@@ -7038,9 +7038,9 @@
      ]
     }
    },
-   "item_xfn5rdzi8pt2asfl": {
+   "item_1jnge4dp3so9q42j": {
     "object": "node",
-    "id": "item_xfn5rdzi8pt2asfl",
+    "id": "item_1jnge4dp3so9q42j",
     "type": "item",
     "name": "Chimney90",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -7137,7 +7137,7 @@
        "updatedAt": "2026-09-28T13:44:13.291Z"
       }
      ],
-     "hostCabinetId": "item_9rbmd22qte4czy7c",
+     "hostCabinetId": "item_c5f77b8xw23t3pdx",
      "designSource": "ai-kitchen-v1-appliance"
     },
     "position": [
@@ -7187,9 +7187,9 @@
      ]
     }
    },
-   "item_jshvvyk10gnzh7wo": {
+   "item_fhxmaw6e2hmcw9fh": {
     "object": "node",
-    "id": "item_jshvvyk10gnzh7wo",
+    "id": "item_fhxmaw6e2hmcw9fh",
     "type": "item",
     "name": "Toe-kick fixture_toekick_wall_56i56ymve0xf69fm_run0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -7254,9 +7254,9 @@
      ]
     }
    },
-   "item_did976y5e7v89ybf": {
+   "item_i3tulk0wxgj37kx5": {
     "object": "node",
-    "id": "item_did976y5e7v89ybf",
+    "id": "item_i3tulk0wxgj37kx5",
     "type": "item",
     "name": "Filler fixture_filler_wall_56i56ymve0xf69fm_base_hi_run0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -7577,9 +7577,9 @@
      ]
     }
    },
-   "item_3p0vhjgeomvvdk1z": {
+   "item_5g7e4r7kf7h5t1yu": {
     "object": "node",
-    "id": "item_3p0vhjgeomvvdk1z",
+    "id": "item_5g7e4r7kf7h5t1yu",
     "type": "item",
     "name": "Countertop fixture_countertop_wall_56i56ymve0xf69fm_ct0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -7854,9 +7854,9 @@
      ]
     }
    },
-   "item_1utigv0bwmpi7uez": {
+   "item_law85ci7ycjss1ep": {
     "object": "node",
-    "id": "item_1utigv0bwmpi7uez",
+    "id": "item_law85ci7ycjss1ep",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_56i56ymve0xf69fm_bs0_0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -8157,9 +8157,9 @@
      ]
     }
    },
-   "item_osek1wlu1zqrnlin": {
+   "item_246dr9fy4okcoceh": {
     "object": "node",
-    "id": "item_osek1wlu1zqrnlin",
+    "id": "item_246dr9fy4okcoceh",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_56i56ymve0xf69fm_bs0_1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -8460,9 +8460,9 @@
      ]
     }
    },
-   "item_1u55urcftjsgk3ef": {
+   "item_kjpfk1sjrh2z4gu7": {
     "object": "node",
-    "id": "item_1u55urcftjsgk3ef",
+    "id": "item_kjpfk1sjrh2z4gu7",
     "type": "item",
     "name": "Filler fixture_filler_wall_56i56ymve0xf69fm_tall_lo_run0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -8783,9 +8783,9 @@
      ]
     }
    },
-   "item_a311lfmsi0fwujy0": {
+   "item_vp5n2poxo5idjsmp": {
     "object": "node",
-    "id": "item_a311lfmsi0fwujy0",
+    "id": "item_vp5n2poxo5idjsmp",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_tall_side_hi_run0_counter",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -9106,9 +9106,9 @@
      ]
     }
    },
-   "item_qnl7tm8duh1bgrtj": {
+   "item_ao2njf633ezgg391": {
     "object": "node",
-    "id": "item_qnl7tm8duh1bgrtj",
+    "id": "item_ao2njf633ezgg391",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_tall_side_hi_run0_upper",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -9429,9 +9429,9 @@
      ]
     }
    },
-   "item_2o40l54qffd9wvx8": {
+   "item_npa5ruhtt29mzsuq": {
     "object": "node",
-    "id": "item_2o40l54qffd9wvx8",
+    "id": "item_npa5ruhtt29mzsuq",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_wall_hi_run0",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -9753,9 +9753,9 @@
      ]
     }
    },
-   "item_f18ikudx6sk40uzq": {
+   "item_eut3pxr5vqgwc6hy": {
     "object": "node",
-    "id": "item_f18ikudx6sk40uzq",
+    "id": "item_eut3pxr5vqgwc6hy",
     "type": "item",
     "name": "Slab fixture_slab_wall_56i56ymve0xf69fm_wall_lo_run1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -10077,9 +10077,9 @@
      ]
     }
    },
-   "item_ilr9v7qeo37pnqgd": {
+   "item_lc48tl2s1jr06g4p": {
     "object": "node",
-    "id": "item_ilr9v7qeo37pnqgd",
+    "id": "item_lc48tl2s1jr06g4p",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_56i56ymve0xf69fm_upper0_1",
     "parentId": "wall_56i56ymve0xf69fm",
@@ -10380,9 +10380,9 @@
      ]
     }
    },
-   "item_xxc1fo4e9rmb1wjr": {
+   "item_r5na7krny2j0kj12": {
     "object": "node",
-    "id": "item_xxc1fo4e9rmb1wjr",
+    "id": "item_r5na7krny2j0kj12",
     "type": "item",
     "name": "Toe-kick fixture_toekick_wall_49fdugi4g7vj12pf_run0",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -10447,9 +10447,9 @@
      ]
     }
    },
-   "item_5fj85xln85weop0m": {
+   "item_hdfq4gd9oderpmxs": {
     "object": "node",
-    "id": "item_5fj85xln85weop0m",
+    "id": "item_hdfq4gd9oderpmxs",
     "type": "item",
     "name": "Countertop fixture_countertop_wall_49fdugi4g7vj12pf_ct0",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -10724,9 +10724,9 @@
      ]
     }
    },
-   "item_nmtgft5uifex42l2": {
+   "item_uaw8hbfu151zuocl": {
     "object": "node",
-    "id": "item_nmtgft5uifex42l2",
+    "id": "item_uaw8hbfu151zuocl",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_49fdugi4g7vj12pf_bs0_0",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -11027,9 +11027,9 @@
      ]
     }
    },
-   "item_nuld2nclan5gojv9": {
+   "item_regv9ywk53604lhk": {
     "object": "node",
-    "id": "item_nuld2nclan5gojv9",
+    "id": "item_regv9ywk53604lhk",
     "type": "item",
     "name": "Slab fixture_slab_wall_49fdugi4g7vj12pf_wall_hi_run0",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -11351,9 +11351,9 @@
      ]
     }
    },
-   "item_vdyha170k2fkm14p": {
+   "item_wntk1ssupialh4a8": {
     "object": "node",
-    "id": "item_vdyha170k2fkm14p",
+    "id": "item_wntk1ssupialh4a8",
     "type": "item",
     "name": "Slab fixture_slab_wall_49fdugi4g7vj12pf_wall_lo_run1",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -11675,9 +11675,9 @@
      ]
     }
    },
-   "item_whugf78levigulq3": {
+   "item_rz7awh9qmjucd7ek": {
     "object": "node",
-    "id": "item_whugf78levigulq3",
+    "id": "item_rz7awh9qmjucd7ek",
     "type": "item",
     "name": "Backsplash fixture_backsplash_wall_49fdugi4g7vj12pf_upper0_0",
     "parentId": "wall_49fdugi4g7vj12pf",
@@ -11978,9 +11978,9 @@
      ]
     }
    },
-   "item_bku25y1zzw7bv41d": {
+   "item_b5jhtvlz5lbv09dd": {
     "object": "node",
-    "id": "item_bku25y1zzw7bv41d",
+    "id": "item_b5jhtvlz5lbv09dd",
     "type": "item",
     "name": "Floor",
     "parentId": "level_d48imrjpuiv83tez",

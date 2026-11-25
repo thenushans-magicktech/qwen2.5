@@ -69,6 +69,9 @@ ASSETS_API_URL = os.getenv(
     "https://dev-ai-design.magicktech.com/assetcatalog/api/v1/ruleengine/cabinets",
 )
 ASSETS_API_METHOD = os.getenv("MAGICKHOME_ASSETS_API_METHOD", "POST").upper()
+# Finishes (shutters, countertops, backsplashes, floors, handles ...): read-only GET, cached locally.
+TEXTURES_API_URL = os.getenv("MAGICKHOME_TEXTURES_API_URL", ASSETS_API_URL.rsplit("/", 1)[0] + "/textures" if ASSETS_API_URL else "")
+TEXTURES_CACHE_PATH = BASE_DIR / "data" / "texture_api_cache.json"
 ASSETS_API_PAGE_SIZE = int(os.getenv("MAGICKHOME_ASSETS_API_PAGE_SIZE", "1000"))
 ASSETS_API_MAX_PAGES = 50
 ASSETS_API_TOKEN = os.getenv("MAGICKHOME_ASSETS_API_TOKEN", "")
@@ -132,10 +135,10 @@ APPLIANCES = {
 # Appliance sizes available as MagickHome models (dimensions measured from the GLBs). The largest
 # model that fits is used: sink / hob by the host cabinet's width, chimney by the hob cabinet's
 # width. The rule workbook's small modules (600 mm hob and sink units, R1 / R2 / R61 / R63)
-# need the 60-series models. Names of the new models are ours (MagickHome lists only *90).
+# need the 60-series models. Names as in the MagickHome appliances API (ruleengine/appliances).
 # (min host cabinet width mm, aid, name, (width, height, depth) mm)
 APPLIANCE_VARIANTS = {
-    "sink": [(1050, "APS03", "Sink120", (950, 450, 450)), (800, "APS02", "Sink90", (780, 450, 450)),
+    "sink": [(1050, "APS03", "Left Sink105", (950, 450, 450)), (800, "APS02", "Sink90", (780, 450, 450)),
              (0, "APS01", "Sink60", (450, 390, 420))],
     "hob": [(750, "APH02", "Hob90", (750, 70, 520)), (0, "APH01", "Hob60", (550, 68, 520))],
     "chimney": [(750, "APC02", "Chimney90", (900, 460, 540)), (0, "APC01", "Chimney60", (600, 463, 540))],

@@ -71,8 +71,8 @@
       "wall_style_why": "Standard hinged doors.",
       "wall_style": "shutters",
       "finish_why": "Warm oak below, a light PU wall run to keep the room bright.",
-      "base_finish": "PURE-LEGNO-OAK-LAMINATE",
-      "wall_finish": "STROMMA-WHITE-PU",
+      "base_finish": "SPRING-AVE-PU",
+      "wall_finish": "CADET-BLUE-PU",
       "loft_why": "The ceiling is too low for lofts.",
       "lofts": "no"
     }
@@ -328,12 +328,12 @@
     {
       "item": "Finishes",
       "decision": null,
-      "built": "Base + tall: Pure Legno Oak (Laminate suede, wood texture, Merino); Wall + loft: Stromma White (PU matte, Magickhome)",
+      "built": "Base + tall: Spring Ave (PU matte, Magickhome); Wall + loft: Cadet Blue (PU matte, Magickhome)",
       "why": "Warm oak below, a light PU wall run to keep the room bright.",
       "source": "qwen",
       "details": [
-        "Base run (base + tall units): Pure Legno Oak (Laminate suede, wood texture, Merino) - chosen by the designer",
-        "Wall run (wall units + lofts): Stromma White (PU matte, Magickhome) - chosen by the designer",
+        "Base run (base + tall units): Spring Ave (PU matte, Magickhome) - chosen by the designer",
+        "Wall run (wall units + lofts): Cadet Blue (PU matte, Magickhome) - chosen by the designer",
         "Tall units take the base-run finish and lofts take the wall-run finish (finish continuity).",
         "Fillers, slabs, end panels and cover panels take the finish of the run they close (workbook: Filler Panel / Cover End Panel finish must match the cabinets)."
       ],
@@ -400,8 +400,8 @@
     "lofts": false,
     "wall_style": "shutters",
     "finishes": {
-      "base": "MHS135",
-      "wall": "MHS212"
+      "base": "MHS218",
+      "wall": "MHS224"
     },
     "reasons": {
       "layout": "L-shape: window wall plus the solid wall away from the door.",
@@ -696,30 +696,64 @@
   },
   "finishes": {
     "base": {
-      "aid": "MHS135",
-      "code": "PURE-LEGNO-OAK-LAMINATE",
-      "name": "Pure Legno Oak",
-      "category": "Laminate",
-      "family": "Wooden",
-      "shutter": "Suede",
-      "brand": "Merino",
-      "color": null,
-      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS135.jpg",
-      "texture": true,
-      "source": "designer"
-    },
-    "wall": {
-      "aid": "MHS212",
-      "code": "STROMMA-WHITE-PU",
-      "name": "Stromma White",
+      "aid": "MHS218",
+      "code": "SPRING-AVE-PU",
+      "name": "Spring Ave",
       "category": "PU",
       "family": "Solids",
       "shutter": "Matte",
       "brand": "Magickhome",
-      "color": "#F2F2F2",
-      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS212.jpg",
+      "color": "#C9CE94",
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS218.jpg",
       "texture": false,
+      "texture_width": 2438,
+      "texture_height": 2438,
       "source": "designer"
+    },
+    "wall": {
+      "aid": "MHS224",
+      "code": "CADET-BLUE-PU",
+      "name": "Cadet Blue",
+      "category": "PU",
+      "family": "Solids",
+      "shutter": "Matte",
+      "brand": "Magickhome",
+      "color": "#3B5A6E",
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHS224.jpg",
+      "texture": false,
+      "texture_width": 2438,
+      "texture_height": 2438,
+      "source": "designer"
+    },
+    "countertop": {
+      "aid": "MHC015",
+      "code": "MHC015-FINISH",
+      "name": "Ceaserstone Empiria White",
+      "category": "Quartz",
+      "family": "Unknown",
+      "shutter": "Unknown",
+      "brand": "Nil",
+      "color": null,
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHC015.jpg",
+      "texture": true,
+      "texture_width": 1219,
+      "texture_height": 1219,
+      "source": "default"
+    },
+    "backsplash": {
+      "aid": "MHB038",
+      "code": "MHB038-FINISH",
+      "name": "Coimbatore_Backsplash_Parallel",
+      "category": "Tile",
+      "family": "Unknown",
+      "shutter": "Unknown",
+      "brand": "Nil",
+      "color": null,
+      "thumbnail": "https://aid-assertcatalogue-dev.s3.ap-south-1.amazonaws.com/thumbnail-texture/MHB038.jpg",
+      "texture": true,
+      "texture_width": 609,
+      "texture_height": 609,
+      "source": "default"
     },
     "budget": null,
     "tier_rule": "",
@@ -741,5 +775,5 @@
     "filtered_skus": 1065,
     "door_style": "Slab (Plain)"
   },
-  "seconds": 0.27
+  "seconds": 0.94
 }
