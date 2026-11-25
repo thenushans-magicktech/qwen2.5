@@ -31,6 +31,14 @@ OLLAMA_OPTIONS = {
     "num_ctx": 8192,
     "num_predict": 1500,
 }
+# Gemma: the low-end local designer, served by the same Ollama (local or Colab) as Qwen and
+# driven by the same prompt, knowledge pack and enum-locked schema. gemma4:E4B is the small
+# "effective 4B" Gemma 4 (~6.6 GB on disk, Gemma licence - commercial use allowed). Its
+# thinking mode is off by default: the schema-locked JSON answer already carries a reason per
+# decision, and thinking would multiply the CPU time. GEMMA_THINK=1 turns it on.
+GEMMA_MODEL = os.getenv("GEMMA_MODEL", "gemma4:E4B")
+GEMMA_THINK = os.getenv("GEMMA_THINK", "0").strip().lower() not in ("", "0", "false", "no", "off")
+GEMMA_EXPECTED_TIME = os.getenv("GEMMA_EXPECTED_TIME", "2-4 minutes")
 AI_MAX_RETRIES = 1
 AI_SHORTLIST_MIN = 35
 AI_SHORTLIST_MAX = 45
@@ -39,7 +47,7 @@ AI_SHORTLIST_MAX = 45
 # v2 = knowledge pack from KNOWLEDGE_DIR (playbook, cabinet guide, worked examples)
 #      + short option codes; v1 = the original prompt, kept for A/B comparison.
 AI_PROMPT_VERSION = os.getenv("MAGICKHOME_PROMPT_VERSION", "v2")
-# Which AI designer: "qwen" (local / Colab Ollama) or "gemini" (Google API, needs GEMINI_API_KEY in the
+# Which AI designer: "qwen" or "gemma" (local / Colab Ollama) or "gemini" (Google API, needs GEMINI_API_KEY in the
 # environment - never stored in files). A request can override it with preferences.ai_provider.
 AI_PROVIDER = os.getenv("MAGICKHOME_AI_PROVIDER", "qwen")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-flash-latest")

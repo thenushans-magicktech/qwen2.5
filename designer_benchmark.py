@@ -268,6 +268,8 @@ def run_one(room: Room, version: str, ai_mode: str, designer: str = "qwen") -> d
     provider, _, model = designer.partition(":")
     if provider == "gemini" and model:
         config.GEMINI_MODEL = model
+    if provider == "gemma" and model:
+        config.GEMMA_MODEL = model
     label = version if designer == "qwen" else designer
     doc = room.build()
     prefs = KitchenPreferences(ai_mode=ai_mode, ai_provider=provider)
@@ -365,7 +367,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--versions", nargs="+", default=["v2", "v1"], choices=["v1", "v2"])
     ap.add_argument("--designer", default="qwen",
-                    help='"qwen" (Ollama) or "gemini:<model>", e.g. gemini:gemini-flash-latest (needs GEMINI_API_KEY)')
+                    help='"qwen" (Ollama), "gemma" / "gemma:<model>" (Ollama, default gemma4:E4B) or "gemini:<model>", '
+                         'e.g. gemini:gemini-flash-latest (needs GEMINI_API_KEY)')
     ap.add_argument("--rooms", nargs="+", default=["all"])
     ap.add_argument("--ai-mode", default="ollama", choices=["ollama", "fallback", "auto"])
     ap.add_argument("--out", default=str(ROOT / "benchmark"))
@@ -375,7 +378,8 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
     started = time.strftime("%Y-%m-%d %H:%M")
     stamp = time.strftime("%Y%m%d_%H%M%S")
-    model = config.OLLAMA_MODEL if args.designer == "qwen" else args.designer.partition(":")[2]
+    model = (config.OLLAMA_MODEL if args.designer == "qwen"
+             else args.designer.partition(":")[2] or (config.GEMMA_MODEL if args.designer == "gemma" else ""))
     meta = {"model": model, "designer": args.designer, "ai_mode": args.ai_mode, "started": started}
     results = []
     # One version at a time so Ollama can reuse the cached prompt prefix.

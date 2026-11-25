@@ -122,8 +122,8 @@ class KitchenPreferences(BaseModel):
     ai_mode: Literal["auto", "ollama", "fallback"] = Field(
         "auto", description="auto = AI designer with deterministic fallback; ollama = require the AI designer"
     )
-    ai_provider: Optional[Literal["qwen", "gemini"]] = Field(
-        None, description="Which AI designer: qwen (Ollama, local/Colab) or gemini (Google API); None = config default"
+    ai_provider: Optional[Literal["qwen", "gemma", "gemini"]] = Field(
+        None, description="Which AI designer: qwen or gemma (Ollama, local/Colab) or gemini (Google API); None = config default"
     )
     strip_existing_items: bool = True
     include_floor: bool = True
@@ -955,18 +955,25 @@ def _model_names(client) -> set[str]:
 _PULL_LOCK = threading.Lock()
 
 
-def ensure_model(client=None, auto_pull: bool = config.OLLAMA_AUTO_PULL, wait: bool = True) -> None:
+def ollama_model_for(provider: Optional[str]) -> str:
+    """The Ollama model behind an AI provider name ("gemma" -> Gemma, anything else -> Qwen)."""
+    return config.GEMMA_MODEL if provider == "gemma" else config.OLLAMA_MODEL
+
+
+def ensure_model(client=None, auto_pull: bool = config.OLLAMA_AUTO_PULL, wait: bool = True,
+                 model: Optional[str] = None) -> None:
     """Raise :class:`AIUnavailable` unless the Ollama model is ready (pull if missing).
 
-    ``wait=False`` fails fast while another thread is downloading the model, so
-    API requests in ``auto`` mode fall back instead of blocking on a multi-GB pull.
+    ``model`` defaults to ``config.OLLAMA_MODEL`` (Qwen). ``wait=False`` fails fast while
+    another thread is downloading the model, so API requests in ``auto`` mode fall back
+    instead of blocking on a multi-GB pull.
     """
     client = client or _client()
     try:
         names = _model_names(client)
     except Exception as exc:
         raise AIUnavailable(f"Ollama not reachable at {config.OLLAMA_HOST}: {exc}") from exc
-    want = config.OLLAMA_MODEL
+    want = model or config.OLLAMA_MODEL
     if want in names or (":" not in want and f"{want}:latest" in names):
         return
     if not auto_pull:
@@ -1027,23 +1034,29 @@ def build_messages(geometry: RoomGeometry, groups, prefs: KitchenPreferences, ve
 
 
 def design_with_ollama(
-    geometry: RoomGeometry, groups, prefs: KitchenPreferences, client=None, version: Optional[str] = None
+    geometry: RoomGeometry, groups, prefs: KitchenPreferences, client=None, version: Optional[str] = None,
+    provider: str = "qwen",
 ) -> tuple[Proposal, dict]:
+    """Design with a local / Colab Ollama model. ``provider`` "qwen" (default) or "gemma":
+    same prompt, knowledge pack and schema; only the model (and Gemma's thinking switch) differ."""
     version = version or config.AI_PROMPT_VERSION
     client = client or _client()
-    ensure_model(client, wait=prefs.ai_mode == "ollama")
+    model = ollama_model_for(provider)
+    ensure_model(client, wait=prefs.ai_mode == "ollama", model=model)
     messages, Model, to_proposal = build_messages(geometry, groups, prefs, version)
     schema = Model.model_json_schema()
+    extra = {"think": config.GEMMA_THINK} if provider == "gemma" else {}
     errors = []
     for attempt in range(config.AI_MAX_RETRIES + 1):
         t0 = time.time()
         try:
             resp = client.chat(
-                model=config.OLLAMA_MODEL,
+                model=model,
                 messages=messages,
                 format=schema,
                 options=dict(config.OLLAMA_OPTIONS),
                 keep_alive=config.OLLAMA_KEEP_ALIVE,
+                **extra,
             )
         except Exception as exc:
             raise AIUnavailable(f"Ollama chat failed: {exc}") from exc
@@ -1056,8 +1069,9 @@ def design_with_ollama(
             messages.append({"role": "user", "content": f"Invalid JSON for the schema: {exc.errors()[:3]}. Reply again."})
             continue
         info = {
-            "mode": "ollama",
-            "model": config.OLLAMA_MODEL,
+            "mode": "gemma" if provider == "gemma" else "ollama",
+            "provider": provider,
+            "model": model,
             "prompt_version": version,
             "attempts": attempt + 1,
             "seconds": round(time.time() - t0, 1),
@@ -1068,7 +1082,10 @@ def design_with_ollama(
             "load_seconds": _secs(resp, "load_duration"),
             "raw": json.loads(design.model_dump_json()),
         }
-        return to_proposal(design), info
+        proposal = to_proposal(design)
+        if provider == "gemma":
+            proposal.source = "gemma"
+        return proposal, info
     raise AIUnavailable(f"model reply failed schema validation: {errors[-1] if errors else 'unknown'}")
 
 
@@ -1352,12 +1369,14 @@ def design_kitchen(
     info: dict = {"shortlist_size": n, "prompt_version": version}
     if prefs.ai_mode in ("auto", "ollama"):
         try:
-            if (prefs.ai_provider or config.AI_PROVIDER) == "gemini":
+            provider = prefs.ai_provider or config.AI_PROVIDER
+            if provider == "gemini":
                 from gemini_designer import design_with_gemini
 
                 proposal, ai = design_with_gemini(geometry, groups, prefs, version=version)
             else:
-                proposal, ai = design_with_ollama(geometry, groups, prefs, version=version)
+                proposal, ai = design_with_ollama(geometry, groups, prefs, version=version,
+                                                  provider="gemma" if provider == "gemma" else "qwen")
             info.update(ai)
             return proposal, info
         except AIUnavailable as exc:

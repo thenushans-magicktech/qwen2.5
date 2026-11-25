@@ -100,7 +100,7 @@ def explain_design(proposal: Proposal, layout: KitchenLayout, prefs, geometry, c
     for p in layout.placements:
         roles.setdefault(p.role, []).append(p)
     reasons = proposal.reasons or {}
-    designer = {"ollama": "qwen", "gemini": "gemini"}.get(proposal.source, "rules-designer")
+    designer = {"ollama": "qwen", "gemma": "gemma", "gemini": "gemini"}.get(proposal.source, "rules-designer")
     notes = [m for m in layout.decisions + layout.warnings if "hinged" not in m]
 
     def rules(*keys: str) -> list[str]:

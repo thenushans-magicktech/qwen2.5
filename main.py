@@ -40,7 +40,7 @@ from pydantic import BaseModel, ConfigDict, Field
 import config
 import finishes
 import rulebook
-from ai_designer import AIUnavailable, KitchenPreferences, base_storage_need, customer_needs, design_kitchen, ensure_model
+from ai_designer import AIUnavailable, KitchenPreferences, base_storage_need, customer_needs, design_kitchen, ensure_model, ollama_model_for
 from explain import explain_design
 from catalog_loader import available_door_styles, catalog_status, load_catalog, load_filtered_catalog, refresh_catalog
 from rule_engine import SolverError, SolverPrefs, solve_layout, validate_layout
@@ -69,6 +69,9 @@ def generate_kitchen(
         step("Designing with the rule-based designer")
     elif (prefs.ai_provider or config.AI_PROVIDER) == "gemini":
         step(f"Gemini ({config.GEMINI_MODEL}) is designing the kitchen - usually 1-2 minutes")
+    elif (prefs.ai_provider or config.AI_PROVIDER) == "gemma":
+        t = config.GEMMA_EXPECTED_TIME
+        step(f"Gemma ({config.GEMMA_MODEL}) is designing the kitchen - {t if t.split()[0] in ('under', 'over', 'about') else 'about ' + t}")
     else:
         t = config.AI_EXPECTED_TIME
         step(f"Qwen ({config.OLLAMA_MODEL}) is designing the kitchen - {t if t.split()[0] in ('under', 'over', 'about') else 'about ' + t}")
@@ -325,8 +328,11 @@ def _download_name(filename: str, suffix: str) -> str:
 
 def _warmup() -> None:
     try:
-        ensure_model()
-        log.info("Ollama model %s ready", config.OLLAMA_MODEL)
+        # Warm up (and pull if missing) only the default designer's model; the other one is
+        # checked when a design asks for it.
+        model = ollama_model_for(config.AI_PROVIDER)
+        ensure_model(model=model)
+        log.info("Ollama model %s ready", model)
     except AIUnavailable as exc:
         log.warning("AI warm-up: %s (requests will use the deterministic fallback in 'auto' mode)", exc)
     try:
@@ -372,6 +378,11 @@ def health() -> dict:
         ensure_model(auto_pull=False)
     except AIUnavailable as exc:
         status = f"unavailable: {exc}"
+    gemma_status = "ready"
+    try:
+        ensure_model(auto_pull=False, model=config.GEMMA_MODEL)
+    except AIUnavailable as exc:
+        gemma_status = f"unavailable: {exc}"
     return {
         "status": "ok",
         "ollama_model": config.OLLAMA_MODEL,
@@ -380,6 +391,8 @@ def health() -> dict:
         # Gemini is offered in the UI only when the server was started with GEMINI_API_KEY set
         "gemini": {"available": bool(os.environ.get("GEMINI_API_KEY", "").strip()), "model": config.GEMINI_MODEL,
                    "knowledge": config.GEMINI_USE_KNOWLEDGE},
+        "gemma": {"available": gemma_status == "ready", "status": gemma_status, "model": config.GEMMA_MODEL,
+                  "ai_expected_time": config.GEMMA_EXPECTED_TIME},
         "catalog": catalog_status(),
     }
 
@@ -546,6 +559,8 @@ def _cli(argv=None) -> int:
                                                          "without it the designer decides")
     ap.add_argument("--no-tall", action="store_true")
     ap.add_argument("--ai", default="auto", choices=["auto", "ollama", "fallback"])
+    ap.add_argument("--designer", choices=["qwen", "gemma", "gemini"],
+                    help="which AI designer (default: MAGICKHOME_AI_PROVIDER, else qwen)")
     ap.add_argument("--notes", default="", help="design brief for the AI")
     ap.add_argument("--keep-items", action="store_true", help="do not strip existing item nodes")
     ap.add_argument("--seed", type=int)
@@ -573,6 +588,7 @@ def _cli(argv=None) -> int:
         include_loft=True if args.loft else None,  # not given: the designer decides
         include_tall=not args.no_tall,
         ai_mode=args.ai,
+        ai_provider=args.designer,
         style_notes=args.notes,
         strip_existing_items=not args.keep_items,
         seed=args.seed,
