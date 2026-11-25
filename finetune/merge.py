@@ -2,7 +2,7 @@
 
     python finetune/merge.py            # -> finetune/data/train.jsonl, val.jsonl, stats.json
 
-Sources: data/generated.jsonl (teacher on random rooms), data/harvested.jsonl (good UI designs) and
+Sources: data/rules.jsonl (current rules, rules_dataset.py), data/generated.jsonl (teacher on random rooms), data/harvested.jsonl (good UI designs) and
 samples/*.json (hand-made designs; checked against the answer format, broken ones are refused).
 Samples are repeated (--sample-weight, default 3) because a designer's sample is worth more than a
 generated one. About 10% of generated / harvested rows go to val.jsonl to measure the fine-tune.
@@ -29,7 +29,8 @@ def main() -> int:
     ap.add_argument("--val-share", type=float, default=0.1)
     args = ap.parse_args()
 
-    rows = read_jsonl(DATA / "generated.jsonl") + read_jsonl(DATA / "harvested.jsonl")
+    rows = (read_jsonl(DATA / "rules.jsonl") + read_jsonl(DATA / "generated.jsonl")
+            + read_jsonl(DATA / "harvested.jsonl"))
     samples, refused = [], []
     for path in sorted(SAMPLES.glob("*.json")):
         s = json.loads(path.read_text(encoding="utf-8"))

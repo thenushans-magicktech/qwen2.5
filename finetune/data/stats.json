@@ -1,0 +1,19 @@
+{
+  "train_rows": 660,
+  "val_rows": 71,
+  "samples": 0,
+  "refused_samples": [],
+  "by_source": {
+    "rules": 726,
+    "ui": 6
+  },
+  "by_teacher": {
+    "rules-teacher": 726,
+    "gemma4:E4B": 4,
+    "qwen2.5-coder:7b": 2
+  },
+  "approx_tokens_per_row": {
+    "max": 2534,
+    "mean": 2313
+  }
+}
