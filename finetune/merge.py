@@ -2,7 +2,7 @@
 
     python finetune/merge.py            # -> finetune/data/train.jsonl, val.jsonl, stats.json
 
-Sources: data/rules.jsonl (current rules, rules_dataset.py), data/generated.jsonl (teacher on random rooms), data/harvested.jsonl (good UI designs) and
+Sources: data/chat.jsonl (MagickHome assistant chat Q&A, chat_dataset.py), data/rules.jsonl (current rules, rules_dataset.py), data/generated.jsonl (teacher on random rooms), data/harvested.jsonl (good UI designs) and
 samples/*.json (hand-made designs; checked against the answer format, broken ones are refused).
 Samples are repeated (--sample-weight, default 3) because a designer's sample is worth more than a
 generated one. About 10% of generated / harvested rows go to val.jsonl to measure the fine-tune.
@@ -27,10 +27,13 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--sample-weight", type=int, default=3)
     ap.add_argument("--val-share", type=float, default=0.1)
+    ap.add_argument("--no-chat", action="store_true", help="leave out the chat Q&A (data/chat.jsonl)")
     args = ap.parse_args()
 
     rows = (read_jsonl(DATA / "rules.jsonl") + read_jsonl(DATA / "generated.jsonl")
             + read_jsonl(DATA / "harvested.jsonl"))
+    if not args.no_chat:  # MagickHome assistant chat Q&A (chat_dataset.py)
+        rows += read_jsonl(DATA / "chat.jsonl")
     samples, refused = [], []
     for path in sorted(SAMPLES.glob("*.json")):
         s = json.loads(path.read_text(encoding="utf-8"))

@@ -982,14 +982,31 @@ def _llamacpp_headers() -> dict:
 
 
 def list_llamacpp_models() -> list[dict]:
-    """Models served by the optional llama.cpp server (``config.LLAMACPP_URL``), as ``llamacpp:<id>``."""
-    if not config.LLAMACPP_URL:
-        return []
+    """Models served by the optional llama.cpp servers (``config.LLAMACPP_URLS``), as ``llamacpp:<id>``.
+    Servers that do not answer are skipped (raises only when none answers)."""
+    out, errors = [], []
+    for model_id, _url in _llamacpp_servers(errors).items():
+        out.append({"name": LLAMACPP_PREFIX + model_id, "size_gb": None, "family": "llama.cpp"})
+    if not out and errors:
+        raise AIUnavailable("; ".join(errors))
+    return out
+
+
+def _llamacpp_servers(errors: Optional[list] = None) -> dict[str, str]:
+    """model id -> base URL of the llama.cpp server that serves it."""
     import requests
 
-    r = requests.get(f"{config.LLAMACPP_URL}/v1/models", headers=_llamacpp_headers(), timeout=5)
-    r.raise_for_status()
-    return [{"name": LLAMACPP_PREFIX + m["id"], "size_gb": None, "family": "llama.cpp"} for m in r.json().get("data", [])]
+    found = {}
+    for url in config.LLAMACPP_URLS:
+        try:
+            r = requests.get(f"{url}/v1/models", headers=_llamacpp_headers(), timeout=5)
+            r.raise_for_status()
+            for m in r.json().get("data", []):
+                found.setdefault(m["id"], url)
+        except Exception as exc:
+            if errors is not None:
+                errors.append(f"{url}: {exc}")
+    return found
 
 
 def list_local_models(client=None) -> list[dict]:
@@ -1135,8 +1152,11 @@ def design_with_llamacpp(geometry: RoomGeometry, groups, prefs: KitchenPreferenc
     import requests
 
     version = version or config.AI_PROMPT_VERSION
-    if not config.LLAMACPP_URL:
+    if not config.LLAMACPP_URLS:
         raise AIUnavailable("LLAMACPP_URL is not set")
+    server = _llamacpp_servers().get(model_id)
+    if not server:
+        raise AIUnavailable(f"no llama.cpp server is serving '{model_id}' (start it with ./run_llamacpp.sh)")
     knowledge = local_knowledge(model_id)
     messages, Model, to_proposal = build_messages(geometry, groups, prefs, version, knowledge=knowledge)
     schema = Model.model_json_schema()
@@ -1150,7 +1170,7 @@ def design_with_llamacpp(geometry: RoomGeometry, groups, prefs: KitchenPreferenc
             "response_format": {"type": "json_schema", "json_schema": {"name": "kitchen_design", "schema": schema}},
         }
         try:
-            r = requests.post(f"{config.LLAMACPP_URL}/v1/chat/completions", json=body, headers=_llamacpp_headers(),
+            r = requests.post(f"{server}/v1/chat/completions", json=body, headers=_llamacpp_headers(),
                               timeout=config.LLAMACPP_TIMEOUT_S)
             data = r.json()
             if r.status_code != 200 or "error" in data:

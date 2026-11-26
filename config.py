@@ -49,10 +49,13 @@ LOCAL_USE_KNOWLEDGE = os.getenv("LOCAL_USE_KNOWLEDGE", "1").strip().lower() not 
 LOCAL_EXPECTED_TIME = os.getenv("LOCAL_EXPECTED_TIME", "a few minutes")
 # Local models fine-tuned on finetune/ data (knowledge in the weights) get the SHORT prompt automatically:
 # any model whose name contains one of these tags (comma-separated).
-FINETUNED_MODEL_TAGS = [t.strip().lower() for t in os.getenv("FINETUNED_MODEL_TAGS", "magick-gemma").split(",") if t.strip()]
+FINETUNED_MODEL_TAGS = [t.strip().lower() for t in os.getenv("FINETUNED_MODEL_TAGS", "magick-gemma,magick-lfm3,magick-qwen").split(",") if t.strip()]
 # Optional llama.cpp server (llama-server, OpenAI-compatible) for models Ollama cannot run yet (e.g. LFM3).
 # Its models appear in the "Local model" list as "llamacpp:<id>". Start one with ./run_llamacpp.sh.
+# LLAMACPP_URL may list several servers, comma-separated.
 LLAMACPP_URL = os.getenv("LLAMACPP_URL", "").rstrip("/")
+# Several llama.cpp servers (one model each): comma-separated, e.g. http://127.0.0.1:8095,http://127.0.0.1:8096
+LLAMACPP_URLS = [u.strip().rstrip("/") for u in LLAMACPP_URL.split(",") if u.strip()]
 LLAMACPP_API_KEY = os.getenv("LLAMACPP_API_KEY", "")
 LLAMACPP_TIMEOUT_S = float(os.getenv("LLAMACPP_TIMEOUT_S", "1200"))
 LLAMACPP_MAX_TOKENS = int(os.getenv("LLAMACPP_MAX_TOKENS", "2500"))
