@@ -31,3 +31,6 @@ Thumbs.db
 
 # Kept on purpose (offline fallback when the Assets API is unreachable):
 #   data/catalog_api_cache.json, data/texture_api_cache.json
+
+# fine-tuned model files (large)
+finetune/models/

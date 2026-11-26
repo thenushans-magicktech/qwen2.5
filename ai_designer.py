@@ -122,8 +122,12 @@ class KitchenPreferences(BaseModel):
     ai_mode: Literal["auto", "ollama", "fallback"] = Field(
         "auto", description="auto = AI designer with deterministic fallback; ollama = require the AI designer"
     )
-    ai_provider: Optional[Literal["qwen", "gemma", "gemini"]] = Field(
-        None, description="Which AI designer: qwen or gemma (Ollama, local/Colab) or gemini (Google API); None = config default"
+    ai_provider: Optional[Literal["qwen", "gemma", "gemini", "local"]] = Field(
+        None, description="Which AI designer: qwen or gemma (Ollama, local/Colab), gemini (Google API), or local "
+                          "(any other installed Ollama model, named in local_model); None = config default"
+    )
+    local_model: Optional[str] = Field(
+        None, max_length=200, description="Ollama model name for ai_provider='local', e.g. qwen3.5:2b or gemma4:e2b"
     )
     strip_existing_items: bool = True
     include_floor: bool = True
@@ -955,9 +959,100 @@ def _model_names(client) -> set[str]:
 _PULL_LOCK = threading.Lock()
 
 
-def ollama_model_for(provider: Optional[str]) -> str:
-    """The Ollama model behind an AI provider name ("gemma" -> Gemma, anything else -> Qwen)."""
+def ollama_model_for(provider: Optional[str], local_model: Optional[str] = None) -> str:
+    """The Ollama model behind an AI provider name ("gemma" -> Gemma, "local" -> the chosen model, else Qwen)."""
+    if provider == "local":
+        return local_model or config.LOCAL_MODEL
     return config.GEMMA_MODEL if provider == "gemma" else config.OLLAMA_MODEL
+
+
+LLAMACPP_PREFIX = "llamacpp:"
+
+
+def local_knowledge(model: str) -> bool:
+    """Full knowledge prompt for a local model? No for fine-tuned ones (FINETUNED_MODEL_TAGS), else LOCAL_USE_KNOWLEDGE."""
+    name = (model or "").lower()
+    if any(tag in name for tag in config.FINETUNED_MODEL_TAGS):
+        return False
+    return config.LOCAL_USE_KNOWLEDGE
+
+
+def _llamacpp_headers() -> dict:
+    return {"Authorization": f"Bearer {config.LLAMACPP_API_KEY}"} if config.LLAMACPP_API_KEY else {}
+
+
+def list_llamacpp_models() -> list[dict]:
+    """Models served by the optional llama.cpp server (``config.LLAMACPP_URL``), as ``llamacpp:<id>``."""
+    if not config.LLAMACPP_URL:
+        return []
+    import requests
+
+    r = requests.get(f"{config.LLAMACPP_URL}/v1/models", headers=_llamacpp_headers(), timeout=5)
+    r.raise_for_status()
+    return [{"name": LLAMACPP_PREFIX + m["id"], "size_gb": None, "family": "llama.cpp"} for m in r.json().get("data", [])]
+
+
+def list_local_models(client=None) -> list[dict]:
+    """Choices for the 'Local model' designer: installed Ollama models plus llama.cpp server models.
+    Raises only when neither source answers."""
+    out, errors = [], []
+    try:
+        out += _ollama_models(client)
+    except Exception as exc:
+        errors.append(f"Ollama: {exc}")
+    try:
+        out += list_llamacpp_models()
+    except Exception as exc:
+        errors.append(f"llama.cpp: {exc}")
+    if not out and errors:
+        raise AIUnavailable("; ".join(errors))
+    return out
+
+
+# Model architectures and the first Ollama version that runs them. Installed models of these families are hidden
+# from the list on older Ollama versions (they fail with "unknown model architecture"); serve them with
+# run_llamacpp.sh instead, or update Ollama.
+OLLAMA_MIN_VERSION = {"lfm3": (0, 40, 12)}
+
+
+def _ollama_version() -> tuple:
+    import requests
+
+    try:
+        v = requests.get(f"{config.OLLAMA_HOST}/api/version", timeout=3).json().get("version", "")
+        return tuple(int(x) for x in v.split("-")[0].split(".")[:3])
+    except Exception:
+        return ()
+
+
+def _ollama_models(client=None) -> list[dict]:
+    """Installed Ollama models (name, size GB, family) that this Ollama version can run."""
+    client = client or _client()
+    version = _ollama_version()
+    resp = client.list()
+    models = getattr(resp, "models", None) or (resp.get("models", []) if isinstance(resp, dict) else [])
+    out = []
+    for m in models:
+        get = (lambda k: getattr(m, k, None)) if not isinstance(m, dict) else m.get
+        name = get("model") or get("name")
+        if not name:
+            continue
+        det = get("details")
+        fam = getattr(det, "family", None) if det is not None and not isinstance(det, dict) else (det or {}).get("family")
+        need = OLLAMA_MIN_VERSION.get(fam or "")
+        if need and version and version < need:
+            continue  # this Ollama cannot load it - offered through llama.cpp instead
+        out.append({"name": name, "size_gb": round((get("size") or 0) / 1e9, 1), "family": fam})
+    return sorted(out, key=lambda x: x["name"])
+
+
+def _can_think(client, model: str) -> bool:
+    """True when the Ollama model has a thinking mode (Qwen 3.x, Gemma 4 ...) - it is then switched off."""
+    try:
+        caps = getattr(client.show(model), "capabilities", None) or []
+        return "thinking" in caps
+    except Exception:
+        return False
 
 
 def ensure_model(client=None, auto_pull: bool = config.OLLAMA_AUTO_PULL, wait: bool = True,
@@ -1033,21 +1128,84 @@ def build_messages(geometry: RoomGeometry, groups, prefs: KitchenPreferences, ve
     return messages, Model, to_proposal
 
 
+def design_with_llamacpp(geometry: RoomGeometry, groups, prefs: KitchenPreferences, model_id: str,
+                         version: Optional[str] = None) -> tuple[Proposal, dict]:
+    """Design with a model on a llama.cpp server (OpenAI-compatible): same prompt and schema as Ollama.
+    The schema is enforced by the server's JSON-schema grammar; thinking is switched off."""
+    import requests
+
+    version = version or config.AI_PROMPT_VERSION
+    if not config.LLAMACPP_URL:
+        raise AIUnavailable("LLAMACPP_URL is not set")
+    knowledge = local_knowledge(model_id)
+    messages, Model, to_proposal = build_messages(geometry, groups, prefs, version, knowledge=knowledge)
+    schema = Model.model_json_schema()
+    errors = []
+    for attempt in range(config.AI_MAX_RETRIES + 1):
+        t0 = time.time()
+        body = {
+            "model": model_id, "messages": messages, "temperature": 0, "seed": config.OLLAMA_OPTIONS.get("seed", 42),
+            "max_tokens": config.LLAMACPP_MAX_TOKENS,
+            "chat_template_kwargs": {"enable_thinking": False},
+            "response_format": {"type": "json_schema", "json_schema": {"name": "kitchen_design", "schema": schema}},
+        }
+        try:
+            r = requests.post(f"{config.LLAMACPP_URL}/v1/chat/completions", json=body, headers=_llamacpp_headers(),
+                              timeout=config.LLAMACPP_TIMEOUT_S)
+            data = r.json()
+            if r.status_code != 200 or "error" in data:
+                raise RuntimeError(str(data.get("error", data))[:300])
+        except Exception as exc:
+            raise AIUnavailable(f"llama.cpp server failed: {exc}") from exc
+        choice = data["choices"][0]
+        content = choice["message"].get("content") or ""
+        try:
+            design = Model.model_validate_json(content)
+        except ValidationError as exc:
+            note = " (answer cut off - raise LLAMACPP_MAX_TOKENS)" if choice.get("finish_reason") == "length" else ""
+            errors.append(str(exc)[:400] + note)
+            messages = messages + [{"role": "assistant", "content": content},
+                                   {"role": "user", "content": f"Invalid JSON for the schema: {exc.errors()[:3]}. Reply again."}]
+            continue
+        usage, timings = data.get("usage") or {}, data.get("timings") or {}
+        info = {
+            "mode": "local", "provider": "local", "model": LLAMACPP_PREFIX + model_id, "server": "llama.cpp",
+            "knowledge": knowledge, "prompt_version": version, "attempts": attempt + 1,
+            "seconds": round(time.time() - t0, 1),
+            "prompt_tokens": usage.get("prompt_tokens"), "eval_count": usage.get("completion_tokens"),
+            "prompt_seconds": round(timings["prompt_ms"] / 1000, 1) if timings.get("prompt_ms") else None,
+            "eval_seconds": round(timings["predicted_ms"] / 1000, 1) if timings.get("predicted_ms") else None,
+            "raw": json.loads(design.model_dump_json()),
+        }
+        proposal = to_proposal(design)
+        proposal.source = "local"
+        return proposal, info
+    raise AIUnavailable(f"model reply failed schema validation: {errors[-1] if errors else 'unknown'}")
+
+
 def design_with_ollama(
     geometry: RoomGeometry, groups, prefs: KitchenPreferences, client=None, version: Optional[str] = None,
     provider: str = "qwen",
 ) -> tuple[Proposal, dict]:
-    """Design with a local / Colab Ollama model. ``provider`` "qwen" (default) or "gemma":
-    same prompt, knowledge pack and schema; only the model (and Gemma's thinking switch) differ."""
+    """Design with a local / Colab Ollama model. ``provider`` "qwen" (default), "gemma" or "local" (any
+    installed model, ``prefs.local_model``): same prompt, knowledge pack and schema; only the model differs.
+    Models with a thinking mode get it switched off (the answer already carries a reason per decision)."""
     version = version or config.AI_PROMPT_VERSION
     client = client or _client()
-    model = ollama_model_for(provider)
-    ensure_model(client, wait=prefs.ai_mode == "ollama", model=model)
+    model = ollama_model_for(provider, prefs.local_model)
+    # a local model must already be installed: no multi-GB download in the middle of a design
+    ensure_model(client, wait=prefs.ai_mode == "ollama", model=model, auto_pull=provider != "local")
     # A fine-tuned Gemma (finetune/) has the knowledge pack in its weights: send the short prompt.
-    knowledge = config.GEMMA_USE_KNOWLEDGE if provider == "gemma" else True
+    knowledge = (config.GEMMA_USE_KNOWLEDGE if provider == "gemma"
+                 else local_knowledge(model) if provider == "local" else True)
     messages, Model, to_proposal = build_messages(geometry, groups, prefs, version, knowledge=knowledge)
     schema = Model.model_json_schema()
-    extra = {"think": config.GEMMA_THINK} if provider == "gemma" else {}
+    if provider == "gemma":
+        extra = {"think": config.GEMMA_THINK}
+    elif provider == "local" and _can_think(client, model):
+        extra = {"think": False}
+    else:
+        extra = {}
     errors = []
     for attempt in range(config.AI_MAX_RETRIES + 1):
         t0 = time.time()
@@ -1061,7 +1219,11 @@ def design_with_ollama(
                 **extra,
             )
         except Exception as exc:
-            raise AIUnavailable(f"Ollama chat failed: {exc}") from exc
+            msg = str(exc)
+            if "unknown model architecture" in msg:
+                msg = (f"Ollama {'.'.join(map(str, _ollama_version())) or ''} cannot run {model} ({msg.split(':')[-1].strip()[:60]}). "
+                       "Update Ollama, or serve it with ./run_llamacpp.sh and pick its llamacpp: entry.")
+            raise AIUnavailable(f"Ollama chat failed: {msg}") from exc
         content = resp.message.content if hasattr(resp, "message") else resp["message"]["content"]
         try:
             design = Model.model_validate_json(content)
@@ -1071,7 +1233,7 @@ def design_with_ollama(
             messages.append({"role": "user", "content": f"Invalid JSON for the schema: {exc.errors()[:3]}. Reply again."})
             continue
         info = {
-            "mode": "gemma" if provider == "gemma" else "ollama",
+            "mode": {"gemma": "gemma", "local": "local"}.get(provider, "ollama"),
             "provider": provider,
             "model": model,
             "knowledge": knowledge,
@@ -1086,8 +1248,8 @@ def design_with_ollama(
             "raw": json.loads(design.model_dump_json()),
         }
         proposal = to_proposal(design)
-        if provider == "gemma":
-            proposal.source = "gemma"
+        if provider in ("gemma", "local"):
+            proposal.source = provider
         return proposal, info
     raise AIUnavailable(f"model reply failed schema validation: {errors[-1] if errors else 'unknown'}")
 
@@ -1377,9 +1539,12 @@ def design_kitchen(
                 from gemini_designer import design_with_gemini
 
                 proposal, ai = design_with_gemini(geometry, groups, prefs, version=version)
+            elif provider == "local" and (prefs.local_model or "").startswith(LLAMACPP_PREFIX):
+                proposal, ai = design_with_llamacpp(geometry, groups, prefs, prefs.local_model[len(LLAMACPP_PREFIX):],
+                                                    version=version)
             else:
                 proposal, ai = design_with_ollama(geometry, groups, prefs, version=version,
-                                                  provider="gemma" if provider == "gemma" else "qwen")
+                                                  provider=provider if provider in ("gemma", "local") else "qwen")
             info.update(ai)
             return proposal, info
         except AIUnavailable as exc:

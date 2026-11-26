@@ -110,7 +110,8 @@ textarea { min-height: 72px; resize: vertical; }
 .choice { display: grid; gap: 8px; }
 .choice.three { grid-template-columns: repeat(3, 1fr); }
 .choice.four { grid-template-columns: repeat(4, 1fr); }
-@media (max-width: 400px) { .choice.four { grid-template-columns: repeat(2, 1fr); } }
+.choice.five { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 400px) { .choice.four, .choice.five { grid-template-columns: repeat(2, 1fr); } }
 .choice input { position: absolute; opacity: 0; pointer-events: none; }
 .choice label { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; padding: 10px 6px; border: 1.5px solid var(--line); border-radius: 12px; cursor: pointer; background: var(--panel); user-select: none; transition: border-color .12s, background .12s, box-shadow .12s; min-height: 60px; }
 .choice label:hover { border-color: var(--accent); }
@@ -361,6 +362,7 @@ ul.rules-applied .chg { display: block; color: var(--warn); margin-top: 2px; }
 .steps li.warnline .mk { color: var(--warn); }
 .src { font-size: 11px; font-weight: 700; padding: 1px 8px; border-radius: 999px; }
 .src.qwen { background: var(--accent-soft); color: var(--accent); }
+.src.local { background: color-mix(in srgb, #16a085 14%, transparent); color: #1abc9c; }
 .src.gemma { background: color-mix(in srgb, #1a73e8 14%, transparent); color: #4285f4; }
 .src.gemini { background: color-mix(in srgb, #8e44ad 14%, transparent); color: #9b59b6; }
 .src.customer { background: var(--ok-soft); color: var(--ok); }
@@ -579,15 +581,22 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
 
       <div class="field">
         <span class="label" id="lbl-designer">Who designs it?</span>
-        <div class="choice four" role="radiogroup" aria-labelledby="lbl-designer">
+        <div class="choice five" role="radiogroup" aria-labelledby="lbl-designer">
           <input type="radio" name="ai" id="ai-qwen" value="auto" checked>
           <label for="ai-qwen" data-ico="chip"><b>Qwen</b><small id="ai-time">AI designer · a few minutes</small></label>
           <input type="radio" name="ai" id="ai-gemma" value="gemma" disabled>
           <label for="ai-gemma" id="lbl-gemma" data-ico="chip" title="Install the Gemma model in Ollama to enable it"><b>Gemma</b><small id="gemma-time">light AI · not installed</small></label>
           <input type="radio" name="ai" id="ai-gemini" value="gemini" disabled>
           <label for="ai-gemini" id="lbl-gemini" data-ico="sparkle" title="Start the server with GEMINI_API_KEY set to enable Gemini"><b>Gemini</b><small id="gemini-time">Google AI · not set up</small></label>
+          <input type="radio" name="ai" id="ai-local" value="local" disabled>
+          <label for="ai-local" id="lbl-local" data-ico="chip" title="Any model installed in Ollama (for testing)"><b>Local model</b><small id="local-time">any Ollama model · none found</small></label>
           <input type="radio" name="ai" id="ai-rules" value="fallback">
           <label for="ai-rules" data-ico="ruler"><b>Quick rules</b><small>standard · seconds</small></label>
+        </div>
+        <div id="local-pick" class="hidden" style="margin-top:8px">
+          <label class="label" for="local-model">Which local model</label>
+          <select id="local-model"></select>
+          <small class="sub" id="local-note">Plain models get the full MagickHome knowledge in the prompt. Install more with: ollama pull &lt;model&gt;</small>
         </div>
       </div>
 
@@ -2835,6 +2844,17 @@ window.dispatchEvent(new Event("kv3d-ready"));
       state.aiTime = h.ai_expected_time || state.aiTime;
       state.model = h.ollama_model;
       if (state.aiTime) $("#ai-time").textContent = `AI designer · ${/^(under|over|about)/.test(state.aiTime) ? state.aiTime : "about " + state.aiTime}`;
+      const lm = h.local || {};
+      const models = (lm.models || []).map((m) => m.name);
+      const sel = $("#local-model"), keep = sel.value || state.localModel || lm.default;
+      sel.innerHTML = (lm.models || []).map((m) => `<option value="${esc(m.name)}">${esc(m.name)}${m.size_gb ? ` (${m.size_gb} GB)` : ""}</option>`).join("");
+      if (models.includes(keep)) sel.value = keep;
+      state.localTime = lm.ai_expected_time || "a few minutes";
+      $("#ai-local").disabled = !models.length;
+      $("#local-time").textContent = models.length ? `any Ollama model · ${models.length} installed` : "any Ollama model · none found";
+      $("#lbl-local").title = models.length ? "Test any installed Ollama model (plain models get the full knowledge prompt)" : (lm.status || "Start Ollama and install a model: ollama pull <model>");
+      if (!models.length && $("#ai-local").checked) $("#ai-qwen").checked = true;
+      $("#local-pick").classList.toggle("hidden", !$("#ai-local").checked);
       const gm = h.gemma || {};
       state.gemmaTime = gm.ai_expected_time || state.gemmaTime;
       $("#ai-gemma").disabled = !gm.available;
@@ -3462,13 +3482,14 @@ window.dispatchEvent(new Event("kv3d-ready"));
   }
   // highlight the chosen cooking / sink walls in the top view
   ["#need-hobwall", "#need-sinkwall"].forEach((sel) => $(sel).addEventListener("change", () => { if (state.tab === "plan") render(); }));
-  const designerChoice = () => document.querySelector('input[name="ai"]:checked').value;  // auto | gemma | gemini | fallback
+  const designerChoice = () => document.querySelector('input[name="ai"]:checked').value;  // auto | gemma | gemini | local | fallback
   function updateHint() {
     if (!state.input) { $("#go-hint").textContent = "Add a floor plan to start."; return; }
     const d = designerChoice();
     const about = (t) => t ? (/^(under|over|about)/.test(t) ? "" : "about ") + t : "a few minutes";
     $("#go-hint").textContent = d === "gemini" ? "Gemini (Google AI) takes about 1-2 minutes; the room facts and brief are sent to Google."
       : d === "gemma" ? `Gemma takes ${about(state.gemmaTime)}; it runs on your Ollama like Qwen.`
+      : d === "local" ? `${$("#local-model").value || "The local model"} runs on your Ollama - speed depends on its size.`
       : d === "auto" ? `Qwen takes ${state.aiTime ? (/^(under|over|about)/.test(state.aiTime) ? "" : "about ") + state.aiTime : "a few minutes"}.` : "Ready in a few seconds.";
   }
   // "Let the designer decide" names the designer: Qwen / Gemini decides (and explains why), or the quick rules do.
@@ -3476,14 +3497,18 @@ window.dispatchEvent(new Event("kv3d-ready"));
   const DECIDE = ["#need-pur", "#need-tower", "#need-disp", "#need-base", "#need-loft", "#need-wallstyle", "#need-open", "#need-crock", "#need-hobwall", "#need-sinkwall"];
   function updateDecideLabels() {
     const d = designerChoice();
-    const text = d === "gemini" ? "Let Gemini decide" : d === "gemma" ? "Let Gemma decide" : d === "auto" ? "Let Qwen decide" : "Standard choice";
+    const text = d === "gemini" ? "Let Gemini decide" : d === "gemma" ? "Let Gemma decide" : d === "local" ? "Let the model decide" : d === "auto" ? "Let Qwen decide" : "Standard choice";
     DECIDE.forEach((sel) => {
       const opt = $(sel) && $(sel).querySelector('option[value="auto"], option[value=""]');
       if (opt) opt.textContent = text;
     });
     refreshSegs();
   }
-  $$('input[name="ai"]').forEach((el) => el.addEventListener("change", () => { updateHint(); updateDecideLabels(); }));
+  $$('input[name="ai"]').forEach((el) => el.addEventListener("change", () => {
+    $("#local-pick").classList.toggle("hidden", designerChoice() !== "local");
+    updateHint(); updateDecideLabels();
+  }));
+  $("#local-model").addEventListener("change", () => { state.localModel = $("#local-model").value; updateHint(); });
   function readFile(file) {
     if (!file) return;
     if (file.size > 50 * 1024 * 1024) return showFileError("That file is larger than 50 MB.");
@@ -3526,7 +3551,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
     const ai = designerChoice();
     const p = {
       ai_mode: ai === "fallback" ? "fallback" : state.strict ? "ollama" : "auto",
-      ai_provider: ai === "gemini" || ai === "gemma" ? ai : "qwen",
+      ai_provider: ["gemini", "gemma", "local"].includes(ai) ? ai : "qwen",
+      local_model: ai === "local" ? $("#local-model").value : null,
       layout: document.querySelector('input[name="layout"]:checked').value,
       door_style: $("#style").value,
       include_tall: $("#tall").checked,
@@ -3593,8 +3619,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
     $("#p-stage").textContent = "Starting…";
     $("#p-steps").innerHTML = "";
     $("#p-bar").style.width = "0%";
-    const gemini = isAI === "gemini", gemma = isAI === "gemma";
-    const aiTime = gemma ? state.gemmaTime : state.aiTime;
+    const gemini = isAI === "gemini", gemma = isAI === "gemma", local = isAI === "local";
+    const aiTime = gemma ? state.gemmaTime : local ? state.localTime : state.aiTime;
     $("#p-eta").textContent = gemini ? "usually about 1-2 minutes" : isAI ? `usually ${aiTime ? (/^(under|over|about)/.test(aiTime) ? "" : "about ") + aiTime : "a few minutes"}` : "a few seconds";
     state.started = Date.now();
     clearInterval(state.tick);
@@ -3614,7 +3640,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
     $("#go").textContent = "Designing…";
     setStep(3);
     hideResults();
-    startProgress(p.ai_mode === "fallback" ? false : p.ai_provider === "gemini" || p.ai_provider === "gemma" ? p.ai_provider : true);
+    startProgress(p.ai_mode === "fallback" ? false : ["gemini", "gemma", "local"].includes(p.ai_provider) ? p.ai_provider : true);
     document.getElementById("view-card").scrollIntoView({ behavior: "smooth", block: "start" });
     try {
       const job = await api("/api/jobs", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ scene: state.input, preferences: p, filename: state.filename }) });
@@ -3695,9 +3721,10 @@ window.dispatchEvent(new Event("kv3d-ready"));
   function askedDesigner(job, ai) {
     const log = (job.log || []).map((s) => s.msg).join("\n"), why = String(ai.fallback_reason || "");
     if (/^Gemini\b/m.test(log) || /gemini/i.test(why)) return "gemini";
+    if (/^Local model\b/m.test(log)) return "local";
     if (/^Gemma\b/m.test(log) || /gemma/i.test(why)) return "gemma";
     if (/^Qwen\b/m.test(log) || /ollama|qwen|colab/i.test(why)) return "qwen";
-    if (state.lastPrefs && state.lastPrefs.ai_mode !== "fallback") return ["gemini", "gemma"].includes(state.lastPrefs.ai_provider) ? state.lastPrefs.ai_provider : "qwen";
+    if (state.lastPrefs && state.lastPrefs.ai_mode !== "fallback") return ["gemini", "gemma", "local"].includes(state.lastPrefs.ai_provider) ? state.lastPrefs.ai_provider : "qwen";
     return null;
   }
   // plain-language reasons from the backend's technical text (several models can fail differently)
@@ -3720,7 +3747,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
   function retryWith(asked) {
     const base = state.lastPrefs || prefs();
     const p = { ...base, ai_provider: asked, ai_mode: state.strict ? "ollama" : "auto" };
-    const radio = asked === "gemini" ? $("#ai-gemini") : asked === "gemma" ? $("#ai-gemma") : $("#ai-qwen");
+    const radio = asked === "gemini" ? $("#ai-gemini") : asked === "gemma" ? $("#ai-gemma") : asked === "local" ? $("#ai-local") : $("#ai-qwen");
     if (radio && !radio.disabled) { radio.checked = true; updateHint(); updateDecideLabels(); }
     if (!state.input && state.output) {  // re-opened job link: the finished scene is a valid plan (its items are replaced)
       state.input = state.output;
@@ -3740,8 +3767,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
     const r = job.report, ai = r.ai || {}, lay = r.layout || {}, prop = r.proposal || {};
     const placements = Object.entries(lay.placements || {}).flatMap(([wid, ps]) => ps.map((p) => ({ ...p, wall: wid })));
     const byRole = (role) => placements.filter((p) => p.role === role);
-    const isAI = ai.mode === "ollama" || ai.mode === "gemma" || ai.mode === "gemini";
-    const who = ai.mode === "gemini" ? "Gemini" : ai.mode === "gemma" ? "Gemma" : "Qwen";
+    const isAI = ["ollama", "gemma", "gemini", "local"].includes(ai.mode);
+    const who = ai.mode === "gemini" ? "Gemini" : ai.mode === "gemma" ? "Gemma" : ai.mode === "local" ? (ai.model || "Local model") : "Qwen";
     const modelName = ai.mode === "gemini" ? ai.model : prettyModel(ai.model);
     const walls = lay.cabinet_walls || [];
     const counts = r.nodes_added || {};
@@ -3760,7 +3787,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
     ].map(([v, l]) => `<div class="kpi"><b>${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
     // the AI designer failed and the rules designer stood in: say so clearly, offer a retry
     state.jobFilename = job.filename;
-    const asked = askedDesigner(job, ai), askedName = asked === "gemini" ? "Gemini" : asked === "gemma" ? "Gemma" : asked === "qwen" ? "Qwen" : "The AI designer";
+    const asked = askedDesigner(job, ai), askedName = asked === "gemini" ? "Gemini" : asked === "gemma" ? "Gemma" : asked === "local" ? "The local model" : asked === "qwen" ? "Qwen" : "The AI designer";
     const fb = $("#fallback-box"), failed = ai.mode === "fallback" && !!ai.fallback_reason;
     document.querySelector(".workspace").classList.toggle("fallback", failed);  // the warning goes above the 3D stage
     if (failed) {
@@ -3799,8 +3826,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
     $("#ai-notes").innerHTML = notes;
 
     const src = state.output || state.input;
-    const SRC = { qwen: "Qwen", gemma: "Gemma", gemini: "Gemini", customer: "Your requirement", "rules-designer": "Quick rules", rules: "Design rules" };
-    const WHY = { qwen: "Why (Qwen's reasoning)", gemma: "Why (Gemma's reasoning)", gemini: "Why (Gemini's reasoning)", customer: "Why",
+    const SRC = { qwen: "Qwen", gemma: "Gemma", local: "Local model", gemini: "Gemini", customer: "Your requirement", "rules-designer": "Quick rules", rules: "Design rules" };
+    const WHY = { qwen: "Why (Qwen's reasoning)", gemma: "Why (Gemma's reasoning)", local: "Why (the model's reasoning)", gemini: "Why (Gemini's reasoning)", customer: "Why",
                   "rules-designer": "Why (quick rules)", rules: "Why (design rule)" };
     const exp = r.explanation || [];
     $("#explain").innerHTML = exp.map((e) => `<li>

@@ -40,7 +40,7 @@ from pydantic import BaseModel, ConfigDict, Field
 import config
 import finishes
 import rulebook
-from ai_designer import AIUnavailable, KitchenPreferences, base_storage_need, customer_needs, design_kitchen, ensure_model, ollama_model_for
+from ai_designer import AIUnavailable, KitchenPreferences, base_storage_need, customer_needs, design_kitchen, ensure_model, list_local_models, ollama_model_for
 from explain import explain_design
 from catalog_loader import available_door_styles, catalog_status, load_catalog, load_filtered_catalog, refresh_catalog
 from rule_engine import SolverError, SolverPrefs, solve_layout, validate_layout
@@ -69,6 +69,8 @@ def generate_kitchen(
         step("Designing with the rule-based designer")
     elif (prefs.ai_provider or config.AI_PROVIDER) == "gemini":
         step(f"Gemini ({config.GEMINI_MODEL}) is designing the kitchen - usually 1-2 minutes")
+    elif (prefs.ai_provider or config.AI_PROVIDER) == "local":
+        step(f"Local model ({prefs.local_model or config.LOCAL_MODEL}) is designing the kitchen - {config.LOCAL_EXPECTED_TIME}")
     elif (prefs.ai_provider or config.AI_PROVIDER) == "gemma":
         t = config.GEMMA_EXPECTED_TIME
         step(f"Gemma ({config.GEMMA_MODEL}) is designing the kitchen - {t if t.split()[0] in ('under', 'over', 'about') else 'about ' + t}")
@@ -371,6 +373,15 @@ mimetypes.add_type("text/javascript", ".js")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
+def _local_models() -> dict:
+    """Installed Ollama models for the 'Local model' designer (empty when Ollama is not reachable)."""
+    try:
+        return {"available": True, "models": list_local_models(), "default": config.LOCAL_MODEL,
+                "ai_expected_time": config.LOCAL_EXPECTED_TIME, "knowledge": config.LOCAL_USE_KNOWLEDGE}
+    except Exception as exc:
+        return {"available": False, "models": [], "status": f"unavailable: {exc}"}
+
+
 @app.get("/health")
 def health() -> dict:
     status = "ready"
@@ -393,6 +404,7 @@ def health() -> dict:
                    "knowledge": config.GEMINI_USE_KNOWLEDGE},
         "gemma": {"available": gemma_status == "ready", "status": gemma_status, "model": config.GEMMA_MODEL,
                   "ai_expected_time": config.GEMMA_EXPECTED_TIME},
+        "local": _local_models(),
         "catalog": catalog_status(),
     }
 
@@ -559,7 +571,8 @@ def _cli(argv=None) -> int:
                                                          "without it the designer decides")
     ap.add_argument("--no-tall", action="store_true")
     ap.add_argument("--ai", default="auto", choices=["auto", "ollama", "fallback"])
-    ap.add_argument("--designer", choices=["qwen", "gemma", "gemini"],
+    ap.add_argument("--local-model", help="Ollama model for --designer local, e.g. qwen3.5:2b")
+    ap.add_argument("--designer", choices=["qwen", "gemma", "gemini", "local"],
                     help="which AI designer (default: MAGICKHOME_AI_PROVIDER, else qwen)")
     ap.add_argument("--notes", default="", help="design brief for the AI")
     ap.add_argument("--keep-items", action="store_true", help="do not strip existing item nodes")
@@ -589,6 +602,7 @@ def _cli(argv=None) -> int:
         include_tall=not args.no_tall,
         ai_mode=args.ai,
         ai_provider=args.designer,
+        local_model=args.local_model,
         style_notes=args.notes,
         strip_existing_items=not args.keep_items,
         seed=args.seed,

@@ -42,6 +42,20 @@ GEMMA_EXPECTED_TIME = os.getenv("GEMMA_EXPECTED_TIME", "2-4 minutes")
 # 1 (default): Gemma gets the full knowledge pack in the prompt, like Qwen. 0: the short prompt only
 # (room, menu, needs) - for a Gemma fine-tuned on finetune/ data, which has the knowledge in its weights.
 GEMMA_USE_KNOWLEDGE = os.getenv("GEMMA_USE_KNOWLEDGE", "1").strip().lower() not in ("", "0", "false", "no", "off")
+# "Local model" designer: ANY installed Ollama model, picked in the UI (for testing plain Qwen / Gemma / Llama ...
+# models of any size). Plain models get the full knowledge pack; set LOCAL_USE_KNOWLEDGE=0 for a fine-tuned one.
+LOCAL_MODEL = os.getenv("LOCAL_MODEL", "qwen3.5:2b")
+LOCAL_USE_KNOWLEDGE = os.getenv("LOCAL_USE_KNOWLEDGE", "1").strip().lower() not in ("", "0", "false", "no", "off")
+LOCAL_EXPECTED_TIME = os.getenv("LOCAL_EXPECTED_TIME", "a few minutes")
+# Local models fine-tuned on finetune/ data (knowledge in the weights) get the SHORT prompt automatically:
+# any model whose name contains one of these tags (comma-separated).
+FINETUNED_MODEL_TAGS = [t.strip().lower() for t in os.getenv("FINETUNED_MODEL_TAGS", "magick-gemma").split(",") if t.strip()]
+# Optional llama.cpp server (llama-server, OpenAI-compatible) for models Ollama cannot run yet (e.g. LFM3).
+# Its models appear in the "Local model" list as "llamacpp:<id>". Start one with ./run_llamacpp.sh.
+LLAMACPP_URL = os.getenv("LLAMACPP_URL", "").rstrip("/")
+LLAMACPP_API_KEY = os.getenv("LLAMACPP_API_KEY", "")
+LLAMACPP_TIMEOUT_S = float(os.getenv("LLAMACPP_TIMEOUT_S", "1200"))
+LLAMACPP_MAX_TOKENS = int(os.getenv("LLAMACPP_MAX_TOKENS", "2500"))
 AI_MAX_RETRIES = 1
 AI_SHORTLIST_MIN = 35
 AI_SHORTLIST_MAX = 45
