@@ -71,6 +71,9 @@ family wants and fill the JSON:
 
 - Set a field ONLY when the brief clearly asks for it (directly or by an obvious need: "we bake every weekend"
   -> an oven; "reheat food a lot" -> a microwave; "big family, need storage" -> drawers). Otherwise "auto".
+- Tall cabinets / tall units / tall cupboards / pantry towers mean tall_units=yes. "No tall cabinets", "minimal
+  cupboards", or "no tall storage" means tall_units=no. Tall cabinets should normally be included by the
+  designer when the customer asks for them.
 - Never guess walls: set cooking_wall / sink_wall / cabinet_walls only when the brief names a wall, or a wall
   feature that identifies exactly one wall (e.g. "sink near the window" when only one wall has a window).
   The sink wall must be a wall that meets the cooking wall at a corner (listed as "corners with"), or the same
@@ -201,8 +204,16 @@ def apply_reading(reading: dict, prefs, geometry, text: str) -> tuple[Any, dict]
     if lofts in ("yes", "no"):
         want("include_loft", lofts == "yes", "Lofts", lofts, prefs.include_loft is None,
              "yes" if prefs.include_loft else "no")
-    if reading.get("tall_units") == "no" and prefs.include_tall:
-        want("include_tall", False, "Tall units", "no", True)
+    tall_units = reading.get("tall_units")
+    if tall_units in ("yes", "no"):
+        requested = tall_units == "yes"
+        if tall_units == "yes" and not prefs.include_tall:
+            kept.append("Tall units: the brief asks for tall cabinets, but the form says no - form kept")
+        elif tall_units == "no" and prefs.include_tall:
+            upd["include_tall"] = False
+            applied.append({"setting": "Tall units", "value": tall_units, "field": "include_tall"})
+        else:
+            applied.append({"setting": "Tall units", "value": tall_units, "field": "include_tall"})
     size = reading.get("household_size")
     if isinstance(size, int) and 1 <= size <= 20:
         want("household_size", size, "Household", f"{size} people", prefs.household_size is None, f"{prefs.household_size} people")

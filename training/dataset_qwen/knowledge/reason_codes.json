@@ -1,0 +1,13 @@
+{
+ "RULE_Rn": "Rule n of the rule sheet set or limited this decision (text in knowledge/rules.json).",
+ "CUSTOMER_LAYOUT / CUSTOMER_WALLS": "The customer chose the kitchen shape / the cabinet walls.",
+ "CUSTOMER_COOKING_WALL / CUSTOMER_SINK_WALL": "The customer chose the hob wall (R24) / sink wall (R25).",
+ "CUSTOMER_FUEL_x": "The customer's hob fuel (LPG / PNG / induction) - R11.",
+ "CUSTOMER_<FIELD>": "A need the customer stated in the form (built-in, crockery, purifier, display, open, storage, wall style).",
+ "CUSTOMER_NO_TALL / CUSTOMER_LOFTS": "The customer does not want tall storage / stated lofts yes or no.",
+ "CUSTOMER_BUDGET_x": "The budget tier (Essential / Premium / Luxury).",
+ "CUSTOMER_BRIEF": "The customer's written brief asked for it (habits, colours, look).",
+ "ROOM_CEILING_ALLOWS_LOFTS / ROOM_CEILING_TOO_LOW": "The ceiling height decides whether lofts fit.",
+ "ENGINE_ADJUSTED": "The placement engine changed the designer's choice to fit the room or a rule.",
+ "DESIGNER_CHOICE": "No rule or customer need decided it: the designer's own judgement (see the written reason)."
+}

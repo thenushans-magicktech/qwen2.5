@@ -1,0 +1,66 @@
+2026-11-26 11:46:45 start: designer qwen qwen2.5:14b, 112 real rooms, 0/50 kept so far, next example 0
+2026-11-26 11:55:48 start: designer qwen qwen2.5:14b, 112 real rooms, 0/50 kept so far, next example 0
+2026-11-26 11:55:48 example 0: db room (4 walls), Slab (Plain), shape single - designing
+2026-11-26 11:57:21   design 1/2: rejected - sink moved to (93 s)
+2026-11-26 11:59:25   design 2/2: rejected - sink moved to (124 s)
+2026-11-26 11:59:25 example 0: generated room (4 walls), Slab (Plain), shape single - designing
+2026-11-26 12:03:17 start: designer qwen qwen2.5:14b, 112 real rooms, 0/50 kept so far, next example 1
+2026-11-26 12:03:17 example 1: generated room (4 walls), Shaker 1, shape L - designing
+2026-11-26 12:10:40 start: designer qwen qwen2.5:14b, 112 real rooms, 0/50 kept so far, next example 2
+2026-11-26 12:10:40 example 2: generated room (4 walls), Slab (Plain), shape U - designing
+2026-11-26 12:11:59   design 1: rejected - breaks R26 (79 s)
+2026-11-26 12:13:54 PAUSED at example 2: Colab stopped answering: ResponseError: {"type":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/error-502/","title":"Error 502: Bad gateway","status"
+2026-11-26 12:13:54 Restart the Colab notebook (Run all) and run the new command it prints - the run continues here.
+2026-11-26 12:13:54 saved: 0 examples in C:\Users\ThenushanSritharan\Downloads\qwen2.5\training\dataset_qwen\scratch (tables rebuilt)
+2026-11-26 12:13:59 PAUSED at example 2: Colab stopped answering: ResponseError: {"type":"https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-1xxx-errors/error-1033/","title":"Error 1033: Cloudflare Tunnel 
+2026-11-26 12:13:59 Restart the Colab notebook (Run all) and run the new command it prints - the run continues here.
+2026-11-26 12:13:59 saved: 0 examples in C:\Users\ThenushanSritharan\Downloads\qwen2.5\training\dataset_qwen\scratch (tables rebuilt)
+2026-11-26 12:21:45 start: designer qwen qwen2.5-coder:7b, 112 real rooms, 0/50 kept so far, next example 2
+2026-11-26 12:21:45 example 2: generated room (4 walls), Slab (Plain), shape U - designing
+2026-11-26 12:22:37   design 1: rejected - breaks R26 (51 s)
+2026-11-26 12:23:07   design 2: rejected - breaks R26 (30 s)
+2026-11-26 12:23:07 example 2: db room (4 walls), Slab (Plain), shape U - designing
+2026-11-26 12:23:45   design 1: passed every rule (38 s)
+2026-11-26 12:23:45 1/50 kept (db, Slab (Plain), 3 walls) - 2.0 min each, ~1.6 h left
+2026-11-26 12:23:45 example 3: db room (4 walls), Shaker 1, shape single - designing
+2026-11-26 12:24:18   design 1: passed every rule (33 s)
+2026-11-26 12:24:18 2/50 kept (db, Shaker 1, 1 walls) - 1.3 min each, ~1.0 h left
+2026-11-26 12:24:18 example 4: variant room (4 walls), Slab (Plain), shape U - designing
+2026-11-26 12:24:56   design 1: passed every rule (38 s)
+2026-11-26 12:24:56 3/50 kept (variant, Slab (Plain), 3 walls) - 1.1 min each, ~0.8 h left
+2026-11-26 12:24:56 example 5: variant room (8 walls), Shaker 1, shape U - designing
+2026-11-26 12:25:33   design 1: rejected - breaks R69 (37 s)
+2026-11-26 12:26:07   design 2: rejected - breaks R58 (34 s)
+2026-11-26 12:26:07 example 5: variant room (4 walls), Slab (Plain), shape L - designing
+2026-11-26 12:26:46   design 1: passed every rule (39 s)
+2026-11-26 12:26:46 4/50 kept (variant, Slab (Plain), 2 walls) - 1.3 min each, ~1.0 h left
+2026-11-26 12:26:46 example 6: generated room (4 walls), Slab (Plain), shape auto - designing
+2026-11-26 12:27:32 start: designer qwen qwen2.5-coder:7b, 112 real rooms, 4/50 kept so far, next example 6
+2026-11-26 12:27:32 example 6: generated room (4 walls), Slab (Plain), shape auto - designing
+2026-11-26 12:28:37   design 1: passed every rule (65 s)
+2026-11-26 12:28:37 5/50 kept (generated, Slab (Plain), 3 walls) - 1.1 min each, ~0.8 h left
+2026-11-26 12:28:37 example 7: db room (4 walls), Slab (Plain), shape L - designing
+2026-11-26 12:29:05   design 1: passed every rule (27 s)
+2026-11-26 12:29:05 6/50 kept (db, Slab (Plain), 2 walls) - 0.8 min each, ~0.6 h left
+2026-11-26 12:29:05 example 8: variant room (4 walls), Shaker 1, shape U - designing
+2026-11-26 12:29:40   design 1: passed every rule (36 s)
+2026-11-26 12:29:40 7/50 kept (variant, Shaker 1, 3 walls) - 0.7 min each, ~0.5 h left
+2026-11-26 12:29:40 example 9: variant room (4 walls), Slab (Plain), shape single - designing
+2026-11-26 12:30:52   design 1: passed every rule (72 s)
+2026-11-26 12:30:52 8/50 kept (variant, Slab (Plain), 1 walls) - 0.8 min each, ~0.6 h left
+2026-11-26 12:30:52 example 10: db room (4 walls), Shaker 1, shape L - designing
+2026-11-26 12:31:50   design 1: passed every rule (58 s)
+2026-11-26 12:31:50 9/50 kept (db, Shaker 1, 2 walls) - 0.9 min each, ~0.6 h left
+2026-11-26 12:31:50 example 11: generated room (4 walls), Shaker 1, shape U - designing
+2026-11-26 12:32:22   design 1: passed every rule (32 s)
+2026-11-26 12:32:22 10/50 kept (generated, Shaker 1, 3 walls) - 0.8 min each, ~0.5 h left
+2026-11-26 12:32:22 example 12: generated room (4 walls), Shaker 1, shape single - designing
+2026-11-26 12:33:29   design 1: rejected - breaks R26 (67 s)
+2026-11-26 12:34:42   design 2: rejected - breaks R26 (72 s)
+2026-11-26 12:34:42 example 12: variant room (4 walls), Slab (Plain), shape single - designing
+2026-11-26 12:35:46   design 1: rejected - breaks R26 (64 s)
+2026-11-26 12:36:42   design 2: rejected - breaks R26 (56 s)
+2026-11-26 12:36:42 example 12: generated room (4 walls), Shaker 1, shape U - designing
+2026-11-26 12:37:20   design 1: passed every rule (38 s)
+2026-11-26 12:37:20 11/50 kept (generated, Shaker 1, 3 walls) - 1.4 min each, ~0.9 h left
+2026-11-26 12:37:20 example 13: db room (4 walls), Shaker 1, shape L - designing

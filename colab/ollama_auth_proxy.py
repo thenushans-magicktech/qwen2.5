@@ -43,12 +43,27 @@ class Proxy(BaseHTTPRequestHandler):
             conn = http.client.HTTPConnection(UPSTREAM_HOST, UPSTREAM_PORT, timeout=None)
             conn.request(self.command, self.path, body=data, headers=headers)
             resp = conn.getresponse()
-            body = resp.read()
-            ctype = resp.getheader("Content-Type", "application/json")
-            conn.close()
         except OSError as exc:
             return self._reply(502, json.dumps({"error": f"ollama not reachable: {exc}"}).encode())
-        self._reply(resp.status, body, ctype)
+        # Relay the answer as it is produced (chunked): a streamed design keeps the tunnel busy, so the
+        # free tunnel's ~100 s limit on a silent request does not cut long answers off.
+        self.send_response(resp.status)
+        self.send_header("Content-Type", resp.getheader("Content-Type", "application/json"))
+        self.send_header("Transfer-Encoding", "chunked")
+        self.end_headers()
+        try:
+            while self.command != "HEAD":
+                chunk = resp.read1(65536) if hasattr(resp, "read1") else resp.read(65536)
+                if not chunk:
+                    break
+                self.wfile.write(b"%x\r\n%s\r\n" % (len(chunk), chunk))
+                self.wfile.flush()
+            if self.command != "HEAD":
+                self.wfile.write(b"0\r\n\r\n")
+        except OSError:
+            pass  # the laptop went away mid-answer
+        finally:
+            conn.close()
 
     do_GET = do_POST = do_DELETE = do_HEAD = _forward
 

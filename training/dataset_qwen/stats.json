@@ -1,0 +1,14 @@
+{
+ "examples": 0,
+ "counts": {
+  "repairs": 34,
+  "reject: breaks R26": 5,
+  "no-tall variant": 4,
+  "reject: sink moved to": 3,
+  "reject: engine corrected: R# changed sink": 3,
+  "reject: no hob built": 2,
+  "adjusted to the rules": 2,
+  "reject: walls not connected": 1,
+  "reject: repairs exhausted": 1
+ }
+}

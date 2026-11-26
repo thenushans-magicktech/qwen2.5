@@ -12,6 +12,25 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent
 
+
+def _load_dotenv(path: Path) -> None:
+    """Load a local .env file, overriding stale variables inherited from the shell."""
+    if not path.is_file():
+        return
+    for raw in path.read_text(encoding="utf-8").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        name, value = line.split("=", 1)
+        name = name.strip()
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in ("'", '"'):
+            value = value[1:-1]
+        os.environ[name] = value
+
+
+_load_dotenv(BASE_DIR / ".env")
+
 # ---------------------------------------------------------------------------
 # Local LLM (Ollama). qwen2.5-coder:7b is Apache-2.0 licensed (commercial use
 # allowed); it needs ~5-5.5 GB RAM with an 8k context and takes ~4-5 min per

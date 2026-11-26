@@ -1,0 +1,644 @@
+{
+ "source": "workbook Kitchen_Rule_Engine_V1.xlsx",
+ "rules": [
+  {
+   "rule": 1,
+   "text": "In a Small L-Shape kitchen (60–80 sqft), set the Base Hob Unit width to 600 mm."
+  },
+  {
+   "rule": 2,
+   "text": "In a Small L-Shape kitchen (60–80 sqft), set the Base Sink Unit width to 600 mm."
+  },
+  {
+   "rule": 3,
+   "text": "In a Small L-Shape kitchen (60–80 sqft), set the Base Spice Pullout width to 150 mm."
+  },
+  {
+   "rule": 4,
+   "text": "In a Small L-Shape kitchen (60–80 sqft), set the Base Cylinder Unit width to 450 mm."
+  },
+  {
+   "rule": 5,
+   "text": "In a Small L-Shape kitchen (60–80 sqft), set the Blind Corner Unit width to 1050 mm."
+  },
+  {
+   "rule": 6,
+   "text": "In Essential budget, fill a leftover counter gap under 600 mm with a single-shutter Base Unit."
+  },
+  {
+   "rule": 7,
+   "text": "In Essential budget, fill a leftover counter gap of 600–900 mm with a double-shutter Base Unit."
+  },
+  {
+   "rule": 8,
+   "text": "In Premium budget, fill a leftover counter gap under 600 mm with a single-shutter Base Unit."
+  },
+  {
+   "rule": 9,
+   "text": "In Premium budget, fill a leftover counter gap of 600 mm or more with a double-drawer Base Unit."
+  },
+  {
+   "rule": 10,
+   "text": "In Luxury budget, fill every leftover counter gap with a double-drawer Base Unit."
+  },
+  {
+   "rule": 11,
+   "text": "Include the Base Cylinder Unit by default (LPG assumed). Drop it only when the hob fuel is piped gas (PNG) or induction; if the fuel input is skipped, assume LPG and keep the Base Cylinder Unit."
+  },
+  {
+   "rule": 12,
+   "text": "In a Medium L-Shape kitchen (81–120 sqft), set the Base Hob Unit width to 800 mm."
+  },
+  {
+   "rule": 13,
+   "text": "In a Medium L-Shape kitchen (81–120 sqft), set the Base Sink Unit width to 900 mm."
+  },
+  {
+   "rule": 14,
+   "text": "In a Medium L-Shape kitchen (81–120 sqft), set the Base Spice Pullout width to 200 mm."
+  },
+  {
+   "rule": 15,
+   "text": "In a Medium L-Shape kitchen (81–120 sqft), set the Base Cylinder Unit width to 500 mm."
+  },
+  {
+   "rule": 16,
+   "text": "In a Medium L-Shape kitchen (81–120 sqft), set the Blind Corner Unit width to 1050 mm."
+  },
+  {
+   "rule": 17,
+   "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm."
+  },
+  {
+   "rule": 18,
+   "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Sink Unit width to 1200 mm."
+  },
+  {
+   "rule": 19,
+   "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Spice Pullout width to 300 mm."
+  },
+  {
+   "rule": 20,
+   "text": "In a Large L-Shape kitchen (121–180 sqft), set the Base Cylinder Unit width to 600 mm."
+  },
+  {
+   "rule": 21,
+   "text": "In a Large L-Shape kitchen (121–180 sqft), set the Blind Corner Unit width to 1050 mm."
+  },
+  {
+   "rule": 22,
+   "text": "Set every base carcass to 700 mm height and keep the counter line uniform across the run; never step or collapse one unit against another."
+  },
+  {
+   "rule": 23,
+   "text": "Build the Base Cylinder Unit at 800 mm carcass height with no legs, so its top matches the 800 mm counter line (700 mm carcass + 100 mm legs) of all other base units."
+  },
+  {
+   "rule": 24,
+   "text": "Place the Base Hob Unit on the user-selected primary wall."
+  },
+  {
+   "rule": 25,
+   "text": "Place the Base Sink Unit on the user-selected secondary wall."
+  },
+  {
+   "rule": 26,
+   "text": "Maintain a minimum 450 mm counter landing between the Base Hob Unit and its wall-end or corner-end; this is a minimum and may be increased to balance the run."
+  },
+  {
+   "rule": 27,
+   "text": "Maintain a minimum 450 mm counter landing between the Base Sink Unit and its wall-end or corner-end; this is a minimum and may be increased to balance the run."
+  },
+  {
+   "rule": 28,
+   "text": "Seat the Base Cylinder Unit immediately beside the Base Hob Unit, on the opposite side from the Base Spice Pullout."
+  },
+  {
+   "rule": 29,
+   "text": "Seat the Base Spice Pullout immediately beside the Base Hob Unit, on the opposite side from the Base Cylinder Unit."
+  },
+  {
+   "rule": 30,
+   "text": "Close each run end with a filler panel where the run abuts a wall."
+  },
+  {
+   "rule": 31,
+   "text": "In Essential, at an exactly 600 mm gap with a working aisle under 1000 mm, fill it with a Base double-shutter unit for better door opening."
+  },
+  {
+   "rule": 32,
+   "text": "In Essential, at an exactly 600 mm gap with a working aisle of 1000 mm or more, fill it with a Base single-shutter unit for better space use."
+  },
+  {
+   "rule": 33,
+   "text": "In Premium, an exactly 600 mm gap always takes a Base double-drawer unit, regardless of aisle."
+  },
+  {
+   "rule": 34,
+   "text": "Resolve a gap wider than a single available unit by tiling it with standard-width units that sum to the gap exactly  e.g., a 1200 mm gap as two 600 mm units, a 1000 mm gap as two 500 mm units."
+  },
+  {
+   "rule": 35,
+   "text": "In Essential, a wall unit above 600 mm and up to 900 mm wide uses a Wall Double-Shutter."
+  },
+  {
+   "rule": 36,
+   "text": "Break the wall run at the chimney; no wall unit may span across the chimney."
+  },
+  {
+   "rule": 37,
+   "text": "Break the wall run at any window; no wall unit may span across a window."
+  },
+  {
+   "rule": 38,
+   "text": "In All Kitchen Shape Luxury, fill >=600mm leftover gap with a Base Double-Drawer unit."
+  },
+  {
+   "rule": 39,
+   "text": "In Premium, fill a gap under 600 mm with a Base Single-Shutter unit."
+  },
+  {
+   "rule": 40,
+   "text": "In Premium, fill a gap of 600 mm or more with a Base Double-Drawer unit."
+  },
+  {
+   "rule": 41,
+   "text": "In Luxury, fill a gap under 600 mm with a Base Single-Shutter unit."
+  },
+  {
+   "rule": 42,
+   "text": "Where a gap can be tiled more than one way, choose the fewest units at the largest valid widths (1200 mm as 2x600 mm, not 600 + 400 + filler)."
+  },
+  {
+   "rule": 43,
+   "text": "In Essential, fill a leftover counter gap of 600 mm or more with a double-shutter Base Unit."
+  },
+  {
+   "rule": 44,
+   "text": "Place only one Base Spice Pullout in any kitchen, regardless of size or shape."
+  },
+  {
+   "rule": 45,
+   "text": "Place only one Base Hob Unit in any kitchen, regardless of size or shape."
+  },
+  {
+   "rule": 46,
+   "text": "Place only one Base Sink Unit in any kitchen, regardless of size or shape."
+  },
+  {
+   "rule": 47,
+   "text": "A loft generates only where the ceiling reaches the 2658 mm minimum; below that the space above the wall run is left open."
+  },
+  {
+   "rule": 48,
+   "text": "Loft height = ceiling - wall-run top; pick the largest standard loft size (600-850 mm) leaving an 18-100 mm reveal to the ceiling. The whole run shares one height, coupled to the wall and tall heights."
+  },
+  {
+   "rule": 49,
+   "text": "A loft inherits the width of the unit below it (1:1); a loft 600 mm or narrower uses the Single Shutter combination."
+  },
+  {
+   "rule": 50,
+   "text": "A loft wider than 600 mm uses the Double Shutter combination."
+  },
+  {
+   "rule": 51,
+   "text": "At generation the loft is 330 mm deep over the wall run and over the standalone refrigerator (the catalogue 430 mm depth is used only in modification)."
+  },
+  {
+   "rule": 52,
+   "text": "Over a tall unit the loft is 560 mm deep, matching the tall-unit depth so it sits flush with no front overhang."
+  },
+  {
+   "rule": 53,
+   "text": "Generated last: one loft sits above each wall unit and each tall unit, one-to-one at the inherited width, taking the widths below with no separate tiling."
+  },
+  {
+   "rule": 54,
+   "text": "The loft never breaks with the wall run; it spans continuously across every gap where a wall unit is absent (chimney, window, any break), finished underneath at each gap."
+  },
+  {
+   "rule": 55,
+   "text": "In a Medium kitchen (81–120 sqft), where the largest clear run on the primary wall is between 600 mm and 899 mm, step the Base Hob Unit width down to 600 mm."
+  },
+  {
+   "rule": 56,
+   "text": "In a Large kitchen (121–180 sqft), where the largest clear run on the primary wall is between 600 mm and 899 mm, step the Base Hob Unit width down to 600 mm."
+  },
+  {
+   "rule": 57,
+   "text": "In any kitchen, where the largest clear run on the primary wall is under 600 mm, the Base Hob Unit cannot be placed and the layout must be changed."
+  },
+  {
+   "rule": 58,
+   "text": "In any kitchen, where the leftover run on the primary wall is under 600 mm, the Base Cylinder Unit must still be provided  relocate it to the secondary wall rather than dropping it from the layout."
+  },
+  {
+   "rule": 59,
+   "text": "In any kitchen, where the leftover run on the primary wall is under 600 mm and the Base Cylinder Unit is relocated to the secondary wall, raise a soft flag so the designer sees the exception."
+  },
+  {
+   "rule": 60,
+   "text": "A leftover gap of exactly 650, 950 or 1150 mm has no single Base Unit width. Fill it with the largest standard Base Unit that fits and close the 50 mm remainder with a filler (650 = 600 + 50 filler, 950 = 900 + 50 filler, 1150 = 1100 + 50 filler)."
+  },
+  {
+   "rule": 61,
+   "text": "In a Small Straight kitchen (60–80 sqft), set the Base Hob Unit width to 600 mm."
+  },
+  {
+   "rule": 62,
+   "text": "In a Small Parallel kitchen (60–80 sqft), set the Base Hob Unit width to 750 mm."
+  },
+  {
+   "rule": 63,
+   "text": "In a Small U-Shape kitchen (60–80 sqft), set the Base Hob Unit width to 600 mm."
+  },
+  {
+   "rule": 64,
+   "text": "In a Medium Straight kitchen (81–120 sqft), set the Base Hob Unit width to 800 mm."
+  },
+  {
+   "rule": 65,
+   "text": "In a Medium Parallel kitchen (81–120 sqft), set the Base Hob Unit width to 800 mm."
+  },
+  {
+   "rule": 66,
+   "text": "In a Medium U-Shape kitchen (81–120 sqft), set the Base Hob Unit width to 800 mm."
+  },
+  {
+   "rule": 67,
+   "text": "In a Large Straight kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm."
+  },
+  {
+   "rule": 68,
+   "text": "In a Large Parallel kitchen (121–180 sqft), set the Base Hob Unit width to 1050 mm."
+  },
+  {
+   "rule": 69,
+   "text": "In a Large U-Shape kitchen (121–180 sqft), set the Base Hob Unit width to 900 mm."
+  },
+  {
+   "rule": 70,
+   "text": "Over the equal-depth tall unit the 560 mm loft sits flush with no overhang, so no underside / bottom panel is applied there."
+  },
+  {
+   "rule": 71,
+   "text": "At an internal corner with an L Corner unit below (Premium/Luxury), the loft corner is a Loft Corner unit (Family Loft Corner, Category 'Loft - L Corner - Frame with Shutter') at the loft run height, sized by loft depth; a loft filler is added beside it only if required."
+  },
+  {
+   "rule": 72,
+   "text": "Loft Corner size at 330 mm loft depth is 650 x 650 mm (height = loft run height)."
+  },
+  {
+   "rule": 73,
+   "text": "Loft Corner size at 430 mm loft depth is 830 x 650 mm (height = loft run height)."
+  },
+  {
+   "rule": 74,
+   "text": "Loft Corner size at 560 mm loft depth is 960 x 650 mm (height = loft run height)."
+  },
+  {
+   "rule": 75,
+   "text": "At an internal corner with a Blind Corner unit below (Essential), the loft corner stays an open void 330 x 330 mm with a filler on each side for door clearance."
+  },
+  {
+   "rule": 76,
+   "text": "Where a run ends short of a wall, a loft filler at the loft height closes the leftover."
+  },
+  {
+   "rule": 77,
+   "text": "An 18-100 mm vertical filler realigns the loft at each break edge (chimney/window), placed only where a wall-unit side cover panel sits - not where a Wall Open Unit flanks the break."
+  },
+  {
+   "rule": 78,
+   "text": "The reveal between the loft top and the ceiling is a thin 18 mm front fascia (18-100 mm tall), returning around any exposed end."
+  },
+  {
+   "rule": 79,
+   "text": "Wherever no wall unit sits beneath the loft (chimney, window, any gap), the underside takes one continuous cover panel; where the loft is deeper than the 330 mm wall unit, the front overhang is panelled (100 mm at 430, 230 mm at 560)."
+  },
+  {
+   "rule": 80,
+   "text": "An exposed loft-run end takes a side cover panel; the top reveal returns around it."
+  },
+  {
+   "rule": 81,
+   "text": "The 560/330 depth step where the tall loft meets the shallower wall-run loft is closed by an L-shaped top filler and a loft side cover panel (loft finish); the tall unit's exposed side takes a cover panel (tall finish); cabinets beside a standalone refrigerator take a side cover panel."
+  }
+ ],
+ "module_widths": [
+  {
+   "rule": 1,
+   "unit": "base hob unit",
+   "kitchen_type": "L-Shape",
+   "size_band": "Small",
+   "width_mm": 600,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 2,
+   "unit": "base sink unit",
+   "kitchen_type": "L-Shape",
+   "size_band": "Small",
+   "width_mm": 600,
+   "combination": "Sink Single Shutter"
+  },
+  {
+   "rule": 3,
+   "unit": "base spice pull out",
+   "kitchen_type": "L-Shape",
+   "size_band": "Small",
+   "width_mm": 150,
+   "combination": "Spice Pullout"
+  },
+  {
+   "rule": 4,
+   "unit": "base cylinder unit",
+   "kitchen_type": "L-Shape",
+   "size_band": "Small",
+   "width_mm": 450,
+   "combination": "Cylinder Single Shutter"
+  },
+  {
+   "rule": 5,
+   "unit": "blind corner unit - l/r",
+   "kitchen_type": "L-Shape",
+   "size_band": "Small",
+   "width_mm": 1050,
+   "combination": null
+  },
+  {
+   "rule": 12,
+   "unit": "base hob unit",
+   "kitchen_type": "L-Shape",
+   "size_band": "Medium",
+   "width_mm": 800,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 13,
+   "unit": "base sink unit",
+   "kitchen_type": "L-Shape",
+   "size_band": "Medium",
+   "width_mm": 900,
+   "combination": "Sink Double Shutter"
+  },
+  {
+   "rule": 14,
+   "unit": "base spice pull out",
+   "kitchen_type": "L-Shape",
+   "size_band": "Medium",
+   "width_mm": 200,
+   "combination": "Spice Pullout"
+  },
+  {
+   "rule": 15,
+   "unit": "base cylinder unit",
+   "kitchen_type": "L-Shape",
+   "size_band": "Medium",
+   "width_mm": 500,
+   "combination": "Cylinder Single Shutter"
+  },
+  {
+   "rule": 16,
+   "unit": "blind corner unit - l/r",
+   "kitchen_type": "L-Shape",
+   "size_band": "Medium",
+   "width_mm": 1050,
+   "combination": null
+  },
+  {
+   "rule": 17,
+   "unit": "base hob unit",
+   "kitchen_type": "L-Shape",
+   "size_band": "Large",
+   "width_mm": 900,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 18,
+   "unit": "base sink unit",
+   "kitchen_type": "L-Shape",
+   "size_band": "Large",
+   "width_mm": 1200,
+   "combination": "Sink Double Shutter"
+  },
+  {
+   "rule": 19,
+   "unit": "base spice pull out",
+   "kitchen_type": "L-Shape",
+   "size_band": "Large",
+   "width_mm": 300,
+   "combination": "Spice Pullout"
+  },
+  {
+   "rule": 20,
+   "unit": "base cylinder unit",
+   "kitchen_type": "L-Shape",
+   "size_band": "Large",
+   "width_mm": 600,
+   "combination": "Cylinder Single Shutter"
+  },
+  {
+   "rule": 21,
+   "unit": "blind corner unit - l/r",
+   "kitchen_type": "L-Shape",
+   "size_band": "Large",
+   "width_mm": 1050,
+   "combination": null
+  },
+  {
+   "rule": 61,
+   "unit": "base hob unit",
+   "kitchen_type": "Straight",
+   "size_band": "Small",
+   "width_mm": 600,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 62,
+   "unit": "base hob unit",
+   "kitchen_type": "Parallel",
+   "size_band": "Small",
+   "width_mm": 750,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 63,
+   "unit": "base hob unit",
+   "kitchen_type": "U-Shape",
+   "size_band": "Small",
+   "width_mm": 600,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 64,
+   "unit": "base hob unit",
+   "kitchen_type": "Straight",
+   "size_band": "Medium",
+   "width_mm": 800,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 65,
+   "unit": "base hob unit",
+   "kitchen_type": "Parallel",
+   "size_band": "Medium",
+   "width_mm": 800,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 66,
+   "unit": "base hob unit",
+   "kitchen_type": "U-Shape",
+   "size_band": "Medium",
+   "width_mm": 800,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 67,
+   "unit": "base hob unit",
+   "kitchen_type": "Straight",
+   "size_band": "Large",
+   "width_mm": 900,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 68,
+   "unit": "base hob unit",
+   "kitchen_type": "Parallel",
+   "size_band": "Large",
+   "width_mm": 1050,
+   "combination": "Triple Drawer - A"
+  },
+  {
+   "rule": 69,
+   "unit": "base hob unit",
+   "kitchen_type": "U-Shape",
+   "size_band": "Large",
+   "width_mm": 900,
+   "combination": "Triple Drawer - A"
+  }
+ ],
+ "groups": {
+  "Cabinet Distribution > Module Distribution": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   31,
+   32,
+   33,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   43,
+   44,
+   45,
+   46,
+   49,
+   50,
+   55,
+   56,
+   61,
+   62,
+   63,
+   64,
+   65,
+   66,
+   67,
+   68,
+   69
+  ],
+  "Service Point > Placement": [
+   11
+  ],
+  "Measurement Standards > Base Unit Height": [
+   22,
+   23
+  ],
+  "Workflow > Hob Placement": [
+   24
+  ],
+  "Workflow > Sink Placement": [
+   25
+  ],
+  "Ergonomics > Hob Placement": [
+   26
+  ],
+  "Ergonomics > Sink Placement": [
+   27
+  ],
+  "Workflow > Module Distribution": [
+   28,
+   29
+  ],
+  "Aesthetic > End Panel": [
+   30
+  ],
+  "Cabinet Distribution > Module Fitting": [
+   34,
+   42,
+   60
+  ],
+  "Cabinet Distribution > Loft Placement": [
+   47,
+   53,
+   54
+  ],
+  "Measurement Standards > Loft Height": [
+   48
+  ],
+  "Measurement Standards > Loft Depth": [
+   51,
+   52
+  ],
+  "Cabinet Distribution > Feasibility": [
+   57,
+   58
+  ],
+  "Cabinet Distribution > Placement": [
+   59
+  ],
+  "Aesthetic > Loft Panel": [
+   70,
+   79,
+   80,
+   81
+  ],
+  "Cabinet Distribution > Corner Placement": [
+   71,
+   75
+  ],
+  "Measurement Standards > Corner Sizing": [
+   72,
+   73,
+   74
+  ],
+  "Aesthetic > Loft Filler": [
+   76,
+   77,
+   78
+  ]
+ }
+}

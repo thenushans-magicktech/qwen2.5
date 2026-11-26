@@ -1878,3 +1878,38 @@ def test_brief_reader_fills_settings_from_any_language(monkeypatch):
     out, report = run(KitchenPreferences(ai_mode="fallback", style_notes=brief), name="brief_reader_off")
     assert "skipped" in report["brief"] and report["explanation"][0]["built"] == "read as written"
     assert seen[-1].style_notes == brief and seen[-1].built_in == "auto"
+
+
+def test_brief_reader_applies_tall_cabinet_request():
+    import brief_reader
+    from scene_parser import parse_scene
+
+    geometry = parse_scene(empty_plan())
+
+    default_tall, info = brief_reader.apply_reading(
+        {"tall_units": "yes", "english_brief": "Add tall cabinets."},
+        KitchenPreferences(include_tall=True),
+        geometry,
+        "I need tall cabinets",
+    )
+    assert default_tall.include_tall is True
+    assert info["changes"] == {}
+    assert any(a["setting"] == "Tall units" and a["value"] == "yes" for a in info["applied"])
+
+    no_tall, info = brief_reader.apply_reading(
+        {"tall_units": "no", "english_brief": "No tall cabinets."},
+        KitchenPreferences(include_tall=True),
+        geometry,
+        "No tall cabinets",
+    )
+    assert no_tall.include_tall is False
+    assert info["changes"]["include_tall"] is False
+
+    form_no_tall, info = brief_reader.apply_reading(
+        {"tall_units": "yes", "english_brief": "Add tall cabinets."},
+        KitchenPreferences(include_tall=False),
+        geometry,
+        "I need tall cabinets",
+    )
+    assert form_no_tall.include_tall is False
+    assert any("form kept" in item for item in info["kept_form"])

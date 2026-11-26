@@ -1,0 +1,686 @@
+{
+ "Slab (Plain)": {
+  "sink": [
+   {
+    "code": "SINK-900",
+    "aid": "MTBABSU900560700SSDSSLBOEHNS",
+    "category": "Base Sink Unit",
+    "width": 900,
+    "combination": "Sink Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "SINK-1050",
+    "aid": "MTBABSU1050560700SSDSSLBOEHNS",
+    "category": "Base Sink Unit",
+    "width": 1050,
+    "combination": "Sink Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "SINK-1200",
+    "aid": "MTBABSU1200560700SSDSSLBOEHNS",
+    "category": "Base Sink Unit",
+    "width": 1200,
+    "combination": "Sink Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "SINK-800",
+    "aid": "MTBABSU800560700SSDSSLBOEHNS",
+    "category": "Base Sink Unit",
+    "width": 800,
+    "combination": "Sink Double Shutter",
+    "opening": "Both"
+   }
+  ],
+  "hob": [
+   {
+    "code": "HOB-900-3DRAWER",
+    "aid": "MTBABHU900560700DTDASLPUEHNS",
+    "category": "Base Hob Unit",
+    "width": 900,
+    "combination": "Triple Drawer - A",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "HOB-900-2DRAWER",
+    "aid": "MTBABHU900560700DHDDSLPUEHNS",
+    "category": "Base Hob Unit",
+    "width": 900,
+    "combination": "Hob Double Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "HOB-750-3DRAWER",
+    "aid": "MTBABHU750560700DTDASLPUEHNS",
+    "category": "Base Hob Unit",
+    "width": 750,
+    "combination": "Triple Drawer - A",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "HOB-900-SHUTTER",
+    "aid": "MTBABHU900560700SHDSSLBOEH1S",
+    "category": "Base Hob Unit",
+    "width": 900,
+    "combination": "Hob Double Shutter",
+    "opening": "Both"
+   }
+  ],
+  "spice": [
+   {
+    "code": "SPICE-300",
+    "aid": "MTBABSP300560700DSPSLPUEHNS",
+    "category": "Base Spice Pull Out",
+    "width": 300,
+    "combination": "Spice Pullout",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "SPICE-150",
+    "aid": "MTBABSP150560700DSPSLPUEHNS",
+    "category": "Base Spice Pull Out",
+    "width": 150,
+    "combination": "Spice Pullout",
+    "opening": "Pull Out"
+   }
+  ],
+  "cylinder": [
+   {
+    "code": "LPG-600",
+    "aid": "MTBABCU600560800SCSSSLREHNS",
+    "category": "Base Cylinder Unit",
+    "width": 600,
+    "combination": "Cylinder Single Shutter",
+    "opening": "Right"
+   }
+  ],
+  "tall": [
+   {
+    "code": "PANTRY-600",
+    "aid": "MTTATU6005601940SSSSLLEH4S",
+    "category": "Tall Unit",
+    "width": 600,
+    "combination": "Single Shutter",
+    "opening": "Left"
+   },
+   {
+    "code": "OVEN-600",
+    "aid": "MTTATBIO6005601940SODBOS2BDOSLLEH1S",
+    "category": "Tall Built-In Oven",
+    "width": 600,
+    "combination": "Built-In Oven With 1 Shutter & 2 Bottom Drawer With Open Box",
+    "opening": "Left"
+   },
+   {
+    "code": "MICROWAVE-600",
+    "aid": "MTTATBIM6005601940SODBMS3DSLLEH1S",
+    "category": "Tall Built-In Microwave",
+    "width": 600,
+    "combination": "Built-In Microwave With 1 Shutter And 3 Drawer",
+    "opening": "Left"
+   },
+   {
+    "code": "OVEN-MICRO-600",
+    "aid": "MTTATBIOM6005601940SODBOMSDSLLEH1S",
+    "category": "Tall Built-In Oven & Micro",
+    "width": 600,
+    "combination": "Built-In Oven & Micro - With 1 Shutter And 1 Drawer",
+    "opening": "Left"
+   },
+   {
+    "code": "TALL-WICKER-600",
+    "aid": "MTTATBIWB6005601940SOBWBSSLLEH2S",
+    "category": "Tall Built-In Wicker Basket",
+    "width": 600,
+    "combination": "Built-In Wicker Basket with 1 Shutter",
+    "opening": "Left"
+   },
+   {
+    "code": "CROCKERY-600",
+    "aid": "MTTATGU6005601940SSSGSSLLEH4S",
+    "category": "Tall Glass Unit",
+    "width": 600,
+    "combination": "Slab - Single Glass Shutter",
+    "opening": "Left"
+   },
+   {
+    "code": "CROCKERY-900",
+    "aid": "MTTATGU9005601940SSDGSSLBOEH4S",
+    "category": "Tall Glass Unit",
+    "width": 900,
+    "combination": "Slab - Double Glass Shutter",
+    "opening": "Both"
+   }
+  ],
+  "base": [
+   {
+    "code": "DRAWERS4-600",
+    "aid": "MTBABU600560700DFDSLPUEHNS",
+    "category": "Base Unit",
+    "width": 600,
+    "combination": "Four Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "DRAWERS4-800",
+    "aid": "MTBABU800560700DFDSLPUEHNS",
+    "category": "Base Unit",
+    "width": 800,
+    "combination": "Four Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "DRAWERS2-900",
+    "aid": "MTBABU900560700DDDSLPUEHNS",
+    "category": "Base Unit",
+    "width": 900,
+    "combination": "Double Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "DRAWER-SHUTTER-800",
+    "aid": "MTBABU800560700DSDDSSLBOEH1S",
+    "category": "Base Unit",
+    "width": 800,
+    "combination": "Drawer with Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "GRAIN-600",
+    "aid": "MTBABGT600560700DGTEDSLPUEHNS",
+    "category": "Base Grain Trolley",
+    "width": 600,
+    "combination": "Grain Trolley With 1 External Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "GRAIN-450",
+    "aid": "MTBABGT450560700DGTEDSLPUEHNS",
+    "category": "Base Grain Trolley",
+    "width": 450,
+    "combination": "Grain Trolley With 1 External Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "WICKER-600",
+    "aid": "MTBABWB600560700ODWB1DSLPUEHNS",
+    "category": "Base Wicker Basket Unit",
+    "width": 600,
+    "combination": "Open Wicker Unit With 1 Bottom Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "WICKER-450",
+    "aid": "MTBABWB450560700ODWB1DSLPUEHNS",
+    "category": "Base Wicker Basket Unit",
+    "width": 450,
+    "combination": "Open Wicker Unit With 1 Bottom Drawer",
+    "opening": "Pull Out"
+   }
+  ],
+  "wall": [
+   {
+    "code": "WALL-600",
+    "aid": "MTWAWU600330600SDSSLBOEH1S",
+    "category": "Wall Unit",
+    "width": 600,
+    "combination": "Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "WALL-700",
+    "aid": "MTWAWU700330600SDSSLBOEH1S",
+    "category": "Wall Unit",
+    "width": 700,
+    "combination": "Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "WALL-800",
+    "aid": "MTWAWU800330600SDSSLBOEH1S",
+    "category": "Wall Unit",
+    "width": 800,
+    "combination": "Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "WALL-900",
+    "aid": "MTWAWU900330600SDSSLBOEH1S",
+    "category": "Wall Unit",
+    "width": 900,
+    "combination": "Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "WALL-1000",
+    "aid": "MTWAWU1000330600SDSSLBOEH1S",
+    "category": "Wall Unit",
+    "width": 1000,
+    "combination": "Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "WALL-450-1DOOR",
+    "aid": "MTWAWU450330600SSSSLLEH1S",
+    "category": "Wall Unit",
+    "width": 450,
+    "combination": "Single Shutter",
+    "opening": "Left"
+   }
+  ],
+  "purifier": [
+   {
+    "code": "AQUAGUARD-600",
+    "aid": "MTWAWAU600330600SASSSLLEHNS",
+    "category": "Wall Aquaguard Unit",
+    "width": 600,
+    "combination": "Aquaguard Single Shutter",
+    "opening": "Left"
+   },
+   {
+    "code": "AQUAGUARD-450",
+    "aid": "MTWAWAU450330600SASSSLLEHNS",
+    "category": "Wall Aquaguard Unit",
+    "width": 450,
+    "combination": "Aquaguard Single Shutter",
+    "opening": "Left"
+   },
+   {
+    "code": "AQUAGUARD-750",
+    "aid": "MTWAWAU750330600SADSSLBOEH1S",
+    "category": "Wall Aquaguard Unit",
+    "width": 750,
+    "combination": "Aquaguard Double Shutter",
+    "opening": "Both"
+   }
+  ],
+  "display": [
+   {
+    "code": "GLASS-600",
+    "aid": "MTWAWGU600330600SSDGSSLBOEH1S",
+    "category": "Wall Glass Unit",
+    "width": 600,
+    "combination": "Slab - Double Glass Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "GLASS-800",
+    "aid": "MTWAWGU800330600SSDGSSLBOEH1S",
+    "category": "Wall Glass Unit",
+    "width": 800,
+    "combination": "Slab - Double Glass Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "GLASS-900",
+    "aid": "MTWAWGU900330600SSDGSSLBOEH1S",
+    "category": "Wall Glass Unit",
+    "width": 900,
+    "combination": "Slab - Double Glass Shutter",
+    "opening": "Both"
+   }
+  ],
+  "open": [
+   {
+    "code": "OPEN-600",
+    "aid": "MTWAWOU600330600OOUCONONH1S",
+    "category": "Wall Open Unit",
+    "width": 600,
+    "combination": "Open Unit",
+    "opening": null
+   },
+   {
+    "code": "OPEN-450",
+    "aid": "MTWAWOU450330600OOUCONONH1S",
+    "category": "Wall Open Unit",
+    "width": 450,
+    "combination": "Open Unit",
+    "opening": null
+   }
+  ]
+ },
+ "Shaker 1": {
+  "sink": [
+   {
+    "code": "SINK-900",
+    "aid": "MTBABSU900560700SSDSDS1BOEHNS",
+    "category": "Base Sink Unit",
+    "width": 900,
+    "combination": "Sink Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "SINK-1050",
+    "aid": "MTBABSU1050560700SSDSDS1BOEHNS",
+    "category": "Base Sink Unit",
+    "width": 1050,
+    "combination": "Sink Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "SINK-1200",
+    "aid": "MTBABSU1200560700SSDSDS1BOEHNS",
+    "category": "Base Sink Unit",
+    "width": 1200,
+    "combination": "Sink Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "SINK-800",
+    "aid": "MTBABSU800560700SSDSDS1BOEHNS",
+    "category": "Base Sink Unit",
+    "width": 800,
+    "combination": "Sink Double Shutter",
+    "opening": "Both"
+   }
+  ],
+  "hob": [
+   {
+    "code": "HOB-900-3DRAWER",
+    "aid": "MTBABHU900560700DTDADS1PUEHNS",
+    "category": "Base Hob Unit",
+    "width": 900,
+    "combination": "Triple Drawer - A",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "HOB-900-2DRAWER",
+    "aid": "MTBABHU900560700DHDDDS1PUEHNS",
+    "category": "Base Hob Unit",
+    "width": 900,
+    "combination": "Hob Double Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "HOB-750-3DRAWER",
+    "aid": "MTBABHU750560700DTDADS1PUEHNS",
+    "category": "Base Hob Unit",
+    "width": 750,
+    "combination": "Triple Drawer - A",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "HOB-900-SHUTTER",
+    "aid": "MTBABHU900560700SHDSDS1BOEH1S",
+    "category": "Base Hob Unit",
+    "width": 900,
+    "combination": "Hob Double Shutter",
+    "opening": "Both"
+   }
+  ],
+  "spice": [
+   {
+    "code": "SPICE-300",
+    "aid": "MTBABSP300560700DSPDS1PUEHNS",
+    "category": "Base Spice Pull Out",
+    "width": 300,
+    "combination": "Spice Pullout",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "SPICE-150",
+    "aid": "MTBABSP150560700DSPDS1PUEHNS",
+    "category": "Base Spice Pull Out",
+    "width": 150,
+    "combination": "Spice Pullout",
+    "opening": "Pull Out"
+   }
+  ],
+  "cylinder": [
+   {
+    "code": "LPG-600",
+    "aid": "MTBABCU600560800SCSSDS1REHNS",
+    "category": "Base Cylinder Unit",
+    "width": 600,
+    "combination": "Cylinder Single Shutter",
+    "opening": "Right"
+   }
+  ],
+  "tall": [
+   {
+    "code": "PANTRY-600",
+    "aid": "MTTATU6005601940SSSDS1LEH4S",
+    "category": "Tall Unit",
+    "width": 600,
+    "combination": "Single Shutter",
+    "opening": "Left"
+   },
+   {
+    "code": "OVEN-600",
+    "aid": "MTTATBIO6005601940SODBOS2BDODS1LEH1S",
+    "category": "Tall Built-In Oven",
+    "width": 600,
+    "combination": "Built-In Oven With 1 Shutter & 2 Bottom Drawer With Open Box",
+    "opening": "Left"
+   },
+   {
+    "code": "MICROWAVE-600",
+    "aid": "MTTATBIM6005601940SODBMS3DDS1LEH1S",
+    "category": "Tall Built-In Microwave",
+    "width": 600,
+    "combination": "Built-In Microwave With 1 Shutter And 3 Drawer",
+    "opening": "Left"
+   },
+   {
+    "code": "OVEN-MICRO-600",
+    "aid": "MTTATBIOM6005601940SODBOMSDDS1LEH1S",
+    "category": "Tall Built-In Oven & Micro",
+    "width": 600,
+    "combination": "Built-In Oven & Micro - With 1 Shutter And 1 Drawer",
+    "opening": "Left"
+   },
+   {
+    "code": "TALL-WICKER-600",
+    "aid": "MTTATBIWB6005601940SOBWBSDS1LEH2S",
+    "category": "Tall Built-In Wicker Basket",
+    "width": 600,
+    "combination": "Built-In Wicker Basket with 1 Shutter",
+    "opening": "Left"
+   },
+   {
+    "code": "CROCKERY-600",
+    "aid": "MTTATGU6005601940SSHSGSDS1LEH4S",
+    "category": "Tall Glass Unit",
+    "width": 600,
+    "combination": "Shaker - Single Glass Shutter",
+    "opening": "Left"
+   },
+   {
+    "code": "CROCKERY-900",
+    "aid": "MTTATGU9005601940SSHDGSDS1BOEH4S",
+    "category": "Tall Glass Unit",
+    "width": 900,
+    "combination": "Shaker - Double Glass Shutter",
+    "opening": "Both"
+   }
+  ],
+  "base": [
+   {
+    "code": "DRAWERS4-600",
+    "aid": "MTBABU600560700DFDDS1PUEHNS",
+    "category": "Base Unit",
+    "width": 600,
+    "combination": "Four Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "DRAWERS4-800",
+    "aid": "MTBABU800560700DFDDS1PUEHNS",
+    "category": "Base Unit",
+    "width": 800,
+    "combination": "Four Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "DRAWERS2-900",
+    "aid": "MTBABU900560700DDDDS1PUEHNS",
+    "category": "Base Unit",
+    "width": 900,
+    "combination": "Double Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "DRAWER-SHUTTER-800",
+    "aid": "MTBABU800560700DSDDSDS1BOEH1S",
+    "category": "Base Unit",
+    "width": 800,
+    "combination": "Drawer with Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "GRAIN-600",
+    "aid": "MTBABGT600560700DGTEDDS1PUEHNS",
+    "category": "Base Grain Trolley",
+    "width": 600,
+    "combination": "Grain Trolley With 1 External Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "GRAIN-450",
+    "aid": "MTBABGT450560700DGTEDDS1PUEHNS",
+    "category": "Base Grain Trolley",
+    "width": 450,
+    "combination": "Grain Trolley With 1 External Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "WICKER-600",
+    "aid": "MTBABWB600560700ODWB1DDS1PUEHNS",
+    "category": "Base Wicker Basket Unit",
+    "width": 600,
+    "combination": "Open Wicker Unit With 1 Bottom Drawer",
+    "opening": "Pull Out"
+   },
+   {
+    "code": "WICKER-450",
+    "aid": "MTBABWB450560700ODWB1DDS1PUEHNS",
+    "category": "Base Wicker Basket Unit",
+    "width": 450,
+    "combination": "Open Wicker Unit With 1 Bottom Drawer",
+    "opening": "Pull Out"
+   }
+  ],
+  "wall": [
+   {
+    "code": "WALL-600",
+    "aid": "MTWAWU600330600SDSDS1BOEH1S",
+    "category": "Wall Unit",
+    "width": 600,
+    "combination": "Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "WALL-700",
+    "aid": "MTWAWU700330600SDSDS1BOEH1S",
+    "category": "Wall Unit",
+    "width": 700,
+    "combination": "Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "WALL-800",
+    "aid": "MTWAWU800330600SDSDS1BOEH1S",
+    "category": "Wall Unit",
+    "width": 800,
+    "combination": "Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "WALL-900",
+    "aid": "MTWAWU900330600SDSDS1BOEH1S",
+    "category": "Wall Unit",
+    "width": 900,
+    "combination": "Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "WALL-1000",
+    "aid": "MTWAWU1000330600SDSDS1BOEH1S",
+    "category": "Wall Unit",
+    "width": 1000,
+    "combination": "Double Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "WALL-450-1DOOR",
+    "aid": "MTWAWU450330600SSSDS1LEH1S",
+    "category": "Wall Unit",
+    "width": 450,
+    "combination": "Single Shutter",
+    "opening": "Left"
+   }
+  ],
+  "purifier": [
+   {
+    "code": "AQUAGUARD-600",
+    "aid": "MTWAWAU600330600SASSDS1LEHNS",
+    "category": "Wall Aquaguard Unit",
+    "width": 600,
+    "combination": "Aquaguard Single Shutter",
+    "opening": "Left"
+   },
+   {
+    "code": "AQUAGUARD-450",
+    "aid": "MTWAWAU450330600SASSDS1LEHNS",
+    "category": "Wall Aquaguard Unit",
+    "width": 450,
+    "combination": "Aquaguard Single Shutter",
+    "opening": "Left"
+   },
+   {
+    "code": "AQUAGUARD-750",
+    "aid": "MTWAWAU750330600SADSDS1BOEH1S",
+    "category": "Wall Aquaguard Unit",
+    "width": 750,
+    "combination": "Aquaguard Double Shutter",
+    "opening": "Both"
+   }
+  ],
+  "display": [
+   {
+    "code": "GLASS-600",
+    "aid": "MTWAWSG600330600SSHDGSDS1BOEH1S",
+    "category": "Wall Shaker Glass Unit",
+    "width": 600,
+    "combination": "Shaker - Double Glass Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "GLASS-800",
+    "aid": "MTWAWSG800330600SSHDGSDS1BOEH1S",
+    "category": "Wall Shaker Glass Unit",
+    "width": 800,
+    "combination": "Shaker - Double Glass Shutter",
+    "opening": "Both"
+   },
+   {
+    "code": "GLASS-900",
+    "aid": "MTWAWSG900330600SSHDGSDS1BOEH1S",
+    "category": "Wall Shaker Glass Unit",
+    "width": 900,
+    "combination": "Shaker - Double Glass Shutter",
+    "opening": "Both"
+   }
+  ],
+  "open": [
+   {
+    "code": "OPEN-600",
+    "aid": "MTWAWOU600330600OOUCONONH1S",
+    "category": "Wall Open Unit",
+    "width": 600,
+    "combination": "Open Unit",
+    "opening": null
+   },
+   {
+    "code": "OPEN-450",
+    "aid": "MTWAWOU450330600OOUCONONH1S",
+    "category": "Wall Open Unit",
+    "width": 450,
+    "combination": "Open Unit",
+    "opening": null
+   }
+  ]
+ }
+}
