@@ -279,6 +279,34 @@ GEMMA_MODEL=magick-gemma GEMMA_USE_KNOWLEDGE=0 MAGICKHOME_AI_PROVIDER=gemma pyth
 Training on this laptop is not practical (no GPU, 14 GB RAM: the model does not fit for training, and a CPU would
 need days); running the trained model locally is fine.
 
+**From the adapter zip only (what actually worked for Gemma 4 E4B)** - free Colab's 12.7 GB RAM cannot convert a
+merged Gemma 4 to GGUF (its `per_layer_token_embd` table is ~5.6 GB), and Ollama no longer accepts LoRA adapters,
+so merge on the laptop (~2 min, no GPU, no 16 GB base download):
+
+```bash
+# 1. adapter zip -> GGUF LoRA (llama.cpp converter from Unsloth Studio's install)
+unzip ~/Downloads/magick-gemma-lora.zip -d finetune/models/magick-gemma-lora
+~/.unsloth/studio/unsloth_studio/bin/python ~/.unsloth/llama.cpp/convert_lora_to_gguf.py finetune/models/magick-gemma-lora \
+    --base-model-id unsloth/gemma-4-E4B-it --outfile finetune/models/magick-gemma-lora-f16.gguf --outtype f16
+# 2. merge into the gemma4:E4B GGUF Ollama already has (llama-export-lora: build it from ~/.unsloth/llama.cpp with
+#    cmake --target llama-export-lora), then re-quantize the merged F16 tensors
+llama-export-lora -m <gemma4:E4B blob> --lora finetune/models/magick-gemma-lora-f16.gguf -o finetune/models/magick-gemma-merged.gguf
+~/.unsloth/llama.cpp/llama-quantize --allow-requantize finetune/models/magick-gemma-merged.gguf finetune/models/magick-gemma-Q4_K_M.gguf Q4_K_M
+# 3. install
+bash finetune/install_local.sh finetune/models/magick-gemma-Q4_K_M.gguf magick-gemma
+```
+
+Measured on this laptop (sample room): **3.5 min per design, scorecard 100 %, 0 corrections** - against ~10-16 min
+and 93 % for the plain Gemma 4 E4B with the full prompt. Without merging, the adapter also runs directly in
+llama.cpp (`LORA=finetune/models/magick-gemma-lora-f16.gguf ./run_llamacpp.sh gemma4:E4B magick-gemma 8096`), but
+~2.5x slower.
+
+**LFM3 (MODEL_CHOICE = "lfm3-1.7b")**: Ollama < 0.40.12 cannot run LFM3, so serve it with llama.cpp: the official base
+`LiquidAI/LFM3-1.7B-GGUF` (`LFM3-1.7B-Q4_K_M.gguf`) plus the converted adapter
+(`LORA=finetune/models/magick-lfm3-lora-f16.gguf ./run_llamacpp.sh finetune/models/LFM3-1.7B-Q4_K_M.gguf magick-lfm3 8097`),
+and add `http://127.0.0.1:8097` to `LLAMACPP_URL`. On Colab's transformers 5.17 the notebook patches two LFM3
+config incompatibilities (see the comments in its load cell) - they must be applied in a fresh Python session.
+
 ### 5.4 Check it
 Compare the fine-tuned model with the full-prompt Gemma on the 8 benchmark rooms:
 ```bash
