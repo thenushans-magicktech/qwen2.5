@@ -64,8 +64,32 @@ p { margin: 0; }
 
 /* ---------- layout ---------- */
 .app { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 22px; padding: 22px 24px 56px; max-width: 1580px; margin: 0 auto; align-items: start; }
-.sidebar { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow-y: auto; display: flex; flex-direction: column; gap: 14px; padding: 2px 4px 4px 2px; scrollbar-width: thin; }
+.sidebar { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 14px; padding: 2px 4px 4px 2px; scrollbar-width: thin; }
 .workspace { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+/* options panel: hide / show */
+.app.sb-collapsed { grid-template-columns: minmax(0, 1fr); }
+.app.sb-collapsed .sidebar { display: none; }
+.sb-tools { display: flex; justify-content: flex-end; margin: -2px 0 -6px; }
+.sb-show { position: fixed; left: 16px; bottom: 18px; z-index: 30; box-shadow: var(--shadow); }
+/* Design button: always visible at the top of the options panel */
+.go-card { position: sticky; top: 0; z-index: 8; padding: 14px 16px; }
+.go-card .card-head { margin-bottom: 10px; }
+.go-card .hint { margin-top: 8px; }
+@media (max-width: 1040px) { .go-card { top: 64px; } }
+/* minimize a card */
+.collapse-btn { margin-left: auto; background: none; border: 1px solid var(--line); border-radius: 8px; width: 28px; height: 28px; display: inline-grid; place-items: center; cursor: pointer; color: var(--muted); flex: none; }
+.collapse-btn:hover { border-color: var(--accent); color: var(--accent); }
+.collapse-btn svg { transition: transform .15s; }
+.card.collapsed .collapse-btn svg { transform: rotate(-90deg); }
+.card.collapsed > :not(.card-head):not(.section-title) { display: none !important; }
+.card.collapsed > .card-head, .card.collapsed > .section-title { margin-bottom: 0; }
+.section-title .collapse-btn { margin-left: 8px; }
+/* designer dropdown */
+.designer-pick select { width: 100%; }
+.designer-pick .sub { display: block; margin-top: 6px; }
+/* 3D full screen */
+.stage:fullscreen { height: 100vh !important; max-height: none; border: 0; border-radius: 0; }
+.stage.pseudo-full { position: fixed !important; inset: 0; z-index: 1000; height: 100vh !important; border-radius: 0; }
 @media (max-width: 1040px) {
   .app { grid-template-columns: minmax(0, 1fr); padding: 14px 16px 40px; gap: 16px; }
   .sidebar { position: static; max-height: none; overflow: visible; padding: 0; }
@@ -174,7 +198,7 @@ textarea { min-height: 72px; resize: vertical; }
 .fin-swatches .chip.img { background-size: cover; background-position: center; }
 .fin-swatches { max-height: 236px; overflow-y: auto; padding: 3px 2px; }
 .fin-filter { display: grid; gap: 6px; margin-top: 8px; }
-.fin-filter input { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); color: var(--text); font: inherit; font-size: 12.5px; }
+.fin-filter input[type="search"] { width: 100%; padding: 7px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); color: var(--text); font: inherit; font-size: 12.5px; }
 .fin-count { font-size: 11px; color: var(--muted); margin-left: 6px; }
 .rb-effect, .rb-facts { margin-top: 6px; }
 .rb-facts b { color: var(--text); font-weight: 650; }
@@ -274,7 +298,7 @@ details.more summary::-webkit-details-marker { display: none; }
 .mini-switch input { accent-color: var(--accent); margin: 0; width: 15px; height: 15px; cursor: pointer; }
 .v3d-hint { position: absolute; left: 10px; bottom: 10px; font-size: 12px; color: var(--muted); padding: 5px 10px; z-index: 3; }
 @media (max-width: 640px) {
-  .v3d-hint, .v3d-group > span.l, #v3d-reset .lbl { display: none; }
+  .v3d-hint, .v3d-group > span.l, #v3d-reset .lbl, #v3d-full .lbl { display: none; }
   .v3d-bar { gap: 6px; top: 8px; left: 8px; right: 8px; }
   .seg button, .mini-switch { font-size: 12px; }
   .seg button { padding: 4px 7px; }
@@ -399,7 +423,7 @@ tr.group td { background: var(--panel-2); font-weight: 680; font-size: 12.5px; c
 tr.group td .sub { font-weight: 400; margin-left: 6px; }
 .code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 11px; color: var(--muted); }
 .tier { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 650; color: #fff; }
-.scroll-x { overflow-x: auto; }
+.scroll-x { overflow-x: auto; max-width: 100%; }
 .dl-row { display: flex; gap: 8px; flex-wrap: wrap; }
 /* ================= premium layer ================= */
 h1 { font-size: 17px; font-weight: 720; letter-spacing: -.02em; }
@@ -524,6 +548,52 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
   *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; scroll-behavior: auto !important; }
   .btn:hover, .choice label:hover, .rb-cards label:hover, .iseg button:hover { transform: none; }
 }
+
+/* ---------- design chat ---------- */
+.chat-fab { position: fixed; right: 20px; bottom: 20px; z-index: 40; width: 54px; height: 54px; border-radius: 50%; border: 0;
+  background: var(--accent); color: var(--accent-ink); box-shadow: var(--shadow-lg); cursor: pointer; display: grid; place-items: center;
+  transition: transform var(--t) var(--ease); }
+.chat-fab:hover { transform: translateY(-2px); }
+.chat-fab:focus-visible { outline: 3px solid var(--accent-glow); outline-offset: 3px; }
+.chat-fab svg { width: 26px; height: 26px; }
+.chat-fab .dot { position: absolute; top: 6px; right: 6px; width: 11px; height: 11px; border-radius: 50%; background: var(--ok); border: 2px solid var(--panel); }
+.chat-panel { position: fixed; right: 20px; bottom: 86px; z-index: 41; width: min(380px, calc(100vw - 32px)); height: min(560px, calc(100vh - 120px));
+  display: flex; flex-direction: column; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow-lg); overflow: hidden; }
+.chat-panel.hidden { display: none; }
+.chat-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+.chat-head b { font-size: 14px; display: block; }
+.chat-head small { color: var(--muted); font-size: 12px; }
+.chat-head .grow { flex: 1; min-width: 0; }
+.chat-log { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.chat-msg { max-width: 88%; padding: 9px 12px; border-radius: 14px; font-size: 13.5px; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
+.chat-msg.user { align-self: flex-end; background: var(--accent); color: var(--accent-ink); border-bottom-right-radius: 4px; }
+.chat-msg.bot { align-self: flex-start; background: var(--panel-2); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.chat-msg.err { border-color: var(--err); color: var(--err); }
+.chat-msg .meta { display: block; margin-top: 6px; font-size: 11.5px; color: var(--muted); white-space: normal; }
+.chat-msg .focus { display: block; font-size: 11.5px; opacity: .85; margin-bottom: 3px; }
+.chat-typing { align-self: flex-start; color: var(--muted); font-size: 12.5px; }
+.chat-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 14px 10px; }
+.chat-chips button { font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--panel-2);
+  color: var(--text); cursor: pointer; }
+.chat-chips button:hover { border-color: var(--accent); color: var(--accent); }
+.chat-form { display: flex; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--line); }
+.chat-form input { flex: 1; min-width: 0; font: inherit; font-size: 14px; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line-2);
+  background: var(--panel-2); color: var(--text); }
+.chat-form input:focus { outline: 2px solid var(--accent-glow); border-color: var(--accent); }
+.chat-empty { color: var(--muted); font-size: 13px; padding: 4px 2px; }
+.chat-choices { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; white-space: normal; }
+.chat-choices button[disabled] { opacity: .55; cursor: default; }
+.chat-msg.change { border-color: var(--accent); }
+.chat-focus { margin: 0 14px 6px; font-size: 12px; color: var(--accent); }
+.cancel-btn { border: 1px solid var(--err); color: var(--err); background: transparent; }
+.cancel-btn:hover:not([disabled]) { background: var(--err-soft); }
+#go-cancel { width: 100%; margin-top: 8px; }
+.progress-title .cancel-btn { margin-left: auto; }
+.loader-pill .cancel-btn { margin-left: 10px; pointer-events: auto; }
+.chat-msg.conflict { border-color: var(--warn); }
+.v3d-ask { margin-top: 9px; }
+@media (max-width: 560px) { .chat-panel { right: 16px; bottom: 80px; } .chat-fab { right: 16px; bottom: 16px; } }
 </style>
 </head>
 <body>
@@ -541,6 +611,26 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
   </div>
 </header>
 
+
+<button class="chat-fab" id="chat-fab" type="button" aria-label="Ask the designer why" aria-expanded="false" aria-controls="chat-panel" title="Ask the designer why">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/><path d="M9.2 9.6a2.8 2.8 0 0 1 5.4 1c0 1.8-2.6 2.2-2.6 3.6"/><path d="M12 16.8h.01"/></svg>
+  <span class="dot hidden" id="chat-dot"></span>
+</button>
+<section class="chat-panel hidden" id="chat-panel" role="dialog" aria-label="Ask the designer">
+  <div class="chat-head">
+    <div class="grow"><b>Ask the designer</b><small id="chat-sub">Why is everything where it is?</small></div>
+    <button type="button" class="icon-btn" id="chat-clear" title="Start over" aria-label="Clear the chat">↺</button>
+    <button type="button" class="icon-btn" id="chat-close" aria-label="Close the chat">×</button>
+  </div>
+  <div class="chat-log" id="chat-log" aria-live="polite"></div>
+  <div class="chat-chips" id="chat-chips"></div>
+  <div class="chat-focus hidden" id="chat-focus"></div>
+  <form class="chat-form" id="chat-form">
+    <input id="chat-input" type="text" autocomplete="off" maxlength="1000" placeholder="Ask why, or ask for a change…" aria-label="Your question">
+    <button class="btn sm primary" type="submit" id="chat-send">Ask</button>
+  </form>
+</section>
+<button class="btn sm sb-show hidden" id="sb-show" type="button" title="Show the options panel">» Options</button>
 <main class="app">
   <!-- ===================== sidebar: the three steps ===================== -->
   <aside class="sidebar" aria-label="Design steps">
@@ -549,6 +639,14 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
       <li data-step="2"><span>2</span>Your kitchen</li>
       <li data-step="3"><span>3</span>Design</li>
     </ol>
+    <div class="sb-tools"><button class="linkbtn" id="sb-hide" type="button" title="Hide the options panel - the views get the full width">« Hide panel</button></div>
+    <section class="card go-card" aria-labelledby="h-go">
+      <div class="card-head"><span class="num">3</span><h2 id="h-go">Design</h2></div>
+      <button class="btn primary big" id="go" type="button" disabled><span id="go-label">Design my kitchen</span></button>
+      <button class="btn big cancel-btn hidden" id="go-cancel" type="button" data-cancel>Cancel design</button>
+      <div class="hint" id="go-hint">Add a floor plan to start.</div>
+      <div class="alert" id="run-err" role="alert"></div>
+    </section>
     <section class="card" aria-labelledby="h-upload">
       <div class="card-head"><span class="num" id="n1">1</span><h2 id="h-upload">Floor plan</h2></div>
       <div id="upload-box">
@@ -580,8 +678,12 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
       <div class="card-head"><span class="num">2</span><h2 id="h-prefs">Your kitchen</h2></div>
 
       <div class="field">
-        <span class="label" id="lbl-designer">Who designs it?</span>
-        <div class="choice five" role="radiogroup" aria-labelledby="lbl-designer">
+        <label class="label" id="lbl-designer" for="designer-select">Who designs it?</label>
+        <div class="designer-pick">
+          <select id="designer-select"></select>
+          <span class="sub" id="designer-sub"></span>
+        </div>
+        <div class="choice five hidden" role="radiogroup" aria-labelledby="lbl-designer">
           <input type="radio" name="ai" id="ai-qwen" value="auto" checked>
           <label for="ai-qwen" data-ico="chip"><b>Qwen</b><small id="ai-time">AI designer · a few minutes</small></label>
           <input type="radio" name="ai" id="ai-gemma" value="gemma" disabled>
@@ -661,10 +763,10 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
           <div class="rb-row hidden" data-pref="primary_wall">
             <div class="needs">
               <div><label for="need-hobwall" data-ico="hob">Cooking (hob) wall</label>
-                <select id="need-hobwall"><option value="">Let the designer decide</option></select>
+                <select id="need-hobwall"><option value="">Let AI decide</option></select>
                 <div class="rb-hint" id="hint-hobwall"></div></div>
               <div><label for="need-sinkwall" data-ico="faucet">Sink wall</label>
-                <select id="need-sinkwall"><option value="">Let the designer decide</option></select>
+                <select id="need-sinkwall"><option value="">Let AI decide</option></select>
                 <div class="rb-hint" id="hint-sinkwall"></div></div>
             </div>
           </div>
@@ -685,9 +787,9 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
           <div class="gtitle" id="g-util" data-ico="microwave">Appliances &amp; services</div>
           <div class="needs">
             <div><label for="need-pur">Water purifier (Aquaguard)</label>
-              <select id="need-pur"><option value="auto">Let the designer decide</option><option value="yes">Needed, on the wall</option><option value="no">Not needed</option></select></div>
+              <select id="need-pur"><option value="auto">Let AI decide</option><option value="yes">Needed, on the wall</option><option value="no">Not needed</option></select></div>
             <div class="wide"><label for="need-tower">Built-in oven / microwave</label>
-              <select id="need-tower"><option value="auto">Let the designer decide</option><option value="none">None</option><option value="microwave">Microwave</option><option value="oven">Oven</option><option value="oven_microwave">Oven + microwave</option></select></div>
+              <select id="need-tower"><option value="auto">Let AI decide</option><option value="none">None</option><option value="microwave">Microwave</option><option value="oven">Oven</option><option value="oven_microwave">Oven + microwave</option></select></div>
           </div>
         </div>
 
@@ -696,17 +798,17 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
           <div class="toggle" style="margin-bottom:10px"><div data-ico="tall"><div>Tall storage<small>Pantry, oven or microwave tower</small></div></div><label class="switch"><input type="checkbox" id="tall" checked aria-label="Tall storage"><span></span></label></div>
           <div class="needs">
             <div><label for="need-base">Base cabinets</label>
-              <select id="need-base"><option value="auto">Let the designer decide</option><option value="drawers">More drawers</option><option value="mixed">Drawer + shutter mix</option><option value="shutters">Mostly shutters</option></select></div>
+              <select id="need-base"><option value="auto">Let AI decide</option><option value="drawers">More drawers</option><option value="mixed">Drawer + shutter mix</option><option value="shutters">Mostly shutters</option></select></div>
             <div data-pref="wall_style" class="hidden"><label for="need-wallstyle">Wall cabinet doors</label>
-              <select id="need-wallstyle"><option value="auto">Let the designer decide</option><option value="shutters">Hinged shutters</option><option value="lift_up">Lift-up (flap-up)</option></select></div>
+              <select id="need-wallstyle"><option value="auto">Let AI decide</option><option value="shutters">Hinged shutters</option><option value="lift_up">Lift-up (flap-up)</option></select></div>
             <div><label for="need-loft">Loft storage (above wall cabinets)</label>
-              <select id="need-loft"><option value="">Let the designer decide</option><option value="true">Yes</option><option value="false">No</option></select></div>
+              <select id="need-loft"><option value="">Let AI decide</option><option value="true">Yes</option><option value="false">No</option></select></div>
             <div><label for="need-disp">Glass display cabinet</label>
-              <select id="need-disp"><option value="auto">Let the designer decide</option><option value="yes">Yes, one</option><option value="no">No</option></select></div>
+              <select id="need-disp"><option value="auto">Let AI decide</option><option value="yes">Yes, one</option><option value="no">No</option></select></div>
             <div data-pref="open_unit" class="hidden"><label for="need-open">Open shelf unit (wall)</label>
-              <select id="need-open"><option value="auto">Let the designer decide</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+              <select id="need-open"><option value="auto">Let AI decide</option><option value="yes">Yes</option><option value="no">No</option></select></div>
             <div data-pref="crockery_unit" class="hidden"><label for="need-crock">Crockery unit (tall glass)</label>
-              <select id="need-crock"><option value="auto">Let the designer decide</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+              <select id="need-crock"><option value="auto">Let AI decide</option><option value="yes">Yes</option><option value="no">No</option></select></div>
           </div>
         </div>
 
@@ -740,12 +842,6 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
       </details>
     </section>
 
-    <section class="card" aria-labelledby="h-go">
-      <div class="card-head"><span class="num">3</span><h2 id="h-go">Design</h2></div>
-      <button class="btn primary big" id="go" type="button" disabled><span id="go-label">Design my kitchen</span></button>
-      <div class="hint" id="go-hint">Add a floor plan to start.</div>
-      <div class="alert" id="run-err" role="alert"></div>
-    </section>
   </aside>
 
   <!-- ===================== workspace: views & results ===================== -->
@@ -786,7 +882,7 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
         </div>
         <div id="svg-host" class="hidden"></div>
         <div id="panel-3d" class="hidden">
-          <div class="loader-pill float hidden" id="loader-pill" role="status"><span class="dotpulse" aria-hidden="true"></span><span id="loader-text">Designing your kitchen…</span></div>
+          <div class="loader-pill float hidden" id="loader-pill" role="status"><span class="dotpulse" aria-hidden="true"></span><span id="loader-text">Designing your kitchen…</span><button class="btn sm cancel-btn" type="button" data-cancel>Cancel</button></div>
           <div id="three-host"></div>
           <div class="v3d-bar">
             <div class="float v3d-group" role="group" aria-label="View mode">
@@ -797,6 +893,8 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
             </div>
             <button class="btn sm float" id="v3d-reset" type="button" title="Back to the starting view" aria-label="Reset view">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg><span class="lbl">Reset view</span></button>
+            <button class="btn sm float" id="v3d-full" type="button" title="Full screen (Esc to leave)" aria-label="Full screen" aria-pressed="false">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="lbl">Full screen</span></button>
             <div class="float v3d-group orbit-only" role="group" aria-label="Walls">
               <span class="l" data-ico="walls" title="Walls">Walls</span>
               <div class="seg" id="v3d-walls">
@@ -826,7 +924,7 @@ select:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 4px var(--accen
         </div>
         <div class="progress" id="progress" aria-live="polite">
           <div class="progress-box">
-            <div class="progress-title"><span class="spinner" aria-hidden="true"></span><span id="p-stage">Starting…</span></div>
+            <div class="progress-title"><span class="spinner" aria-hidden="true"></span><span id="p-stage">Starting…</span><button class="btn sm cancel-btn" type="button" data-cancel>Cancel</button></div>
             <div class="bar" aria-hidden="true"><i id="p-bar"></i></div>
             <div class="bar-meta"><span id="p-timer">0:00 elapsed</span><span id="p-eta"></span></div>
             <ol class="steps" id="p-steps"></ol>
@@ -2639,8 +2737,13 @@ class KitchenViewer {
     const d = this._describe(obj.userData.node);
     info.innerHTML = `<div class="v3d-info-head"><b>${escH(d.title)}</b><button type="button" class="icon-btn" aria-label="Close details">×</button></div>`
       + (d.sub ? `<div class="sub">${escH(d.sub)}</div>` : "")
-      + `<ul>${(d.lines || []).map((l) => `<li>${escH(l)}</li>`).join("")}</ul>`;
+      + `<ul>${(d.lines || []).map((l) => `<li>${escH(l)}</li>`).join("")}</ul>`
+      + `<div class="chat-choices"><button type="button" class="btn sm v3d-ask">Ask why it's here</button><button type="button" class="btn sm v3d-change">Change this…</button></div>`;
     info.querySelector("button").addEventListener("click", () => this._select(null));
+    info.querySelector(".v3d-ask").addEventListener("click", () =>
+      window.dispatchEvent(new CustomEvent("kv3d-ask", { detail: { title: d.title, sub: d.sub || "", lines: (d.lines || []).slice(0, 6) } })));
+    info.querySelector(".v3d-change").addEventListener("click", () =>
+      window.dispatchEvent(new CustomEvent("kv3d-change", { detail: { title: d.title, sub: d.sub || "", lines: (d.lines || []).slice(0, 6) } })));
     info.classList.remove("hidden");
   }
 
@@ -2851,7 +2954,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
       if (models.includes(keep)) sel.value = keep;
       state.localTime = lm.ai_expected_time || "a few minutes";
       $("#ai-local").disabled = !models.length;
-      $("#local-time").textContent = models.length ? `any Ollama model · ${models.length} installed` : "any Ollama model · none found";
+      $("#local-time").textContent = models.length ? `local models · ${models.length} running` : "local models · none found";
       $("#lbl-local").title = models.length ? "Test any installed Ollama model (plain models get the full knowledge prompt)" : (lm.status || "Start Ollama and install a model: ollama pull <model>");
       if (!models.length && $("#ai-local").checked) $("#ai-qwen").checked = true;
       $("#local-pick").classList.toggle("hidden", !$("#ai-local").checked);
@@ -2870,7 +2973,19 @@ window.dispatchEvent(new Event("kv3d-ready"));
         ? `Google ${gem.model} - ${gem.knowledge ? "given the MagickHome playbook and examples" : "designs from its own judgement (no MagickHome playbook, examples or cabinet notes)"}`
         : "Start the server with GEMINI_API_KEY set to enable Gemini";
       const ok = h.ollama === "ready";
-      setPill("#chip-ai", ok ? "ok" : "warn", ok ? `AI designer ready · ${prettyModel(h.ollama_model)}` : "AI designer offline · quick rules will be used", h.ollama);
+      // Qwen needs Ollama: say so in the dropdown instead of silently falling back to the quick rules
+      if (!ok) $("#ai-time").textContent = "AI designer · offline (Ollama not running)";
+      // Qwen needs Ollama: when it is down and a local model (e.g. llama.cpp magick-lfm3) is running, use that
+      if ($("#ai-qwen").checked && !ok && models.length && !state.userPickedDesigner) {
+        $("#ai-local").checked = true;
+        $("#local-pick").classList.remove("hidden");
+      }
+      updateDecideLabels();  // the designer may have been switched above (model no longer installed)
+      syncDesignerSelect();
+      const localOnly = !ok && models.length;
+      setPill("#chip-ai", ok || localOnly ? "ok" : "warn", ok ? `AI designer ready · ${prettyModel(h.ollama_model)}`
+        : localOnly ? `AI designer ready · ${models[0].replace(/^llamacpp:/, "")}` : "AI designer offline · quick rules will be used", h.ollama);
+      if (localOnly) $("#ai-time").textContent = `AI designer · ${models[0].replace(/^llamacpp:/, "")}`;
       const c = h.catalog || {};
       if (c.loaded) setPill("#chip-cat", c.source === "api" ? "ok" : "warn", `${c.skus.toLocaleString()} cabinets · ${c.source === "api" ? "live catalogue" : "offline copy"}`);
       else { setPill("#chip-cat", "", "Loading cabinet catalogue…"); setTimeout(refreshHealth, 4000); }
@@ -3471,7 +3586,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
       const tags = [g.all.some((n) => n.type === "window" && n.wallId === w.id) ? "window" : "", g.all.some((n) => n.type === "door" && n.wallId === w.id) ? "door" : ""].filter(Boolean).join(", ");
       return `<option value="${esc(w.id)}">${esc(w.name || w.id)}${tags ? ` (${tags})` : ""}</option>`;
     }).join("");
-    ["#need-hobwall", "#need-sinkwall"].forEach((sel) => { $(sel).innerHTML = `<option value="">Let the designer decide</option>${wallOpts}`; });
+    ["#need-hobwall", "#need-sinkwall"].forEach((sel) => { $(sel).innerHTML = `<option value="">Let AI decide</option>${wallOpts}`; });
     updateDecideLabels();
     state.facts = null;
     loadFacts();
@@ -3489,24 +3604,46 @@ window.dispatchEvent(new Event("kv3d-ready"));
     const about = (t) => t ? (/^(under|over|about)/.test(t) ? "" : "about ") + t : "a few minutes";
     $("#go-hint").textContent = d === "gemini" ? "Gemini (Google AI) takes about 1-2 minutes; the room facts and brief are sent to Google."
       : d === "gemma" ? `Gemma takes ${about(state.gemmaTime)}; it runs on your Ollama like Qwen.`
-      : d === "local" ? `${$("#local-model").value || "The local model"} runs on your Ollama - speed depends on its size.`
-      : d === "auto" ? `Qwen takes ${state.aiTime ? (/^(under|over|about)/.test(state.aiTime) ? "" : "about ") + state.aiTime : "a few minutes"}.` : "Ready in a few seconds.";
+      : d === "local" ? `${($("#local-model").value || "The local model").replace(/^llamacpp:/, "")} runs on this computer (${/^llamacpp:/.test($("#local-model").value) ? "llama.cpp" : "Ollama"}) - you can cancel it any time.`
+      : d === "auto" ? (/offline/.test($("#ai-time").textContent) ? "Qwen is offline (Ollama not running) - the quick rules will be used. Pick another designer or start Ollama."
+        : `Qwen takes ${state.aiTime ? (/^(under|over|about)/.test(state.aiTime) ? "" : "about ") + state.aiTime : "a few minutes"}.`) : "Ready in a few seconds.";
   }
-  // "Let the designer decide" names the designer: Qwen / Gemini decides (and explains why), or the quick rules do.
+  // "Let AI decide" when an AI designer decides (and explains why); "Standard choice" for the quick rules.
   // (gas supply is not here: "not stated" means LPG is assumed - rule R11 - not a designer decision)
   const DECIDE = ["#need-pur", "#need-tower", "#need-disp", "#need-base", "#need-loft", "#need-wallstyle", "#need-open", "#need-crock", "#need-hobwall", "#need-sinkwall"];
   function updateDecideLabels() {
     const d = designerChoice();
-    const text = d === "gemini" ? "Let Gemini decide" : d === "gemma" ? "Let Gemma decide" : d === "local" ? "Let the model decide" : d === "auto" ? "Let Qwen decide" : "Standard choice";
+    const text = d === "fallback" ? "Standard choice" : "Let AI decide";
     DECIDE.forEach((sel) => {
       const opt = $(sel) && $(sel).querySelector('option[value="auto"], option[value=""]');
       if (opt) opt.textContent = text;
     });
     refreshSegs();
   }
+  // "Who designs it?" dropdown mirrors the (hidden) radio buttons the rest of the page reads
+  function syncDesignerSelect() {
+    const sel = $("#designer-select");
+    if (!sel) return;
+    const radios = $$('input[name="ai"]');
+    sel.innerHTML = radios.map((r) => {
+      const lab = document.querySelector(`label[for="${r.id}"]`);
+      const name = lab ? lab.querySelector("b").textContent : r.value;
+      return `<option value="${r.id}"${r.disabled ? " disabled" : ""}${r.checked ? " selected" : ""}>${esc(name)}${r.disabled ? " - not available" : ""}</option>`;
+    }).join("");
+    const cur = radios.find((r) => r.checked);
+    const lab = cur && document.querySelector(`label[for="${cur.id}"]`);
+    $("#designer-sub").textContent = lab && lab.querySelector("small") ? lab.querySelector("small").textContent : "";
+    $("#designer-sub").title = lab ? lab.title || "" : "";
+  }
+  $("#designer-select").addEventListener("change", (e) => {
+    const r = document.getElementById(e.target.value);
+    if (r && !r.disabled) { r.checked = true; r.dispatchEvent(new Event("change", { bubbles: true })); }
+    syncDesignerSelect();
+  });
+  $$('input[name="ai"]').forEach((el) => el.addEventListener("change", () => { state.userPickedDesigner = true; }));
   $$('input[name="ai"]').forEach((el) => el.addEventListener("change", () => {
     $("#local-pick").classList.toggle("hidden", designerChoice() !== "local");
-    updateHint(); updateDecideLabels();
+    updateHint(); updateDecideLabels(); syncDesignerSelect();
   }));
   $("#local-model").addEventListener("change", () => { state.localModel = $("#local-model").value; updateHint(); });
   function readFile(file) {
@@ -3616,6 +3753,8 @@ window.dispatchEvent(new Event("kv3d-ready"));
     $("#loader-text").textContent = STAGE_TEXT.read;
     if (use3d) { state.tab = "3d"; render(); }
     $("#progress").classList.add("show");
+    $("#go-cancel").classList.remove("hidden");
+    document.querySelectorAll("[data-cancel]").forEach((b) => { b.disabled = false; b.textContent = b.id === "go-cancel" ? "Cancel design" : "Cancel"; });
     $("#p-stage").textContent = "Starting…";
     $("#p-steps").innerHTML = "";
     $("#p-bar").style.width = "0%";
@@ -3666,11 +3805,24 @@ window.dispatchEvent(new Event("kv3d-ready"));
       }
       if (j.status === "done") return done(j);
       if (j.status === "error") { finish(); return showRunError(j.error || "The design could not be made."); }
+      if (j.status === "cancelled") {
+        finish();
+        $("#go-hint").textContent = "Design cancelled - change anything you like and design again.";
+        return;
+      }
       setTimeout(poll, 1500);
     } catch (e) { finish(); showRunError(e.message); }
   }
+  document.addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-cancel]");
+    if (!b || !state.jobId) return;
+    document.querySelectorAll("[data-cancel]").forEach((x) => { x.disabled = true; x.textContent = "Cancelling…"; });
+    try { await api(`/api/jobs/${state.jobId}/cancel`, { method: "POST" }); }
+    catch (err) { showRunError(`Could not cancel: ${err.message}`); }
+  });
   function finish() {
     clearInterval(state.tick);
+    $("#go-cancel").classList.add("hidden");
     $("#progress").classList.remove("show", "docked");
     $("#loader-pill").classList.add("hidden");
     $("#panel-3d").classList.remove("loading");
@@ -3748,7 +3900,7 @@ window.dispatchEvent(new Event("kv3d-ready"));
     const base = state.lastPrefs || prefs();
     const p = { ...base, ai_provider: asked, ai_mode: state.strict ? "ollama" : "auto" };
     const radio = asked === "gemini" ? $("#ai-gemini") : asked === "gemma" ? $("#ai-gemma") : asked === "local" ? $("#ai-local") : $("#ai-qwen");
-    if (radio && !radio.disabled) { radio.checked = true; updateHint(); updateDecideLabels(); }
+    if (radio && !radio.disabled) { radio.checked = true; updateHint(); updateDecideLabels(); syncDesignerSelect(); }
     if (!state.input && state.output) {  // re-opened job link: the finished scene is a valid plan (its items are replaced)
       state.input = state.output;
       state.filename = state.filename || state.jobFilename || "kitchen.json";
@@ -3928,9 +4080,70 @@ window.dispatchEvent(new Event("kv3d-ready"));
   }
 
   $("#go").addEventListener("click", generate);
+
+  // ---------- minimize cards / hide the options panel (remembered in this browser) ----------
+  const store = {
+    get(k) { try { return JSON.parse(localStorage.getItem("mh-ui-" + k)); } catch (e) { return null; } },
+    set(k, v) { try { localStorage.setItem("mh-ui-" + k, JSON.stringify(v)); } catch (e) { /* private mode */ } },
+  };
+  const CHEVRON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+  $$(".sidebar .card:not(.go-card), #why-card, #details-card").forEach((card) => {
+    const head = card.querySelector(":scope > .card-head, :scope > .section-title");
+    const key = card.getAttribute("aria-labelledby") || card.id;
+    if (!head || !key) return;
+    const btn = document.createElement("button");
+    btn.type = "button"; btn.className = "collapse-btn"; btn.innerHTML = CHEVRON;
+    const set = (collapsed) => {
+      card.classList.toggle("collapsed", collapsed);
+      btn.setAttribute("aria-expanded", String(!collapsed));
+      btn.title = collapsed ? "Expand" : "Minimize";
+      btn.setAttribute("aria-label", btn.title);
+    };
+    set(!!(store.get("collapsed") || {})[key]);
+    btn.addEventListener("click", () => {
+      const now = !card.classList.contains("collapsed");
+      set(now);
+      const all = store.get("collapsed") || {}; all[key] = now; store.set("collapsed", all);
+    });
+    head.appendChild(btn);
+  });
+  function setPanel(hidden) {
+    $(".app").classList.toggle("sb-collapsed", hidden);
+    $("#sb-show").classList.toggle("hidden", !hidden);
+    store.set("panelHidden", hidden);
+  }
+  $("#sb-hide").addEventListener("click", () => setPanel(true));
+  $("#sb-show").addEventListener("click", () => setPanel(false));
+  if (store.get("panelHidden")) setPanel(true);
+
+  // ---------- 3D full screen ----------
+  const stageEl = $("#stage");
+  const isFull = () => document.fullscreenElement === stageEl || stageEl.classList.contains("pseudo-full");
+  function fullLabel() {
+    const on = isFull();
+    $("#v3d-full .lbl").textContent = on ? "Exit full screen" : "Full screen";
+    $("#v3d-full").setAttribute("aria-pressed", String(on));
+    $("#v3d-full").title = on ? "Leave full screen (Esc)" : "Full screen (Esc to leave)";
+  }
+  $("#v3d-full").addEventListener("click", async () => {
+    if (isFull()) {
+      if (document.fullscreenElement) await document.exitFullscreen().catch(() => {});
+      stageEl.classList.remove("pseudo-full");
+    } else if (stageEl.requestFullscreen) {
+      await stageEl.requestFullscreen().catch(() => stageEl.classList.add("pseudo-full"));
+    } else {
+      stageEl.classList.add("pseudo-full");  // browsers without the Fullscreen API (e.g. iPhone)
+    }
+    fullLabel();
+  });
+  document.addEventListener("fullscreenchange", fullLabel);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && stageEl.classList.contains("pseudo-full")) { stageEl.classList.remove("pseudo-full"); fullLabel(); }
+  });
   $(".jump").addEventListener("click", (e) => { const a = e.target.closest("[data-jump]"); if (a) selectTab(a.dataset.jump); });
 
   // ---------- boot ----------
+  syncDesignerSelect();
   refreshHealth();
   setInterval(refreshHealth, 30000);  // pick up server restarts / Colab or Gemini becoming available
   loadStyles();
@@ -3949,6 +4162,138 @@ window.dispatchEvent(new Event("kv3d-ready"));
     $("#go").disabled = true;
     poll();
   } else if (qs.has("sample")) loadSample().then(() => { if (qs.has("run")) generate(); });
+
+  // ---------- design chat: "why did you place this here?" ----------
+  (() => {
+    const fab = $("#chat-fab"), panel = $("#chat-panel"), logEl = $("#chat-log"), input = $("#chat-input"), chips = $("#chat-chips");
+    const CHIPS = ["Why is the sink here?", "Why is the hob on this wall?", "Why this layout?", "Why these tall units?", "Why no lofts?", "Why these colours?"];
+    const chat = { job: null, history: [], busy: false };
+    const ready = () => !!(state.jobId && state.report);
+    const scroll = () => { logEl.scrollTop = logEl.scrollHeight; };
+    function add(role, text, extra = {}) {
+      const el = document.createElement("div");
+      el.className = `chat-msg ${role === "user" ? "user" : "bot"}${extra.err ? " err" : ""}`;
+      el.innerHTML = (extra.focus ? `<span class="focus">About: ${esc(extra.focus)}</span>` : "") + esc(text)
+        + (extra.meta ? `<span class="meta">${esc(extra.meta)}</span>` : "");
+      logEl.appendChild(el); scroll(); return el;
+    }
+    function reset() {
+      chat.job = state.jobId; chat.history = []; logEl.innerHTML = "";
+      if (!ready()) {
+        logEl.innerHTML = `<div class="chat-empty">Design a kitchen first. Then ask me why anything is where it is - or click a cabinet in the 3D view and choose <b>Ask why it's here</b>.</div>`;
+        chips.innerHTML = ""; input.disabled = $("#chat-send").disabled = true; return;
+      }
+      input.disabled = $("#chat-send").disabled = false;
+      add("bot", "Hi! I designed this kitchen. Ask me why anything is where it is, or ask for a change (\"change this to a crockery unit\", \"move the hob to Wall 1\") - I'll check it against the MagickHome rules first. Click a cabinet in the 3D view to ask about that one.");
+      chips.innerHTML = CHIPS.map((c) => `<button type="button">${esc(c)}</button>`).join("");
+    }
+    function open(show = true) {
+      panel.classList.toggle("hidden", !show);
+      fab.setAttribute("aria-expanded", String(show));
+      $("#chat-dot").classList.add("hidden");
+      if (show) { if (chat.job !== state.jobId || !logEl.children.length || (ready() && input.disabled)) reset(); setTimeout(() => input.focus(), 30); }
+    }
+    async function ask(question, focus = null) {
+      question = (question || "").trim();
+      if (!question || chat.busy || !ready()) return;
+      if (chat.job !== state.jobId) reset();
+      chat.busy = true; $("#chat-send").disabled = true;
+      add("user", question, { focus: focus ? `${focus.title}${focus.sub ? " - " + focus.sub : ""}` : "" });
+      chips.innerHTML = "";  // suggestions only at the start: the answers need the room
+      const wait = document.createElement("div"), ctl = new AbortController();
+      wait.className = "chat-typing";
+      wait.innerHTML = `<span>Thinking… (a local model can take 5-60 s)</span> <button type="button" class="btn sm cancel-btn">Stop</button>`;
+      wait.querySelector("button").addEventListener("click", () => ctl.abort());
+      logEl.appendChild(wait); scroll();
+      const t0 = Date.now(), timer = setInterval(() => { wait.firstChild.textContent = `Thinking… ${Math.round((Date.now() - t0) / 1000)} s`; }, 1000);
+      try {
+        const r = await api(`/api/jobs/${state.jobId}/chat`, { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question, history: chat.history.slice(-4), focus }), signal: ctl.signal });
+        const who = r.model ? r.model.replace(/^(llamacpp|ollama):/, "") : "saved design notes (no AI model running)";
+        const el = add("bot", r.answer, { meta: `${who} · ${r.seconds} s` });
+        if (r.type === "change") offerChoices(el, r);
+        chat.history.push({ role: "user", content: question }, { role: "assistant", content: r.answer });
+        if (panel.classList.contains("hidden")) $("#chat-dot").classList.remove("hidden");
+      } catch (e) {
+        if (e.name === "AbortError") add("bot", "Stopped.");
+        else add("bot", `Sorry - I couldn't answer: ${e.message}`, { err: true });
+      } finally {
+        clearInterval(timer); wait.remove(); chat.busy = false; $("#chat-send").disabled = false; input.focus();
+      }
+    }
+    // a proposed design change: buttons for the customer's decision
+    function offerChoices(el, r) {
+      el.classList.add(r.conflicts && r.conflicts.length ? "conflict" : "change");
+      const box = document.createElement("div");
+      box.className = "chat-choices";
+      box.innerHTML = (r.choices || []).map((c) => `<button type="button" class="btn sm${c.id === "cancel" ? "" : " primary"}" data-choice="${esc(c.id)}">${esc(c.label)}</button>`).join("");
+      el.appendChild(box);
+      box.addEventListener("click", async (e) => {
+        const b = e.target.closest("button[data-choice]");
+        if (!b) return;
+        box.querySelectorAll("button").forEach((x) => { x.disabled = true; });
+        b.textContent = b.dataset.choice === "cancel" ? "Cancelled" : "Applying…";
+        try {
+          const res = await api(`/api/jobs/${state.jobId}/changes/${r.id}`, { method: "POST", headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ choice: b.dataset.choice }) });
+          if (!res.applied) { add("bot", "OK - I left the design as it was."); return; }
+          b.textContent = "Applied ✓";
+          await reloadDesign();
+          const msg = b.dataset.choice === "override" ? "Done - your choice is in the design (marked as a rule override in the report)."
+            : b.dataset.choice === "rules" && r.conflicts && r.conflicts.length ? "Done - I followed the rules: " + r.conflicts.map((c) => c.rules_build).join(", ") + "."
+            : "Done - the design is updated.";
+          offerUndo(add("bot", msg));
+          chat.history.push({ role: "assistant", content: msg });
+        } catch (err) { add("bot", `Sorry - the change failed: ${err.message}`, { err: true }); }
+      });
+    }
+    function offerUndo(el) {
+      const box = document.createElement("div");
+      box.className = "chat-choices";
+      box.innerHTML = `<button type="button" class="btn sm">Undo</button>`;
+      el.appendChild(box);
+      box.querySelector("button").addEventListener("click", async (e) => {
+        e.target.disabled = true; e.target.textContent = "Undoing…";
+        try {
+          await api(`/api/jobs/${state.jobId}/undo`, { method: "POST" });
+          await reloadDesign();
+          e.target.textContent = "Undone ✓";
+          add("bot", "Undone - the design is back to the previous version.");
+        } catch (err) { e.target.textContent = "Undo"; e.target.disabled = false; add("bot", `Couldn't undo: ${err.message}`, { err: true }); }
+      });
+    }
+    async function reloadDesign() {
+      const id = state.jobId;
+      const doc = await api(`/api/jobs/${id}/scene`), job = await api(`/api/jobs/${id}`);
+      if (id !== state.jobId) return;
+      state.output = doc; state.report = job.report;
+      if (state.viewer && state.tab === "3d") { state.viewer.show(doc, true); state.viewerDoc = state.viewerShown = doc; }
+      showReport(job);
+      render();
+    }
+    fab.addEventListener("click", () => open(panel.classList.contains("hidden")));
+    $("#chat-close").addEventListener("click", () => { open(false); fab.focus(); });
+    $("#chat-clear").addEventListener("click", reset);
+    panel.addEventListener("keydown", (e) => { if (e.key === "Escape") { e.stopPropagation(); open(false); fab.focus(); } });
+    $("#chat-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const q = input.value; input.value = "";
+      const f = chat.focus && /\b(this|it|that one|here)\b/i.test(q) ? chat.focus : null;
+      setFocus(null);
+      ask(q, f);
+    });
+    function setFocus(f) {
+      chat.focus = f;
+      $("#chat-focus").classList.toggle("hidden", !f);
+      $("#chat-focus").textContent = f ? `"this" = ${f.title}${f.sub ? " - " + f.sub : ""}` : "";
+    }
+    window.addEventListener("kv3d-change", (e) => {
+      open(true); setFocus(e.detail);
+      input.value = "Change this to "; input.focus(); input.setSelectionRange(input.value.length, input.value.length);
+    });
+    chips.addEventListener("click", (e) => { const b = e.target.closest("button"); if (b) ask(b.textContent); });
+    window.addEventListener("kv3d-ask", (e) => { open(true); ask("Why did you place this here?", e.detail); });
+  })();
 })();
 </script>
 </body>

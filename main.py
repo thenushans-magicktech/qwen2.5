@@ -40,8 +40,10 @@ from pydantic import BaseModel, ConfigDict, Field
 import config
 import finishes
 import rulebook
-from ai_designer import AIUnavailable, KitchenPreferences, base_storage_need, customer_needs, design_kitchen, ensure_model, list_local_models, ollama_model_for
+from ai_designer import AIUnavailable, JobCancelled, KitchenPreferences, check_cancelled, set_cancel_event, base_storage_need, customer_needs, design_kitchen, ensure_model, list_local_models, ollama_model_for
 from explain import explain_design
+import chat
+import design_edit
 from catalog_loader import available_door_styles, catalog_status, load_catalog, load_filtered_catalog, refresh_catalog
 from rule_engine import SolverError, SolverPrefs, solve_layout, validate_layout
 from scene_hydrator import hydrate_scene, scene_seed
@@ -80,6 +82,15 @@ def generate_kitchen(
     proposal, ai_info = design_kitchen(geometry, catalog, prefs)
     if ai_info.get("mode") == "fallback" and prefs.ai_mode != "fallback":
         step("The AI designer was not available - used the rule-based designer instead")
+    return build_kitchen(doc, geometry, catalog, prefs, proposal, ai_info, step, t0)
+
+
+def build_kitchen(doc: dict, geometry, catalog, prefs: KitchenPreferences, proposal, ai_info: dict,
+                  step: Callable[[str], None], t0: float,
+                  after_rules: Optional[Callable[[Any, Any], None]] = None) -> tuple[dict, dict]:
+    """Rule book -> layout solver -> 3D scene -> report, for a designer proposal (from the AI, the fallback
+    designer, or a customer's change in the design chat). ``after_rules(proposal, facts)`` runs right after
+    the rule book has been applied (the design chat uses it to see, or override, what the rules changed)."""
     if not prefs.include_tall:
         proposal.tall_units = []
     if prefs.include_cylinder is False:
@@ -93,6 +104,8 @@ def generate_kitchen(
     # Rule workbook: module widths by kitchen type / size band, LPG assumed (R11), ...
     step("Applying the MagickHome rule book: module sizes for this kitchen size and shape")
     facts = rulebook.apply_module_rules(proposal, geometry, catalog, prefs)
+    if after_rules:
+        after_rules(proposal, facts)
     # Base cabinet style: the customer's stated style, else the designer's (Qwen's) choice.
     stated_storage = base_storage_need(prefs)[0]
     storage = stated_storage if stated_storage != "auto" else (proposal.base_storage or "auto")
@@ -204,6 +217,7 @@ class JobStore:
     def __init__(self, keep: int = 25):
         self.keep = keep
         self.jobs: "OrderedDict[str, dict]" = OrderedDict()
+        self.cancels: dict[str, threading.Event] = {}
         self.lock = threading.Lock()
         self.pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="kitchen-job")
         # Quick-rules designs never call Qwen / Gemini and take about a second: their own lane, so
@@ -230,12 +244,28 @@ class JobStore:
         }
         with self.lock:
             self.jobs[job_id] = job
+            self.cancels[job_id] = threading.Event()
             while len(self.jobs) > self.keep:
                 self.jobs.popitem(last=False)
         (self.fast_pool if job["lane"] == "fast" else self.pool).submit(self._run, job_id, doc, prefs)
         return job
 
+    def cancel(self, job_id: str) -> dict:
+        """Stop a queued or running design. A running AI design hangs up on the model, which stops it."""
+        job = self.get(job_id)
+        with self.lock:
+            if job["status"] in ("queued", "running"):
+                ev = self.cancels.get(job_id)
+                if ev:
+                    ev.set()
+                if job["status"] == "queued":
+                    job.update(status="cancelled", stage="Cancelled", finished=time.time())
+                else:
+                    job["stage"] = "Cancelling…"
+        return job
+
     def _progress(self, job_id: str, msg: str) -> None:
+        check_cancelled()  # every pipeline step is a point where a cancelled job stops
         with self.lock:
             job = self.jobs.get(job_id)
             if job:
@@ -245,22 +275,33 @@ class JobStore:
     def _run(self, job_id: str, doc: dict, prefs: KitchenPreferences) -> None:
         with self.lock:
             job = self.jobs.get(job_id)
-            if not job:
+            ev = self.cancels.get(job_id)
+            if not job or job["status"] == "cancelled" or (ev and ev.is_set()):
+                self.cancels.pop(job_id, None)
                 return
             job["status"], job["started"] = "running", time.time()
+        set_cancel_event(ev)
         try:
             out, report = generate_kitchen(doc, prefs, progress=lambda m: self._progress(job_id, m))
+            check_cancelled()
             with self.lock:
                 job.update(status="done", result=out, report=report, stage="Done")
+        except JobCancelled:
+            log.info("job %s cancelled", job_id)
+            with self.lock:
+                job.update(status="cancelled", stage="Cancelled", error=None)
         except Exception as exc:  # surfaced to the UI
             code, msg = _error_payload(exc)
             log.exception("job %s failed", job_id) if code == 500 else log.warning("job %s failed: %s", job_id, msg)
             with self.lock:
                 job.update(status="error", error=msg, error_code=code, stage="Failed")
         finally:
+            set_cancel_event(None)
             with self.lock:
                 job["finished"] = time.time()
-            self._save(job)
+                self.cancels.pop(job_id, None)
+            if job["status"] != "cancelled":
+                self._save(job)
 
     @staticmethod
     def _path(job_id: str) -> Path:
@@ -497,6 +538,12 @@ def job_status(job_id: str) -> dict:
     return JOBS.public(JOBS.get(job_id))
 
 
+@app.post("/api/jobs/{job_id}/cancel")
+def cancel_job(job_id: str) -> dict:
+    """Cancel a queued or running design (the AI model stops generating)."""
+    return JOBS.public(JOBS.cancel(job_id))
+
+
 @app.get("/api/jobs/{job_id}/scene")
 def job_scene(job_id: str, download: bool = False):
     job = JOBS.get(job_id)
@@ -552,6 +599,65 @@ def job_report(job_id: str, download: bool = False):
         raise HTTPException(status_code=409, detail=f"job is {job['status']}")
     headers = {"Content-Disposition": f'attachment; filename="{_download_name(job["filename"], "design_report")}"'} if download else {}
     return JSONResponse(job["report"], headers=headers)
+
+
+class ChatRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=1000)
+    history: list[dict] = Field(default_factory=list)   # earlier turns: {"role": "user"|"assistant", "content": ...}
+    focus: Optional[dict] = None                         # the item clicked in the 3D view: {title, sub, lines}
+
+
+@app.post("/api/jobs/{job_id}/chat")
+def job_chat(job_id: str, req: ChatRequest) -> dict:
+    """Ask about a finished design ("why is the sink on Wall 2?"); answered from that design's own reasons."""
+    job = JOBS.get(job_id)
+    if job["status"] != "done":
+        raise HTTPException(status_code=409, detail=f"job is {job['status']}")
+    if design_edit.looks_like_change(req.question):
+        try:
+            change = design_edit.propose(job, req.question, req.focus)
+            if change is not None:
+                return change
+        except Exception as exc:  # could not understand / build it: answer as a question instead
+            log.warning("design change failed: %s", exc)
+            ans = chat.answer(job, req.question, req.history, req.focus)
+            ans["answer"] = f"I couldn't make that change ({exc}).\n\n" + ans["answer"]
+            return ans
+    return chat.answer(job, req.question, req.history, req.focus)
+
+
+class ChangeChoice(BaseModel):
+    choice: str = Field(pattern="^(rules|override|cancel)$")
+
+
+@app.post("/api/jobs/{job_id}/changes/{change_id}")
+def job_change(job_id: str, change_id: str, req: ChangeChoice) -> dict:
+    """The customer's answer to a proposed change: follow the rules, override the rule, or cancel."""
+    job = JOBS.get(job_id)
+    if req.choice == "cancel":
+        design_edit.PENDING.pop(change_id, None)
+        return {"ok": True, "applied": False}
+    with JOBS.lock:
+        try:
+            design_edit.apply(job, change_id, override=req.choice == "override")
+        except KeyError as exc:
+            raise HTTPException(status_code=410, detail=str(exc).strip("'"))
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc))
+    JOBS._save(job)
+    return {"ok": True, "applied": True, "version": job.get("version", 0), "can_undo": bool(job.get("history"))}
+
+
+@app.post("/api/jobs/{job_id}/undo")
+def job_undo(job_id: str) -> dict:
+    job = JOBS.get(job_id)
+    with JOBS.lock:
+        try:
+            design_edit.undo(job)
+        except ValueError as exc:
+            raise HTTPException(status_code=409, detail=str(exc))
+    JOBS._save(job)
+    return {"ok": True, "version": job.get("version", 0), "can_undo": bool(job.get("history"))}
 
 
 # ---------------------------------------------------------------------------

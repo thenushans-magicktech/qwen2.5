@@ -36,4 +36,7 @@ if [ -n "${LORA:-}" ]; then
   lora_args=(--lora "$LORA")
 fi
 echo "llama.cpp: serving $gguf ${LORA:++ adapter $LORA }as '$alias' on http://127.0.0.1:$port (GPU layers: ${GPU:-0})"
-exec "$bin" -m "$gguf" "${lora_args[@]}" --alias "$alias" --host 127.0.0.1 --port "$port" -c "${CTX:-12288}" -ngl "${GPU:-0}" --jinja
+# THINK=off: fine-tuned models were trained with thinking OFF - force it for every client (e.g. the web chat page)
+think_args=()
+[ "${THINK:-}" = "off" ] && think_args=(--reasoning off --chat-template-kwargs '{"enable_thinking": false}')
+exec "$bin" -m "$gguf" "${lora_args[@]}" --alias "$alias" --host 127.0.0.1 --port "$port" -c "${CTX:-12288}" -ngl "${GPU:-0}" --jinja "${think_args[@]}"

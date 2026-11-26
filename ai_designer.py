@@ -61,6 +61,23 @@ from scene_parser import RoomGeometry
 log = logging.getLogger(__name__)
 
 
+class JobCancelled(RuntimeError):
+    """The customer cancelled the design while it was being generated."""
+
+
+_CANCEL = threading.local()  # .event: the running job's cancel flag (set by the job's worker thread)
+
+
+def set_cancel_event(event) -> None:
+    _CANCEL.event = event
+
+
+def check_cancelled() -> None:
+    ev = getattr(_CANCEL, "event", None)
+    if ev is not None and ev.is_set():
+        raise JobCancelled("cancelled by the customer")
+
+
 class AIUnavailable(RuntimeError):
     """Ollama not reachable, model missing, or the reply was unusable."""
 
@@ -1145,6 +1162,37 @@ def build_messages(geometry: RoomGeometry, groups, prefs: KitchenPreferences, ve
     return messages, Model, to_proposal
 
 
+def _llamacpp_stream(server: str, body: dict) -> dict:
+    """POST a chat completion as a stream, so a cancelled job can hang up mid-answer (llama.cpp then stops
+    generating). Returns the same shape as a non-streamed reply."""
+    import requests
+
+    check_cancelled()
+    body = dict(body, stream=True, stream_options={"include_usage": True})
+    parts, finish, usage, timings = [], None, {}, {}
+    with requests.post(f"{server}/v1/chat/completions", json=body, headers=_llamacpp_headers(),
+                       timeout=(10, config.LLAMACPP_TIMEOUT_S), stream=True) as r:
+        if r.status_code != 200:
+            raise RuntimeError(r.text[:300])
+        for line in r.iter_lines(decode_unicode=True):
+            check_cancelled()  # leaving the with-block closes the connection
+            if not line or not line.startswith("data:"):
+                continue
+            payload = line[5:].strip()
+            if payload == "[DONE]":
+                break
+            chunk = json.loads(payload)
+            if "error" in chunk:
+                raise RuntimeError(str(chunk["error"])[:300])
+            for ch in chunk.get("choices") or []:
+                parts.append((ch.get("delta") or {}).get("content") or "")
+                finish = ch.get("finish_reason") or finish
+            usage = chunk.get("usage") or usage
+            timings = chunk.get("timings") or timings
+    return {"choices": [{"message": {"content": "".join(parts)}, "finish_reason": finish}],
+            "usage": usage, "timings": timings}
+
+
 def design_with_llamacpp(geometry: RoomGeometry, groups, prefs: KitchenPreferences, model_id: str,
                          version: Optional[str] = None) -> tuple[Proposal, dict]:
     """Design with a model on a llama.cpp server (OpenAI-compatible): same prompt and schema as Ollama.
@@ -1170,11 +1218,9 @@ def design_with_llamacpp(geometry: RoomGeometry, groups, prefs: KitchenPreferenc
             "response_format": {"type": "json_schema", "json_schema": {"name": "kitchen_design", "schema": schema}},
         }
         try:
-            r = requests.post(f"{server}/v1/chat/completions", json=body, headers=_llamacpp_headers(),
-                              timeout=config.LLAMACPP_TIMEOUT_S)
-            data = r.json()
-            if r.status_code != 200 or "error" in data:
-                raise RuntimeError(str(data.get("error", data))[:300])
+            data = _llamacpp_stream(server, body)
+        except JobCancelled:
+            raise
         except Exception as exc:
             raise AIUnavailable(f"llama.cpp server failed: {exc}") from exc
         choice = data["choices"][0]

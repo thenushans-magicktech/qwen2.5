@@ -275,3 +275,9 @@ DESIGN_SOURCE_APPLIANCE = DESIGN_SOURCE + "-appliance"
 # ---------------------------------------------------------------------------
 DEFAULT_DOOR_STYLE = "Slab (Plain)"
 DEFAULT_HANDLE_TYPE = "External Handle"
+
+# Design chat ("why is the sink here?"): auto = a llama.cpp model (fine-tuned magick-* first), else an Ollama model,
+# else Gemini when GEMINI_API_KEY is set. Or name one: llamacpp:magick-lfm3 | ollama:magick-gemma:latest | gemini
+CHAT_MODEL = os.getenv("CHAT_MODEL", "auto")
+CHAT_MAX_TOKENS = int(os.getenv("CHAT_MAX_TOKENS", "300"))
+CHAT_TIMEOUT_S = float(os.getenv("CHAT_TIMEOUT_S", "300"))
