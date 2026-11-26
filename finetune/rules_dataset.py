@@ -110,7 +110,8 @@ class Answer:
         if solid:
             reading.append(f"long solid walls: {', '.join(solid)}")
         room_reading = cut("; ".join(reading) + ".", 240)
-        tall_name = self.catalog.get(talls[0]["aid"]).category.lower() if talls and self.catalog.get(talls[0]["aid"]) else None
+        # the placement records its own category (the height-filtered catalogue may not have this unit)
+        tall_name = (talls[0].get("category") or "tall unit").lower() if talls else None
         plan = [f"Wet zone: sink on {L[sink['wall']]}" + (" under the window" if win and sink and sink["wall"] == win.wall_id else "") if sink else "",
                 f"Cooking: hob on {L[hob['wall']]} with the chimney above" if hob else "",
                 f"Storage: {tall_name} on {L[talls[0]['wall']]} at a run end" if talls else ""]
@@ -134,8 +135,14 @@ class Answer:
         sfree = _free_len(g, sink["wall"]) if sink else 0
         sink_why = (f"Centred under the {L[sink['wall']]} window for light and air; " if win and sink and sink["wall"] == win.wall_id
                     else f"No usable window wall, so the longest free run ({L[sink['wall']]}); ") if sink else ""
-        if "sink" in rules:
+        # playbook sizes: 800 small, 900 standard, 1050 from 3000 mm free, 1200 from 3600 mm free
+        want = 800 if sfree < 2400 else 900 if sfree < 3000 else 1050 if sfree < 3600 else 1200
+        if "sink" in rules and rules["sink"].get("width") == sink["width"]:
             sink_why += f"rule R{rules['sink']['rule']} sets a {rules['sink']['width']} mm sink unit for this kitchen."
+        elif sink["width"] < want:
+            sink_why += (f"{sink['width']} mm is the widest sink that stays centred under the window and clear of "
+                         "the corner unit." if win and sink["wall"] == win.wall_id else
+                         f"{sink['width']} mm is the widest sink that fits between the corner and the other units.")
         else:
             sink_why += f"{sink['width']} mm suits a {sfree:.0f} mm free run."
 
@@ -207,8 +214,17 @@ class Answer:
             units = [c for c in (self.code("base", a) for a in aids) if c != "NONE"][:3]
             if units:
                 feats.append({"wall": L[wid], "units": units})
-        features_why = ("Drawers beside the hob for pans; grain trolley on the sink wall, away from the hob heat."
-                        if feats else "Plain base units in the chosen style fill the runs.")
+        # the reason names only the feature units actually chosen
+        chosen = " ".join(u for f in feats for u in f["units"])
+        parts = []
+        if "DRAWER" in chosen:
+            parts.append("drawers beside the hob for pans and pressure cookers")
+        if "GRAIN" in chosen:
+            parts.append("a grain trolley on the sink wall, away from the hob heat")
+        if "WICKER" in chosen:
+            parts.append("a wicker basket by the sink for vegetables")
+        features_why = (cut("; ".join(parts).capitalize() + ".", 180) if parts
+                        else "Plain base units in the chosen style fill the runs.")
         sizes = []
         for wid in walls:
             widths = Counter(q["aid"] for q in self.places if q["wall"] == wid and q["role"] == "wall")

@@ -1,6 +1,6 @@
 {
-  "train_rows": 660,
-  "val_rows": 71,
+  "train_rows": 649,
+  "val_rows": 82,
   "samples": 0,
   "refused_samples": [],
   "by_source": {
@@ -14,6 +14,6 @@
   },
   "approx_tokens_per_row": {
     "max": 2534,
-    "mean": 2313
+    "mean": 2323
   }
 }
