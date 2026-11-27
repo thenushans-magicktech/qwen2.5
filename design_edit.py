@@ -314,6 +314,9 @@ def apply_change(ctx: dict, p0, change: dict):
             what.append(f"{key.replace('_', ' ')} → {change[key]}")
             if L[change[key]] not in p.cabinet_walls:
                 p.cabinet_walls.append(L[change[key]])
+                p.layout_type = {1: "single", 2: "L"}.get(len(p.cabinet_walls), "U")
+                pref["layout"] = p.layout_type  # the new wall needs a bigger layout
+                pref["cabinet_walls"] = list(p.cabinet_walls)
     if change.get("hob_center_mm") is not None and abs((p.hob_center_mm or 0) - change["hob_center_mm"]) > 1:
         p.hob_center_mm = float(change["hob_center_mm"])
         requested["hob_center_mm"] = p.hob_center_mm
@@ -409,6 +412,11 @@ def _not_built(ctx, requested: dict, report: dict, skip=()) -> list[str]:
         it = ctx["catalog"].get(a)
         if it is not None and (it.category, it.width) not in placed:
             out.append(f"{it.category} {it.width} mm")
+    placements = (report.get("layout") or {}).get("placements") or {}
+    for attr, role, label in (("sink_wall_id", "sink", "sink"), ("hob_wall_id", "hob", "hob")):
+        if requested.get(attr) and not any(i.get("role") == role for i in placements.get(requested[attr], [])):
+            out.append(f"the {label} on {ctx['names'].get(requested[attr], requested[attr])} (no room for it there - "
+                       "a door, window or corner leaves too little wall)")
     if requested.get("lofts") and not (report.get("heights") or {}).get("lofts"):
         out.append("lofts - " + ((report.get("heights") or {}).get("why") or "the ceiling is too low"))
     return out
@@ -522,6 +530,7 @@ def propose(job: dict, request: str, focus: Optional[dict] = None) -> Optional[d
         "issues": [_plain_warning(i) for i in (rep.get("validation_issues") or []) + ((rep.get("layout") or {}).get("warnings") or [])
                    if i not in before_issues],
         "model": got["model"],
+        "fields": sorted(requested),  # which decisions changed (sink_aid, hob_wall_id, tall_units ...)
     }
     before_guides = set(guideline_issues(ctx, job.get("report") or {}))
     result["guidelines"] = [g for g in guideline_issues(ctx, rep) if g not in before_guides]

@@ -41,7 +41,7 @@ def _wall_names(job: dict) -> dict[str, str]:
         return {}
 
 
-def design_facts(job: dict) -> str:
+def design_facts(job: dict, placements: bool = True) -> str:
     """The design's fact sheet (about 2-3k tokens)."""
     rep = job.get("report") or {}
     names = _wall_names(job)
@@ -69,14 +69,14 @@ def design_facts(job: dict) -> str:
             out.append(f"- Rule R{a.get('rule')}: {a.get('text')}" + (f" (designer had proposed {a['designer']})"
                                                                       if a.get("changed") and a.get("designer") else ""))
     lay = rep.get("layout") or {}
-    walls = lay.get("placements") or {}
+    walls = (lay.get("placements") or {}) if placements else {}
     if walls:
         out.append("CABINETS ON EACH WALL (left to right, start position along the wall):")
         for wid, items in walls.items():
             parts = [f"{i.get('category')} {i.get('width')} mm at {round(i.get('start_mm') or 0)} mm ({i.get('tier')})"
                      for i in items]
             out.append(f"- {names.get(wid, wid)}: " + "; ".join(parts))
-    for d in lay.get("decisions") or []:
+    for d in (lay.get("decisions") or []) if placements else []:
         out.append(f"- Placement note: {d}")
     for w in lay.get("warnings") or []:
         out.append(f"- Warning: {w}")
@@ -212,14 +212,32 @@ def _words(s: str) -> set[str]:
     return {w for w in re.findall(r"[a-z]+", (s or "").lower()) if w not in _STOP and len(w) > 2}
 
 
+# a clicked item's type -> the design decision ("explanation" item) that explains it
+_ITEM_FOR = (
+    (r"\bsink", "Sink"), (r"\bhob\b|chimney|cooktop", "Hob"), (r"cylinder|\blpg", "LPG cylinder"),
+    (r"spice", "Spice pull-out"), (r"aquaguard|purifier", "Water purifier"), (r"\bloft", "Lofts"),
+    (r"corner|blind", "Corners"), (r"\btall|pantry|oven|microwave|fridge|refrigerator", "Tall units"),
+    (r"glass|display", "Glass display"), (r"open", "Open shelf unit"), (r"grain|wicker|basket|trolley", "Feature units"),
+    (r"^wall|wall unit|wall cabinet", "Wall cabinets"), (r"^base|drawer|shutter", "Base cabinets"),
+)
+
+
+def _item_for(focus: Optional[dict]) -> Optional[str]:
+    title = str((focus or {}).get("title", "")).lower()
+    return next((item for pat, item in _ITEM_FOR if re.search(pat, title)), None)
+
+
 def matching_reasons(job: dict, question: str, focus: Optional[dict] = None, k: int = 2) -> list[dict]:
     q = _words(question)
+    target = _item_for(focus)
     if focus:  # a clicked item: match on what it is, not on the question wording ("why is this here?")
         q = _words(f"{focus.get('title', '')} {focus.get('sub', '')}") | q
     scored = []
     for e in (job.get("report") or {}).get("explanation") or []:
         words = _words(f"{e.get('item')} {e.get('built')} {' '.join(e.get('details') or [])}")
         score = 3 * len(q & _words(str(e.get("item")))) + len(q & words)
+        if target and str(e.get("item")) == target:  # the clicked item's own decision always comes first
+            score += 100
         if focus:  # the clicked item's name ("grain trolley") written in this decision: it is about that item
             text = f"{e.get('built')} {e.get('why')} {' '.join(e.get('details') or [])}".lower()
             name = [w for w in re.findall(r"[a-z]+", str(focus.get("title", "")).lower()) if w not in _STOP]
@@ -233,12 +251,18 @@ def matching_reasons(job: dict, question: str, focus: Optional[dict] = None, k: 
     return [{"item": e.get("item"), "built": e.get("built"), "why": e.get("why")} for _, e in scored[:k]]
 
 
-def answer(job: dict, question: str, history: Optional[list[dict]] = None, focus: Optional[dict] = None) -> dict:
+def answer(job: dict, question: str, history: Optional[list[dict]] = None, focus: Optional[dict] = None,
+           placements: bool = True) -> dict:
+    """``placements=False``: leave out this designer's own cabinet-by-cabinet layout - for apps whose rule engine
+    placed the final cabinets differently (exact sizes / positions come from the item the customer clicked)."""
     history = [m for m in (history or []) if m.get("role") in ("user", "assistant") and m.get("content")][-MAX_HISTORY:]
     if focus:  # a clicked item is a new topic: earlier answers only pull a small model back to them
         history = []
     sources = matching_reasons(job, question, focus)
-    system = SYSTEM + "\n\nDESIGN FACTS:\n" + design_facts(job)  # same for every turn: llama.cpp reuses its cache
+    system = SYSTEM + "\n\nDESIGN FACTS:\n" + design_facts(job, placements)
+    if not placements:
+        system += ("\n\nThe exact cabinet sizes and positions in the customer's design come from the rule engine: "
+                   "take the clicked item's size and wall as true and explain the DECISION behind it.")  # same for every turn: llama.cpp reuses its cache
     user = question.strip()
     if focus:
         bits = [focus.get("title"), focus.get("sub")] + list(focus.get("lines") or [])[:6]

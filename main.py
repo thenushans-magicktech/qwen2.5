@@ -44,6 +44,7 @@ from ai_designer import AIUnavailable, JobCancelled, KitchenPreferences, check_c
 from explain import explain_design
 import chat
 import design_edit
+import ai_service
 from catalog_loader import available_door_styles, catalog_status, load_catalog, load_filtered_catalog, refresh_catalog
 from rule_engine import SolverError, SolverPrefs, solve_layout, validate_layout
 from scene_hydrator import hydrate_scene, scene_seed
@@ -658,6 +659,65 @@ def job_undo(job_id: str) -> dict:
             raise HTTPException(status_code=409, detail=str(exc))
     JOBS._save(job)
     return {"ok": True, "version": job.get("version", 0), "can_undo": bool(job.get("history"))}
+
+
+class AIDecisionRequest(BaseModel):
+    scene: dict[str, Any] = Field(..., description="Pascal / MagickHomes scene ({nodes, rootNodeIds} or the exported document)")
+    preferences: dict[str, Any] = Field(default_factory=dict, description="design-backend intake keys (kitchenType, budgetTier ...)")
+    model: Optional[str] = Field(None, description="local model id, e.g. llamacpp:magick-lfm3 (default LOCAL_MODEL)")
+
+
+@app.post("/api/ai/decisions")
+def ai_decisions(req: AIDecisionRequest) -> dict:
+    """For other apps: the AI designer's decisions (walls, sink, hob, tall units ...) for a room, with reasons."""
+    try:
+        return ai_service.decisions(req.scene, req.preferences, req.model)
+    except (SceneError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc))
+    except AIUnavailable as exc:
+        raise HTTPException(status_code=503, detail=f"AI designer unavailable: {exc}")
+
+
+@app.get("/api/ai/state/{state_id}")
+def ai_state(state_id: str) -> dict:
+    """For other apps: the decisions of an earlier answer (after the customer picked a change variant)."""
+    try:
+        return ai_service.state(state_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=410, detail=str(exc).strip("'"))
+
+
+class AIAskRequest(BaseModel):
+    state_id: str
+    question: str = Field(min_length=1, max_length=1000)
+    focus: Optional[dict] = None
+    history: list[dict] = Field(default_factory=list)
+
+
+@app.post("/api/ai/ask")
+def ai_ask(req: AIAskRequest) -> dict:
+    """For other apps: answer "why is this here?" from the design's own decisions and reasons."""
+    try:
+        return ai_service.ask(req.state_id, req.question, req.focus, req.history[-4:])
+    except KeyError as exc:
+        raise HTTPException(status_code=410, detail=str(exc).strip("'"))
+
+
+class AIChangeRequest(BaseModel):
+    state_id: str
+    message: str = Field(min_length=1, max_length=1000)
+    focus: Optional[dict] = None
+
+
+@app.post("/api/ai/change")
+def ai_change(req: AIChangeRequest) -> dict:
+    """For other apps: a customer's change request -> new decisions, checked against the rule book."""
+    try:
+        return ai_service.change(req.state_id, req.message, req.focus)
+    except KeyError as exc:
+        raise HTTPException(status_code=410, detail=str(exc).strip("'"))
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc))
 
 
 # ---------------------------------------------------------------------------
